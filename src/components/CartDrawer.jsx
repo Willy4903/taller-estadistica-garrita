@@ -1,104 +1,94 @@
-export default function CartDrawer({ abierto, onCerrar, items, onQuitar, onCambiarCantidad, onVaciar, total }) {
+import { formatearPrecio } from "../lib/catalogo";
+import Drawer from "./Drawer";
+import { IconoBasura, IconoCarrito } from "./icons";
+import ProductImage from "./ProductImage";
+
+function BotonCantidad({ children, ...props }) {
   return (
-    <>
-      <div
-        className={`fixed inset-0 z-40 bg-black/40 transition-opacity ${
-          abierto ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-        onClick={onCerrar}
-      />
-      <aside
-        className={`fixed right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col bg-white shadow-2xl transition-transform duration-300 ${
-          abierto ? "translate-x-0" : "translate-x-full"
-        }`}
+    <button
+      type="button"
+      className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-300 text-navy hover:bg-gray-100 disabled:opacity-40"
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+
+export default function CartDrawer({ abierto, onCerrar, items, onQuitar, onCambiarCantidad, onVaciar, total, cantidadTotal }) {
+  const pie = items.length > 0 && (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between text-lg font-bold text-navy">
+        <span>
+          Total{" "}
+          <span className="text-sm font-normal text-gray-500">
+            ({cantidadTotal} {cantidadTotal === 1 ? "artículo" : "artículos"})
+          </span>
+        </span>
+        <span>{formatearPrecio(total)}</span>
+      </div>
+      <button
+        type="button"
+        onClick={onVaciar}
+        className="w-full rounded-lg border border-navy py-2 text-sm font-semibold text-navy hover:bg-navy/5"
       >
-        <div className="flex items-center justify-between border-b border-gray-200 bg-navy px-4 py-4">
-          <h2 className="text-lg font-bold text-gold">Tu carrito</h2>
-          <button
-            type="button"
-            onClick={onCerrar}
-            className="rounded-full p-1 text-gold hover:bg-white/10"
-            aria-label="Cerrar carrito"
-          >
-            ✕
+        Vaciar carrito
+      </button>
+    </div>
+  );
+
+  return (
+    <Drawer abierto={abierto} onCerrar={onCerrar} titulo="Tu carrito" pie={pie}>
+      {items.length === 0 ? (
+        <div className="mt-16 flex flex-col items-center gap-3 text-center text-gray-500">
+          <IconoCarrito className="h-12 w-12 text-gray-300" strokeWidth={1.5} />
+          <p>Tu carrito está vacío.</p>
+          <button type="button" onClick={onCerrar} className="text-sm font-semibold text-navy underline decoration-gold decoration-2 underline-offset-4">
+            Seguir comprando
           </button>
         </div>
-
-        <div className="flex-1 overflow-y-auto p-4">
-          {items.length === 0 ? (
-            <p className="mt-10 text-center text-gray-500">Tu carrito está vacío.</p>
-          ) : (
-            <ul className="space-y-3">
-              {items.map((item) => (
-                <li
-                  key={item.id}
-                  className="flex gap-3 rounded-lg border border-gray-200 p-2"
-                >
-                  <img
-                    src={item.imagen}
-                    alt={item.nombre}
-                    className="h-16 w-16 flex-shrink-0 rounded-md object-cover"
-                  />
-                  <div className="flex flex-1 flex-col justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-navy">{item.nombre}</p>
-                      <p className="text-xs text-gray-500">
-                        Talla {item.talla} · {item.color}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => onCambiarCantidad(item.id, item.cantidad - 1)}
-                          className="h-6 w-6 rounded-full border border-gray-300 text-sm text-navy hover:bg-gray-100"
-                        >
-                          −
-                        </button>
-                        <span className="w-5 text-center text-sm">{item.cantidad}</span>
-                        <button
-                          type="button"
-                          onClick={() => onCambiarCantidad(item.id, item.cantidad + 1)}
-                          className="h-6 w-6 rounded-full border border-gray-300 text-sm text-navy hover:bg-gray-100"
-                        >
-                          +
-                        </button>
-                      </div>
-                      <span className="text-sm font-bold text-navy">
-                        S/ {(item.precio * item.cantidad).toFixed(2)}
-                      </span>
-                    </div>
+      ) : (
+        <ul className="space-y-3">
+          {items.map((item) => (
+            <li key={item.id} className="flex gap-3 rounded-lg border border-gray-200 p-2">
+              <ProductImage producto={item} className="h-20 w-20 flex-shrink-0 rounded-md" />
+              <div className="flex min-w-0 flex-1 flex-col justify-between">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-navy">{item.nombre}</p>
+                    <p className="text-xs capitalize text-gray-500">
+                      Talla {Array.isArray(item.talla) ? item.talla.join(", ") : item.talla} · {item.color}
+                    </p>
+                    <p className="text-xs text-gray-500">{formatearPrecio(item.precio)} c/u</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => onQuitar(item.id)}
-                    className="self-start text-gray-400 hover:text-red-500"
+                    className="text-gray-400 hover:text-red-600"
                     aria-label={`Quitar ${item.nombre}`}
                   >
-                    ✕
+                    <IconoBasura className="h-4 w-4" />
                   </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {items.length > 0 && (
-          <div className="space-y-3 border-t border-gray-200 p-4">
-            <div className="flex items-center justify-between text-lg font-bold text-navy">
-              <span>Total</span>
-              <span>S/ {total.toFixed(2)}</span>
-            </div>
-            <button
-              type="button"
-              onClick={onVaciar}
-              className="w-full rounded-lg border border-navy py-2 text-sm font-semibold text-navy hover:bg-navy/5"
-            >
-              Vaciar carrito
-            </button>
-          </div>
-        )}
-      </aside>
-    </>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BotonCantidad onClick={() => onCambiarCantidad(item.id, item.cantidad - 1)} aria-label="Disminuir cantidad">
+                      −
+                    </BotonCantidad>
+                    <span className="w-6 text-center text-sm font-medium" aria-live="polite">
+                      {item.cantidad}
+                    </span>
+                    <BotonCantidad onClick={() => onCambiarCantidad(item.id, item.cantidad + 1)} aria-label="Aumentar cantidad">
+                      +
+                    </BotonCantidad>
+                  </div>
+                  <span className="text-sm font-bold text-navy">{formatearPrecio(item.precio * item.cantidad)}</span>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Drawer>
   );
 }
