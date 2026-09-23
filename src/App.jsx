@@ -46,7 +46,11 @@ export default function App() {
 
   useEffect(() => {
     const query = escribirEstadoEnUrl({ busqueda, orden, filtros });
-    window.history.replaceState(null, "", `${window.location.pathname}${query}`);
+    try {
+      window.history.replaceState(null, "", `${window.location.pathname}${query}`);
+    } catch {
+      // Algunos entornos embebidos no permiten modificar el historial
+    }
   }, [busqueda, orden, filtros]);
 
   const grupos = useMemo(
