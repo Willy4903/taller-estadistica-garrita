@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #001f3f;
+  --color-navy-dark: #00142b;
+  --color-navy-light: #06305c;
+  --color-gold: #ffd700;
+  --color-gold-dark: #e6c200;
+  --font-sans: "Poppins", "Inter", system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f5f6f8;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-navy) #e5e7eb;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
