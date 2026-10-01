@@ -167,7 +167,8 @@
     const hours = (Date.now() - upd) / 36e5;
     const st = $("#status");
     st.classList.toggle("stale", hours > 36);
-    $("#status-text").textContent = "Actualizado " + upd.toLocaleString("es-PE", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", timeZone: meta.timezone });
+    st.dataset.tip = "Última actualización de los datos\nSe actualiza todos los días a las 6:00 am (hora de Lima)."; st.tabIndex = 0;
+    $("#status-text").textContent = upd.toLocaleString("es-PE", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", timeZone: meta.timezone });
     if (meta.sample) {
       const b = $("#banner");
       b.hidden = false;

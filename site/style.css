@@ -282,3 +282,5 @@ td .chip{white-space:nowrap}
   .top-in{gap:12px}
   .status{font-size:.7rem}
 }
+@media (min-width:1500px){#status-text::before{content:"Actualizado "}}
+.status{cursor:help}
