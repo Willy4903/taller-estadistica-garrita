@@ -47,7 +47,10 @@ jobs:
           fi
 
       - name: Versionar archivos estáticos (evita caché del navegador)
-        run: sed -i "s/__V__/$(date +%s)/g" site/index.html
+        run: |
+          V=$(date +%s)
+          sed -i "s/__V__/$V/g" site/index.html
+          echo "$V" > site/version.txt
 
       - uses: actions/configure-pages@v5
         with:
