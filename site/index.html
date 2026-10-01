@@ -49,6 +49,19 @@
     <div class="banner" id="banner" hidden></div>
   </section>
 
+  <section class="hero-car" aria-label="Destacados de hoy">
+    <div class="carousel"><div class="track slides" id="hero-track" tabindex="0"></div></div>
+    <div class="car-ctrl" id="hero-ctrl"></div>
+  </section>
+
+  <nav class="quick" aria-label="Accesos rápidos">
+    <a href="#noticias"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h13v14H6a2 2 0 0 1-2-2V5zM17 8h3v9a2 2 0 0 1-2 2M7 9h7M7 12h7M7 15h4"/></svg><span>Noticias</span></a>
+    <a href="#lanzamientos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h11l-3-3M17 17H6l3 3M18 7l-3 3M6 17l3-3"/></svg><span>Qué cambió</span></a>
+    <a href="#matriz"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM4 10h16M4 15h16M10 4v16"/></svg><span>Matriz</span></a>
+    <a href="#graficas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg><span>Gráficas</span></a>
+    <a href="#comparador"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M5 8h14M5 8l-2 6a3 3 0 0 0 4 0zM19 8l-2 6a3 3 0 0 0 4 0z"/></svg><span>Comparador</span></a>
+  </nav>
+
   <section class="kpis" id="kpis" aria-label="Indicadores"></section>
 
   <section id="noticias">
@@ -61,13 +74,15 @@
       <input type="search" id="n-q" placeholder="Buscar en las noticias" aria-label="Buscar en las noticias">
       <button class="pill" id="n-reset" hidden>Quitar filtros</button>
     </div>
+    <div class="carousel" role="region" aria-roledescription="carrusel" aria-label="Noticias de IA">
+      <div class="track" id="news" tabindex="0"></div>
+    </div>
+    <div class="car-ctrl" id="news-ctrl"></div>
     <div class="grid3">
       <article class="panel"><h3>Noticias por día</h3><p class="sub">Toca una barra para filtrar</p><div class="chart xs"><canvas id="c-n-day"></canvas></div></article>
       <article class="panel"><h3>Por tema</h3><p class="sub">Toca un tema para filtrar</p><div class="chart xs"><canvas id="c-n-topic"></canvas></div></article>
       <article class="panel"><h3>Por fuente</h3><p class="sub">Toca una fuente para filtrar</p><div class="chart xs"><canvas id="c-n-src"></canvas></div></article>
     </div>
-    <div id="news"></div>
-    <button class="btn" id="news-more" hidden>Ver más noticias</button>
   </section>
 
   <section id="resumen">

@@ -471,12 +471,72 @@
     // Por fuente
     const sc = {};
     newsFiltered("source").forEach((n) => { sc[n.source] = (sc[n.source] || 0) + 1; });
-    const sk = Object.keys(sc).sort((a, b) => sc[b] - sc[a]).slice(0, 8);
+    const sk = Object.keys(sc).sort((a, b) => sc[b] - sc[a]).slice(0, 6);
     draw("c-n-src", { type: "bar", data: { labels: sk, datasets: [{ data: sk.map((k) => sc[k]), borderRadius: 3,
         backgroundColor: sk.map((k) => (!news.source || k === news.source ? C.violet : C.violet + "44")) }] },
-      options: { indexAxis: "y", plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } }, y: { grid: { display: false } } },
+      options: { indexAxis: "y", plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } }, y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 11 } } } },
         onClick: (e, els) => { if (els.length) toggle("source", sk[els[0].index]); }, onHover: pointer } });
   }
+
+  // Carrusel reutilizable: avanza solo, se detiene con el cursor encima, con el foco dentro o con el botón de pausa.
+  function createCarousel(track, ctrl, gap, interval) {
+    const st = { page: 0, pages: 1, per: 1, paused: window.matchMedia("(prefers-reduced-motion: reduce)").matches, hover: false };
+    ctrl.innerHTML = '<button class="c-prev" aria-label="Anterior">&#8249;</button><div class="dots" role="tablist" aria-label="Páginas"></div><span class="c-count" aria-live="off"></span>' +
+      '<button class="c-next" aria-label="Siguiente">&#8250;</button><button class="c-play"></button>';
+    const q = (sel) => ctrl.querySelector(sel);
+    const items = () => [...track.children];
+    function measure() {
+      const cs = items();
+      if (!cs.length) { st.per = 1; st.pages = 1; return; }
+      st.per = Math.max(1, Math.round((track.clientWidth + gap) / (cs[0].offsetWidth + gap)));
+      st.pages = Math.max(1, Math.ceil(cs.length / st.per));
+    }
+    function draw() {
+      q(".dots").innerHTML = Array.from({ length: st.pages }, (_, i) =>
+        `<button role="tab" class="${i === st.page ? "on" : ""}" aria-selected="${i === st.page}" aria-label="Página ${i + 1} de ${st.pages}" data-i="${i}"></button>`).join("");
+      q(".c-count").textContent = (st.page + 1) + " / " + st.pages;
+      ctrl.hidden = st.pages <= 1;
+    }
+    function go(page, smooth) {
+      measure();
+      st.page = ((page % st.pages) + st.pages) % st.pages;
+      const c = items()[st.page * st.per];
+      if (c) track.scrollTo({ left: c.offsetLeft - track.offsetLeft, behavior: smooth === false ? "auto" : "smooth" });
+      draw();
+    }
+    function setPaused(p) {
+      st.paused = p;
+      const b = q(".c-play");
+      b.innerHTML = p ? "&#9654;" : "&#10074;&#10074;";
+      b.setAttribute("aria-label", p ? "Reanudar el avance automático" : "Pausar el avance automático");
+    }
+    let timer;
+    const restart = () => { clearInterval(timer); timer = setInterval(() => { if (!st.paused && !st.hover && !document.hidden) go(st.page + 1); }, interval); };
+    setPaused(st.paused);
+    q(".c-prev").addEventListener("click", () => { go(st.page - 1); restart(); });
+    q(".c-next").addEventListener("click", () => { go(st.page + 1); restart(); });
+    q(".c-play").addEventListener("click", () => setPaused(!st.paused));
+    q(".dots").addEventListener("click", (e) => { const i = e.target.dataset && e.target.dataset.i; if (i != null) { go(+i); restart(); } });
+    const box = track.parentElement.parentElement;
+    ["mouseenter", "focusin"].forEach((ev) => box.addEventListener(ev, () => { st.hover = true; }));
+    ["mouseleave", "focusout"].forEach((ev) => box.addEventListener(ev, () => { st.hover = false; }));
+    track.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); go(st.page + 1); } else if (e.key === "ArrowLeft") { e.preventDefault(); go(st.page - 1); }
+    });
+    let t;
+    track.addEventListener("scroll", () => {  // sincroniza los puntos cuando se desliza con el dedo o la rueda
+      clearTimeout(t);
+      t = setTimeout(() => {
+        measure();
+        const p = Math.min(st.pages - 1, Math.round(track.scrollLeft / (track.clientWidth + gap)));
+        if (p !== st.page) { st.page = p; draw(); }
+      }, 120);
+    }, { passive: true });
+    window.addEventListener("resize", () => go(st.page, false));
+    restart();
+    return { reset() { track.scrollLeft = 0; go(0, false); } };
+  }
+  let newsCar = null;
 
   function renderNewsList() {
     const list = newsFiltered();
@@ -486,23 +546,20 @@
       ". Titulares traducidos al español, con enlace a la fuente original.";
     $("#n-reset").hidden = !(news.topic || news.source || news.day || news.q);
     if (!list.length) {
-      box.innerHTML = '<p class="news-empty">No hay noticias con estos filtros. Prueba ampliar el periodo o quitar filtros.</p>';
-      $("#news-more").hidden = true;
+      box.innerHTML = '<p class="news-empty" style="width:100%">No hay noticias con estos filtros. Prueba ampliar el periodo o quitar filtros.</p>';
+      if (newsCar) newsCar.reset();
       return;
     }
-    let group = "", html = "";
-    list.slice(0, news.shown).forEach((n) => {
-      const [g, rel] = relLabel(n.published);
-      if (g !== group) { group = g; html += `<h3 class="news-group">${esc(g)}</h3>`; }
+    box.innerHTML = list.slice(0, 30).map((n) => {
+      const [, rel] = relLabel(n.published);
       const tp = topicOf(n);
       const when = new Date(n.published).toLocaleString("es-PE", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
       const orig = n.title_es ? ` title="Original: ${esc(n.title)}"` : "";
-      html += `<article class="news-item"><div class="news-src"><span class="provtag">${newsIcon(n)}<span>${esc(n.source)}</span></span><time datetime="${esc(n.published)}" title="${esc(when)}">${esc(rel)}</time></div>
-        <div><a class="t" href="${esc(n.link)}" target="_blank" rel="noopener noreferrer"${orig}>${esc(tTitle(n))}</a>${tSummary(n) ? `<p>${esc(tSummary(n))}</p>` : ""}
-        <div class="chips"><span class="chip tp" style="color:${TOPIC_COLORS[tp]}">${esc(TOPIC_NAMES[tp])}</span>${n.title_es ? "" : '<span class="chip">Original en inglés</span>'}</div></div></article>`;
-    });
-    box.innerHTML = html;
-    $("#news-more").hidden = list.length <= news.shown;
+      return `<article class="news-card"><div class="news-src"><span class="provtag">${newsIcon(n)}<span>${esc(n.source)}</span></span><time datetime="${esc(n.published)}" title="${esc(when)}">${esc(rel)}</time></div>
+        <a class="t" href="${esc(n.link)}" target="_blank" rel="noopener noreferrer"${orig}>${esc(tTitle(n))}</a>${tSummary(n) ? `<p>${esc(tSummary(n))}</p>` : ""}
+        <div class="chips"><span class="chip tp" style="color:${TOPIC_COLORS[tp]}">${esc(TOPIC_NAMES[tp])}</span>${n.title_es ? "" : '<span class="chip">Original en inglés</span>'}</div></article>`;
+    }).join("");
+    if (newsCar) newsCar.reset();
   }
 
   function renderNewsPanel() {
@@ -514,15 +571,34 @@
   function initNews(data) {
     news.items = (data && data.items) || [];
     if (!news.items.length) {
-      $("#news").innerHTML = '<p class="news-empty">Aún no hay noticias cargadas. Aparecerán tras la próxima actualización diaria (6:00 am, hora de Lima).</p>';
+      $("#news-ctrl").hidden = true;
+      $("#news").innerHTML = '<p class="news-empty" style="width:100%">Aún no hay noticias cargadas. Aparecerán tras la próxima actualización diaria (6:00 am, hora de Lima).</p>';
       return;
     }
     // Si hoy no hay noticias, parte del periodo de 7 días; si hay muchas hoy, igualmente se ve el contexto semanal.
     document.querySelectorAll("#n-period button").forEach((b) => b.addEventListener("click", () => { news.period = +b.dataset.p; news.day = ""; news.shown = 12; renderNewsPanel(); }));
     $("#n-q").addEventListener("input", (e) => { news.q = e.target.value; news.shown = 12; renderNewsPanel(); });
     $("#n-reset").addEventListener("click", () => { news.topic = news.source = news.day = news.q = ""; $("#n-q").value = ""; news.shown = 12; renderNewsPanel(); });
-    $("#news-more").addEventListener("click", () => { news.shown += 12; renderNewsList(); });
+    newsCar = createCarousel($("#news"), $("#news-ctrl"), 16, 6000);
     renderNewsPanel();
+  }
+
+  // ---- Banner de destacados ----
+  function renderHero(meta) {
+    const slides = [];
+    const link = (href, txt, ext = "") => `<a class="cta" href="${href}"${ext}>${txt}</a>`;
+    const head = $("#headline").textContent;
+    if (head) slides.push(`<div class="k">Resumen de hoy</div><p class="big">${esc(head)}</p>${link("#resumen", "Ver las conclusiones")}`);
+    const top = news.items.find((n) => n.kind === "lab" && ageDays(n.published) <= 1) || news.items[0];
+    if (top) slides.push(`<div class="k">Noticia destacada</div><p class="big">${esc(tTitle(top))}</p><span class="tg">${newsIcon(top)}<span>${esc(top.source)} · ${esc(relLabel(top.published)[1])}</span></span>${link(esc(top.link), "Leer la fuente", ' target="_blank" rel="noopener noreferrer"')}`);
+    const cut = versionPairs(models.filter(isMajor)).filter((p) => p.dIn != null && p.dIn <= -10).sort((x, y) => x.dIn - y.dIn)[0];
+    if (cut) slides.push(`<div class="k">Mayor recorte de precio</div><p class="big">${esc(cut.cur.name)}: ${cut.dIn}% en el precio de entrada</p><p class="sm">De ${esc(fmtPrice(cut.prev.price_in))} a ${esc(fmtPrice(cut.cur.price_in))} por millón de tokens frente a ${esc(cut.prev.name.replace(/^[^:]+: /, ""))}.</p>${link("#lanzamientos", "Ver qué cambió")}`);
+    const cm = currentModels();
+    if (cm.length) slides.push(`<div class="k">Matriz de comparación</div><p class="big">${cm.length} modelos comparables en tres gamas de precio</p><p class="sm">Gama alta, media y económicos, con el mejor valor de cada criterio resaltado.</p>${link("#matriz", "Abrir la matriz")}`);
+    const box = $("#hero-track");
+    if (!slides.length) { box.closest(".hero-car").hidden = true; return; }
+    box.innerHTML = slides.map((h) => `<article class="slide${h.length > 260 ? " long" : ""}">${h}</article>`).join("");
+    createCarousel(box, $("#hero-ctrl"), 0, 7000).reset();
   }
 
   async function init() {
@@ -537,6 +613,7 @@
     renderInsights(data.meta);
     renderVersions();
     initMatrix();
+    renderHero(data.meta);
     renderCharts(hist);
     renderHF(data.hf || []);
     bindTable();
