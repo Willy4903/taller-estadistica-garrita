@@ -12,6 +12,36 @@
   const daysAgo = (d) => Math.floor((Date.now() - new Date(d + "T12:00:00")) / 864e5);
   const median = (a) => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
 
+
+  // slug de OpenRouter -> [archivo de icono, nombre visible, color]
+  const PROV = {
+    openai: ["openai", "OpenAI", "#10a37f"], anthropic: ["anthropic", "Anthropic", "#d97757"], google: ["google", "Google", "#4285f4"],
+    "meta-llama": ["meta", "Meta", "#0866ff"], mistralai: ["mistral", "Mistral AI", "#fa520f"], deepseek: ["deepseek", "DeepSeek", "#4d6bfe"],
+    qwen: ["qwen", "Qwen", "#615ced"], "x-ai": ["xai", "xAI"], cohere: ["cohere", "Cohere", "#39a98c"], microsoft: ["microsoft", "Microsoft", "#00a4ef"],
+    nvidia: ["nvidia", "NVIDIA", "#76b900"], amazon: ["aws", "Amazon", "#ff9900"], perplexity: ["perplexity", "Perplexity", "#22b8cd"],
+    moonshotai: ["moonshot", "Moonshot AI"], "z-ai": ["zai", "Z.ai"], minimax: ["minimax", "MiniMax", "#f23f5d"], ai21: ["ai21", "AI21 Labs", "#e91e63"],
+    baidu: ["baidu", "Baidu", "#2932e1"], tencent: ["tencent", "Tencent", "#0052d9"], bytedance: ["bytedance", "ByteDance", "#3c8cff"],
+    "bytedance-seed": ["bytedance", "ByteDance Seed", "#3c8cff"], stepfun: ["stepfun", "StepFun", "#3b82f6"], inflection: ["inflection", "Inflection"],
+    nousresearch: ["nousresearch", "Nous Research"], liquid: ["liquid", "Liquid AI"], "ibm-granite": ["ibm", "IBM", "#4589ff"], "arcee-ai": ["arcee", "Arcee AI", "#a78bfa"],
+    inception: ["inception", "Inception"], openrouter: ["openrouter", "OpenRouter", "#6566f1"], huggingface: ["huggingface", "Hugging Face", "#ffd21e"],
+    meta: ["meta", "Meta", "#0866ff"], xiaomi: ["xiaomimimo", "Xiaomi", "#ff6900"], "aion-labs": ["aionlabs", "Aion Labs"], inclusionai: ["antgroup", "inclusionAI", "#1677ff"],
+    morph: ["morph", "Morph"], perceptron: ["perceptron", "Perceptron"], poolside: ["poolside", "Poolside"], relace: ["relace", "Relace"], sakana: ["sakana", "Sakana AI"],
+    upstage: ["upstage", "Upstage", "#7c5cff"],
+    alibaba: ["alibaba", "Alibaba", "#ff6a00"], thudm: ["zhipu", "Zhipu AI", "#3b82f6"], apple: ["apple", "Apple"], rekaai: ["reka", "Reka"],
+  };
+  const norm = (slug) => String(slug).replace(/^~/, "");
+  const provName = (slug) => (PROV[norm(slug)] ? PROV[norm(slug)][1] : norm(slug));
+  function provIcon(slug) {
+    slug = norm(slug);
+    const p = PROV[slug];
+    if (p) {
+      const col = p[2] ? "--c:" + p[2] + ";" : "";
+      return `<span class="pi" style="${col}-webkit-mask-image:url(icons/${p[0]}.svg);mask-image:url(icons/${p[0]}.svg)" role="img" aria-label="${esc(p[1])}"></span>`;
+    }
+    return `<span class="pi mono" aria-hidden="true">${esc((slug[0] || "?").toUpperCase())}</span>`;
+  }
+  const provTag = (slug) => `<span class="provtag">${provIcon(slug)}<span>${esc(provName(slug))}</span></span>`;
+
   const C = { cyan: "#22d3ee", violet: "#a78bfa", pink: "#f472b6", green: "#34d399", amber: "#fbbf24" };
   const charts = {};
   function theme() {
@@ -79,7 +109,7 @@
   function renderLatest(meta) {
     $("#latest").innerHTML = models.slice(0, 12).map((m) => {
       const isNew = !meta.sample && daysAgo(m.first_seen) <= 2 && m.first_seen !== m.created;
-      return `<article class="card"><div class="prov">${esc(m.provider)}</div><h4>${esc(m.name)}</h4>
+      return `<article class="card"><div class="prov">${provTag(m.provider)}</div><h4>${esc(m.name)}</h4>
         <div class="meta"><span>${esc(fmtDate(m.created))}</span><span>Contexto <b>${esc(fmtCtx(m.context))}</b></span>
         <span>Entrada <b>${esc(fmtPrice(m.price_in))}</b></span><span>Salida <b>${esc(fmtPrice(m.price_out))}</b></span></div>
         <div class="chips">${chips(m, isNew)}</div></article>`;
@@ -103,7 +133,7 @@
     const cnt = {};
     models.filter((m) => daysAgo(m.created) <= 90).forEach((m) => { cnt[m.provider] = (cnt[m.provider] || 0) + 1; });
     const top = Object.entries(cnt).sort((a, b) => b[1] - a[1]).slice(0, 10);
-    draw("c-providers", { type: "bar", data: { labels: top.map((t) => t[0]), datasets: [{ data: top.map((t) => t[1]), backgroundColor: C.cyan, borderRadius: 4 }] },
+    draw("c-providers", { type: "bar", data: { labels: top.map((t) => provName(t[0])), datasets: [{ data: top.map((t) => t[1]), backgroundColor: C.cyan, borderRadius: 4 }] },
       options: { indexAxis: "y", plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } }, y: { grid: { display: false } } } } });
 
     // Precio vs contexto
@@ -137,7 +167,7 @@
   function filtered() {
     const q = $("#q").value.trim().toLowerCase(), p = $("#prov").value, f = $("#flt").value;
     return models.filter((m) =>
-      (!q || m.name.toLowerCase().includes(q) || m.id.toLowerCase().includes(q)) && (!p || m.provider === p) &&
+      (!q || m.name.toLowerCase().includes(q) || m.id.toLowerCase().includes(q) || provName(m.provider).toLowerCase().includes(q)) && (!p || m.provider === p) &&
       (!f || (f === "multimodal" && m.multimodal) || (f === "reasoning" && m.reasoning) || (f === "free" && m.price_in === 0 && m.price_out === 0)));
   }
   function renderTable() {
@@ -153,7 +183,7 @@
     $("#count").textContent = nf.format(rows.length) + " modelos";
     $("#tbl tbody").innerHTML = rows.slice(0, state.shown).map((m) => `<tr>
       <td><input type="checkbox" data-id="${esc(m.id)}" aria-label="Comparar ${esc(m.name)}" ${state.picked.includes(m.id) ? "checked" : ""}></td>
-      <td class="nm">${esc(m.name)}<small>${esc(m.id)}</small></td><td>${esc(m.provider)}</td><td>${esc(fmtDate(m.created))}</td>
+      <td class="nm">${esc(m.name)}<small>${esc(m.id)}</small></td><td>${provTag(m.provider)}</td><td>${esc(fmtDate(m.created))}</td>
       <td class="num">${esc(fmtCtx(m.context))}</td><td class="num">${esc(fmtPrice(m.price_in))}</td><td class="num">${esc(fmtPrice(m.price_out))}</td>
       <td><div class="chips" style="margin:0">${chips(m, false)}</div></td></tr>`).join("");
     $("#more").hidden = rows.length <= state.shown;
@@ -176,14 +206,14 @@
     draw("c-cmp-ctx", { type: "bar", data: { labels, datasets: [{ data: sel.map((m) => m.context), backgroundColor: sel.map((_, i) => cols[i]), borderRadius: 4 }] },
       options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: (v) => fmtAxis(v) } }, x: { grid: { display: false } } } } });
     const row = (l, f) => `<tr><th scope="row">${l}</th>${sel.map((m) => `<td>${f(m)}</td>`).join("")}</tr>`;
-    $("#cmp-table").innerHTML = row("Modelo", (m) => esc(m.name)) + row("Proveedor", (m) => esc(m.provider)) + row("Lanzamiento", (m) => esc(fmtDate(m.created))) +
+    $("#cmp-table").innerHTML = row("Modelo", (m) => esc(m.name)) + row("Proveedor", (m) => provTag(m.provider)) + row("Lanzamiento", (m) => esc(fmtDate(m.created))) +
       row("Contexto", (m) => esc(fmtCtx(m.context))) + row("Entrada $/M", (m) => esc(fmtPrice(m.price_in))) + row("Salida $/M", (m) => esc(fmtPrice(m.price_out))) +
       row("Multimodal", (m) => (m.multimodal ? "Sí (" + esc(m.inputs.join(", ")) + ")" : "No")) + row("Razonamiento", (m) => (m.reasoning ? "Sí" : "No"));
   }
 
   function bindTable() {
     const provs = [...new Set(models.map((m) => m.provider))].sort();
-    $("#prov").insertAdjacentHTML("beforeend", provs.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join(""));
+    $("#prov").insertAdjacentHTML("beforeend", provs.map((p) => `<option value="${esc(p)}">${esc(provName(p))}</option>`).join(""));
     ["#q", "#prov", "#flt"].forEach((s) => $(s).addEventListener("input", () => { state.shown = 25; renderTable(); }));
     $("#more").addEventListener("click", () => { state.shown += 50; renderTable(); });
     document.querySelectorAll("#tbl th[data-k]").forEach((th) => {
