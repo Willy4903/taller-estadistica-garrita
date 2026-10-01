@@ -65,7 +65,7 @@
     } catch (e) { return fallback; }
   }
 
-  let models = [], state = { sort: "created", asc: false, shown: 25, picked: [] };
+  let models = [], allCount = 0, state = { sort: "created", asc: false, shown: 25, picked: [] };
 
   function renderStatus(meta) {
     const upd = new Date(meta.updated_at);
@@ -87,9 +87,9 @@
     const prices = models.filter((m) => daysAgo(m.created) <= 180 && m.price_in > 0).map((m) => m.price_in);
     const provs = new Set(recent.map((m) => m.provider));
     const prev = hist.length > 1 ? hist[hist.length - 2] : null;
-    const delta = prev ? models.length - prev.total : null;
+    const delta = prev ? allCount - prev.total : null;
     const items = [
-      [nf.format(models.length), "modelos en el catálogo" + (delta ? " (" + (delta > 0 ? "+" : "") + delta + " vs. ayer)" : "")],
+      [nf.format(allCount), "modelos en el catálogo" + (delta ? " (" + (delta > 0 ? "+" : "") + delta + " vs. ayer)" : "")],
       [nf.format(recent.length), "lanzados en los últimos 30 días"],
       [nf.format(provs.size), "proveedores activos en 30 días"],
       [prices.length ? "$" + median(prices).toFixed(2) : "n/d", "precio mediano de entrada por millón de tokens (180 días)"],
@@ -112,8 +112,108 @@
       return `<article class="card"><div class="prov">${provTag(m.provider)}</div><h4>${esc(m.name)}</h4>
         <div class="meta"><span>${esc(fmtDate(m.created))}</span><span>Contexto <b>${esc(fmtCtx(m.context))}</b></span>
         <span>Entrada <b>${esc(fmtPrice(m.price_in))}</b></span><span>Salida <b>${esc(fmtPrice(m.price_out))}</b></span></div>
-        <div class="chips">${chips(m, isNew)}</div></article>`;
+        ${cardInsight(m)}<div class="chips">${chips(m, isNew)}</div></article>`;
     }).join("");
+  }
+
+  // ---- Conclusiones ----
+  // Excluye variantes (:batch, alias "~", enrutadores) para no contar dos veces el mismo modelo.
+  function baseModels(list) {
+    const ids = new Set(list.map((m) => m.id));
+    return list.filter((m) => {
+      if (m.id.startsWith("~") || m.provider === "openrouter" || m.id.endsWith(":batch")) return false;
+      const root = m.id.split(":")[0];
+      return !(m.id.includes(":") && ids.has(root));
+    });
+  }
+  const between = (list, a, b) => list.filter((m) => { const d = daysAgo(m.created); return d >= a && d < b; });
+  const pct = (cur, prev) => (prev ? Math.round(((cur - prev) / prev) * 100) : null);
+  const signed = (n) => (n > 0 ? "+" : "") + n + "%";
+  const paid = (list) => list.filter((m) => m.price_in > 0);
+  let refPrice = null, refCtx = null;
+
+  function cardInsight(m) {
+    const parts = [];
+    if (m.price_in === 0 && m.price_out === 0) parts.push("Sin costo de uso");
+    else if (m.price_in > 0 && refPrice) {
+      const diff = Math.round((1 - m.price_in / refPrice) * 100);
+      if (diff >= 15) parts.push(`<span class="up">${diff}% más barato</span> que la mediana`);
+      else if (diff <= -100) parts.push(`<span class="down">${(m.price_in / refPrice).toFixed(1).replace(".0", "")}x</span> la mediana de precio`);
+      else if (diff <= -15) parts.push(`<span class="down">${Math.abs(diff)}% más caro</span> que la mediana`);
+      else parts.push("Precio en la mediana");
+    }
+    if (m.context && refCtx) {
+      const r = m.context / refCtx;
+      if (r >= 2) parts.push(`contexto ${r >= 10 ? Math.round(r) : r.toFixed(1)}x la mediana`);
+      else if (r <= 0.5) parts.push("contexto corto");
+    }
+    return parts.length ? `<p class="ins">${parts.join(" · ")}</p>` : "";
+  }
+
+  function renderInsights(meta) {
+    const d30 = between(models, 0, 30), p30 = between(models, 30, 60);
+    const recentPaid = paid(between(models, 0, 180));
+    refPrice = median(recentPaid.map((m) => m.price_in));
+    refCtx = median(between(models, 0, 180).map((m) => m.context).filter(Boolean));
+    const cards = [];
+    const headline = [];
+
+    // Ritmo
+    const rate = pct(d30.length, p30.length);
+    cards.push({ k: "Ritmo de lanzamientos", v: d30.length, u: "modelos en 30 días",
+      t: rate == null ? "Sin periodo anterior para comparar." : `${signed(rate)} frente a los 30 días previos (${p30.length}).`, tone: rate == null ? "" : rate >= 0 ? "up" : "down" });
+    headline.push(`En los últimos 30 días se lanzaron ${d30.length} modelos` + (rate == null ? "" : ` (${signed(rate)} vs. el periodo anterior)`));
+
+    // Proveedor líder
+    const cnt = {};
+    d30.forEach((m) => { cnt[m.provider] = (cnt[m.provider] || 0) + 1; });
+    const lead = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0];
+    if (lead) {
+      const share = Math.round((lead[1] / d30.length) * 100);
+      cards.push({ k: "Quién marca el ritmo", v: provName(lead[0]), vhtml: provTag(lead[0]), u: `${lead[1]} lanzamientos`, t: `Concentra ${share}% de los modelos nuevos de los últimos 30 días.` });
+      headline.push(`${provName(lead[0])} lidera con ${lead[1]}`);
+    }
+
+    // Precio de los nuevos
+    const newPrice = median(paid(d30).map((m) => m.price_in));
+    const oldPrice = median(paid(between(models, 30, 120)).map((m) => m.price_in));
+    if (newPrice != null && oldPrice != null) {
+      const ch = pct(newPrice, oldPrice);
+      cards.push({ k: "Precio de los nuevos", v: "$" + newPrice.toFixed(2), u: "mediana de entrada por millón de tokens",
+        t: `${ch <= 0 ? "Son " + Math.abs(ch) + "% más baratos" : "Son " + ch + "% más caros"} que los lanzados entre 30 y 120 días atrás ($${oldPrice.toFixed(2)}).`, tone: ch <= 0 ? "up" : "down" });
+      headline.push(`los nuevos cuestan ${Math.abs(ch)}% ${ch <= 0 ? "menos" : "más"} que los anteriores`);
+    }
+
+    // Mejor valor reciente
+    const value = paid(d30).filter((m) => m.context >= 128000).sort((a, b) => a.price_in - b.price_in)[0];
+    if (value) cards.push({ k: "Mejor valor reciente", v: "$" + value.price_in.toFixed(3), u: value.name,
+      t: `El más barato de pago entre los nuevos con 128K de contexto o más (${fmtCtx(value.context)}).`, prov: value.provider });
+
+    // Contexto máximo
+    const big = [...d30].sort((a, b) => b.context - a.context)[0];
+    if (big && big.context) cards.push({ k: "Mayor contexto reciente", v: fmtCtx(big.context), u: big.name,
+      t: `${(big.context / refCtx).toFixed(1)} veces la mediana de los últimos 180 días (${fmtCtx(refCtx)}).`, prov: big.provider });
+
+    // Capacidades
+    const share = (list, f) => (list.length ? Math.round((list.filter(f).length / list.length) * 100) : null);
+    const mmNow = share(d30, (m) => m.multimodal), mmPrev = share(p30, (m) => m.multimodal);
+    const rsNow = share(d30, (m) => m.reasoning), rsPrev = share(p30, (m) => m.reasoning);
+    if (mmNow != null) {
+      const dm = mmPrev == null ? "" : ` (${mmNow - mmPrev >= 0 ? "+" : ""}${mmNow - mmPrev} pts vs. periodo previo)`;
+      cards.push({ k: "Capacidades", v: mmNow + "%", u: "de los nuevos son multimodales",
+        t: `${rsNow}% incorpora razonamiento${rsPrev == null ? "" : ` (antes ${rsPrev}%)`}.${dm ? " Multimodales" + dm.replace(/^ \(/, ": ").replace(/\)$/, "") + "." : ""}` });
+    }
+
+    // Hoy
+    const today = meta.new_today || 0;
+    const todayText = today > 0
+      ? `Hoy se sumaron ${today} modelo${today > 1 ? "s" : ""} al catálogo: ${models.filter((m) => m.first_seen === meta.updated_date).slice(0, 3).map((m) => m.name).join(", ")}.`
+      : "Hoy no se detectaron modelos nuevos respecto a la actualización anterior.";
+
+    $("#headline").textContent = headline.join("; ") + ".";
+    $("#today").textContent = meta.sample ? "" : todayText;
+    $("#insights").innerHTML = cards.map((c) => `<article class="ins-card ${c.tone || ""}"><span class="ins-k">${esc(c.k)}</span>
+      <b class="ins-v">${c.vhtml || esc(c.v)}</b><span class="ins-u">${c.prov ? provTag(c.prov) + " " : ""}${esc(c.u)}</span><p>${esc(c.t)}</p></article>`).join("");
   }
 
   function renderCharts(hist) {
@@ -237,9 +337,11 @@
     theme();
     const [data, hist] = await Promise.all([load("data/latest.json", null), load("data/history.json", [])]);
     if (!data || !data.models) { $("#status-text").textContent = "Sin datos"; return; }
-    models = data.models;
+    allCount = data.models.length;
+    models = baseModels(data.models);
     renderStatus(data.meta);
     renderKpis(data.meta, hist);
+    renderInsights(data.meta);
     renderLatest(data.meta);
     renderCharts(hist);
     renderHF(data.hf || []);
