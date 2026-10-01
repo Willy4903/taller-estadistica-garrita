@@ -6,6 +6,7 @@
 <title>IA Radar | Últimos modelos de inteligencia artificial</title>
 <meta name="description" content="Panel diario con los últimos modelos de IA, comparaciones de precio y contexto, y gráficas de tendencias. Se actualiza todos los días a las 6:00 am (hora de Lima).">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1020'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%2322d3ee' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%23a78bfa'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add("js");</script>
 <script>
 // Si hay una versión más nueva publicada, recarga una vez saltándose la copia guardada del navegador.
 (function () {
@@ -20,7 +21,8 @@
 <link rel="stylesheet" href="style.css?v=__V__">
 </head>
 <body>
-<div class="bg-grid" aria-hidden="true"></div>
+<div id="progress" aria-hidden="true"></div>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
 
 <header class="top">
   <div class="wrap top-in">
@@ -28,7 +30,7 @@
       <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" fill="none" stroke="url(#g)" stroke-width="2.5"/><circle cx="16" cy="16" r="3.5" fill="url(#g)"/><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs></svg>
       <span>IA Radar</span>
     </a>
-    <nav>
+    <nav class="main" aria-label="Secciones">
       <a href="#noticias">Noticias</a>
       <a href="#resumen">Resumen</a>
       <a href="#lanzamientos">Qué cambió</a>
@@ -55,45 +57,50 @@
   </section>
 
   <nav class="quick" aria-label="Accesos rápidos">
-    <a href="#noticias"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h13v14H6a2 2 0 0 1-2-2V5zM17 8h3v9a2 2 0 0 1-2 2M7 9h7M7 12h7M7 15h4"/></svg><span>Noticias</span></a>
-    <a href="#lanzamientos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h11l-3-3M17 17H6l3 3M18 7l-3 3M6 17l3-3"/></svg><span>Qué cambió</span></a>
-    <a href="#matriz"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM4 10h16M4 15h16M10 4v16"/></svg><span>Matriz</span></a>
-    <a href="#graficas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg><span>Gráficas</span></a>
-    <a href="#comparador"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M5 8h14M5 8l-2 6a3 3 0 0 0 4 0zM19 8l-2 6a3 3 0 0 0 4 0z"/></svg><span>Comparador</span></a>
+    <a class="fx" href="#noticias" style="--a:#22d3ee" data-tip="Noticias de IA
+Titulares del día de laboratorios y prensa, traducidos al español, con filtros por tema y fuente."><span class="qi"><i class="ui" style="--i:url(icons/ui/newspaper.svg)" aria-hidden="true"></i></span><b>Noticias</b><small>13 fuentes, traducidas</small></a>
+    <a class="fx" href="#lanzamientos" style="--a:#8b5cf6" data-tip="Qué cambió
+Cada lanzamiento reciente frente a la versión anterior de su familia: precio, contexto y capacidades."><span class="qi"><i class="ui" style="--i:url(icons/ui/git-compare.svg)" aria-hidden="true"></i></span><b>Qué cambió</b><small>Nuevo vs. anterior</small></a>
+    <a class="fx" href="#matriz" style="--a:#f43f9e" data-tip="Matriz de comparación
+Modelos vigentes de los laboratorios principales, agrupados por gama de precio."><span class="qi"><i class="ui" style="--i:url(icons/ui/table-2.svg)" aria-hidden="true"></i></span><b>Matriz</b><small>Modelos por gama</small></a>
+    <a class="fx" href="#graficas" style="--a:#fbbf24" data-tip="Gráficas
+Lanzamientos por mes, proveedores activos y relación entre precio y contexto."><span class="qi"><i class="ui" style="--i:url(icons/ui/chart-column.svg)" aria-hidden="true"></i></span><b>Gráficas</b><small>Tendencias</small></a>
+    <a class="fx" href="#comparador" style="--a:#34d399" data-tip="Comparador
+Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."><span class="qi"><i class="ui" style="--i:url(icons/ui/scale.svg)" aria-hidden="true"></i></span><b>Comparador</b><small>Elige hasta 4</small></a>
   </nav>
 
   <section class="kpis" id="kpis" aria-label="Indicadores"></section>
 
-  <section id="noticias">
-    <h2><span class="tag">01</span> Panel de noticias de IA</h2>
+  <section id="noticias" class="rv">
+    <h2><span class="hi" style="--a:#22d3ee"><i class="ui" style="--i:url(icons/ui/newspaper.svg)" aria-hidden="true"></i></span> Panel de noticias de IA</h2>
     <p class="sub" id="news-sub">Titulares de laboratorios y prensa especializada, traducidos al español.</p>
     <div class="panel-bar">
       <div class="seg" id="n-period" role="group" aria-label="Periodo">
         <button data-p="1">Hoy</button><button data-p="7" class="on">7 días</button><button data-p="30">30 días</button>
       </div>
-      <input type="search" id="n-q" placeholder="Buscar en las noticias" aria-label="Buscar en las noticias">
-      <button class="pill" id="n-reset" hidden>Quitar filtros</button>
+      <label class="search"><i class="ui" style="--i:url(icons/ui/search.svg)" aria-hidden="true"></i><input type="search" id="n-q" placeholder="Buscar en las noticias" aria-label="Buscar en las noticias"></label>
+      <button class="pill" id="n-reset" hidden><i class="ui" style="--i:url(icons/ui/x.svg)" aria-hidden="true"></i> Quitar filtros</button>
     </div>
     <div class="carousel" role="region" aria-roledescription="carrusel" aria-label="Noticias de IA">
       <div class="track" id="news" tabindex="0"></div>
     </div>
     <div class="car-ctrl" id="news-ctrl"></div>
     <div class="grid3">
-      <article class="panel"><h3>Noticias por día</h3><p class="sub">Toca una barra para filtrar</p><div class="chart xs"><canvas id="c-n-day"></canvas></div></article>
-      <article class="panel"><h3>Por tema</h3><p class="sub">Toca un tema para filtrar</p><div class="chart xs"><canvas id="c-n-topic"></canvas></div></article>
-      <article class="panel"><h3>Por fuente</h3><p class="sub">Toca una fuente para filtrar</p><div class="chart xs"><canvas id="c-n-src"></canvas></div></article>
+      <article class="panel fx" style="--a:#22d3ee"><h3>Noticias por día</h3><p class="sub">Toca una barra para filtrar</p><div class="chart xs"><canvas id="c-n-day"></canvas></div></article>
+      <article class="panel fx" style="--a:#8b5cf6"><h3>Por tema</h3><p class="sub">Toca un tema para filtrar</p><div class="chart xs"><canvas id="c-n-topic"></canvas></div></article>
+      <article class="panel fx" style="--a:#f43f9e"><h3>Por fuente</h3><p class="sub">Toca una fuente para filtrar</p><div class="chart xs"><canvas id="c-n-src"></canvas></div></article>
     </div>
   </section>
 
-  <section id="resumen">
-    <h2><span class="tag">02</span> Lo que dicen los datos hoy</h2>
+  <section id="resumen" class="rv">
+    <h2><span class="hi" style="--a:#8b5cf6"><i class="ui" style="--i:url(icons/ui/sparkles.svg)" aria-hidden="true"></i></span> Lo que dicen los datos hoy</h2>
     <p class="headline" id="headline"></p>
     <p class="today" id="today"></p>
     <div class="ins-grid" id="insights"></div>
   </section>
 
-  <section id="lanzamientos">
-    <h2><span class="tag">03</span> Nuevas versiones: qué cambió</h2>
+  <section id="lanzamientos" class="rv">
+    <h2><span class="hi" style="--a:#f43f9e"><i class="ui" style="--i:url(icons/ui/git-compare.svg)" aria-hidden="true"></i></span> Nuevas versiones: qué cambió</h2>
     <p class="sub">Cada lanzamiento reciente de los laboratorios principales frente a la versión anterior de su misma familia. Precios en USD por millón de tokens; el verde indica que mejora.</p>
     <div class="table-wrap">
       <table id="versions">
@@ -103,8 +110,8 @@
     </div>
   </section>
 
-  <section id="matriz">
-    <h2><span class="tag">04</span> Matriz de comparación por gama</h2>
+  <section id="matriz" class="rv">
+    <h2><span class="hi" style="--a:#fb923c"><i class="ui" style="--i:url(icons/ui/table-2.svg)" aria-hidden="true"></i></span> Matriz de comparación por gama</h2>
     <p class="sub">Modelos vigentes (últimos 150 días) de los laboratorios principales, agrupados por gama de precio para comparar solo lo comparable. El verde más intenso marca el mejor valor de cada columna.</p>
     <div class="panel-bar">
       <div class="seg" id="mx-tier" role="group" aria-label="Gama">
@@ -124,28 +131,28 @@
     <p class="sub" id="mx-note"></p>
   </section>
 
-  <section id="graficas">
-    <h2><span class="tag">05</span> Gráficas</h2>
+  <section id="graficas" class="rv">
+    <h2><span class="hi" style="--a:#fbbf24"><i class="ui" style="--i:url(icons/ui/chart-column.svg)" aria-hidden="true"></i></span> Gráficas</h2>
     <div class="grid2">
-      <article class="panel"><h3>Lanzamientos por mes</h3><p class="sub">Últimos 12 meses, texto frente a multimodal</p><div class="chart"><canvas id="c-releases"></canvas></div></article>
-      <article class="panel"><h3>Proveedores más activos</h3><p class="sub">Modelos lanzados en los últimos 90 días</p><div class="chart"><canvas id="c-providers"></canvas></div></article>
-      <article class="panel"><h3>Precio frente a contexto</h3><p class="sub">Modelos de los últimos 180 días (escala logarítmica)</p><div class="chart"><canvas id="c-scatter"></canvas></div></article>
-      <article class="panel"><h3>Evolución del catálogo</h3><p class="sub" id="hist-sub">Un punto por cada actualización diaria</p><div class="chart"><canvas id="c-history"></canvas></div><p class="empty" id="hist-empty" hidden>El historial se acumula día a día. Vuelve en unos días para ver la tendencia.</p></article>
+      <article class="panel fx" style="--a:#fbbf24"><h3>Lanzamientos por mes</h3><p class="sub">Últimos 12 meses, texto frente a multimodal</p><div class="chart"><canvas id="c-releases"></canvas></div></article>
+      <article class="panel fx" style="--a:#34d399"><h3>Proveedores más activos</h3><p class="sub">Modelos lanzados en los últimos 90 días</p><div class="chart"><canvas id="c-providers"></canvas></div></article>
+      <article class="panel fx" style="--a:#fb923c"><h3>Precio frente a contexto</h3><p class="sub">Modelos de los últimos 180 días (escala logarítmica)</p><div class="chart"><canvas id="c-scatter"></canvas></div></article>
+      <article class="panel fx" style="--a:#22d3ee"><h3>Evolución del catálogo</h3><p class="sub" id="hist-sub">Un punto por cada actualización diaria</p><div class="chart"><canvas id="c-history"></canvas></div><p class="empty" id="hist-empty" hidden>El historial se acumula día a día. Vuelve en unos días para ver la tendencia.</p></article>
     </div>
   </section>
 
-  <section id="comparador">
-    <h2><span class="tag">06</span> Comparador</h2>
+  <section id="comparador" class="rv">
+    <h2><span class="hi" style="--a:#34d399"><i class="ui" style="--i:url(icons/ui/scale.svg)" aria-hidden="true"></i></span> Comparador</h2>
     <p class="sub">Marca hasta 4 modelos para compararlos lado a lado.</p>
     <div class="compare" id="compare" hidden>
       <div class="grid2">
-        <article class="panel"><h3>Precio por millón de tokens (USD)</h3><div class="chart sm"><canvas id="c-cmp-price"></canvas></div></article>
-        <article class="panel"><h3>Ventana de contexto (tokens)</h3><div class="chart sm"><canvas id="c-cmp-ctx"></canvas></div></article>
+        <article class="panel fx" style="--a:#8b5cf6"><h3>Precio por millón de tokens (USD)</h3><div class="chart sm"><canvas id="c-cmp-price"></canvas></div></article>
+        <article class="panel fx" style="--a:#f43f9e"><h3>Ventana de contexto (tokens)</h3><div class="chart sm"><canvas id="c-cmp-ctx"></canvas></div></article>
       </div>
       <div class="table-wrap"><table class="cmp-table" id="cmp-table"></table></div>
     </div>
     <div class="filters">
-      <input type="search" id="q" placeholder="Buscar modelo o proveedor" aria-label="Buscar">
+      <label class="search"><i class="ui" style="--i:url(icons/ui/search.svg)" aria-hidden="true"></i><input type="search" id="q" placeholder="Buscar modelo o proveedor" aria-label="Buscar"></label>
       <select id="prov" aria-label="Proveedor"><option value="">Todos los proveedores</option></select>
       <select id="flt" aria-label="Filtro">
         <option value="">Todos</option><option value="multimodal">Solo multimodales</option><option value="reasoning">Solo razonamiento</option><option value="free">Solo gratuitos</option>
@@ -165,11 +172,11 @@
     <button class="btn" id="more" hidden>Mostrar más</button>
   </section>
 
-  <section id="abiertos">
-    <h2><span class="tag">07</span> Modelos abiertos en tendencia</h2>
+  <section id="abiertos" class="rv">
+    <h2><span class="hi" style="--a:#4f8cff"><i class="ui" style="--i:url(icons/ui/bot.svg)" aria-hidden="true"></i></span> Modelos abiertos en tendencia</h2>
     <div class="grid2">
-      <article class="panel"><h3>Descargas</h3><p class="sub">Top 10 en Hugging Face</p><div class="chart"><canvas id="c-hf"></canvas></div></article>
-      <article class="panel"><h3>Ranking de tendencia</h3><ol class="hf-list" id="hf-list"></ol></article>
+      <article class="panel fx" style="--a:#fbbf24"><h3>Descargas</h3><p class="sub">Top 10 en Hugging Face</p><div class="chart"><canvas id="c-hf"></canvas></div></article>
+      <article class="panel fx" style="--a:#34d399"><h3>Ranking de tendencia</h3><ol class="hf-list" id="hf-list"></ol></article>
     </div>
   </section>
 </main>
