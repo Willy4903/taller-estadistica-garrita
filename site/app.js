@@ -741,6 +741,10 @@
     renderHF(data.hf || []);
     bindTable();
     renderTable();
+    // Se comparte con otras secciones (infografía semanal) sin duplicar lógica.
+    window.IAR = { models, news, meta: data.meta, hist, esc, ico, nf, C, draw, countUp, fmtPrice, fmtCtx, fmtDate, daysAgo, ageDays, median, signed, provName, provTag,
+      tTitle, topicOf, TOPIC_NAMES, TOPIC_COLORS, TOPIC_ICONS, relLabel, newsIcon, tipAttr, versionPairs, isMajor, currentModels, family, dayKey };
+    document.dispatchEvent(new CustomEvent("iar:ready"));
   }
   init();
 })();
