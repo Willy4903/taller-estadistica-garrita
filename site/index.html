@@ -32,6 +32,7 @@
       <a href="#noticias">Noticias</a>
       <a href="#resumen">Resumen</a>
       <a href="#lanzamientos">Qué cambió</a>
+      <a href="#matriz">Matriz</a>
       <a href="#graficas">Gráficas</a>
       <a href="#comparador">Comparador</a>
       <a href="#abiertos">Modelos abiertos</a>
@@ -87,8 +88,29 @@
     </div>
   </section>
 
+  <section id="matriz">
+    <h2><span class="tag">04</span> Matriz de comparación por gama</h2>
+    <p class="sub">Modelos vigentes (últimos 150 días) de los laboratorios principales, agrupados por gama de precio para comparar solo lo comparable. El verde más intenso marca el mejor valor de cada columna.</p>
+    <div class="panel-bar">
+      <div class="seg" id="mx-tier" role="group" aria-label="Gama">
+        <button data-t="alta" class="on">Gama alta</button><button data-t="media">Gama media</button><button data-t="eco">Económicos</button><button data-t="todos">Todos</button>
+      </div>
+      <span class="count" id="mx-count"></span>
+    </div>
+    <div class="table-wrap">
+      <table id="matrix">
+        <thead><tr>
+          <th data-k="name">Modelo</th><th data-k="created">Lanzamiento</th><th data-k="price_in" class="num">Entrada $/M</th><th data-k="price_out" class="num">Salida $/M</th>
+          <th data-k="blend" class="num" title="Promedio ponderado 3 partes de entrada y 1 de salida">Mixto 3:1 $/M</th><th data-k="context" class="num">Contexto</th><th data-k="multimodal">Multimodal</th><th data-k="reasoning">Razonamiento</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="sub" id="mx-note"></p>
+  </section>
+
   <section id="graficas">
-    <h2><span class="tag">04</span> Gráficas</h2>
+    <h2><span class="tag">05</span> Gráficas</h2>
     <div class="grid2">
       <article class="panel"><h3>Lanzamientos por mes</h3><p class="sub">Últimos 12 meses, texto frente a multimodal</p><div class="chart"><canvas id="c-releases"></canvas></div></article>
       <article class="panel"><h3>Proveedores más activos</h3><p class="sub">Modelos lanzados en los últimos 90 días</p><div class="chart"><canvas id="c-providers"></canvas></div></article>
@@ -98,7 +120,7 @@
   </section>
 
   <section id="comparador">
-    <h2><span class="tag">05</span> Comparador</h2>
+    <h2><span class="tag">06</span> Comparador</h2>
     <p class="sub">Marca hasta 4 modelos para compararlos lado a lado.</p>
     <div class="compare" id="compare" hidden>
       <div class="grid2">
@@ -129,7 +151,7 @@
   </section>
 
   <section id="abiertos">
-    <h2><span class="tag">06</span> Modelos abiertos en tendencia</h2>
+    <h2><span class="tag">07</span> Modelos abiertos en tendencia</h2>
     <div class="grid2">
       <article class="panel"><h3>Descargas</h3><p class="sub">Top 10 en Hugging Face</p><div class="chart"><canvas id="c-hf"></canvas></div></article>
       <article class="panel"><h3>Ranking de tendencia</h3><ol class="hf-list" id="hf-list"></ol></article>

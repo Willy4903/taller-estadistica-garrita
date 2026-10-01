@@ -141,3 +141,11 @@ input[type=checkbox]{accent-color:var(--cyan);width:16px;height:16px;padding:0}
 .news-item .chips{margin-top:8px}
 .chip.tp{border-color:currentColor}
 @media (max-width:860px){.grid3{grid-template-columns:1fr}}
+
+#matrix td{white-space:normal}
+#matrix td.nm{min-width:200px}
+#matrix td.nm small{display:block;color:var(--muted);font:.74rem ui-monospace,monospace;margin-top:2px}
+#matrix td.hm{transition:background-color .2s}
+#matrix th[data-k]{cursor:pointer}
+.yes{color:var(--green);font-weight:700}
+.no{color:var(--muted)}
