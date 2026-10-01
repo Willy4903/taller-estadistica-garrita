@@ -42,15 +42,31 @@
   }
   const provTag = (slug) => `<span class="provtag">${provIcon(slug)}<span>${esc(provName(slug))}</span></span>`;
 
-  const C = { cyan: "#22d3ee", violet: "#a78bfa", pink: "#f472b6", green: "#34d399", amber: "#fbbf24" };
+  const ico = (name, cls = "") => `<i class="ui ${cls}" style="--i:url(icons/ui/${name}.svg)" aria-hidden="true"></i>`;
+  const C = { cyan: "#22d3ee", violet: "#8b5cf6", pink: "#f43f9e", green: "#34d399", amber: "#fbbf24", orange: "#fb923c", blue: "#4f8cff" };
+  // Relleno degradado para barras: del color pleno al transparente.
+  const grad = (color, horizontal) => (ctx) => {
+    const a = ctx.chart.chartArea;
+    if (!a) return color;
+    const g = horizontal ? ctx.chart.ctx.createLinearGradient(a.left, 0, a.right, 0) : ctx.chart.ctx.createLinearGradient(0, a.top, 0, a.bottom);
+    g.addColorStop(0, horizontal ? color + "66" : color);
+    g.addColorStop(1, horizontal ? color : color + "40");
+    return g;
+  };
   const charts = {};
   function theme() {
     const s = getComputedStyle(document.documentElement);
     Chart.defaults.color = s.getPropertyValue("--muted").trim();
     Chart.defaults.borderColor = s.getPropertyValue("--line").trim();
-    Chart.defaults.font.family = "system-ui, sans-serif";
+    Chart.defaults.font.family = '"Inter", system-ui, sans-serif';
+    Chart.defaults.font.size = 13;
     Chart.defaults.maintainAspectRatio = false;
     Chart.defaults.plugins.legend.labels.boxWidth = 12;
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    const tt = Chart.defaults.plugins.tooltip;
+    tt.backgroundColor = "rgba(8,10,26,.97)"; tt.titleColor = "#f3f5ff"; tt.bodyColor = "#c3cbea";
+    tt.titleFont = { size: 14, weight: "700" }; tt.bodyFont = { size: 13 };
+    tt.padding = 14; tt.cornerRadius = 14; tt.borderColor = "rgba(255,255,255,.2)"; tt.borderWidth = 1; tt.boxPadding = 5;
   }
   function draw(id, cfg) {
     if (charts[id]) charts[id].destroy();
@@ -65,7 +81,86 @@
     } catch (e) { return fallback; }
   }
 
-  let models = [], allCount = 0, state = { sort: "created", asc: false, shown: 25, picked: [] };
+
+  // ---- Interacción global: tooltip con información, foco de luz, aparición y progreso ----
+  const tip = document.createElement("div");
+  tip.id = "tip"; tip.setAttribute("role", "tooltip");
+  document.body.appendChild(tip);
+  let tipEl = null;
+  function tipPlace(x, y) {
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let left = x + 18, top = y + 20;
+    if (left + w > innerWidth - 12) left = x - w - 18;
+    if (top + h > innerHeight - 12) top = y - h - 18;
+    tip.style.left = Math.max(12, left) + "px";
+    tip.style.top = Math.max(12, top) + "px";
+  }
+  function tipShow(el, x, y) {
+    const [title, ...rest] = (el.dataset.tip || "").split("\n");
+    if (!title) return;
+    tip.innerHTML = "<b>" + esc(title) + "</b>" + rest.map((l) => "<span>" + esc(l) + "</span>").join("");
+    tip.classList.add("on");
+    tipPlace(x, y);
+  }
+  const tipHide = () => { tipEl = null; tip.classList.remove("on"); };
+  document.addEventListener("mouseover", (e) => {
+    const el = e.target.closest && e.target.closest("[data-tip]");
+    if (el === tipEl) return;
+    if (!el) return tipHide();
+    tipEl = el; tipShow(el, e.clientX, e.clientY);
+  });
+  document.addEventListener("mousemove", (e) => {
+    const t = e.target.closest && e.target.closest("[data-tip]");
+    if (t && t !== tipEl) { tipEl = t; tipShow(t, e.clientX, e.clientY); }  // reaparece tras un scroll
+    else if (!t && tipEl) tipHide();
+    else if (tipEl) tipPlace(e.clientX, e.clientY);
+    const c = e.target.closest && e.target.closest(".fx, .panel");
+    if (c) { const r = c.getBoundingClientRect(); c.style.setProperty("--mx", (e.clientX - r.left) + "px"); c.style.setProperty("--my", (e.clientY - r.top) + "px"); }
+  }, { passive: true });
+  document.addEventListener("focusin", (e) => {
+    const el = e.target.closest && e.target.closest("[data-tip]");
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    tipEl = el; tipShow(el, r.left + 24, r.top + r.height / 2);
+  });
+  document.addEventListener("focusout", tipHide);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") tipHide(); });
+  window.addEventListener("scroll", tipHide, { passive: true });
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function initEffects() {
+    const bar = $("#progress");
+    const onScroll = () => { const h = document.documentElement.scrollHeight - innerHeight; bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%"; };
+    window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+    if (!("IntersectionObserver" in window)) { document.querySelectorAll(".rv").forEach((e) => e.classList.add("in")); return; }
+    const rv = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); rv.unobserve(e.target); } }), { threshold: 0.05 });
+    document.querySelectorAll(".rv").forEach((e) => rv.observe(e));
+    const links = [...document.querySelectorAll("nav.main a")];
+    const nav = new IntersectionObserver((es) => es.forEach((e) => {
+      if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+    }), { rootMargin: "-35% 0px -60% 0px" });
+    links.forEach((a) => { const sec = document.querySelector(a.getAttribute("href")); if (sec) nav.observe(sec); });
+  }
+  // Los números de los indicadores suben desde cero al aparecer.
+  function countUp() {
+    const els = [...document.querySelectorAll("[data-to]")];
+    const run = (el) => {
+      const to = +el.dataset.to, dec = +(el.dataset.dec || 0), pre = el.dataset.pre || "";
+      if (reduceMotion) { el.textContent = pre + to.toLocaleString("es-PE", { minimumFractionDigits: dec, maximumFractionDigits: dec }); return; }
+      const t0 = performance.now();
+      const step = (t) => {
+        const p = Math.min(1, (t - t0) / 1100), v = to * (1 - Math.pow(1 - p, 3));
+        el.textContent = pre + v.toLocaleString("es-PE", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    if (!("IntersectionObserver" in window)) return els.forEach(run);
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } }), { threshold: 0.4 });
+    els.forEach((e) => io.observe(e));
+  }
+
+  let models = [], allCount = 0, state = { sort: "created", asc: false, shown: 10, picked: [] };
 
   function renderStatus(meta) {
     const upd = new Date(meta.updated_at);
@@ -85,26 +180,46 @@
   function renderKpis(meta, hist) {
     const recent = models.filter((m) => daysAgo(m.created) <= 30);
     const prices = models.filter((m) => daysAgo(m.created) <= 180 && m.price_in > 0).map((m) => m.price_in);
-    const provs = new Set(recent.map((m) => m.provider));
+    const cnt = {};
+    recent.forEach((m) => { cnt[m.provider] = (cnt[m.provider] || 0) + 1; });
+    const topProv = Object.entries(cnt).sort((x, y) => y[1] - x[1]).slice(0, 5).map(([p, n]) => `${provName(p)}: ${n}`);
     const prev = hist.length > 1 ? hist[hist.length - 2] : null;
     const delta = prev ? allCount - prev.total : null;
+    const med = prices.length ? median(prices) : null;
     const items = [
-      [nf.format(allCount), "modelos en el catálogo" + (delta ? " (" + (delta > 0 ? "+" : "") + delta + " vs. ayer)" : "")],
-      [nf.format(recent.length), "lanzados en los últimos 30 días"],
-      [nf.format(provs.size), "proveedores activos en 30 días"],
-      [prices.length ? "$" + median(prices).toFixed(2) : "n/d", "precio mediano de entrada por millón de tokens (180 días)"],
+      { ic: "layers", to: allCount, l: "modelos en el catálogo" + (delta ? " (" + (delta > 0 ? "+" : "") + delta + " vs. ayer)" : ""),
+        tip: "Modelos en el catálogo\nTotal que lista OpenRouter hoy, con variantes (batch, gratuitas, alias).\nEn los análisis se cuentan sin duplicados." },
+      { ic: "rocket", to: recent.length, l: "lanzados en los últimos 30 días", tip: "Lanzados en 30 días\nModelos únicos con fecha de lanzamiento en el último mes.\nTodos los proveedores, no solo los principales." },
+      { ic: "building-2", to: new Set(recent.map((m) => m.provider)).size, l: "proveedores activos en 30 días", tip: "Proveedores más activos\n" + topProv.join("\n") },
+      { ic: "coins", to: med, dec: 2, pre: "$", l: "precio mediano de entrada por millón de tokens (180 días)",
+        tip: "Precio mediano de entrada\nLa mitad de los modelos de pago de los últimos 180 días cuesta menos que esto.\nUn millón de tokens equivale a unas 750,000 palabras." },
     ];
-    $("#kpis").innerHTML = items.map(([v, l]) => `<div class="kpi"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
+    $("#kpis").innerHTML = items.map((k) => `<div class="kpi fx"${tipAttr(k.tip)}><span class="ico">${ico(k.ic)}</span><b data-to="${k.to ?? 0}" data-dec="${k.dec || 0}" data-pre="${esc(k.pre || "")}">${k.to == null ? "n/d" : "0"}</b><span class="l">${esc(k.l)}</span></div>`).join("");
+    countUp();
   }
 
   function chips(m, isNew) {
     const c = [];
     if (isNew) c.push('<span class="chip nw">NUEVO</span>');
-    if (m.multimodal) c.push('<span class="chip mm">Multimodal</span>');
-    if (m.reasoning) c.push('<span class="chip rs">Razonamiento</span>');
-    if (m.price_in === 0 && m.price_out === 0) c.push('<span class="chip fr">Gratis</span>');
+    if (m.multimodal) c.push(`<span class="chip mm">${ico("eye")}Multimodal</span>`);
+    if (m.reasoning) c.push(`<span class="chip rs">${ico("brain")}Razonamiento</span>`);
+    if (m.price_in === 0 && m.price_out === 0) c.push(`<span class="chip fr">${ico("zap")}Gratis</span>`);
     return c.join("");
   }
+
+  const INPUT_ES = { image: "imágenes", file: "archivos", audio: "audio", video: "video" };
+  function modelTip(m) {
+    const lines = [m.name, `${provName(m.provider)} · lanzado el ${fmtDate(m.created)}`,
+      `Entrada ${fmtPrice(m.price_in)} · salida ${fmtPrice(m.price_out)} por millón de tokens`];
+    if (m.context) lines.push(`Contexto: ${nf.format(m.context)} tokens (≈ ${nf.format(Math.round((m.context * 0.75) / 1000) * 1000)} palabras)`);
+    if (m.price_in > 0 && m.context >= 133000) lines.push(`Analizar un libro de ${nf.format(100000)} palabras costaría ≈ $${((133333 / 1e6) * m.price_in).toFixed(3)} en entrada`);
+    const caps = [];
+    if (m.multimodal) caps.push("entiende " + (m.inputs || []).filter((i) => i !== "text").map((i) => INPUT_ES[i] || i).join(", "));
+    if (m.reasoning) caps.push("razona antes de responder");
+    if (caps.length) lines.push("Capacidades: " + caps.join(" y "));
+    return lines.join("\n");
+  }
+  const tipAttr = (txt) => ` data-tip="${esc(txt)}" tabindex="0"`;
 
   // ---- Nueva versión frente a la anterior de la misma familia ----
   function family(m) {
@@ -142,11 +257,16 @@
     const rows = versionPairs(models.filter(isMajor)).slice(0, 12);
     $("#versions tbody").innerHTML = rows.map(({ cur, prev, dIn, dOut }) => {
       const gains = [];
-      if (cur.multimodal && !prev.multimodal) gains.push('<span class="chip mm">+ Multimodal</span>');
-      if (cur.reasoning && !prev.reasoning) gains.push('<span class="chip rs">+ Razonamiento</span>');
+      if (cur.multimodal && !prev.multimodal) gains.push(`<span class="chip mm">${ico("eye")}+ Multimodal</span>`);
+      if (cur.reasoning && !prev.reasoning) gains.push(`<span class="chip rs">${ico("brain")}+ Razonamiento</span>`);
       if (!cur.multimodal && prev.multimodal) gains.push('<span class="chip">− Multimodal</span>');
       if (!cur.reasoning && prev.reasoning) gains.push('<span class="chip">− Razonamiento</span>');
-      return `<tr><td class="nm">${provTag(cur.provider)}<br><b>${esc(cur.name.replace(/^[^:]+: /, ""))}</b><small>${esc(fmtDate(cur.created))}</small></td>
+      const days = Math.max(1, Math.round((new Date(cur.created) - new Date(prev.created)) / 864e5));
+      const vtip = [`${cur.name.replace(/^[^:]+: /, "")} frente a ${prev.name.replace(/^[^:]+: /, "")}`, `Pasaron ${nf.format(days)} días entre ambos lanzamientos`,
+        `Entrada: ${fmtPrice(prev.price_in)} → ${fmtPrice(cur.price_in)}${dIn != null ? " (" + signed(dIn) + ")" : ""}`,
+        `Salida: ${fmtPrice(prev.price_out)} → ${fmtPrice(cur.price_out)}${dOut != null ? " (" + signed(dOut) + ")" : ""}`,
+        `Contexto: ${fmtCtx(prev.context)} → ${fmtCtx(cur.context)}`].join("\n");
+      return `<tr${tipAttr(vtip)}><td class="nm">${provTag(cur.provider)}<br><b>${esc(cur.name.replace(/^[^:]+: /, ""))}</b><small>${esc(fmtDate(cur.created))}</small></td>
         <td class="nm">${esc(prev.name.replace(/^[^:]+: /, ""))}<small>${esc(fmtDate(prev.created))}</small></td>
         <td>${deltaCell(cur.price_in, prev.price_in, dIn, fmtPrice)}</td><td>${deltaCell(cur.price_out, prev.price_out, dOut, fmtPrice)}</td>
         <td>${ctxCell(cur.context, prev.context)}</td><td><div class="chips" style="margin:0">${gains.join("") || '<span class="muted">sin cambios</span>'}</div></td></tr>`;
@@ -181,7 +301,7 @@
 
     // Ritmo
     const rate = pct(d30.length, p30.length);
-    cards.push({ k: "Ritmo de lanzamientos", v: d30.length, u: "modelos en 30 días",
+    cards.push({ ic: "trending-up", how: "Cuenta modelos únicos (sin variantes) de los laboratorios principales con fecha de lanzamiento en los últimos 30 días y los compara con los 30 días anteriores.", k: "Ritmo de lanzamientos", v: d30.length, u: "modelos en 30 días",
       t: rate == null ? "Sin periodo anterior para comparar." : `${signed(rate)} frente a los 30 días previos (${p30.length}).`, tone: rate == null ? "" : rate >= 0 ? "up" : "down" });
     headline.push(`En los últimos 30 días los laboratorios principales lanzaron ${d30.length} modelos` + (rate == null ? "" : ` (${signed(rate)} vs. el periodo anterior)`));
 
@@ -191,7 +311,7 @@
     const lead = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0];
     if (lead) {
       const share = Math.round((lead[1] / d30.length) * 100);
-      cards.push({ k: "Quién marca el ritmo", v: provName(lead[0]), vhtml: provTag(lead[0]), u: `${lead[1]} lanzamientos`, t: `Concentra ${share}% de los modelos nuevos de los últimos 30 días.` });
+      cards.push({ ic: "crown", how: "Proveedor con más modelos nuevos en los últimos 30 días; el porcentaje es su parte sobre el total de lanzamientos de laboratorios principales.", k: "Quién marca el ritmo", v: provName(lead[0]), vhtml: provTag(lead[0]), u: `${lead[1]} lanzamientos`, t: `Concentra ${share}% de los modelos nuevos de los últimos 30 días.` });
       headline.push(`${provName(lead[0])} lidera con ${lead[1]}`);
     }
 
@@ -199,19 +319,19 @@
     const vp = versionPairs(M).filter((p) => p.dIn != null);
     if (vp.length >= 3) {
       const down = vp.filter((p) => p.dIn < 0).length, upn = vp.filter((p) => p.dIn > 0).length, flat = vp.length - down - upn;
-      cards.push({ k: "Precios vs. versión anterior", v: `${down} ↓  ${upn} ↑`, u: `de ${vp.length} versiones nuevas comparables`,
+      cards.push({ ic: "scale", how: "Se empareja cada modelo nuevo con la versión anterior de su misma familia y se compara el precio de entrada. Solo cuentan los pares con precio en ambos.", k: "Precios vs. versión anterior", v: `${down} ↓  ${upn} ↑`, u: `de ${vp.length} versiones nuevas comparables`,
         t: `${down} bajaron el precio de entrada, ${upn} lo subieron y ${flat} lo mantienen.`, tone: down >= upn ? "up" : "down" });
       headline.push(`${down} de ${vp.length} versiones nuevas bajaron su precio de entrada frente a la anterior`);
     }
 
     // Mayor recorte de precio frente a la versión anterior
     const cut = versionPairs(M).filter((p) => p.dIn != null && p.dIn <= -10).sort((x, y) => x.dIn - y.dIn)[0];
-    if (cut) cards.push({ k: "Mayor recorte de precio", v: cut.dIn + "%", u: cut.cur.name,
+    if (cut) cards.push({ ic: "coins", how: "La mayor bajada del precio de entrada entre un modelo nuevo y su versión anterior, entre los lanzados en los últimos 90 días.", k: "Mayor recorte de precio", v: cut.dIn + "%", u: cut.cur.name,
       t: `Entrada de ${fmtPrice(cut.prev.price_in)} a ${fmtPrice(cut.cur.price_in)} por millón de tokens frente a ${cut.prev.name.replace(/^[^:]+: /, "")}.`, tone: "up" });
 
     // Contexto máximo
     const big = [...d30].sort((a, b) => b.context - a.context)[0];
-    if (big && big.context && refCtx && big.context / refCtx >= 2) cards.push({ k: "Mayor contexto reciente", v: fmtCtx(big.context), u: big.name,
+    if (big && big.context && refCtx && big.context / refCtx >= 2) cards.push({ ic: "ruler", how: "El modelo reciente con la ventana de contexto más grande, comparado con la mediana de los últimos 180 días.", k: "Mayor contexto reciente", v: fmtCtx(big.context), u: big.name,
       t: `${(big.context / refCtx).toFixed(1)} veces la mediana de los últimos 180 días (${fmtCtx(refCtx)}).`, prov: big.provider });
 
     // Capacidades
@@ -220,7 +340,7 @@
     const rsNow = share(d30, (m) => m.reasoning), rsPrev = share(p30, (m) => m.reasoning);
     if (mmNow != null) {
       const dm = mmPrev == null ? "" : ` (${mmNow - mmPrev >= 0 ? "+" : ""}${mmNow - mmPrev} pts vs. periodo previo)`;
-      cards.push({ k: "Capacidades", v: mmNow + "%", u: "de los nuevos son multimodales",
+      cards.push({ ic: "sparkles", how: "Porcentaje de los lanzamientos de los últimos 30 días que aceptan imágenes, audio o archivos (multimodal) y que ofrecen razonamiento, frente a los 30 días anteriores.", k: "Capacidades", v: mmNow + "%", u: "de los nuevos son multimodales",
         t: `${rsNow}% incorpora razonamiento${rsPrev == null ? "" : ` (antes ${rsPrev}%)`}.${dm ? " Multimodales" + dm.replace(/^ \(/, ": ").replace(/\)$/, "") + "." : ""}` });
     }
 
@@ -232,7 +352,7 @@
 
     $("#headline").textContent = headline.join("; ") + ".";
     $("#today").textContent = meta.sample ? "" : todayText;
-    $("#insights").innerHTML = cards.map((c) => `<article class="ins-card ${c.tone || ""}"><span class="ins-k">${esc(c.k)}</span>
+    $("#insights").innerHTML = cards.map((c) => `<article class="ins-card fx"${tipAttr("Cómo se calcula\n" + c.how)}><span class="ico">${ico(c.ic)}</span><span class="ins-k">${esc(c.k)}</span>
       <b class="ins-v">${c.vhtml || esc(c.v)}</b><span class="ins-u">${c.prov ? provTag(c.prov) + " " : ""}${esc(c.u)}</span><p>${esc(c.t)}</p></article>`).join("");
   }
 
@@ -245,20 +365,20 @@
     models.forEach((m) => { const i = months.indexOf(m.created.slice(0, 7)); if (i >= 0) (m.multimodal ? mm : txt)[i]++; });
     const label = (k) => { const [y, mo] = k.split("-"); return new Date(+y, +mo - 1, 1).toLocaleDateString("es-PE", { month: "short", year: "2-digit" }); };
     draw("c-releases", { type: "bar", data: { labels: months.map(label), datasets: [
-      { label: "Texto", data: txt, backgroundColor: C.violet, borderRadius: 4 },
-      { label: "Multimodal", data: mm, backgroundColor: C.cyan, borderRadius: 4 }] },
+      { label: "Texto", data: txt, backgroundColor: grad(C.violet), borderRadius: 6 },
+      { label: "Multimodal", data: mm, backgroundColor: grad(C.cyan), borderRadius: 6 }] },
       options: { scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } } } } });
 
     // Proveedores 90 días
     const cnt = {};
     models.filter((m) => daysAgo(m.created) <= 90).forEach((m) => { cnt[m.provider] = (cnt[m.provider] || 0) + 1; });
     const top = Object.entries(cnt).sort((a, b) => b[1] - a[1]).slice(0, 10);
-    draw("c-providers", { type: "bar", data: { labels: top.map((t) => provName(t[0])), datasets: [{ data: top.map((t) => t[1]), backgroundColor: C.cyan, borderRadius: 4 }] },
+    draw("c-providers", { type: "bar", data: { labels: top.map((t) => provName(t[0])), datasets: [{ data: top.map((t) => t[1]), backgroundColor: grad(C.cyan, true), borderRadius: 8 }] },
       options: { indexAxis: "y", plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } }, y: { grid: { display: false } } } } });
 
     // Precio vs contexto
     const pts = models.filter((m) => daysAgo(m.created) <= 180 && m.price_in > 0 && m.context > 0);
-    const ds = (list, lbl, col) => ({ label: lbl, backgroundColor: col + "cc", pointRadius: 5, pointHoverRadius: 7, data: list.map((m) => ({ x: m.context, y: m.price_in, n: m.name })) });
+    const ds = (list, lbl, col) => ({ label: lbl, backgroundColor: col + "d9", pointRadius: 6, pointHoverRadius: 9, pointHoverBorderWidth: 3, pointHoverBorderColor: "#fff", data: list.map((m) => ({ x: m.context, y: m.price_in, n: m.name })) });
     draw("c-scatter", { type: "scatter", data: { datasets: [ds(pts.filter((m) => !m.reasoning), "Estándar", C.violet), ds(pts.filter((m) => m.reasoning), "Razonamiento", C.pink)] },
       options: { scales: {
         x: { type: "logarithmic", title: { display: true, text: "Contexto (tokens)" }, ticks: { callback: (v) => (isPow10(v) ? fmtCtx(v) : "") } },
@@ -270,14 +390,14 @@
     $("#hist-empty").hidden = ok;
     $("#c-history").parentElement.hidden = !ok;
     if (ok) draw("c-history", { type: "line", data: { labels: hist.map((h) => fmtDate(h.date)), datasets: [
-      { label: "Modelos en catálogo", data: hist.map((h) => h.total), borderColor: C.cyan, backgroundColor: C.cyan + "33", tension: .3, yAxisID: "y", fill: true },
+      { label: "Modelos en catálogo", data: hist.map((h) => h.total), borderColor: C.cyan, backgroundColor: C.cyan + "33", tension: .35, yAxisID: "y", fill: true, borderWidth: 3, pointRadius: 3, pointHoverRadius: 7 },
       { label: "Precio mediano entrada ($/M)", data: hist.map((h) => h.median_price_in), borderColor: C.amber, tension: .3, yAxisID: "y1" }] },
       options: { interaction: { mode: "index", intersect: false }, scales: { y: { position: "left", title: { display: true, text: "Modelos" } }, y1: { position: "right", grid: { drawOnChartArea: false }, title: { display: true, text: "USD/M" } } } } });
   }
 
   function renderHF(hf) {
     const top = hf.slice(0, 10);
-    draw("c-hf", { type: "bar", data: { labels: top.map((m) => m.id.split("/").pop()), datasets: [{ data: top.map((m) => m.downloads), backgroundColor: C.violet, borderRadius: 4 }] },
+    draw("c-hf", { type: "bar", data: { labels: top.map((m) => m.id.split("/").pop()), datasets: [{ data: top.map((m) => m.downloads), backgroundColor: grad(C.violet, true), borderRadius: 8 }] },
       options: { indexAxis: "y", plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => nf.format(c.raw) + " descargas" } } }, scales: { x: { ticks: { callback: (v) => fmtAxis(v) } }, y: { grid: { display: false } } } } });
     $("#hf-list").innerHTML = hf.slice(0, 15).map((m, i) =>
       `<li><a href="https://huggingface.co/${encodeURI(m.id)}" target="_blank" rel="noopener">${i + 1}. ${esc(m.id)}</a><span>${esc(nf.format(m.downloads))} desc. · ${esc(nf.format(m.likes))} likes</span></li>`).join("");
@@ -301,7 +421,7 @@
       return (typeof x === "string" ? x.localeCompare(y) : x - y) * dir;
     });
     $("#count").textContent = nf.format(rows.length) + " modelos";
-    $("#tbl tbody").innerHTML = rows.slice(0, state.shown).map((m) => `<tr>
+    $("#tbl tbody").innerHTML = rows.slice(0, state.shown).map((m) => `<tr${tipAttr(modelTip(m))}>
       <td><input type="checkbox" data-id="${esc(m.id)}" aria-label="Comparar ${esc(m.name)}" ${state.picked.includes(m.id) ? "checked" : ""}></td>
       <td class="nm">${esc(m.name)}<small>${esc(m.id)}</small></td><td>${provTag(m.provider)}</td><td>${esc(fmtDate(m.created))}</td>
       <td class="num">${esc(fmtCtx(m.context))}</td><td class="num">${esc(fmtPrice(m.price_in))}</td><td class="num">${esc(fmtPrice(m.price_out))}</td>
@@ -320,10 +440,10 @@
     const labels = sel.map((m) => m.name);
     const cols = [C.cyan, C.violet, C.pink, C.amber];
     draw("c-cmp-price", { type: "bar", data: { labels, datasets: [
-      { label: "Entrada", data: sel.map((m) => m.price_in), backgroundColor: C.cyan, borderRadius: 4 },
-      { label: "Salida", data: sel.map((m) => m.price_out), backgroundColor: C.violet, borderRadius: 4 }] },
+      { label: "Entrada", data: sel.map((m) => m.price_in), backgroundColor: grad(C.cyan), borderRadius: 8 },
+      { label: "Salida", data: sel.map((m) => m.price_out), backgroundColor: grad(C.violet), borderRadius: 8 }] },
       options: { scales: { y: { beginAtZero: true, ticks: { callback: (v) => "$" + v } }, x: { grid: { display: false } } } } });
-    draw("c-cmp-ctx", { type: "bar", data: { labels, datasets: [{ data: sel.map((m) => m.context), backgroundColor: sel.map((_, i) => cols[i]), borderRadius: 4 }] },
+    draw("c-cmp-ctx", { type: "bar", data: { labels, datasets: [{ data: sel.map((m) => m.context), backgroundColor: sel.map((_, i) => cols[i]), borderRadius: 8 }] },
       options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: (v) => fmtAxis(v) } }, x: { grid: { display: false } } } } });
     const row = (l, f) => `<tr><th scope="row">${l}</th>${sel.map((m) => `<td>${f(m)}</td>`).join("")}</tr>`;
     $("#cmp-table").innerHTML = row("Modelo", (m) => esc(m.name)) + row("Proveedor", (m) => provTag(m.provider)) + row("Lanzamiento", (m) => esc(fmtDate(m.created))) +
@@ -334,7 +454,7 @@
   function bindTable() {
     const provs = [...new Set(models.map((m) => m.provider))].sort();
     $("#prov").insertAdjacentHTML("beforeend", provs.map((p) => `<option value="${esc(p)}">${esc(provName(p))}</option>`).join(""));
-    ["#q", "#prov", "#flt"].forEach((s) => $(s).addEventListener("input", () => { state.shown = 25; renderTable(); }));
+    ["#q", "#prov", "#flt"].forEach((s) => $(s).addEventListener("input", () => { state.shown = 10; renderTable(); }));
     $("#more").addEventListener("click", () => { state.shown += 50; renderTable(); });
     document.querySelectorAll("#tbl th[data-k]").forEach((th) => {
       th.tabIndex = 0;
@@ -377,16 +497,16 @@
       const [lo, hi] = range(key);
       if (hi === lo) return "";
       const score = higherBetter ? (val - lo) / (hi - lo) : (hi - val) / (hi - lo);
-      return ` style="background-color:color-mix(in srgb, var(--green) ${Math.round(score * 38)}%, transparent)"`;
+      return ` style="background-color:color-mix(in srgb, var(--green) ${Math.round(score * 46)}%, transparent)"`;
     };
-    $("#matrix tbody").innerHTML = rows.map((m) => `<tr>
+    const yn = (v) => (v ? `<span class="yes">${ico("circle-check")}Sí</span>` : `<span class="no">${ico("circle-x")}No</span>`);
+    $("#matrix tbody").innerHTML = rows.map((m) => `<tr${tipAttr(modelTip(m))}>
       <td class="nm">${provTag(m.provider)}<br><b>${esc(m.name.replace(/^[^:]+: /, ""))}</b></td><td>${esc(fmtDate(m.created))}</td>
       <td class="num hm"${heat(m.price_in, "price_in", false)}>${esc(fmtPrice(m.price_in))}</td>
       <td class="num hm"${heat(m.price_out, "price_out", false)}>${esc(fmtPrice(m.price_out))}</td>
       <td class="num hm"${heat(m.blend, "blend", false)}>${esc(fmtPrice(m.blend))}</td>
       <td class="num hm"${heat(m.context, "context", true)}>${esc(fmtCtx(m.context))}</td>
-      <td>${m.multimodal ? '<span class="yes">Sí</span>' : '<span class="no">No</span>'}</td>
-      <td>${m.reasoning ? '<span class="yes">Sí</span>' : '<span class="no">No</span>'}</td></tr>`).join("") ||
+      <td>${yn(m.multimodal)}</td><td>${yn(m.reasoning)}</td></tr>`).join("") ||
       '<tr><td colspan="8" class="muted">No hay modelos en esta gama.</td></tr>';
     const lim = (a) => (a.length ? `$${Math.min(...a.map((m) => m.blend)).toFixed(2)} a $${Math.max(...a.map((m) => m.blend)).toFixed(2)}` : "");
     $("#mx-count").textContent = rows.length + " modelos";
@@ -409,7 +529,8 @@
   // ---- Panel de noticias ----
   const TOPIC_NAMES = { modelos: "Modelos y lanzamientos", productos: "Productos y aplicaciones", negocios: "Negocios y mercado", seguridad: "Seguridad y regulación",
     investigacion: "Investigación", infra: "Chips e infraestructura", general: "General" };
-  const TOPIC_COLORS = { modelos: C.cyan, productos: C.green, negocios: C.amber, seguridad: C.pink, investigacion: C.violet, infra: "#60a5fa", general: "#64748b" };
+  const TOPIC_COLORS = { modelos: C.cyan, productos: C.green, negocios: C.amber, seguridad: C.pink, investigacion: C.violet, infra: C.blue, general: "#94a3b8" };
+  const TOPIC_ICONS = { modelos: "rocket", productos: "app-window", negocios: "briefcase", seguridad: "shield-check", investigacion: "flask-conical", infra: "cpu", general: "globe" };
   const news = { items: [], period: 7, q: "", topic: "", source: "", day: "", shown: 12 };
   const NEWS_KEY = { xai: "x-ai" };
   const pad2 = (n) => String(n).padStart(2, "0");
@@ -455,7 +576,7 @@
     const byDay = keys.map(() => 0);
     const base = newsFiltered("period", "day");
     base.forEach((n) => { const i = keys.indexOf(dayKey(new Date(n.published))); if (i >= 0) byDay[i]++; });
-    draw("c-n-day", { type: "bar", data: { labels, datasets: [{ data: byDay, backgroundColor: keys.map((k) => (!news.day || k === news.day ? C.cyan : C.cyan + "44")), borderRadius: 3 }] },
+    draw("c-n-day", { type: "bar", data: { labels, datasets: [{ data: byDay, backgroundColor: keys.map((k) => (!news.day || k === news.day ? C.cyan : C.cyan + "44")), borderRadius: 6 }] },
       options: { plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }, y: { beginAtZero: true, ticks: { precision: 0 } } },
         onClick: (e, els) => { if (els.length) toggle("day", keys[els[0].index]); }, onHover: pointer } });
 
@@ -472,7 +593,7 @@
     const sc = {};
     newsFiltered("source").forEach((n) => { sc[n.source] = (sc[n.source] || 0) + 1; });
     const sk = Object.keys(sc).sort((a, b) => sc[b] - sc[a]).slice(0, 6);
-    draw("c-n-src", { type: "bar", data: { labels: sk, datasets: [{ data: sk.map((k) => sc[k]), borderRadius: 3,
+    draw("c-n-src", { type: "bar", data: { labels: sk, datasets: [{ data: sk.map((k) => sc[k]), borderRadius: 8,
         backgroundColor: sk.map((k) => (!news.source || k === news.source ? C.violet : C.violet + "44")) }] },
       options: { indexAxis: "y", plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } }, y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 11 } } } },
         onClick: (e, els) => { if (els.length) toggle("source", sk[els[0].index]); }, onHover: pointer } });
@@ -481,8 +602,8 @@
   // Carrusel reutilizable: avanza solo, se detiene con el cursor encima, con el foco dentro o con el botón de pausa.
   function createCarousel(track, ctrl, gap, interval) {
     const st = { page: 0, pages: 1, per: 1, paused: window.matchMedia("(prefers-reduced-motion: reduce)").matches, hover: false };
-    ctrl.innerHTML = '<button class="c-prev" aria-label="Anterior">&#8249;</button><div class="dots" role="tablist" aria-label="Páginas"></div><span class="c-count" aria-live="off"></span>' +
-      '<button class="c-next" aria-label="Siguiente">&#8250;</button><button class="c-play"></button>';
+    ctrl.innerHTML = `<button class="c-prev" aria-label="Anterior">${ico("chevron-left")}</button><div class="dots" role="tablist" aria-label="Páginas"></div><span class="c-count" aria-live="off"></span>` +
+      `<button class="c-next" aria-label="Siguiente">${ico("chevron-right")}</button><button class="c-play"></button>`;
     const q = (sel) => ctrl.querySelector(sel);
     const items = () => [...track.children];
     function measure() {
@@ -507,7 +628,7 @@
     function setPaused(p) {
       st.paused = p;
       const b = q(".c-play");
-      b.innerHTML = p ? "&#9654;" : "&#10074;&#10074;";
+      b.innerHTML = ico(p ? "play" : "pause");
       b.setAttribute("aria-label", p ? "Reanudar el avance automático" : "Pausar el avance automático");
     }
     let timer;
@@ -554,10 +675,10 @@
       const [, rel] = relLabel(n.published);
       const tp = topicOf(n);
       const when = new Date(n.published).toLocaleString("es-PE", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
-      const orig = n.title_es ? ` title="Original: ${esc(n.title)}"` : "";
-      return `<article class="news-card"><div class="news-src"><span class="provtag">${newsIcon(n)}<span>${esc(n.source)}</span></span><time datetime="${esc(n.published)}" title="${esc(when)}">${esc(rel)}</time></div>
-        <a class="t" href="${esc(n.link)}" target="_blank" rel="noopener noreferrer"${orig}>${esc(tTitle(n))}</a>${tSummary(n) ? `<p>${esc(tSummary(n))}</p>` : ""}
-        <div class="chips"><span class="chip tp" style="color:${TOPIC_COLORS[tp]}">${esc(TOPIC_NAMES[tp])}</span>${n.title_es ? "" : '<span class="chip">Original en inglés</span>'}</div></article>`;
+      const ntip = [n.title_es ? "Título original" : "Noticia en inglés", n.title, `${n.source} · ${when}`, "Clic para leer la fuente"].join("\n");
+      return `<article class="news-card fx" style="--a:${TOPIC_COLORS[tp]}"${tipAttr(ntip)}><div class="news-src"><span class="provtag">${newsIcon(n)}<span>${esc(n.source)}</span></span><time datetime="${esc(n.published)}" title="${esc(when)}">${esc(rel)}</time></div>
+        <a class="t" href="${esc(n.link)}" target="_blank" rel="noopener noreferrer">${esc(tTitle(n))}</a>${tSummary(n) ? `<p>${esc(tSummary(n))}</p>` : ""}
+        <div class="chips"><span class="chip tp" style="color:${TOPIC_COLORS[tp]}">${ico(TOPIC_ICONS[tp])}${esc(TOPIC_NAMES[tp])}</span>${n.title_es ? "" : `<span class="chip">${ico("languages")}Original en inglés</span>`}</div></article>`;
     }).join("");
     if (newsCar) newsCar.reset();
   }
@@ -586,23 +707,25 @@
   // ---- Banner de destacados ----
   function renderHero(meta) {
     const slides = [];
-    const link = (href, txt, ext = "") => `<a class="cta" href="${href}"${ext}>${txt}</a>`;
+    const link = (href, txt, ext = "") => `<a class="cta" href="${href}"${ext}>${txt}${ico("arrow-right")}</a>`;
+    const slide = (acc, ic, k, body, long = false) => ({ acc, long, html: `<span class="bgi">${ico(ic)}</span><div class="k">${ico(ic)}${esc(k)}</div>${body}` });
     const head = $("#headline").textContent;
-    if (head) slides.push(`<div class="k">Resumen de hoy</div><p class="big">${esc(head)}</p>${link("#resumen", "Ver las conclusiones")}`);
+    if (head) slides.push(slide(C.violet, "sparkles", "Resumen de hoy", `<p class="big">${esc(head)}</p>${link("#resumen", "Ver las conclusiones")}`, head.length > 110));
     const top = news.items.find((n) => n.kind === "lab" && ageDays(n.published) <= 1) || news.items[0];
-    if (top) slides.push(`<div class="k">Noticia destacada</div><p class="big">${esc(tTitle(top))}</p><span class="tg">${newsIcon(top)}<span>${esc(top.source)} · ${esc(relLabel(top.published)[1])}</span></span>${link(esc(top.link), "Leer la fuente", ' target="_blank" rel="noopener noreferrer"')}`);
+    if (top) slides.push(slide(C.cyan, "newspaper", "Noticia destacada", `<p class="big">${esc(tTitle(top))}</p><span class="tg">${newsIcon(top)}<span>${esc(top.source)} · ${esc(relLabel(top.published)[1])}</span></span>${link(esc(top.link), "Leer la fuente", ' target="_blank" rel="noopener noreferrer"')}`, tTitle(top).length > 90));
     const cut = versionPairs(models.filter(isMajor)).filter((p) => p.dIn != null && p.dIn <= -10).sort((x, y) => x.dIn - y.dIn)[0];
-    if (cut) slides.push(`<div class="k">Mayor recorte de precio</div><p class="big">${esc(cut.cur.name)}: ${cut.dIn}% en el precio de entrada</p><p class="sm">De ${esc(fmtPrice(cut.prev.price_in))} a ${esc(fmtPrice(cut.cur.price_in))} por millón de tokens frente a ${esc(cut.prev.name.replace(/^[^:]+: /, ""))}.</p>${link("#lanzamientos", "Ver qué cambió")}`);
+    if (cut) slides.push(slide(C.green, "coins", "Mayor recorte de precio", `<p class="big">${esc(cut.cur.name)}: ${cut.dIn}% en el precio de entrada</p><p class="sm">De ${esc(fmtPrice(cut.prev.price_in))} a ${esc(fmtPrice(cut.cur.price_in))} por millón de tokens frente a ${esc(cut.prev.name.replace(/^[^:]+: /, ""))}.</p>${link("#lanzamientos", "Ver qué cambió")}`));
     const cm = currentModels();
-    if (cm.length) slides.push(`<div class="k">Matriz de comparación</div><p class="big">${cm.length} modelos comparables en tres gamas de precio</p><p class="sm">Gama alta, media y económicos, con el mejor valor de cada criterio resaltado.</p>${link("#matriz", "Abrir la matriz")}`);
+    if (cm.length) slides.push(slide(C.pink, "table-2", "Matriz de comparación", `<p class="big">${cm.length} modelos comparables en tres gamas de precio</p><p class="sm">Gama alta, media y económicos, con el mejor valor de cada criterio resaltado.</p>${link("#matriz", "Abrir la matriz")}`));
     const box = $("#hero-track");
     if (!slides.length) { box.closest(".hero-car").hidden = true; return; }
-    box.innerHTML = slides.map((h) => `<article class="slide${h.length > 260 ? " long" : ""}">${h}</article>`).join("");
+    box.innerHTML = slides.map((x) => `<article class="slide fx${x.long ? " long" : ""}" style="--a:${x.acc}">${x.html}</article>`).join("");
     createCarousel(box, $("#hero-ctrl"), 0, 7000).reset();
   }
 
   async function init() {
     theme();
+    initEffects();
     const [data, hist, newsData] = await Promise.all([load("data/latest.json", null), load("data/history.json", []), load("data/news.json", null)]);
     initNews(newsData);
     if (!data || !data.models) { $("#status-text").textContent = "Sin datos"; return; }
