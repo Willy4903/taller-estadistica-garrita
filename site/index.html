@@ -19,6 +19,7 @@
 })();
 </script>
 <link rel="stylesheet" href="style.css?v=__V__">
+<link rel="stylesheet" href="guide.css?v=__V__">
 </head>
 <body>
 <div id="progress" aria-hidden="true"></div>
@@ -35,6 +36,7 @@
       <a href="#resumen">Resumen</a>
       <a href="#lanzamientos">Qué cambió</a>
       <a href="#matriz">Matriz</a>
+      <a href="#guia">Guía de IA</a>
       <a href="#graficas">Gráficas</a>
       <a href="#comparador">Comparador</a>
       <a href="#abiertos">Modelos abiertos</a>
@@ -63,6 +65,8 @@ Titulares del día de laboratorios y prensa, traducidos al español, con filtros
 Cada lanzamiento reciente frente a la versión anterior de su familia: precio, contexto y capacidades."><span class="qi"><i class="ui" style="--i:url(icons/ui/git-compare.svg)" aria-hidden="true"></i></span><b>Qué cambió</b><small>Nuevo vs. anterior</small></a>
     <a class="fx" href="#matriz" style="--a:#f43f9e" data-tip="Matriz de comparación
 Modelos vigentes de los laboratorios principales, agrupados por gama de precio."><span class="qi"><i class="ui" style="--i:url(icons/ui/table-2.svg)" aria-hidden="true"></i></span><b>Matriz</b><small>Modelos por gama</small></a>
+    <a class="fx" href="#guia" style="--a:#f43f9e" data-tip="Guía de IA
+IA generativa y agéntica, ética, normatividad (UE y Perú), verificador de riesgo y glosario."><span class="qi"><i class="ui" style="--i:url(icons/ui/book-open.svg)" aria-hidden="true"></i></span><b>Guía de IA</b><small>Ética y normas</small></a>
     <a class="fx" href="#graficas" style="--a:#fbbf24" data-tip="Gráficas
 Lanzamientos por mes, proveedores activos y relación entre precio y contexto."><span class="qi"><i class="ui" style="--i:url(icons/ui/chart-column.svg)" aria-hidden="true"></i></span><b>Gráficas</b><small>Tendencias</small></a>
     <a class="fx" href="#comparador" style="--a:#34d399" data-tip="Comparador
@@ -131,6 +135,8 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
     <p class="sub" id="mx-note"></p>
   </section>
 
+  <section id="guia" class="rv"><div id="guide-root"></div></section>
+
   <section id="graficas" class="rv">
     <h2><span class="hi" style="--a:#fbbf24"><i class="ui" style="--i:url(icons/ui/chart-column.svg)" aria-hidden="true"></i></span> Gráficas</h2>
     <div class="grid2">
@@ -190,5 +196,6 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
 
 <script src="vendor/chart.umd.js"></script>
 <script src="app.js?v=__V__"></script>
+<script src="guide.js?v=__V__"></script>
 </body>
 </html>

@@ -32,7 +32,7 @@ a{color:var(--cyan)}
 .top-in{display:flex;align-items:center;gap:20px;height:68px}
 .brand{white-space:nowrap;display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none;font-weight:800;font-size:1.25rem;letter-spacing:-.02em}
 nav.main{display:flex;gap:2px;margin-left:4px}
-nav.main a{color:var(--muted);text-decoration:none;font-size:.96rem;font-weight:500;white-space:nowrap;padding:8px 12px;border-radius:99px;transition:color .2s,background .2s}
+nav.main a{color:var(--muted);text-decoration:none;font-size:.96rem;font-weight:500;white-space:nowrap;padding:8px 10px;border-radius:99px;transition:color .2s,background .2s}
 nav.main a:hover{color:var(--text);background:color-mix(in srgb,var(--violet) 16%,transparent)}
 nav.main a.on{color:var(--text);background:color-mix(in srgb,var(--cyan) 16%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--cyan) 40%,transparent)}
 .status{margin-left:auto;display:flex;align-items:center;gap:10px;font:500 .85rem ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);white-space:nowrap}
@@ -78,7 +78,7 @@ h3{margin:0;font-size:1.2rem;font-weight:700;letter-spacing:-.01em}
 .fx.lift:hover,.quick a:hover,.news-card:hover,.kpi:hover,.ins-card:hover{transform:translateY(-5px)}
 
 /* ---------- accesos rápidos ---------- */
-.quick{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin:30px 0 8px}
+.quick{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin:30px 0 8px}
 .quick a{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:22px 22px 20px;color:var(--text);text-decoration:none}
 .quick a:focus-visible{outline:2px solid var(--a);outline-offset:3px}
 .qi{display:grid;place-items:center;width:54px;height:54px;border-radius:17px;color:#fff;margin-bottom:8px;background:linear-gradient(135deg,var(--a),color-mix(in srgb,var(--a) 50%,#000));box-shadow:0 12px 28px -12px var(--a),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .3s}
