@@ -106,14 +106,51 @@
     return c.join("");
   }
 
-  function renderLatest(meta) {
-    $("#latest").innerHTML = models.filter(isMajor).slice(0, 12).map((m) => {
-      const isNew = !meta.sample && daysAgo(m.first_seen) <= 2 && m.first_seen !== m.created;
-      return `<article class="card"><div class="prov">${provTag(m.provider)}</div><h4>${esc(m.name)}</h4>
-        <div class="meta"><span>${esc(fmtDate(m.created))}</span><span>Contexto <b>${esc(fmtCtx(m.context))}</b></span>
-        <span>Entrada <b>${esc(fmtPrice(m.price_in))}</b></span><span>Salida <b>${esc(fmtPrice(m.price_out))}</b></span></div>
-        <div class="chips">${chips(m, isNew)}</div></article>`;
-    }).join("");
+  // ---- Nueva versión frente a la anterior de la misma familia ----
+  function family(m) {
+    let n = m.name.includes(": ") ? m.name.split(": ").slice(1).join(": ") : m.name;
+    n = n.toLowerCase().replace(/\(.*?\)/g, " ").replace(/\bv?\d+(\.\d+)*[a-z]?\b/g, " ")
+      .replace(/\b(preview|beta|exp|experimental|latest|batch)\b/g, " ").replace(/[^a-z ]/g, " ");
+    return norm(m.provider) + "|" + n.split(/\s+/).filter(Boolean).join(" ");
+  }
+  function versionPairs(list) {
+    const groups = {};
+    list.forEach((m) => { (groups[family(m)] = groups[family(m)] || []).push(m); });
+    const out = [];
+    Object.values(groups).forEach((g) => {
+      g.sort((a, b) => b.created.localeCompare(a.created));
+      const cur = g[0], prev = g.find((m) => m.created < cur.created && m.name !== cur.name);
+      if (!prev || daysAgo(cur.created) > 90) return;
+      const d = (a, b) => (a > 0 && b > 0 ? Math.round(((a - b) / b) * 100) : null);
+      out.push({ cur, prev, dIn: d(cur.price_in, prev.price_in), dOut: d(cur.price_out, prev.price_out), same: cur.context === prev.context });
+    });
+    return out.sort((a, b) => b.cur.created.localeCompare(a.cur.created) || a.cur.name.localeCompare(b.cur.name));
+  }
+  function deltaCell(now, before, pctv, fmt) {
+    if (now == null || before == null) return '<span class="muted">n/d</span>';
+    if (now === before) return `<span class="muted">${esc(fmt(now))} sin cambio</span>`;
+    const tone = now < before ? "up" : "down";
+    const tag = pctv == null ? "" : ` <span class="${tone}">${pctv > 0 ? "+" : ""}${pctv}%</span>`;
+    return `<span class="was">${esc(fmt(before))}</span> → <b>${esc(fmt(now))}</b>${tag}`;
+  }
+  function ctxCell(cur, prev) {
+    if (cur === prev) return `<span class="muted">${esc(fmtCtx(cur))} sin cambio</span>`;
+    const tone = cur > prev ? "up" : "down";
+    return `<span class="was">${esc(fmtCtx(prev))}</span> → <b>${esc(fmtCtx(cur))}</b> <span class="${tone}">${cur > prev ? "más" : "menos"}</span>`;
+  }
+  function renderVersions() {
+    const rows = versionPairs(models.filter(isMajor)).slice(0, 12);
+    $("#versions tbody").innerHTML = rows.map(({ cur, prev, dIn, dOut }) => {
+      const gains = [];
+      if (cur.multimodal && !prev.multimodal) gains.push('<span class="chip mm">+ Multimodal</span>');
+      if (cur.reasoning && !prev.reasoning) gains.push('<span class="chip rs">+ Razonamiento</span>');
+      if (!cur.multimodal && prev.multimodal) gains.push('<span class="chip">− Multimodal</span>');
+      if (!cur.reasoning && prev.reasoning) gains.push('<span class="chip">− Razonamiento</span>');
+      return `<tr><td class="nm">${provTag(cur.provider)}<br><b>${esc(cur.name.replace(/^[^:]+: /, ""))}</b><small>${esc(fmtDate(cur.created))}</small></td>
+        <td class="nm">${esc(prev.name.replace(/^[^:]+: /, ""))}<small>${esc(fmtDate(prev.created))}</small></td>
+        <td>${deltaCell(cur.price_in, prev.price_in, dIn, fmtPrice)}</td><td>${deltaCell(cur.price_out, prev.price_out, dOut, fmtPrice)}</td>
+        <td>${ctxCell(cur.context, prev.context)}</td><td><div class="chips" style="margin:0">${gains.join("") || '<span class="muted">sin cambios</span>'}</div></td></tr>`;
+    }).join("") || '<tr><td colspan="6" class="muted">No hay versiones nuevas con una anterior comparable en los últimos 90 días.</td></tr>';
   }
 
   // ---- Conclusiones ----
@@ -168,10 +205,10 @@
       headline.push(`los nuevos cuestan ${Math.abs(ch)}% ${ch <= 0 ? "menos" : "más"} que los anteriores`);
     }
 
-    // Mejor valor reciente
-    const value = paid(d30).filter((m) => m.context >= 128000).sort((a, b) => a.price_in - b.price_in)[0];
-    if (value) cards.push({ k: "Mejor valor reciente", v: "$" + value.price_in.toFixed(3), u: value.name,
-      t: `El más barato de pago entre los nuevos con 128K de contexto o más (${fmtCtx(value.context)}).`, prov: value.provider });
+    // Mayor recorte de precio frente a la versión anterior
+    const cut = versionPairs(M).filter((p) => p.dIn != null && p.dIn <= -10).sort((x, y) => x.dIn - y.dIn)[0];
+    if (cut) cards.push({ k: "Mayor recorte de precio", v: cut.dIn + "%", u: cut.cur.name,
+      t: `Entrada de ${fmtPrice(cut.prev.price_in)} a ${fmtPrice(cut.cur.price_in)} por millón de tokens frente a ${cut.prev.name.replace(/^[^:]+: /, "")}.`, tone: "up" });
 
     // Contexto máximo
     const big = [...d30].sort((a, b) => b.context - a.context)[0];
@@ -375,7 +412,7 @@
     renderStatus(data.meta);
     renderKpis(data.meta, hist);
     renderInsights(data.meta);
-    renderLatest(data.meta);
+    renderVersions();
     renderCharts(hist);
     renderHF(data.hf || []);
     bindTable();
