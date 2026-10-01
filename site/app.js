@@ -160,7 +160,7 @@
     els.forEach((e) => io.observe(e));
   }
 
-  let models = [], allCount = 0, state = { sort: "created", asc: false, shown: 10, picked: [] };
+  let models = [], allCount = 0, state = { sort: "created", asc: false, shown: 10, picked: [], open: new Set() };
 
   function renderStatus(meta) {
     const upd = new Date(meta.updated_at);
@@ -218,6 +218,8 @@
     if (m.multimodal) caps.push("entiende " + (m.inputs || []).filter((i) => i !== "text").map((i) => INPUT_ES[i] || i).join(", "));
     if (m.reasoning) caps.push("razona antes de responder");
     if (caps.length) lines.push("Capacidades: " + caps.join(" y "));
+    lines.push("Ideal para: " + uses(m).tags.map((x) => x.t.toLowerCase()).join(", "));
+    lines.push("Clic en la fila para ver cuándo conviene usarlo");
     return lines.join("\n");
   }
   const tipAttr = (txt) => ` data-tip="${esc(txt)}" tabindex="0"`;
@@ -404,6 +406,96 @@
       `<li><a href="https://huggingface.co/${encodeURI(m.id)}" target="_blank" rel="noopener">${i + 1}. ${esc(m.id)}</a><span>${esc(nf.format(m.downloads))} desc. · ${esc(nf.format(m.likes))} likes</span></li>`).join("");
   }
 
+  // ---- Para qué sirve cada modelo ----
+  // Orientación calculada con precio, contexto y capacidades (no es una evaluación de calidad) más la descripción del proveedor.
+  let thrCache = null;
+  function thr() {
+    if (thrCache) return thrCache;
+    const b = models.filter((m) => isMajor(m) && m.price_in > 0 && m.price_out > 0).map((m) => (m.price_in * 3 + m.price_out) / 4).sort((x, y) => x - y);
+    thrCache = { lo: b[Math.floor(b.length / 3)] || 0.6, hi: b[Math.floor((b.length * 2) / 3)] || 3 };
+    return thrCache;
+  }
+  const money = (v) => (v == null ? "n/d" : v === 0 ? "Gratis" : v < 0.01 ? "menos de $0.01" : "$" + v.toFixed(v < 1 ? 3 : 2));
+  function uses(m) {
+    const tags = [], good = [], care = [];
+    const nm = (m.id + " " + m.name).toLowerCase(), ds = (m.description || "").toLowerCase();
+    const bl = m.price_in > 0 && m.price_out > 0 ? (m.price_in * 3 + m.price_out) / 4 : null;
+    const words = Math.round((m.context * 0.75) / 1000) * 1000;
+    const add = (ic, t, why) => { tags.push({ ic, t }); good.push({ t, why }); };
+    if (m.price_in === 0 && m.price_out === 0) add("zap", "Probar sin costo", "no cobra por token: sirve para prototipos y pruebas, aunque suele tener límites de uso o menor disponibilidad.");
+    if (/code|coder|codex|devstral|codestral/.test(nm) || /\b(coding|programming|software engineering)\b/.test(ds)) add("code", "Programación", "orientado a escribir, revisar y depurar código.");
+    if (m.reasoning) { add("brain", "Razonamiento complejo", "piensa paso a paso antes de responder: útil en matemáticas, lógica, análisis y planificación."); care.push("Más lento y con más tokens por respuesta que un modelo sin razonamiento; sobra para tareas simples."); }
+    if (m.context >= 500000) add("file-search", "Documentos extensos", `su contexto de ${fmtCtx(m.context)} tokens (≈ ${nf.format(words)} palabras) permite analizar contratos, informes o bases de código completas de una vez.`);
+    else if (m.context >= 128000) good.push({ t: "Contexto amplio", why: `con ${fmtCtx(m.context)} tokens (≈ ${nf.format(words)} palabras) maneja manuales e informes largos.` });
+    else if (m.context > 0 && m.context <= 64000) care.push(`Contexto de ${fmtCtx(m.context)}: para documentos largos hay que dividirlos en partes.`);
+    const ins = m.inputs || [];
+    if (ins.includes("image")) add("image", "Analizar imágenes", "acepta imágenes: capturas, gráficos, facturas o documentos escaneados.");
+    if (ins.includes("audio") || ins.includes("video")) add("mic", "Audio y video", "puede procesar " + [ins.includes("audio") && "audio", ins.includes("video") && "video"].filter(Boolean).join(" y ") + ".");
+    if (/flash|mini|lite|nano|haiku|small|instant|turbo|fast/.test(nm)) add("timer", "Respuestas rápidas", "versión ligera pensada para velocidad y bajo costo: chatbots, clasificación y extracción a gran volumen.");
+    if (/sonar|search|online/.test(nm) || /web search|real-time|up-to-date information/.test(ds)) add("search", "Búsqueda con fuentes", "consulta información actual de la web y suele citar fuentes.");
+    if (/image|banana|imagen|flux|dall|diffusion/.test(nm) && !/vision/.test(nm)) add("image", "Generación de imágenes", "orientado a crear o editar imágenes.");
+    if (/\b(tts|whisper|voice|speech|realtime|audio)\b/.test(nm)) add("mic", "Voz y audio", "orientado a conversación por voz o transcripción.");
+    if (/creative|roleplay|role-play|storytelling|fiction/.test(ds) || /euryale|story|\brp\b|roleplay/.test(nm)) add("pen-line", "Escritura creativa", "pensado para relatos, personajes y conversación con estilo.");
+    if (/agentic|tool use|tool calling|function calling|\bagents?\b/.test(ds)) add("bot", "Agentes y herramientas", "diseñado para usar herramientas y resolver tareas de varios pasos.");
+    if (/multilingual|\b\d{2,3}\+? languages\b/.test(ds)) add("languages", "Varios idiomas", "buen soporte para trabajar en múltiples idiomas.");
+    if (/\b(math|mathematical|stem|scientific)\b/.test(ds)) add("calculator", "Matemáticas y ciencia", "destaca en problemas matemáticos y científicos según su descripción.");
+    if (bl != null && bl < thr().lo) add("coins", "Alto volumen a bajo costo", `con ≈ ${money(bl)} por millón de tokens conviene para procesar grandes cantidades: clasificar, resumir o atender consultas.`);
+    if (bl != null && bl >= thr().hi) { add("target", "Tareas críticas", `gama alta (≈ ${money(bl)} por millón de tokens): para casos donde importa la calidad, como análisis complejo, código difícil y agentes.`); care.push("Cuesta bastante más que las opciones medias y económicas: resérvalo para donde aporte valor."); }
+    if (m.price_in > 0 && m.price_out / m.price_in >= 5) care.push(`La salida cuesta ${Math.round(m.price_out / m.price_in)} veces la entrada: ojo con las respuestas muy largas.`);
+    if (!tags.length) add("message-square", "Uso general", "conversación, redacción, resumen y consultas cotidianas.");
+    return { tags: tags.slice(0, 4), good: good.slice(0, 5), care: care.slice(0, 3) };
+  }
+  function costExamples(m) {
+    if (m.price_in == null || m.price_out == null) return [];
+    const c = (tin, tout) => (tin * m.price_in + tout * m.price_out) / 1e6;
+    const out = [["message-square", "1,000 conversaciones de soporte (≈ 1,500 tokens de entrada y 500 de salida cada una)", c(1.5e6, 0.5e6)]];
+    if (m.context >= 40000) out.push(["file-text", "Resumir un informe de 50 páginas (≈ 35,000 tokens) en un resumen de 1,000 tokens", c(35000, 1000)]);
+    if (m.context >= 140000) out.push(["book-open", `Analizar un libro de ${nf.format(100000)} palabras (≈ 133,000 tokens) y responder con 2,000 tokens`, c(133000, 2000)]);
+    return out;
+  }
+  function descText(m) {
+    if (m.description_es) return { t: m.description_es, en: false };
+    if (m.description) return { t: m.description, en: true };
+    return null;
+  }
+  function useChips(m, tags) {
+    return `<div class="chips use-tags">${(tags || uses(m).tags).slice(0, 3).map((x) => `<span class="chip ut${x.rel ? " rel" : ""}">${ico(x.ic)}${esc(x.t)}</span>`).join("")}</div>`;
+  }
+  // Dentro de un grupo de modelos comparables, destaca lo que distingue a cada uno (lo común a casi todos no ayuda a decidir).
+  function distinguish(rows) {
+    const n = rows.length || 1, freq = {};
+    rows.forEach((m) => uses(m).tags.forEach((t) => { freq[t.t] = (freq[t.t] || 0) + 1; }));
+    const minB = Math.min(...rows.map((m) => m.blend)), maxC = Math.max(...rows.map((m) => m.context));
+    const nMax = rows.filter((m) => m.context === maxC).length;
+    const out = new Map();
+    rows.forEach((m) => {
+      const rel = [];
+      if (n > 3 && m.blend === minB) rel.push({ ic: "coins", t: "Más barato de la gama", rel: true });
+      if (n > 3 && m.context === maxC && nMax <= 3) rel.push({ ic: "ruler", t: "Mayor contexto de la gama", rel: true });
+      const own = uses(m).tags.slice().sort((a, b) => freq[a.t] - freq[b.t]);
+      const rare = own.filter((t) => freq[t.t] / n < 0.7), common = own.filter((t) => freq[t.t] / n >= 0.7);
+      out.set(m.id, rel.concat(rare, common).slice(0, 3));
+    });
+    return out;
+  }
+  function rankLine(rows, m) {
+    const byPrice = [...rows].sort((a, b) => a.blend - b.blend).findIndex((x) => x.id === m.id) + 1;
+    const byCtx = [...rows].sort((a, b) => b.context - a.context).findIndex((x) => x.id === m.id) + 1;
+    return `Precio mixto: puesto ${byPrice} de ${rows.length} (de más barato a más caro) · Contexto: puesto ${byCtx} de ${rows.length} (de mayor a menor)`;
+  }
+  function detailRow(m, cols, rows) {
+    const u = uses(m), ex = costExamples(m), d = descText(m);
+    return `<tr class="md-row"><td colspan="${cols}"><div class="md">
+      ${rows ? `<div class="md-col wide md-rank">${ico("trophy")}<span><b>En su gama:</b> ${esc(rankLine(rows, m))}</span></div>` : ""}
+      <div class="md-col"><h5>${ico("lightbulb")} Para qué es bueno</h5><ul>${u.good.map((g) => `<li><b>${esc(g.t)}.</b> ${esc(g.why)}</li>`).join("")}</ul></div>
+      <div class="md-col"><h5>${ico("triangle-alert")} Con cuidado</h5>${u.care.length ? `<ul>${u.care.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : '<p class="muted">Sin advertencias particulares por precio o contexto.</p>'}
+        <h5 class="md-h5b">${ico("receipt")} Costo de ejemplo</h5><ul class="md-cost">${ex.map((e) => `<li>${ico(e[0])}<span>${esc(e[1])}: <b>${esc(money(e[2]))}</b></span></li>`).join("")}</ul></div>
+      <div class="md-col wide">${d ? `<h5>${ico("quote")} Según el proveedor ${d.en ? '<span class="chip">en inglés</span>' : ""}</h5><p>${esc(d.t)}</p>` : ""}
+        <p class="md-note">${ico("info")}<span>La orientación se calcula con el precio, el contexto y las capacidades del modelo; no mide su calidad real. Pruébalo con tus propios casos antes de decidir.</span></p></div>
+    </div></td></tr>`;
+  }
+  const chev = (open) => ico("chevron-down", "chev" + (open ? " open" : ""));
+
   // ---- Comparador ----
   function filtered() {
     const q = $("#q").value.trim().toLowerCase(), p = $("#prov").value, f = $("#flt").value;
@@ -422,11 +514,14 @@
       return (typeof x === "string" ? x.localeCompare(y) : x - y) * dir;
     });
     $("#count").textContent = nf.format(rows.length) + " modelos";
-    $("#tbl tbody").innerHTML = rows.slice(0, state.shown).map((m) => `<tr${tipAttr(modelTip(m))}>
+    $("#tbl tbody").innerHTML = rows.slice(0, state.shown).map((m) => {
+      const open = state.open.has(m.id);
+      return `<tr data-row="${esc(m.id)}" class="${open ? "open" : ""}" aria-expanded="${open}"${tipAttr(modelTip(m))}>
       <td><input type="checkbox" data-id="${esc(m.id)}" aria-label="Comparar ${esc(m.name)}" ${state.picked.includes(m.id) ? "checked" : ""}></td>
-      <td class="nm">${esc(m.name)}<small>${esc(m.id)}</small></td><td>${provTag(m.provider)}</td><td>${esc(fmtDate(m.created))}</td>
+      <td class="nm">${chev(open)}${esc(m.name)}<small>${esc(m.id)}</small></td><td>${provTag(m.provider)}</td><td>${esc(fmtDate(m.created))}</td>
       <td class="num">${esc(fmtCtx(m.context))}</td><td class="num">${esc(fmtPrice(m.price_in))}</td><td class="num">${esc(fmtPrice(m.price_out))}</td>
-      <td><div class="chips" style="margin:0">${chips(m, false)}</div></td></tr>`).join("");
+      <td>${useChips(m)}</td><td><div class="chips" style="margin:0">${chips(m, false)}</div></td></tr>${open ? detailRow(m, 9) : ""}`;
+    }).join("");
     $("#more").hidden = rows.length <= state.shown;
     document.querySelectorAll("#tbl th[data-k]").forEach((th) => {
       const on = th.dataset.k === k;
@@ -449,7 +544,12 @@
     const row = (l, f) => `<tr><th scope="row">${l}</th>${sel.map((m) => `<td>${f(m)}</td>`).join("")}</tr>`;
     $("#cmp-table").innerHTML = row("Modelo", (m) => esc(m.name)) + row("Proveedor", (m) => provTag(m.provider)) + row("Lanzamiento", (m) => esc(fmtDate(m.created))) +
       row("Contexto", (m) => esc(fmtCtx(m.context))) + row("Entrada $/M", (m) => esc(fmtPrice(m.price_in))) + row("Salida $/M", (m) => esc(fmtPrice(m.price_out))) +
-      row("Multimodal", (m) => (m.multimodal ? "Sí (" + esc(m.inputs.join(", ")) + ")" : "No")) + row("Razonamiento", (m) => (m.reasoning ? "Sí" : "No"));
+      row("Multimodal", (m) => (m.multimodal ? "Sí (" + esc(m.inputs.join(", ")) + ")" : "No")) + row("Razonamiento", (m) => (m.reasoning ? "Sí" : "No")) +
+      row("Ideal para", (m) => `<div class="chips use-tags">${uses(m).tags.map((x) => `<span class="chip ut">${ico(x.ic)}${esc(x.t)}</span>`).join("")}</div>`) +
+      row("Para qué es bueno", (m) => `<ul class="cmp-list">${uses(m).good.slice(0, 3).map((g) => `<li><b>${esc(g.t)}.</b> ${esc(g.why)}</li>`).join("")}</ul>`) +
+      row("Con cuidado", (m) => (uses(m).care.length ? `<ul class="cmp-list">${uses(m).care.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : '<span class="muted">Sin advertencias</span>')) +
+      row("1,000 conversaciones de soporte", (m) => esc(money(costExamples(m)[0] && costExamples(m)[0][2]))) +
+      row("Según el proveedor", (m) => { const d = descText(m); return d ? `<p class="cmp-desc">${esc(d.t)}${d.en ? ' <span class="chip">en inglés</span>' : ""}</p>` : '<span class="muted">Sin descripción</span>'; });
   }
 
   function bindTable() {
@@ -463,6 +563,16 @@
       th.addEventListener("click", go);
       th.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
     });
+    const toggleRow = (set, id, redraw) => { set.has(id) ? set.delete(id) : set.add(id); redraw(); };
+    $("#tbl tbody").addEventListener("click", (e) => {
+      if (e.target.closest("input")) return;
+      const tr = e.target.closest("tr[data-row]");
+      if (tr) toggleRow(state.open, tr.dataset.row, renderTable);
+    });
+    $("#tbl tbody").addEventListener("keydown", (e) => {
+      const tr = e.target.closest && e.target.closest("tr[data-row]");
+      if (tr && e.target === tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggleRow(state.open, tr.dataset.row, renderTable); }
+    });
     $("#tbl tbody").addEventListener("change", (e) => {
       const id = e.target.dataset.id;
       if (!id) return;
@@ -475,7 +585,7 @@
   }
 
   // ---- Matriz de comparación por gama ----
-  const mx = { tier: "alta", sort: "price_in", asc: false };
+  const mx = { tier: "alta", sort: "price_in", asc: false, open: new Set() };
   const blend = (m) => (m.price_in * 3 + m.price_out) / 4;
   function currentModels() {
     const groups = {};
@@ -501,14 +611,17 @@
       return ` style="background-color:color-mix(in srgb, var(--green) ${Math.round(score * 46)}%, transparent)"`;
     };
     const yn = (v) => (v ? `<span class="yes">${ico("circle-check")}Sí</span>` : `<span class="no">${ico("circle-x")}No</span>`);
-    $("#matrix tbody").innerHTML = rows.map((m) => `<tr${tipAttr(modelTip(m))}>
-      <td class="nm">${provTag(m.provider)}<br><b>${esc(m.name.replace(/^[^:]+: /, ""))}</b></td><td>${esc(fmtDate(m.created))}</td>
+    const dist = distinguish(rows);
+    $("#matrix tbody").innerHTML = rows.map((m) => {
+      const open = mx.open.has(m.id);
+      return `<tr data-row="${esc(m.id)}" class="${open ? "open" : ""}" aria-expanded="${open}"${tipAttr(modelTip(m))}>
+      <td class="nm">${chev(open)}${provTag(m.provider)}<br><b>${esc(m.name.replace(/^[^:]+: /, ""))}</b><small>${esc(fmtDate(m.created))}</small></td>
       <td class="num hm"${heat(m.price_in, "price_in", false)}>${esc(fmtPrice(m.price_in))}</td>
       <td class="num hm"${heat(m.price_out, "price_out", false)}>${esc(fmtPrice(m.price_out))}</td>
       <td class="num hm"${heat(m.blend, "blend", false)}>${esc(fmtPrice(m.blend))}</td>
       <td class="num hm"${heat(m.context, "context", true)}>${esc(fmtCtx(m.context))}</td>
-      <td>${yn(m.multimodal)}</td><td>${yn(m.reasoning)}</td></tr>`).join("") ||
-      '<tr><td colspan="8" class="muted">No hay modelos en esta gama.</td></tr>';
+      <td>${yn(m.multimodal)}</td><td>${yn(m.reasoning)}</td><td>${useChips(m, dist.get(m.id))}</td></tr>${open ? detailRow(m, 8, rows) : ""}`;
+    }).join("") || '<tr><td colspan="8" class="muted">No hay modelos en esta gama.</td></tr>';
     const lim = (a) => (a.length ? `$${Math.min(...a.map((m) => m.blend)).toFixed(2)} a $${Math.max(...a.map((m) => m.blend)).toFixed(2)}` : "");
     $("#mx-count").textContent = rows.length + " modelos";
     $("#mx-note").textContent = mx.tier === "todos" ? "Gamas por precio mixto: alta " + lim(tiers.alta) + ", media " + lim(tiers.media) + ", económicos " + lim(tiers.eco) + " por millón de tokens."
@@ -524,6 +637,10 @@
       th.addEventListener("click", go);
       th.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
     });
+    const tb = $("#matrix tbody");
+    const flip = (id) => { mx.open.has(id) ? mx.open.delete(id) : mx.open.add(id); renderMatrix(); };
+    tb.addEventListener("click", (e) => { const tr = e.target.closest("tr[data-row]"); if (tr) flip(tr.dataset.row); });
+    tb.addEventListener("keydown", (e) => { const tr = e.target.closest && e.target.closest("tr[data-row]"); if (tr && e.target === tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); flip(tr.dataset.row); } });
     renderMatrix();
   }
 

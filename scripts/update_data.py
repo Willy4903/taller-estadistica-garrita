@@ -192,6 +192,31 @@ def translate_items(items, limit=200):
     return done
 
 
+def translate_descriptions(models, previous_models, limit=450):
+    """Traduce al español las descripciones de los modelos; reutiliza las ya traducidas si no cambiaron."""
+    prev = {m["id"]: m for m in previous_models}
+    pending = []
+    for m in models:
+        old = prev.get(m["id"])
+        if old and old.get("description") == m.get("description") and old.get("description_es"):
+            m["description_es"] = old["description_es"]
+        elif m.get("description") and not m["id"].startswith("~") and not m["id"].endswith(":batch"):
+            pending.append(m)
+    if not pending:
+        return 0
+    tr = get_translator()
+    if not tr:
+        return 0
+    done = 0
+    for m in pending[:limit]:
+        try:
+            m["description_es"] = tr(m["description"]).strip()
+            done += 1
+        except Exception as e:
+            print(f"No se pudo traducir la descripción de {m['id']}: {e}", file=sys.stderr)
+    return done
+
+
 def collect_news(previous_items, now_utc):
     status, found = {}, []
     for key, source, url, kind, only_ai in FEEDS:
@@ -234,6 +259,19 @@ def per_million(value):
     return round(v * 1_000_000, 4) if v >= 0 else None
 
 
+def clean_desc(text, limit=330):
+    """Descripción del proveedor: sin enlaces ni formato markdown, en 1 o 2 frases."""
+    t = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", text or "")
+    t = re.sub(r"https?://\S+", "", t)
+    t = re.sub(r"[*_`#>]+", "", t)
+    t = re.sub(r"\s+", " ", t).strip()
+    if len(t) <= limit:
+        return t
+    cut = t[:limit]
+    end = max(cut.rfind(". "), cut.rfind("? "), cut.rfind("! "))
+    return (cut[: end + 1] if end > 120 else cut.rsplit(" ", 1)[0] + "…").strip()
+
+
 def parse_openrouter(raw):
     models = []
     for m in raw.get("data", []):
@@ -255,6 +293,7 @@ def parse_openrouter(raw):
             "inputs": inputs,
             "multimodal": len(set(inputs) - {"text"}) > 0,
             "reasoning": "reasoning" in (m.get("supported_parameters") or []),
+            "description": clean_desc(m.get("description")),
         })
     return models
 
@@ -350,6 +389,12 @@ def main():
     new_today = sum(1 for m in models if m["first_seen"] == today) if not first_run else 0
 
     models.sort(key=lambda m: (m["created"], m["id"]), reverse=True)
+    if not sample:
+        prev_models = previous.get("models", []) if not previous.get("meta", {}).get("sample") else []
+        n_desc = translate_descriptions(models, prev_models)
+        con = sum(1 for m in models if m.get("description"))
+        trad = sum(1 for m in models if m.get("description_es"))
+        print(f"Descripciones: {con} de {len(models)} modelos con descripción, {trad} en español (traducidas ahora: {n_desc})")
 
     latest = {
         "meta": {
