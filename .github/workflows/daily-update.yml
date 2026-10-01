@@ -46,6 +46,9 @@ jobs:
             git push
           fi
 
+      - name: Versionar archivos estáticos (evita caché del navegador)
+        run: sed -i "s/__V__/$(date +%s)/g" site/index.html
+
       - uses: actions/configure-pages@v5
         with:
           enablement: true
