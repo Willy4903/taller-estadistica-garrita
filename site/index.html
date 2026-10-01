@@ -51,12 +51,19 @@
   <section class="kpis" id="kpis" aria-label="Indicadores"></section>
 
   <section id="noticias">
-    <h2><span class="tag">01</span> Noticias de IA</h2>
-    <p class="sub" id="news-sub">Titulares de laboratorios y prensa especializada, en su idioma original.</p>
-    <div class="filters news-filters" id="news-filters" role="group" aria-label="Filtrar noticias">
-      <button class="pill on" data-f="">Todas</button>
-      <button class="pill" data-f="lab">Laboratorios</button>
-      <button class="pill" data-f="press">Prensa</button>
+    <h2><span class="tag">01</span> Panel de noticias de IA</h2>
+    <p class="sub" id="news-sub">Titulares de laboratorios y prensa especializada, traducidos al español.</p>
+    <div class="panel-bar">
+      <div class="seg" id="n-period" role="group" aria-label="Periodo">
+        <button data-p="1">Hoy</button><button data-p="7" class="on">7 días</button><button data-p="30">30 días</button>
+      </div>
+      <input type="search" id="n-q" placeholder="Buscar en las noticias" aria-label="Buscar en las noticias">
+      <button class="pill" id="n-reset" hidden>Quitar filtros</button>
+    </div>
+    <div class="grid3">
+      <article class="panel"><h3>Noticias por día</h3><p class="sub">Toca una barra para filtrar</p><div class="chart xs"><canvas id="c-n-day"></canvas></div></article>
+      <article class="panel"><h3>Por tema</h3><p class="sub">Toca un tema para filtrar</p><div class="chart xs"><canvas id="c-n-topic"></canvas></div></article>
+      <article class="panel"><h3>Por fuente</h3><p class="sub">Toca una fuente para filtrar</p><div class="chart xs"><canvas id="c-n-src"></canvas></div></article>
     </div>
     <div id="news"></div>
     <button class="btn" id="news-more" hidden>Ver más noticias</button>

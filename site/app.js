@@ -353,52 +353,123 @@
     });
   }
 
-  // ---- Noticias ----
-  const news = { items: [], filter: "", shown: 12 };
+  // ---- Panel de noticias ----
+  const TOPIC_NAMES = { modelos: "Modelos y lanzamientos", productos: "Productos y aplicaciones", negocios: "Negocios y mercado", seguridad: "Seguridad y regulación",
+    investigacion: "Investigación", infra: "Chips e infraestructura", general: "General" };
+  const TOPIC_COLORS = { modelos: C.cyan, productos: C.green, negocios: C.amber, seguridad: C.pink, investigacion: C.violet, infra: "#60a5fa", general: "#64748b" };
+  const news = { items: [], period: 7, q: "", topic: "", source: "", day: "", shown: 12 };
   const NEWS_KEY = { xai: "x-ai" };
+  const pad2 = (n) => String(n).padStart(2, "0");
+  const dayKey = (d) => d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  const ageDays = (iso) => {
+    const day = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate());
+    return Math.round((day(new Date()) - day(new Date(iso))) / 864e5);
+  };
+  const tTitle = (n) => n.title_es || n.title;
+  const tSummary = (n) => (n.title_es ? n.summary_es : n.summary) || "";
+  const topicOf = (n) => (TOPIC_NAMES[n.topic] ? n.topic : "general");
   function newsIcon(n) {
     const k = NEWS_KEY[n.provider] || n.provider;
     return PROV[k] ? provIcon(k) : `<span class="pi mono" aria-hidden="true">${esc(n.source[0])}</span>`;
   }
-  function relDay(iso) {
-    const d = new Date(iso), t = new Date();
-    const day = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate());
-    const diff = Math.round((day(t) - day(d)) / 864e5);
-    if (diff <= 0) return ["Hoy", "hoy"];
-    if (diff === 1) return ["Ayer", "ayer"];
-    if (diff < 7) return ["Esta semana", "hace " + diff + " días"];
-    return ["Antes", "hace " + diff + " días"];
+  function relLabel(iso) {
+    const d = ageDays(iso);
+    if (d <= 0) return ["Hoy", "hoy"];
+    if (d === 1) return ["Ayer", "ayer"];
+    if (d < 7) return ["Esta semana", "hace " + d + " días"];
+    return ["Antes", "hace " + d + " días"];
   }
-  function renderNews() {
-    const list = news.items.filter((n) => !news.filter || n.kind === news.filter);
+  // Aplica los filtros activos; "skip" omite una dimensión para que su propio gráfico muestre todas las opciones.
+  function newsFiltered(...skip) {
+    const q = news.q.trim().toLowerCase();
+    return news.items.filter((n) => {
+      if (!skip.includes("period") && ageDays(n.published) >= news.period) return false;
+      if (!skip.includes("topic") && news.topic && topicOf(n) !== news.topic) return false;
+      if (!skip.includes("source") && news.source && n.source !== news.source) return false;
+      if (!skip.includes("day") && news.day && dayKey(new Date(n.published)) !== news.day) return false;
+      if (q && !(tTitle(n) + " " + n.title + " " + tSummary(n) + " " + n.source).toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }
+  function toggle(key, val) { news[key] = news[key] === val ? "" : val; news.shown = 12; renderNewsPanel(); }
+  const pointer = (e, els) => { if (e.native) e.native.target.style.cursor = els.length ? "pointer" : "default"; };
+
+  function renderNewsCharts() {
+    // Por día
+    const span = Math.min(30, Math.max(7, news.period));
+    const keys = [], labels = [];
+    for (let i = span - 1; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); keys.push(dayKey(d)); labels.push(d.toLocaleDateString("es-PE", { day: "2-digit", month: "short" })); }
+    const byDay = keys.map(() => 0);
+    const base = newsFiltered("period", "day");
+    base.forEach((n) => { const i = keys.indexOf(dayKey(new Date(n.published))); if (i >= 0) byDay[i]++; });
+    draw("c-n-day", { type: "bar", data: { labels, datasets: [{ data: byDay, backgroundColor: keys.map((k) => (!news.day || k === news.day ? C.cyan : C.cyan + "44")), borderRadius: 3 }] },
+      options: { plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }, y: { beginAtZero: true, ticks: { precision: 0 } } },
+        onClick: (e, els) => { if (els.length) toggle("day", keys[els[0].index]); }, onHover: pointer } });
+
+    // Por tema
+    const tc = {};
+    newsFiltered("topic").forEach((n) => { tc[topicOf(n)] = (tc[topicOf(n)] || 0) + 1; });
+    const tk = Object.keys(tc).sort((a, b) => tc[b] - tc[a]);
+    draw("c-n-topic", { type: "doughnut", data: { labels: tk.map((k) => TOPIC_NAMES[k]), datasets: [{ data: tk.map((k) => tc[k]), borderWidth: 0,
+        backgroundColor: tk.map((k) => (!news.topic || k === news.topic ? TOPIC_COLORS[k] : TOPIC_COLORS[k] + "44")) }] },
+      options: { cutout: "58%", plugins: { legend: { position: "right", labels: { boxWidth: 10, font: { size: 11 } } } },
+        onClick: (e, els) => { if (els.length) toggle("topic", tk[els[0].index]); }, onHover: pointer } });
+
+    // Por fuente
+    const sc = {};
+    newsFiltered("source").forEach((n) => { sc[n.source] = (sc[n.source] || 0) + 1; });
+    const sk = Object.keys(sc).sort((a, b) => sc[b] - sc[a]).slice(0, 8);
+    draw("c-n-src", { type: "bar", data: { labels: sk, datasets: [{ data: sk.map((k) => sc[k]), borderRadius: 3,
+        backgroundColor: sk.map((k) => (!news.source || k === news.source ? C.violet : C.violet + "44")) }] },
+      options: { indexAxis: "y", plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } }, y: { grid: { display: false } } },
+        onClick: (e, els) => { if (els.length) toggle("source", sk[els[0].index]); }, onHover: pointer } });
+  }
+
+  function renderNewsList() {
+    const list = newsFiltered();
     const box = $("#news");
+    const active = [news.topic && TOPIC_NAMES[news.topic], news.source, news.day && fmtDate(news.day), news.q && "«" + news.q + "»"].filter(Boolean);
+    $("#news-sub").textContent = list.length + (list.length === 1 ? " noticia" : " noticias") + (active.length ? " con: " + active.join(" · ") : "") +
+      ". Titulares traducidos al español, con enlace a la fuente original.";
+    $("#n-reset").hidden = !(news.topic || news.source || news.day || news.q);
     if (!list.length) {
-      box.innerHTML = '<p class="news-empty">Aún no hay noticias cargadas. Aparecerán tras la próxima actualización diaria (6:00 am, hora de Lima).</p>';
+      box.innerHTML = '<p class="news-empty">No hay noticias con estos filtros. Prueba ampliar el periodo o quitar filtros.</p>';
       $("#news-more").hidden = true;
       return;
     }
     let group = "", html = "";
     list.slice(0, news.shown).forEach((n) => {
-      const [g, rel] = relDay(n.published);
+      const [g, rel] = relLabel(n.published);
       if (g !== group) { group = g; html += `<h3 class="news-group">${esc(g)}</h3>`; }
+      const tp = topicOf(n);
       const when = new Date(n.published).toLocaleString("es-PE", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+      const orig = n.title_es ? ` title="Original: ${esc(n.title)}"` : "";
       html += `<article class="news-item"><div class="news-src"><span class="provtag">${newsIcon(n)}<span>${esc(n.source)}</span></span><time datetime="${esc(n.published)}" title="${esc(when)}">${esc(rel)}</time></div>
-        <div><a class="t" href="${esc(n.link)}" target="_blank" rel="noopener noreferrer">${esc(n.title)}</a>${n.summary ? `<p>${esc(n.summary)}</p>` : ""}</div></article>`;
+        <div><a class="t" href="${esc(n.link)}" target="_blank" rel="noopener noreferrer"${orig}>${esc(tTitle(n))}</a>${tSummary(n) ? `<p>${esc(tSummary(n))}</p>` : ""}
+        <div class="chips"><span class="chip tp" style="color:${TOPIC_COLORS[tp]}">${esc(TOPIC_NAMES[tp])}</span>${n.title_es ? "" : '<span class="chip">Original en inglés</span>'}</div></div></article>`;
     });
     box.innerHTML = html;
     $("#news-more").hidden = list.length <= news.shown;
   }
+
+  function renderNewsPanel() {
+    document.querySelectorAll("#n-period button").forEach((b) => b.classList.toggle("on", +b.dataset.p === news.period));
+    renderNewsCharts();
+    renderNewsList();
+  }
+
   function initNews(data) {
     news.items = (data && data.items) || [];
-    const today = news.items.filter((n) => relDay(n.published)[0] === "Hoy").length;
-    const labs = new Set(news.items.filter((n) => relDay(n.published)[0] === "Hoy" && n.kind === "lab").map((n) => n.source));
-    if (news.items.length) $("#news-sub").textContent = `${today} noticias hoy` + (labs.size ? ` (de ${[...labs].slice(0, 4).join(", ")}${labs.size > 4 ? " y otros" : ""})` : "") + ". Titulares en su idioma original, con enlace a la fuente.";
-    document.querySelectorAll("#news-filters .pill").forEach((b) => b.addEventListener("click", () => {
-      document.querySelectorAll("#news-filters .pill").forEach((x) => x.classList.toggle("on", x === b));
-      news.filter = b.dataset.f; news.shown = 12; renderNews();
-    }));
-    $("#news-more").addEventListener("click", () => { news.shown += 12; renderNews(); });
-    renderNews();
+    if (!news.items.length) {
+      $("#news").innerHTML = '<p class="news-empty">Aún no hay noticias cargadas. Aparecerán tras la próxima actualización diaria (6:00 am, hora de Lima).</p>';
+      return;
+    }
+    // Si hoy no hay noticias, parte del periodo de 7 días; si hay muchas hoy, igualmente se ve el contexto semanal.
+    document.querySelectorAll("#n-period button").forEach((b) => b.addEventListener("click", () => { news.period = +b.dataset.p; news.day = ""; news.shown = 12; renderNewsPanel(); }));
+    $("#n-q").addEventListener("input", (e) => { news.q = e.target.value; news.shown = 12; renderNewsPanel(); });
+    $("#n-reset").addEventListener("click", () => { news.topic = news.source = news.day = news.q = ""; $("#n-q").value = ""; news.shown = 12; renderNewsPanel(); });
+    $("#news-more").addEventListener("click", () => { news.shown += 12; renderNewsList(); });
+    renderNewsPanel();
   }
 
   async function init() {
