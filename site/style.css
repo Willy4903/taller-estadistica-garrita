@@ -149,3 +149,51 @@ input[type=checkbox]{accent-color:var(--cyan);width:16px;height:16px;padding:0}
 #matrix th[data-k]{cursor:pointer}
 .yes{color:var(--green);font-weight:700}
 .no{color:var(--muted)}
+
+.carousel{position:relative}
+.track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:2px 0 6px;position:relative}
+.track::-webkit-scrollbar{display:none}
+.track:focus-visible{outline:2px solid var(--cyan);outline-offset:4px;border-radius:8px}
+.news-card{flex:0 0 calc((100% - 32px) / 3);scroll-snap-align:start;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-height:230px;box-shadow:var(--glow)}
+.news-card .news-src{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+.news-card a.t{color:var(--text);text-decoration:none;font-weight:600;font-size:1.02rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.news-card a.t:hover{color:var(--cyan);text-decoration:underline}
+.news-card p{margin:0;color:var(--muted);font-size:.88rem;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.news-card .chips{margin-top:auto}
+.car-ctrl{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px}
+.car-ctrl button{background:transparent;color:var(--text);border:1px solid var(--line);border-radius:50%;width:36px;height:36px;font-size:1.15rem;line-height:1;cursor:pointer;display:grid;place-items:center}
+.car-ctrl button:hover{border-color:var(--cyan);color:var(--cyan)}
+.car-ctrl button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.c-play{font-size:.7rem;letter-spacing:-1px}
+.dots{display:flex;gap:8px;align-items:center}
+.dots button{width:10px;height:10px;padding:0;border-radius:99px;border:0;background:var(--line);transition:width .25s,background-color .25s}
+.dots button.on{width:26px;background:var(--cyan)}
+@media (max-width:1000px){.news-card{flex-basis:calc((100% - 16px) / 2)}}
+@media (max-width:640px){.news-card{flex-basis:100%}}
+@media (prefers-reduced-motion:reduce){.track{scroll-behavior:auto}}
+
+.c-count{display:none;font:.8rem ui-monospace,monospace;color:var(--muted);min-width:56px;text-align:center}
+@media (max-width:640px){.dots{display:none}.c-count{display:inline-block}}
+.hero-car{padding:8px 0 0}
+.slides{gap:0;scroll-snap-type:x mandatory}
+.slide{flex:0 0 100%;scroll-snap-align:start;min-height:230px;border:1px solid var(--line);border-radius:18px;padding:30px 34px;display:flex;flex-direction:column;justify-content:center;gap:12px;
+  background:radial-gradient(40rem 16rem at 90% 0,rgba(167,139,250,.28),transparent 60%),radial-gradient(34rem 14rem at 0 100%,rgba(34,211,238,.2),transparent 60%),var(--panel);box-shadow:var(--glow)}
+.slide .k{font:.78rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.14em;color:var(--cyan)}
+.slide .big{font-size:clamp(1.5rem,3.4vw,2.4rem);line-height:1.2;font-weight:700;margin:0;max-width:30ch;letter-spacing:-.01em}
+.slide .sm{color:var(--muted);margin:0;max-width:60ch}
+.slide .tg{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:.9rem}
+.cta{align-self:flex-start;margin-top:6px;display:inline-block;background:linear-gradient(90deg,var(--cyan),var(--violet));color:#06101f;text-decoration:none;font-weight:700;border-radius:99px;padding:10px 22px;font-size:.92rem}
+.cta:hover{filter:brightness(1.1)}
+.cta:focus-visible{outline:2px solid var(--text);outline-offset:3px}
+.quick{display:flex;gap:12px;margin:16px 0 4px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.quick::-webkit-scrollbar{display:none}
+.quick a{flex:1 0 118px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;color:var(--text);text-decoration:none;font-size:.88rem;transition:border-color .2s,transform .2s}
+.quick a:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.quick a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.quick svg{width:30px;height:30px;fill:none;stroke:var(--cyan);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:640px){.slide{padding:22px 20px;min-height:250px}}
+
+.slide.long .big{font-size:clamp(1.15rem,2.2vw,1.55rem);max-width:62ch;line-height:1.35;font-weight:600}
+.slide{min-height:210px}
+.chart.xs{height:170px}
+.car-ctrl{margin-bottom:18px}
