@@ -50,6 +50,25 @@ FEEDS = [
     ("press", "TechCrunch", "https://techcrunch.com/category/artificial-intelligence/feed/", "press", False),
     ("press", "MIT Technology Review", "https://www.technologyreview.com/topic/artificial-intelligence/feed", "press", False),
 ]
+# Clasificación temática por palabras clave (sobre el texto original en inglés); gana la primera coincidencia.
+TOPICS = [
+    ("seguridad", r"safety|regulat|lawsuit|sues?\b|court|judge|antitrust|polic(y|ies)|\bban(s|ned)?\b|privacy|copyright|security|alignment|ethic|governance|legislat|\blaw\b|congress|senate|\beu\b|attorney"),
+    ("infra", r"\bchips?\b|\bgpus?\b|data ?cent|compute|infrastructure|hardware|semiconductor|energy|nuclear|\bcloud\b|supercomputer|tpu|datacenter"),
+    ("negocios", r"funding|raises?|valuation|acquir|acquisition|invest|revenue|\bipo\b|partnership|\bdeal\b|billion|million|startup|layoff|hires?\b|\bceo\b|earnings|stock|shares|merger|customers"),
+    ("investigacion", r"research|\bpaper|\bstudy|scientist|discover|benchmark|dataset|algorithm|\bphysics|biology|math|training|\bevals?\b|interpretab"),
+    ("modelos", r"\bmodels?\b|\bgpt-?\d|claude (opus|sonnet|haiku|fable)|gemini \d|llama ?\d|qwen ?\d|deepseek|mistral|grok ?\d|open[- ]source|open[- ]weights|\bllms?\b|reasoning"),
+    ("productos", r"\bapp\b|feature|assistant|chatgpt|copilot|\bagents?\b|browser|search|tool|plugin|launch|rolls? out|introduc|available|debuts?"),
+]
+TOPIC_RES = [(k, re.compile(v, re.I)) for k, v in TOPICS]
+
+
+def classify(text):
+    for key, rx in TOPIC_RES:
+        if rx.search(text):
+            return key
+    return "general"
+
+
 AI_WORDS = re.compile(
     r"\b(ai|a\.i\.|llm|gpt|claude|gemini|gemma|llama|mistral|deepseek|qwen|grok|openai|anthropic|model|models|"
     r"agent|agents|chatbot|transformer|diffusion|reasoning|machine learning|neural|copilot|inference)\b", re.I)
@@ -115,8 +134,62 @@ def parse_feed(raw, key, source, kind, only_ai):
         items.append({
             "title": title, "link": link, "source": source, "provider": key, "kind": kind,
             "published": dt.strftime("%Y-%m-%dT%H:%M:%SZ"), "summary": summary,
+            "topic": classify(title + " " + summary),
         })
     return items
+
+
+_translate = None
+
+
+def get_translator():
+    """Traductor inglés->español local (argostranslate). Devuelve None si no está disponible."""
+    global _translate
+    if _translate is not None:
+        return _translate or None
+    try:
+        import argostranslate.package as pkg
+        import argostranslate.translate as tr
+
+        def find():
+            langs = {l.code: l for l in tr.get_installed_languages()}
+            if "en" in langs and "es" in langs:
+                t = langs["en"].get_translation(langs["es"])
+                if t:
+                    return t
+            return None
+
+        t = find()
+        if t is None:
+            pkg.update_package_index()
+            cand = next(p for p in pkg.get_available_packages() if p.from_code == "en" and p.to_code == "es")
+            pkg.install_from_path(cand.download())
+            t = find()
+        _translate = t.translate if t else False
+    except Exception as e:  # sin traductor se muestra el original
+        print(f"Traductor no disponible: {e}", file=sys.stderr)
+        _translate = False
+    return _translate or None
+
+
+def translate_items(items, limit=200):
+    """Traduce al español título y resumen de las noticias que aún no lo tienen."""
+    pending = [i for i in items if not i.get("title_es")][:limit]
+    if not pending:
+        return 0
+    tr = get_translator()
+    if not tr:
+        return 0
+    done = 0
+    for i in pending:
+        try:
+            i["title_es"] = tr(i["title"]).strip()
+            if i.get("summary"):
+                i["summary_es"] = tr(i["summary"]).strip()
+            done += 1
+        except Exception as e:
+            print(f"No se pudo traducir '{i['title'][:50]}': {e}", file=sys.stderr)
+    return done
 
 
 def collect_news(previous_items, now_utc):
@@ -129,11 +202,20 @@ def collect_news(previous_items, now_utc):
         except Exception as e:  # un feed caído no debe tumbar la actualización
             print(f"Feed {source} falló: {e}", file=sys.stderr)
             status[source] = {"ok": False, "count": 0, "error": str(e)[:160]}
-    merged = {i["link"]: i for i in previous_items}
-    merged.update({i["link"]: i for i in found})
+    prev = {i["link"]: i for i in previous_items}
+    merged = dict(prev)
+    for i in found:
+        old = prev.get(i["link"])
+        if old and old.get("title") == i["title"]:  # conserva la traducción ya hecha
+            i["title_es"], i["summary_es"] = old.get("title_es", ""), old.get("summary_es", "")
+        merged[i["link"]] = i
+    for i in merged.values():
+        i.setdefault("topic", classify(i["title"] + " " + i.get("summary", "")))
     limit = (now_utc - timedelta(days=NEWS_KEEP_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
     kept = sorted((i for i in merged.values() if i["published"] >= limit), key=lambda i: i["published"], reverse=True)
-    return kept[:NEWS_MAX_ITEMS], status
+    kept = kept[:NEWS_MAX_ITEMS]
+    status["_traducidas"] = {"ok": True, "count": translate_items(kept)}
+    return kept, status
 
 
 def read_json(path, default):
@@ -304,8 +386,10 @@ def main():
     if not sample:
         prev_news = read_json(DATA / "news.json", {}).get("items", [])
         items, feed_status = collect_news(prev_news, datetime.now(timezone.utc))
+        trad = feed_status.pop("_traducidas")["count"]
         ok = sum(1 for v in feed_status.values() if v["ok"])
-        print(f"Noticias: {len(items)} items, {ok}/{len(feed_status)} feeds ok")
+        sin = sum(1 for i in items if not i.get("title_es"))
+        print(f"Noticias: {len(items)} items, {ok}/{len(feed_status)} feeds ok, traducidas ahora: {trad}, sin traducir: {sin}")
         for name, v in feed_status.items():
             print(f"  {'OK ' if v['ok'] else 'ERR'} {name}: {v['count']}" + ("" if v["ok"] else " " + v["error"]))
         if items or not prev_news:

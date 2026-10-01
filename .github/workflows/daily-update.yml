@@ -31,6 +31,19 @@ jobs:
         with:
           python-version: "3.12"
 
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.local/share/argos-translate
+          key: argos-${{ runner.os }}-v1
+
+      - name: Instalar traductor al español (versión CPU)
+        continue-on-error: true
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install argostranslate
+
       - name: Descargar datos y generar JSON
         run: python scripts/update_data.py
 
