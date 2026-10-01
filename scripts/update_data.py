@@ -4,17 +4,22 @@
 Fuentes (sin API key):
   - OpenRouter: catálogo de modelos con fecha de lanzamiento, contexto y precios.
   - Hugging Face: modelos abiertos en tendencia.
+  - RSS/Atom de laboratorios y prensa especializada: noticias del día.
 
 Uso:
   python scripts/update_data.py            # datos reales
   python scripts/update_data.py --sample   # datos sintéticos para probar el sitio
 """
+import html
 import json
 import random
+import re
 import statistics
 import sys
 import urllib.request
+import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 DATA = Path(__file__).resolve().parent.parent / "site" / "data"
@@ -25,13 +30,110 @@ HF_URL = (
     "&limit=30&filter=text-generation"
 )
 HISTORY_DAYS = 730
-UA = {"User-Agent": "ia-radar/1.0 (+github actions)"}
+NEWS_KEEP_DAYS = 30
+NEWS_MAX_ITEMS = 150
+UA = {"User-Agent": "Mozilla/5.0 (compatible; IA-Radar/1.0; +https://github.com/Willy4903/taller-estadistica-garrita)"}
+
+# (clave de proveedor, nombre, url, tipo, filtrar por tema IA)
+FEEDS = [
+    ("openai", "OpenAI", "https://openai.com/news/rss.xml", "lab", False),
+    ("anthropic", "Anthropic", "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_news.xml", "lab", False),
+    ("google", "Google DeepMind", "https://deepmind.google/blog/rss.xml", "lab", False),
+    ("google", "Google AI", "https://blog.google/technology/ai/rss/", "lab", True),
+    ("meta", "Meta AI", "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_meta_ai.xml", "lab", False),
+    ("mistralai", "Mistral AI", "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_mistral.xml", "lab", False),
+    ("xai", "xAI", "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_xainews.xml", "lab", False),
+    ("microsoft", "Microsoft Research", "https://www.microsoft.com/en-us/research/feed/", "lab", True),
+    ("nvidia", "NVIDIA", "https://blogs.nvidia.com/blog/category/generative-ai/feed/", "lab", True),
+    ("huggingface", "Hugging Face", "https://huggingface.co/blog/feed.xml", "lab", False),
+    ("press", "The Verge", "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "press", False),
+    ("press", "TechCrunch", "https://techcrunch.com/category/artificial-intelligence/feed/", "press", False),
+    ("press", "MIT Technology Review", "https://www.technologyreview.com/topic/artificial-intelligence/feed", "press", False),
+]
+AI_WORDS = re.compile(
+    r"\b(ai|a\.i\.|llm|gpt|claude|gemini|gemma|llama|mistral|deepseek|qwen|grok|openai|anthropic|model|models|"
+    r"agent|agents|chatbot|transformer|diffusion|reasoning|machine learning|neural|copilot|inference)\b", re.I)
 
 
 def fetch_json(url):
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=60) as r:
         return json.load(r)
+
+
+def fetch_text(url):
+    req = urllib.request.Request(url, headers=UA)
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return r.read()
+
+
+def clean(text, limit=240):
+    text = html.unescape(re.sub(r"<[^>]+>", " ", text or ""))
+    text = re.sub(r"\s+", " ", text).strip()
+    return text if len(text) <= limit else text[: limit - 1].rsplit(" ", 1)[0] + "…"
+
+
+def parse_date(value):
+    if not value:
+        return None
+    value = value.strip()
+    try:
+        dt = parsedate_to_datetime(value)
+    except (TypeError, ValueError):
+        try:
+            dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
+
+
+def parse_feed(raw, key, source, kind, only_ai):
+    """Lee RSS 2.0 o Atom y devuelve una lista de noticias normalizadas."""
+    root = ET.fromstring(raw)
+    strip = lambda tag: tag.rsplit("}", 1)[-1]
+    items = []
+    for node in root.iter():
+        if strip(node.tag) not in ("item", "entry"):
+            continue
+        f = {}
+        for child in node:
+            name = strip(child.tag)
+            if name == "link":
+                f.setdefault("link", child.get("href") or (child.text or "").strip())
+            elif name not in f:
+                f[name] = "".join(child.itertext())
+        title = clean(f.get("title"), 200)
+        link = f.get("link", "")
+        dt = parse_date(f.get("pubDate") or f.get("published") or f.get("updated") or f.get("date"))
+        summary = clean(f.get("description") or f.get("summary") or f.get("encoded") or f.get("content"))
+        if not title or not link or not dt:
+            continue
+        if only_ai and not AI_WORDS.search(title + " " + summary):
+            continue
+        items.append({
+            "title": title, "link": link, "source": source, "provider": key, "kind": kind,
+            "published": dt.strftime("%Y-%m-%dT%H:%M:%SZ"), "summary": summary,
+        })
+    return items
+
+
+def collect_news(previous_items, now_utc):
+    status, found = {}, []
+    for key, source, url, kind, only_ai in FEEDS:
+        try:
+            items = parse_feed(fetch_text(url), key, source, kind, only_ai)
+            status[source] = {"ok": True, "count": len(items)}
+            found.extend(items)
+        except Exception as e:  # un feed caído no debe tumbar la actualización
+            print(f"Feed {source} falló: {e}", file=sys.stderr)
+            status[source] = {"ok": False, "count": 0, "error": str(e)[:160]}
+    merged = {i["link"]: i for i in previous_items}
+    merged.update({i["link"]: i for i in found})
+    limit = (now_utc - timedelta(days=NEWS_KEEP_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    kept = sorted((i for i in merged.values() if i["published"] >= limit), key=lambda i: i["published"], reverse=True)
+    return kept[:NEWS_MAX_ITEMS], status
 
 
 def read_json(path, default):
@@ -198,6 +300,18 @@ def main():
         history.append(entry)
         history = history[-HISTORY_DAYS:]
         (DATA / "history.json").write_text(json.dumps(history, separators=(",", ":")), encoding="utf-8")
+
+    if not sample:
+        prev_news = read_json(DATA / "news.json", {}).get("items", [])
+        items, feed_status = collect_news(prev_news, datetime.now(timezone.utc))
+        ok = sum(1 for v in feed_status.values() if v["ok"])
+        print(f"Noticias: {len(items)} items, {ok}/{len(feed_status)} feeds ok")
+        for name, v in feed_status.items():
+            print(f"  {'OK ' if v['ok'] else 'ERR'} {name}: {v['count']}" + ("" if v["ok"] else " " + v["error"]))
+        if items or not prev_news:
+            (DATA / "news.json").write_text(json.dumps(
+                {"updated_at": now.isoformat(timespec="minutes"), "feeds": feed_status, "items": items},
+                ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     print(f"OK {today}: {len(models)} modelos, {len(hf)} HF, nuevos hoy: {new_today}, sample={sample}")
     return 0

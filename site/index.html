@@ -18,6 +18,7 @@
       <span>IA Radar</span>
     </a>
     <nav>
+      <a href="#noticias">Noticias</a>
       <a href="#resumen">Resumen</a>
       <a href="#lanzamientos">Lanzamientos</a>
       <a href="#graficas">Gráficas</a>
@@ -38,20 +39,33 @@
 
   <section class="kpis" id="kpis" aria-label="Indicadores"></section>
 
+  <section id="noticias">
+    <h2><span class="tag">01</span> Noticias de IA</h2>
+    <p class="sub" id="news-sub">Titulares de laboratorios y prensa especializada, en su idioma original.</p>
+    <div class="filters news-filters" id="news-filters" role="group" aria-label="Filtrar noticias">
+      <button class="pill on" data-f="">Todas</button>
+      <button class="pill" data-f="lab">Laboratorios</button>
+      <button class="pill" data-f="press">Prensa</button>
+    </div>
+    <div id="news"></div>
+    <button class="btn" id="news-more" hidden>Ver más noticias</button>
+  </section>
+
   <section id="resumen">
-    <h2><span class="tag">00</span> Lo que dicen los datos hoy</h2>
+    <h2><span class="tag">02</span> Lo que dicen los datos hoy</h2>
     <p class="headline" id="headline"></p>
     <p class="today" id="today"></p>
     <div class="ins-grid" id="insights"></div>
   </section>
 
   <section id="lanzamientos">
-    <h2><span class="tag">01</span> Últimos lanzamientos</h2>
+    <h2><span class="tag">03</span> Lanzamientos de los laboratorios principales</h2>
+    <p class="sub">Solo proveedores de primera línea. El catálogo completo está en el comparador.</p>
     <div class="cards" id="latest"></div>
   </section>
 
   <section id="graficas">
-    <h2><span class="tag">02</span> Gráficas</h2>
+    <h2><span class="tag">04</span> Gráficas</h2>
     <div class="grid2">
       <article class="panel"><h3>Lanzamientos por mes</h3><p class="sub">Últimos 12 meses, texto frente a multimodal</p><div class="chart"><canvas id="c-releases"></canvas></div></article>
       <article class="panel"><h3>Proveedores más activos</h3><p class="sub">Modelos lanzados en los últimos 90 días</p><div class="chart"><canvas id="c-providers"></canvas></div></article>
@@ -61,7 +75,7 @@
   </section>
 
   <section id="comparador">
-    <h2><span class="tag">03</span> Comparador</h2>
+    <h2><span class="tag">05</span> Comparador</h2>
     <p class="sub">Marca hasta 4 modelos para compararlos lado a lado.</p>
     <div class="compare" id="compare" hidden>
       <div class="grid2">
@@ -92,7 +106,7 @@
   </section>
 
   <section id="abiertos">
-    <h2><span class="tag">04</span> Modelos abiertos en tendencia</h2>
+    <h2><span class="tag">06</span> Modelos abiertos en tendencia</h2>
     <div class="grid2">
       <article class="panel"><h3>Descargas</h3><p class="sub">Top 10 en Hugging Face</p><div class="chart"><canvas id="c-hf"></canvas></div></article>
       <article class="panel"><h3>Ranking de tendencia</h3><ol class="hf-list" id="hf-list"></ol></article>
@@ -102,7 +116,7 @@
 
 <footer class="foot">
   <div class="wrap">
-    <p>Fuentes: <a href="https://openrouter.ai/models" target="_blank" rel="noopener">OpenRouter</a> (catálogo, precios, contexto) y <a href="https://huggingface.co/models?sort=trending" target="_blank" rel="noopener">Hugging Face</a> (modelos abiertos en tendencia). Los precios son por millón de tokens y pueden variar según el proveedor.</p>
+    <p>Fuentes: titulares de OpenAI, Anthropic, Google, Meta, Mistral, xAI, Microsoft, NVIDIA, Hugging Face, The Verge, TechCrunch y MIT Technology Review; <a href="https://openrouter.ai/models" target="_blank" rel="noopener">OpenRouter</a> (catálogo, precios, contexto) y <a href="https://huggingface.co/models?sort=trending" target="_blank" rel="noopener">Hugging Face</a> (modelos abiertos en tendencia). Los precios son por millón de tokens y pueden variar según el proveedor.</p>
     <p id="src-status"></p>
   </div>
 </footer>
