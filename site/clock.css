@@ -1,0 +1,33 @@
+/* ---------- reloj digital en la cabecera ---------- */
+.status.clock{flex-direction:column;align-items:flex-end;gap:0;justify-content:center;font-family:"Inter",sans-serif;cursor:help;min-width:0;white-space:nowrap;line-height:1.15}
+.clock-time{font:800 1.5rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--text);
+  background:linear-gradient(100deg,var(--cyan),var(--violet) 60%,var(--pink));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 14px color-mix(in srgb,var(--violet) 40%,transparent))}
+.clock-sub{display:flex;align-items:center;gap:7px;font:600 .72rem "Inter",sans-serif;color:var(--muted);letter-spacing:.01em}
+.clock-sub .dot{width:7px;height:7px}
+#status-text{overflow:hidden;text-overflow:ellipsis;max-width:190px}
+
+/* ---------- reloj mundial de los centros de la IA ---------- */
+.hubs{padding:28px 0 4px}
+.hubs-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 20px;margin-bottom:14px}
+.hubs-head h3{display:flex;align-items:center;gap:10px;font-size:1.25rem;font-weight:800;letter-spacing:-.02em}
+.hubs-head h3 .ui{color:var(--cyan)}
+.hubs-sum{color:var(--muted);font-weight:500;font-size:.98rem}
+.hubs-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.hub{--a:#64748b;display:flex;flex-direction:column;gap:4px;padding:18px 20px;cursor:help;border-radius:20px}
+.hub.work{--a:var(--green)}
+.hub.me{--a:var(--cyan)}
+.hub-top{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:.98rem}
+.hub-top .ui{color:var(--a);width:1.2em;height:1.2em}
+.hub-top b{color:var(--text);font-weight:700}
+.hub-top em{margin-left:auto;font:700 .72rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--amber);font-style:normal}
+.hub-time{font:800 clamp(2rem,3.4vw,2.7rem) ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.02em;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--text)}
+.hub.me .hub-time{color:var(--cyan)}
+.hub-labs{color:var(--muted);font-size:.86rem;line-height:1.35;min-height:2.3em}
+.hub-st{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font:700 .8rem "Inter",sans-serif;color:var(--a)}
+.hub-st .dot{width:8px;height:8px;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 2s infinite}
+@media (max-width:1100px){.hubs-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){
+  .hubs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .clock-time{font-size:1.15rem}.clock-sub{font-size:.62rem}#status-text{max-width:120px}
+}
+@media (prefers-reduced-motion:reduce){.hub-st .dot{animation:none}}
