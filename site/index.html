@@ -121,7 +121,7 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
 
   <section id="matriz" class="rv">
     <h2><span class="hi" style="--a:#fb923c"><i class="ui" style="--i:url(icons/ui/table-2.svg)" aria-hidden="true"></i></span> Matriz de comparación por gama</h2>
-    <p class="sub">Modelos vigentes (últimos 150 días) de los laboratorios principales, agrupados por gama de precio para comparar solo lo comparable. El verde más intenso marca el mejor valor de cada columna.</p>
+    <p class="sub">Modelos vigentes (últimos 150 días) de los laboratorios principales, agrupados por gama de precio para comparar solo lo comparable. El verde más intenso marca el mejor valor de cada columna. Toca una fila para ver para qué es bueno cada modelo.</p>
     <div class="panel-bar">
       <div class="seg" id="mx-tier" role="group" aria-label="Gama">
         <button data-t="alta" class="on">Gama alta</button><button data-t="media">Gama media</button><button data-t="eco">Económicos</button><button data-t="todos">Todos</button>
@@ -131,8 +131,8 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
     <div class="table-wrap">
       <table id="matrix">
         <thead><tr>
-          <th data-k="name">Modelo</th><th data-k="created">Lanzamiento</th><th data-k="price_in" class="num">Entrada $/M</th><th data-k="price_out" class="num">Salida $/M</th>
-          <th data-k="blend" class="num" title="Promedio ponderado 3 partes de entrada y 1 de salida">Mixto 3:1 $/M</th><th data-k="context" class="num">Contexto</th><th data-k="multimodal">Multimodal</th><th data-k="reasoning">Razonamiento</th>
+          <th data-k="name">Modelo</th><th data-k="price_in" class="num">Entrada $/M</th><th data-k="price_out" class="num">Salida $/M</th>
+          <th data-k="blend" class="num" title="Promedio ponderado 3 partes de entrada y 1 de salida">Mixto 3:1 $/M</th><th data-k="context" class="num">Contexto</th><th data-k="multimodal">Multimodal</th><th data-k="reasoning">Razonamiento</th><th>Ideal para</th>
         </tr></thead>
         <tbody></tbody>
       </table>
@@ -154,7 +154,7 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
 
   <section id="comparador" class="rv">
     <h2><span class="hi" style="--a:#34d399"><i class="ui" style="--i:url(icons/ui/scale.svg)" aria-hidden="true"></i></span> Comparador</h2>
-    <p class="sub">Marca hasta 4 modelos para compararlos lado a lado.</p>
+    <p class="sub">Marca hasta 4 modelos para compararlos lado a lado. Toca una fila para ver para qué es bueno, con qué cuidado usarlo y cuánto costaría una tarea típica.</p>
     <div class="compare" id="compare" hidden>
       <div class="grid2">
         <article class="panel fx" style="--a:#8b5cf6"><h3>Precio por millón de tokens (USD)</h3><div class="chart sm"><canvas id="c-cmp-price"></canvas></div></article>
@@ -175,7 +175,7 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
         <thead><tr>
           <th></th>
           <th data-k="name">Modelo</th><th data-k="provider">Proveedor</th><th data-k="created">Lanzamiento</th>
-          <th data-k="context" class="num">Contexto</th><th data-k="price_in" class="num">Entrada $/M</th><th data-k="price_out" class="num">Salida $/M</th><th>Capacidades</th>
+          <th data-k="context" class="num">Contexto</th><th data-k="price_in" class="num">Entrada $/M</th><th data-k="price_out" class="num">Salida $/M</th><th>Ideal para</th><th>Capacidades</th>
         </tr></thead>
         <tbody></tbody>
       </table>
