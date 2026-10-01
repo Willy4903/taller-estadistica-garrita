@@ -107,12 +107,12 @@
   }
 
   function renderLatest(meta) {
-    $("#latest").innerHTML = models.slice(0, 12).map((m) => {
+    $("#latest").innerHTML = models.filter(isMajor).slice(0, 12).map((m) => {
       const isNew = !meta.sample && daysAgo(m.first_seen) <= 2 && m.first_seen !== m.created;
       return `<article class="card"><div class="prov">${provTag(m.provider)}</div><h4>${esc(m.name)}</h4>
         <div class="meta"><span>${esc(fmtDate(m.created))}</span><span>Contexto <b>${esc(fmtCtx(m.context))}</b></span>
         <span>Entrada <b>${esc(fmtPrice(m.price_in))}</b></span><span>Salida <b>${esc(fmtPrice(m.price_out))}</b></span></div>
-        ${cardInsight(m)}<div class="chips">${chips(m, isNew)}</div></article>`;
+        <div class="chips">${chips(m, isNew)}</div></article>`;
     }).join("");
   }
 
@@ -130,31 +130,15 @@
   const pct = (cur, prev) => (prev ? Math.round(((cur - prev) / prev) * 100) : null);
   const signed = (n) => (n > 0 ? "+" : "") + n + "%";
   const paid = (list) => list.filter((m) => m.price_in > 0);
-  let refPrice = null, refCtx = null;
-
-  function cardInsight(m) {
-    const parts = [];
-    if (m.price_in === 0 && m.price_out === 0) parts.push("Sin costo de uso");
-    else if (m.price_in > 0 && refPrice) {
-      const diff = Math.round((1 - m.price_in / refPrice) * 100);
-      if (diff >= 15) parts.push(`<span class="up">${diff}% más barato</span> que la mediana`);
-      else if (diff <= -100) parts.push(`<span class="down">${(m.price_in / refPrice).toFixed(1).replace(".0", "")}x</span> la mediana de precio`);
-      else if (diff <= -15) parts.push(`<span class="down">${Math.abs(diff)}% más caro</span> que la mediana`);
-      else parts.push("Precio en la mediana");
-    }
-    if (m.context && refCtx) {
-      const r = m.context / refCtx;
-      if (r >= 2) parts.push(`contexto ${r >= 10 ? Math.round(r) : r.toFixed(1)}x la mediana`);
-      else if (r <= 0.5) parts.push("contexto corto");
-    }
-    return parts.length ? `<p class="ins">${parts.join(" · ")}</p>` : "";
-  }
+  // Laboratorios y proveedores de primera línea (el resto queda en el comparador).
+  const MAJOR = new Set(["openai", "anthropic", "google", "meta-llama", "meta", "mistralai", "deepseek", "qwen", "x-ai", "microsoft", "nvidia", "amazon",
+    "moonshotai", "z-ai", "minimax", "cohere", "perplexity", "bytedance-seed", "tencent", "baidu", "xiaomi", "ibm-granite", "stepfun", "ai21", "alibaba"]);
+  const isMajor = (m) => MAJOR.has(norm(m.provider));
 
   function renderInsights(meta) {
-    const d30 = between(models, 0, 30), p30 = between(models, 30, 60);
-    const recentPaid = paid(between(models, 0, 180));
-    refPrice = median(recentPaid.map((m) => m.price_in));
-    refCtx = median(between(models, 0, 180).map((m) => m.context).filter(Boolean));
+    const M = models.filter(isMajor);
+    const d30 = between(M, 0, 30), p30 = between(M, 30, 60);
+    const refCtx = median(between(M, 0, 180).map((m) => m.context).filter(Boolean));
     const cards = [];
     const headline = [];
 
@@ -162,7 +146,7 @@
     const rate = pct(d30.length, p30.length);
     cards.push({ k: "Ritmo de lanzamientos", v: d30.length, u: "modelos en 30 días",
       t: rate == null ? "Sin periodo anterior para comparar." : `${signed(rate)} frente a los 30 días previos (${p30.length}).`, tone: rate == null ? "" : rate >= 0 ? "up" : "down" });
-    headline.push(`En los últimos 30 días se lanzaron ${d30.length} modelos` + (rate == null ? "" : ` (${signed(rate)} vs. el periodo anterior)`));
+    headline.push(`En los últimos 30 días los laboratorios principales lanzaron ${d30.length} modelos` + (rate == null ? "" : ` (${signed(rate)} vs. el periodo anterior)`));
 
     // Proveedor líder
     const cnt = {};
@@ -176,7 +160,7 @@
 
     // Precio de los nuevos
     const newPrice = median(paid(d30).map((m) => m.price_in));
-    const oldPrice = median(paid(between(models, 30, 120)).map((m) => m.price_in));
+    const oldPrice = median(paid(between(M, 30, 120)).map((m) => m.price_in));
     if (newPrice != null && oldPrice != null) {
       const ch = pct(newPrice, oldPrice);
       cards.push({ k: "Precio de los nuevos", v: "$" + newPrice.toFixed(2), u: "mediana de entrada por millón de tokens",
@@ -207,7 +191,7 @@
     // Hoy
     const today = meta.new_today || 0;
     const todayText = today > 0
-      ? `Hoy se sumaron ${today} modelo${today > 1 ? "s" : ""} al catálogo: ${models.filter((m) => m.first_seen === meta.updated_date).slice(0, 3).map((m) => m.name).join(", ")}.`
+      ? `Hoy se sumaron ${today} modelo${today > 1 ? "s" : ""} al catálogo: ${M.filter((m) => m.first_seen === meta.updated_date).slice(0, 3).map((m) => m.name).join(", ")}.`
       : "Hoy no se detectaron modelos nuevos respecto a la actualización anterior.";
 
     $("#headline").textContent = headline.join("; ") + ".";
@@ -333,9 +317,58 @@
     });
   }
 
+  // ---- Noticias ----
+  const news = { items: [], filter: "", shown: 12 };
+  const NEWS_KEY = { xai: "x-ai" };
+  function newsIcon(n) {
+    const k = NEWS_KEY[n.provider] || n.provider;
+    return PROV[k] ? provIcon(k) : `<span class="pi mono" aria-hidden="true">${esc(n.source[0])}</span>`;
+  }
+  function relDay(iso) {
+    const d = new Date(iso), t = new Date();
+    const day = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate());
+    const diff = Math.round((day(t) - day(d)) / 864e5);
+    if (diff <= 0) return ["Hoy", "hoy"];
+    if (diff === 1) return ["Ayer", "ayer"];
+    if (diff < 7) return ["Esta semana", "hace " + diff + " días"];
+    return ["Antes", "hace " + diff + " días"];
+  }
+  function renderNews() {
+    const list = news.items.filter((n) => !news.filter || n.kind === news.filter);
+    const box = $("#news");
+    if (!list.length) {
+      box.innerHTML = '<p class="news-empty">Aún no hay noticias cargadas. Aparecerán tras la próxima actualización diaria (6:00 am, hora de Lima).</p>';
+      $("#news-more").hidden = true;
+      return;
+    }
+    let group = "", html = "";
+    list.slice(0, news.shown).forEach((n) => {
+      const [g, rel] = relDay(n.published);
+      if (g !== group) { group = g; html += `<h3 class="news-group">${esc(g)}</h3>`; }
+      const when = new Date(n.published).toLocaleString("es-PE", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+      html += `<article class="news-item"><div class="news-src"><span class="provtag">${newsIcon(n)}<span>${esc(n.source)}</span></span><time datetime="${esc(n.published)}" title="${esc(when)}">${esc(rel)}</time></div>
+        <div><a class="t" href="${esc(n.link)}" target="_blank" rel="noopener noreferrer">${esc(n.title)}</a>${n.summary ? `<p>${esc(n.summary)}</p>` : ""}</div></article>`;
+    });
+    box.innerHTML = html;
+    $("#news-more").hidden = list.length <= news.shown;
+  }
+  function initNews(data) {
+    news.items = (data && data.items) || [];
+    const today = news.items.filter((n) => relDay(n.published)[0] === "Hoy").length;
+    const labs = new Set(news.items.filter((n) => relDay(n.published)[0] === "Hoy" && n.kind === "lab").map((n) => n.source));
+    if (news.items.length) $("#news-sub").textContent = `${today} noticias hoy` + (labs.size ? ` (de ${[...labs].slice(0, 4).join(", ")}${labs.size > 4 ? " y otros" : ""})` : "") + ". Titulares en su idioma original, con enlace a la fuente.";
+    document.querySelectorAll("#news-filters .pill").forEach((b) => b.addEventListener("click", () => {
+      document.querySelectorAll("#news-filters .pill").forEach((x) => x.classList.toggle("on", x === b));
+      news.filter = b.dataset.f; news.shown = 12; renderNews();
+    }));
+    $("#news-more").addEventListener("click", () => { news.shown += 12; renderNews(); });
+    renderNews();
+  }
+
   async function init() {
     theme();
-    const [data, hist] = await Promise.all([load("data/latest.json", null), load("data/history.json", [])]);
+    const [data, hist, newsData] = await Promise.all([load("data/latest.json", null), load("data/history.json", []), load("data/news.json", null)]);
+    initNews(newsData);
     if (!data || !data.models) { $("#status-text").textContent = "Sin datos"; return; }
     allCount = data.models.length;
     models = baseModels(data.models);
