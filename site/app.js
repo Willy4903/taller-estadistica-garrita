@@ -195,14 +195,13 @@
       headline.push(`${provName(lead[0])} lidera con ${lead[1]}`);
     }
 
-    // Precio de los nuevos
-    const newPrice = median(paid(d30).map((m) => m.price_in));
-    const oldPrice = median(paid(between(M, 30, 120)).map((m) => m.price_in));
-    if (newPrice != null && oldPrice != null) {
-      const ch = pct(newPrice, oldPrice);
-      cards.push({ k: "Precio de los nuevos", v: "$" + newPrice.toFixed(2), u: "mediana de entrada por millón de tokens",
-        t: `${ch <= 0 ? "Son " + Math.abs(ch) + "% más baratos" : "Son " + ch + "% más caros"} que los lanzados entre 30 y 120 días atrás ($${oldPrice.toFixed(2)}).`, tone: ch <= 0 ? "up" : "down" });
-      headline.push(`los nuevos cuestan ${Math.abs(ch)}% ${ch <= 0 ? "menos" : "más"} que los anteriores`);
+    // Balance de precios frente a la versión anterior de cada familia
+    const vp = versionPairs(M).filter((p) => p.dIn != null);
+    if (vp.length >= 3) {
+      const down = vp.filter((p) => p.dIn < 0).length, upn = vp.filter((p) => p.dIn > 0).length, flat = vp.length - down - upn;
+      cards.push({ k: "Precios vs. versión anterior", v: `${down} ↓  ${upn} ↑`, u: `de ${vp.length} versiones nuevas comparables`,
+        t: `${down} bajaron el precio de entrada, ${upn} lo subieron y ${flat} lo mantienen.`, tone: down >= upn ? "up" : "down" });
+      headline.push(`${down} de ${vp.length} versiones nuevas bajaron su precio de entrada frente a la anterior`);
     }
 
     // Mayor recorte de precio frente a la versión anterior
@@ -212,7 +211,7 @@
 
     // Contexto máximo
     const big = [...d30].sort((a, b) => b.context - a.context)[0];
-    if (big && big.context) cards.push({ k: "Mayor contexto reciente", v: fmtCtx(big.context), u: big.name,
+    if (big && big.context && refCtx && big.context / refCtx >= 2) cards.push({ k: "Mayor contexto reciente", v: fmtCtx(big.context), u: big.name,
       t: `${(big.context / refCtx).toFixed(1)} veces la mediana de los últimos 180 días (${fmtCtx(refCtx)}).`, prov: big.provider });
 
     // Capacidades
@@ -228,7 +227,7 @@
     // Hoy
     const today = meta.new_today || 0;
     const todayText = today > 0
-      ? `Hoy se sumaron ${today} modelo${today > 1 ? "s" : ""} al catálogo: ${M.filter((m) => m.first_seen === meta.updated_date).slice(0, 3).map((m) => m.name).join(", ")}.`
+      ? `Hoy se sumaron ${today} modelo${today > 1 ? "s" : ""} al catálogo: ${models.filter((m) => m.first_seen === meta.updated_date).slice(0, 3).map((m) => m.name).join(", ") || "ver el comparador"}.`
       : "Hoy no se detectaron modelos nuevos respecto a la actualización anterior.";
 
     $("#headline").textContent = headline.join("; ") + ".";
