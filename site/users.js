@@ -8,6 +8,7 @@
 
   const COL = { ChatGPT: "#10a37f", Gemini: "#4285f4", Claude: "#d97757", Copilot: "#00a4ef", DeepSeek: "#4d6bfe" };
   const NAMES = Object.keys(COL);
+  const pc = (v) => (v < 1 ? "menos de 1" : v);  // 0 por redondeo no significa que nadie lo use
 
   async function load(path) {
     try { const r = await fetch(path + "?v=" + Date.now()); return r.ok ? await r.json() : null; } catch (e) { return null; }
@@ -48,8 +49,8 @@
         const d = (n) => Math.round((pe.share[n] - avg(n)) * 10) / 10;
         const topReg = (n) => [...reg.peru_regions].sort((a, b) => b.share[n] - a.share[n])[0];
         const gem = topReg("Gemini");
-        story = `<div class="u-story fx" style="--a:#f43f9e"><p class="u-big">En el Perú, <b style="color:${COL[peOrder[0]]}">${esc(peOrder[0])}</b> concentra el <b>${pe.share[peOrder[0]]}%</b> del interés de búsqueda entre estas cinco IA.</p>
-          <p>Le siguen ${peOrder.slice(1, 3).map((n) => `${esc(n)} (${pe.share[n]}%)`).join(" y ")}. Frente al promedio de los demás países de la región, ${esc(peOrder[0])} está ${Math.abs(d(peOrder[0]))} ${Math.abs(d(peOrder[0])) === 1 ? "punto" : "puntos"} ${d(peOrder[0]) >= 0 ? "por encima" : "por debajo"}${gem ? `; el departamento donde Gemini pesa más es <b>${esc(gem.name)}</b> (${gem.share.Gemini}%).` : "."}</p></div>`;
+        story = `<div class="u-story fx" style="--a:#f43f9e"><p class="u-big">En el Perú, <b style="color:${COL[peOrder[0]]}">${esc(peOrder[0])}</b> concentra el <b>${pc(pe.share[peOrder[0]])}%</b> del interés de búsqueda entre estas cinco IA.</p>
+          <p>Le siguen ${peOrder.slice(1, 3).map((n) => `${esc(n)} (${pc(pe.share[n])}%)`).join(" y ")}. ${Math.abs(d(peOrder[0])) < 1 ? `Su peso está en línea con el promedio de los demás países de la región` : `Frente al promedio de los demás países de la región, ${esc(peOrder[0])} está ${Math.abs(d(peOrder[0]))} ${Math.abs(d(peOrder[0])) === 1 ? "punto" : "puntos"} ${d(peOrder[0]) >= 0 ? "por encima" : "por debajo"}`}${gem ? `; el departamento donde Gemini pesa más es <b>${esc(gem.name)}</b> (${pc(gem.share.Gemini)}%).` : "."}</p></div>`;
       }
       const sortedC = Object.entries(reg.countries).sort((a, b) => b[1].share.ChatGPT - a[1].share.ChatGPT);
       regional = `
@@ -60,7 +61,7 @@
           <article class="panel fx wide" style="--a:#34d399"><h3>${ico("chart-line")} Evolución del interés en el Perú</h3><p class="sub">Índice diario de búsqueda (100 = el día de mayor interés de cualquiera de las cinco). ${esc(reg.window || "")}.</p><div class="chart u-chart"><canvas id="c-u-time"></canvas></div></article>
         </div>
         <h4 class="u-h4">${ico("trophy")} Quién lidera en la región</h4>
-        <div class="u-comp">${NAMES.map((n) => { const rk = pe ? peOrder.indexOf(n) + 1 : null; return `<div class="u-card fx" style="--a:${COL[n]}"${tipAttr(n + "\nLidera el interés de búsqueda en " + (leadCount[n] || 0) + " de " + lead.length + " países de la región" + (pe ? "\nEn el Perú ocupa el puesto " + rk + " de 5 (" + pe.share[n] + "%)" : ""))}><b>${esc(n)}</b><span class="u-n">${leadCount[n] || 0}<small>/${lead.length}</small></span><span class="u-l">países donde lidera</span>${pe ? `<span class="u-pe">Perú: puesto ${rk} · ${pe.share[n]}%</span>` : ""}</div>`; }).join("")}</div>`;
+        <div class="u-comp">${NAMES.map((n) => { const rk = pe ? peOrder.indexOf(n) + 1 : null; return `<div class="u-card fx" style="--a:${COL[n]}"${tipAttr(n + "\nLidera el interés de búsqueda en " + (leadCount[n] || 0) + " de " + lead.length + " países de la región" + (pe ? "\nEn el Perú ocupa el puesto " + rk + " de 5 (" + pc(pe.share[n]) + "%)" : ""))}><b>${esc(n)}</b><span class="u-n">${leadCount[n] || 0}<small>/${lead.length}</small></span><span class="u-l">países donde lidera</span>${pe ? `<span class="u-pe">Perú: puesto ${rk} · ${pc(pe.share[n])}%</span>` : ""}</div>`; }).join("")}</div>`;
     } else {
       regional = `<div class="panel fx u-empty" style="--a:#fbbf24"><h3>${ico("map-pin")} Región y Perú</h3>
         <p>Los datos de interés de búsqueda por país y por departamento se cargan con la actualización de datos. Aún no hay datos disponibles${reg && reg.error ? ` (Google limitó la consulta: ${esc(reg.error)})` : ""}.</p></div>`;
@@ -69,6 +70,7 @@
     const limits = `<div class="u-limits fx" style="--a:#fbbf24"><h4>${ico("triangle-alert")} Qué se puede saber y qué no</h4>
       <ul><li><b>Suscriptores por país:</b> ninguna empresa de IA publica cuántos suscriptores o usuarios tiene en el Perú ni en la región. No existe una cifra oficial.</li>
       <li><b>Lo que sí se mide aquí:</b> el interés de búsqueda en Google (tendencia relativa), que indica presencia y preferencia, no cantidad de usuarios. Se comparan los términos ${ok ? Object.values(reg.terms).map(esc).join(", ") : "ChatGPT, Gemini AI, Claude AI, Microsoft Copilot y DeepSeek"}.</li>
+      <li><b>Sesgo de los términos:</b> mucha gente llama "ChatGPT" a cualquier chatbot, por lo que su cuota está inflada frente a las demás; y Copilot casi no se busca por separado (suele usarse dentro de productos de Microsoft), así que aparece con menos de 1 %. Es una señal de presencia en búsquedas, no una cuota de mercado.</li>
       <li><b>Para cifras de tráfico o descargas por país:</b> consulta servicios como <a href="https://www.similarweb.com/" target="_blank" rel="noopener noreferrer">Similarweb</a> o <a href="https://sensortower.com/" target="_blank" rel="noopener noreferrer">Sensor Tower</a> (muchas funciones son de pago) y encuestas de uso de tecnología como las del <a href="https://www.inei.gob.pe/" target="_blank" rel="noopener noreferrer">INEI</a>.</li>
       ${users && users.regional_players ? `<li><b>Iniciativas regionales:</b> ${users.regional_players.map((p) => `${esc(p.name)} (${esc(p.where)})`).join("; ")}. ${esc(users.regional_players[0].note)}</li>` : ""}</ul></div>`;
 
