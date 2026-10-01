@@ -353,6 +353,59 @@
     });
   }
 
+  // ---- Matriz de comparación por gama ----
+  const mx = { tier: "alta", sort: "price_in", asc: false };
+  const blend = (m) => (m.price_in * 3 + m.price_out) / 4;
+  function currentModels() {
+    const groups = {};
+    models.filter((m) => isMajor(m) && m.price_in > 0 && m.price_out > 0 && daysAgo(m.created) <= 150)
+      .forEach((m) => { (groups[family(m)] = groups[family(m)] || []).push(m); });
+    return Object.values(groups).map((g) => g.sort((a, b) => b.created.localeCompare(a.created))[0]).map((m) => ({ ...m, blend: blend(m) }));
+  }
+  function renderMatrix() {
+    const all = currentModels().sort((a, b) => b.blend - a.blend);
+    const third = Math.ceil(all.length / 3);
+    const tiers = { alta: all.slice(0, third), media: all.slice(third, third * 2), eco: all.slice(third * 2), todos: all };
+    const rows = [...tiers[mx.tier]];
+    const k = mx.sort, dir = mx.asc ? 1 : -1;
+    rows.sort((a, b) => {
+      const x = a[k], y = b[k];
+      return (typeof x === "string" ? x.localeCompare(y) : (x === y ? 0 : x - y)) * dir;
+    });
+    const range = (key) => { const v = rows.map((r) => r[key]).filter((n) => typeof n === "number"); return [Math.min(...v), Math.max(...v)]; };
+    const heat = (val, key, higherBetter) => {
+      const [lo, hi] = range(key);
+      if (hi === lo) return "";
+      const score = higherBetter ? (val - lo) / (hi - lo) : (hi - val) / (hi - lo);
+      return ` style="background-color:color-mix(in srgb, var(--green) ${Math.round(score * 38)}%, transparent)"`;
+    };
+    $("#matrix tbody").innerHTML = rows.map((m) => `<tr>
+      <td class="nm">${provTag(m.provider)}<br><b>${esc(m.name.replace(/^[^:]+: /, ""))}</b></td><td>${esc(fmtDate(m.created))}</td>
+      <td class="num hm"${heat(m.price_in, "price_in", false)}>${esc(fmtPrice(m.price_in))}</td>
+      <td class="num hm"${heat(m.price_out, "price_out", false)}>${esc(fmtPrice(m.price_out))}</td>
+      <td class="num hm"${heat(m.blend, "blend", false)}>${esc(fmtPrice(m.blend))}</td>
+      <td class="num hm"${heat(m.context, "context", true)}>${esc(fmtCtx(m.context))}</td>
+      <td>${m.multimodal ? '<span class="yes">Sí</span>' : '<span class="no">No</span>'}</td>
+      <td>${m.reasoning ? '<span class="yes">Sí</span>' : '<span class="no">No</span>'}</td></tr>`).join("") ||
+      '<tr><td colspan="8" class="muted">No hay modelos en esta gama.</td></tr>';
+    const lim = (a) => (a.length ? `$${Math.min(...a.map((m) => m.blend)).toFixed(2)} a $${Math.max(...a.map((m) => m.blend)).toFixed(2)}` : "");
+    $("#mx-count").textContent = rows.length + " modelos";
+    $("#mx-note").textContent = mx.tier === "todos" ? "Gamas por precio mixto: alta " + lim(tiers.alta) + ", media " + lim(tiers.media) + ", económicos " + lim(tiers.eco) + " por millón de tokens."
+      : "Esta gama abarca " + lim(tiers[mx.tier]) + " de precio mixto por millón de tokens (3 partes de entrada y 1 de salida). Un modelo por familia, el más reciente.";
+    document.querySelectorAll("#mx-tier button").forEach((b) => b.classList.toggle("on", b.dataset.t === mx.tier));
+    document.querySelectorAll("#matrix th[data-k]").forEach((th) => { const on = th.dataset.k === k; th.classList.toggle("sorted", on); th.classList.toggle("asc", on && mx.asc); });
+  }
+  function initMatrix() {
+    document.querySelectorAll("#mx-tier button").forEach((b) => b.addEventListener("click", () => { mx.tier = b.dataset.t; renderMatrix(); }));
+    document.querySelectorAll("#matrix th[data-k]").forEach((th) => {
+      th.tabIndex = 0;
+      const go = () => { const k = th.dataset.k; mx.asc = mx.sort === k ? !mx.asc : k === "name" || k === "price_in" || k === "price_out" || k === "blend"; mx.sort = k; renderMatrix(); };
+      th.addEventListener("click", go);
+      th.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    });
+    renderMatrix();
+  }
+
   // ---- Panel de noticias ----
   const TOPIC_NAMES = { modelos: "Modelos y lanzamientos", productos: "Productos y aplicaciones", negocios: "Negocios y mercado", seguridad: "Seguridad y regulación",
     investigacion: "Investigación", infra: "Chips e infraestructura", general: "General" };
@@ -483,6 +536,7 @@
     renderKpis(data.meta, hist);
     renderInsights(data.meta);
     renderVersions();
+    initMatrix();
     renderCharts(hist);
     renderHF(data.hf || []);
     bindTable();
