@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IA Radar | Últimos modelos de inteligencia artificial</title>
-<meta name="description" content="Panel diario con los últimos modelos de IA, comparaciones de precio y contexto, y gráficas de tendencias. Se actualiza todos los días a las 6:00 am (hora de Lima).">
+<meta name="description" content="Panel diario con los últimos modelos de IA, comparaciones de precio y contexto, y gráficas de tendencias.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1020'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%2322d3ee' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%23a78bfa'/%3E%3C/svg%3E">
 <script>document.documentElement.classList.add("js");</script>
 <script>
@@ -21,6 +21,8 @@
 <link rel="stylesheet" href="style.css?v=__V__">
 <link rel="stylesheet" href="guide.css?v=__V__">
 <link rel="stylesheet" href="week.css?v=__V__">
+<link rel="stylesheet" href="users.css?v=__V__">
+<link rel="stylesheet" href="clock.css?v=__V__">
 </head>
 <body>
 <div id="progress" aria-hidden="true"></div>
@@ -37,19 +39,20 @@
       <a href="#noticias">Noticias</a>
       <a href="#lanzamientos">Qué cambió</a>
       <a href="#matriz">Matriz</a>
+      <a href="#usuarios">Usuarios</a>
       <a href="#guia">Guía de IA</a>
       <a href="#graficas">Gráficas</a>
       <a href="#comparador">Comparador</a>
-      <a href="#abiertos">Modelos abiertos</a>
+      
     </nav>
-    <div class="status" id="status"><span class="dot"></span><span id="status-text">Cargando…</span></div>
+    <div class="status clock" id="status" tabindex="0"><span class="clock-time" id="clock-time" aria-label="Hora en Lima">--:--:--</span><span class="clock-sub"><span class="dot"></span><span id="status-text">Cargando…</span></span></div>
   </div>
 </header>
 
 <main class="wrap">
   <section class="hero">
-    <p class="eyebrow">Actualización diaria · 6:00 am (Lima)</p>
-    <h1>El pulso de los modelos de IA, <span class="grad">cada mañana</span></h1>
+    <p class="eyebrow" id="today-pill">Inteligencia artificial</p>
+    <h1>El pulso de los modelos de IA, <span class="grad">hoy</span></h1>
     <p class="lead">Lanzamientos recientes, precios, ventanas de contexto y tendencias en un solo lugar.</p>
     <div class="banner" id="banner" hidden></div>
   </section>
@@ -75,6 +78,8 @@ Lanzamientos por mes, proveedores activos y relación entre precio y contexto.">
     <a class="fx" href="#comparador" style="--a:#34d399" data-tip="Comparador
 Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."><span class="qi"><i class="ui" style="--i:url(icons/ui/scale.svg)" aria-hidden="true"></i></span><b>Comparador</b><small>Elige hasta 4</small></a>
   </nav>
+
+  <section class="hubs" id="hubs" aria-label="Hora en los centros de la IA"></section>
 
   <section class="kpis" id="kpis" aria-label="Indicadores"></section>
 
@@ -140,6 +145,8 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
     <p class="sub" id="mx-note"></p>
   </section>
 
+  <section id="usuarios" class="rv"><div id="users-root"></div></section>
+
   <section id="guia" class="rv"><div id="guide-root"></div></section>
 
   <section id="graficas" class="rv">
@@ -148,7 +155,7 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
       <article class="panel fx" style="--a:#fbbf24"><h3>Lanzamientos por mes</h3><p class="sub">Últimos 12 meses, texto frente a multimodal</p><div class="chart"><canvas id="c-releases"></canvas></div></article>
       <article class="panel fx" style="--a:#34d399"><h3>Proveedores más activos</h3><p class="sub">Modelos lanzados en los últimos 90 días</p><div class="chart"><canvas id="c-providers"></canvas></div></article>
       <article class="panel fx" style="--a:#fb923c"><h3>Precio frente a contexto</h3><p class="sub">Modelos de los últimos 180 días (escala logarítmica)</p><div class="chart"><canvas id="c-scatter"></canvas></div></article>
-      <article class="panel fx" style="--a:#22d3ee"><h3>Evolución del catálogo</h3><p class="sub" id="hist-sub">Un punto por cada actualización diaria</p><div class="chart"><canvas id="c-history"></canvas></div><p class="empty" id="hist-empty" hidden>El historial se acumula día a día. Vuelve en unos días para ver la tendencia.</p></article>
+      <article class="panel fx" style="--a:#22d3ee"><h3>Evolución del catálogo</h3><p class="sub" id="hist-sub">Un punto por día</p><div class="chart"><canvas id="c-history"></canvas></div><p class="empty" id="hist-empty" hidden>El historial se acumula día a día. Vuelve en unos días para ver la tendencia.</p></article>
     </div>
   </section>
 
@@ -203,5 +210,7 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
 <script src="app.js?v=__V__"></script>
 <script src="guide.js?v=__V__"></script>
 <script src="week.js?v=__V__"></script>
+<script src="users.js?v=__V__"></script>
+<script src="clock.js?v=__V__"></script>
 </body>
 </html>

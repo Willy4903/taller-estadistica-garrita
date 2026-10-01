@@ -43,6 +43,7 @@ jobs:
         run: |
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install argostranslate
+          pip install pytrends
 
       - name: Descargar datos y generar JSON
         run: python scripts/update_data.py

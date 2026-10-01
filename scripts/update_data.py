@@ -217,6 +217,55 @@ def translate_descriptions(models, previous_models, limit=450):
     return done
 
 
+# ---------- Interés de búsqueda por país y por departamento (Google Trends) ----------
+# Indicador de presencia, no de suscriptores: ninguna empresa publica usuarios por país.
+TREND_TERMS = [("ChatGPT", "ChatGPT"), ("Gemini", "Gemini AI"), ("Claude", "Claude AI"), ("Copilot", "Microsoft Copilot"), ("DeepSeek", "DeepSeek")]
+LATAM_CODES = {"PE": "Perú", "MX": "México", "CO": "Colombia", "CL": "Chile", "AR": "Argentina", "BR": "Brasil", "EC": "Ecuador", "UY": "Uruguay",
+               "BO": "Bolivia", "PY": "Paraguay", "VE": "Venezuela", "CR": "Costa Rica", "PA": "Panamá", "DO": "Rep. Dominicana", "GT": "Guatemala"}
+
+
+def _shares(row, keys):
+    vals = {k: float(row.get(k, 0) or 0) for k in keys}
+    tot = sum(vals.values())
+    return {k: (round(v / tot * 100, 1) if tot else 0.0) for k, v in vals.items()}
+
+
+def collect_regional():
+    """Cuota de interés de búsqueda entre cinco asistentes de IA: LatAm, departamentos del Perú y serie diaria en Perú."""
+    try:
+        from pytrends.request import TrendReq
+    except Exception as e:
+        return {"ok": False, "error": f"pytrends no disponible: {e}"[:200]}
+    import time
+    kw = [t[1] for t in TREND_TERMS]
+    names = [t[0] for t in TREND_TERMS]
+    try:
+        py = TrendReq(hl="es-PE", tz=300, timeout=(10, 40), retries=3, backoff_factor=2.0)
+        py.build_payload(kw, timeframe="today 3-m", geo="")
+        world = py.interest_by_region(resolution="COUNTRY", inc_low_vol=True, inc_geo_code=True)
+        time.sleep(3)
+        countries = {}
+        for _, row in world.iterrows():
+            code = row.get("geoCode")
+            if code in LATAM_CODES:
+                countries[code] = {"name": LATAM_CODES[code], "share": _shares({n: row[k] for n, k in zip(names, kw)}, names)}
+        time.sleep(3)
+        py.build_payload(kw, timeframe="today 3-m", geo="PE")
+        reg = py.interest_by_region(resolution="REGION", inc_low_vol=True, inc_geo_code=False)
+        regions = []
+        for name, row in reg.iterrows():
+            tot = sum(float(row[k] or 0) for k in kw)
+            if tot > 0:
+                regions.append({"name": str(name).replace(" Region", "").replace("Provincia de ", ""), "total": round(tot, 1), "share": _shares({n: row[k] for n, k in zip(names, kw)}, names)})
+        regions.sort(key=lambda r: r["total"], reverse=True)
+        time.sleep(3)
+        series = py.interest_over_time()
+        timeline = [{"date": idx.strftime("%Y-%m-%d"), **{n: int(row[k]) for n, k in zip(names, kw)}} for idx, row in series.iterrows()]
+        return {"ok": True, "terms": dict(zip(names, kw)), "window": "últimos 3 meses", "countries": countries, "peru_regions": regions[:24], "peru_timeline": timeline}
+    except Exception as e:  # Google puede limitar las consultas desde servidores en la nube
+        return {"ok": False, "error": str(e)[:200]}
+
+
 def collect_news(previous_items, now_utc):
     status, found = {}, []
     for key, source, url, kind, only_ai in FEEDS:
@@ -441,6 +490,18 @@ def main():
             (DATA / "news.json").write_text(json.dumps(
                 {"updated_at": now.isoformat(timespec="minutes"), "feeds": feed_status, "items": items},
                 ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+    if not sample:
+        reg = collect_regional()
+        old = read_json(DATA / "regional.json", {})
+        if reg.get("ok"):
+            reg["updated_at"] = now.isoformat(timespec="minutes")
+            (DATA / "regional.json").write_text(json.dumps(reg, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+            print(f"Interés regional: ok, {len(reg['countries'])} países, {len(reg['peru_regions'])} departamentos")
+        else:
+            print(f"Interés regional: no disponible ({reg.get('error')}); se conservan los últimos datos válidos", file=sys.stderr)
+            if not old.get("ok"):
+                (DATA / "regional.json").write_text(json.dumps({"ok": False, "error": reg.get("error"), "updated_at": now.isoformat(timespec="minutes")}, ensure_ascii=False), encoding="utf-8")
 
     print(f"OK {today}: {len(models)} modelos, {len(hf)} HF, nuevos hoy: {new_today}, sample={sample}")
     return 0

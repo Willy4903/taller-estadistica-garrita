@@ -167,8 +167,7 @@
     const hours = (Date.now() - upd) / 36e5;
     const st = $("#status");
     st.classList.toggle("stale", hours > 36);
-    st.dataset.tip = "Última actualización de los datos\nSe actualiza todos los días a las 6:00 am (hora de Lima)."; st.tabIndex = 0;
-    $("#status-text").textContent = upd.toLocaleString("es-PE", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", timeZone: meta.timezone });
+    st.dataset.updated = upd.toISOString();  // el reloj de la cabecera muestra cuánto hace que se actualizaron los datos
     if (meta.sample) {
       const b = $("#banner");
       b.hidden = false;
@@ -811,7 +810,7 @@
     news.items = (data && data.items) || [];
     if (!news.items.length) {
       $("#news-ctrl").hidden = true;
-      $("#news").innerHTML = '<p class="news-empty" style="width:100%">Aún no hay noticias cargadas. Aparecerán tras la próxima actualización diaria (6:00 am, hora de Lima).</p>';
+      $("#news").innerHTML = '<p class="news-empty" style="width:100%">Aún no hay noticias cargadas. Aparecerán en la próxima actualización de datos.</p>';
       return;
     }
     // Si hoy no hay noticias, parte del periodo de 7 días; si hay muchas hoy, igualmente se ve el contexto semanal.
