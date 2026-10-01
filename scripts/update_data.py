@@ -139,6 +139,16 @@ def parse_feed(raw, key, source, kind, only_ai):
     return items
 
 
+# El traductor automático deforma algunos nombres propios; se corrigen después de traducir.
+ES_FIXES = [("Antrópico", "Anthropic"), ("Antrópica", "Anthropic"), ("Antropic", "Anthropic"), ("Antropico", "Anthropic")]
+
+
+def fix_es(text):
+    for bad, good in ES_FIXES:
+        text = text.replace(bad, good)
+    return text
+
+
 _translate = None
 
 
@@ -183,9 +193,9 @@ def translate_items(items, limit=200):
     done = 0
     for i in pending:
         try:
-            i["title_es"] = tr(i["title"]).strip()
+            i["title_es"] = fix_es(tr(i["title"]).strip())
             if i.get("summary"):
-                i["summary_es"] = tr(i["summary"]).strip()
+                i["summary_es"] = fix_es(tr(i["summary"]).strip())
             done += 1
         except Exception as e:
             print(f"No se pudo traducir '{i['title'][:50]}': {e}", file=sys.stderr)
@@ -199,7 +209,7 @@ def translate_descriptions(models, previous_models, limit=450):
     for m in models:
         old = prev.get(m["id"])
         if old and old.get("description") == m.get("description") and old.get("description_es"):
-            m["description_es"] = old["description_es"]
+            m["description_es"] = fix_es(old["description_es"])
         elif m.get("description") and not m["id"].startswith("~") and not m["id"].endswith(":batch"):
             pending.append(m)
     if not pending:
@@ -210,7 +220,7 @@ def translate_descriptions(models, previous_models, limit=450):
     done = 0
     for m in pending[:limit]:
         try:
-            m["description_es"] = tr(m["description"]).strip()
+            m["description_es"] = fix_es(tr(m["description"]).strip())
             done += 1
         except Exception as e:
             print(f"No se pudo traducir la descripción de {m['id']}: {e}", file=sys.stderr)
@@ -240,9 +250,20 @@ def collect_regional():
     kw = [t[1] for t in TREND_TERMS]
     names = [t[0] for t in TREND_TERMS]
     try:
-        py = TrendReq(hl="es-PE", tz=300, timeout=(10, 40), retries=3, backoff_factor=2.0)
+        py = TrendReq(hl="es-PE", tz=300, timeout=(10, 40))  # no usar retries/backoff_factor: fallan con urllib3 2.x
+
+        def attempt(fn, tries=4):
+            last = None
+            for k in range(tries):
+                try:
+                    return fn()
+                except Exception as e:  # 429 u otros bloqueos temporales de Google
+                    last = e
+                    time.sleep(6 * (k + 1))
+            raise last
+
         py.build_payload(kw, timeframe="today 3-m", geo="")
-        world = py.interest_by_region(resolution="COUNTRY", inc_low_vol=True, inc_geo_code=True)
+        world = attempt(lambda: py.interest_by_region(resolution="COUNTRY", inc_low_vol=True, inc_geo_code=True))
         time.sleep(3)
         countries = {}
         for _, row in world.iterrows():
@@ -251,7 +272,7 @@ def collect_regional():
                 countries[code] = {"name": LATAM_CODES[code], "share": _shares({n: row[k] for n, k in zip(names, kw)}, names)}
         time.sleep(3)
         py.build_payload(kw, timeframe="today 3-m", geo="PE")
-        reg = py.interest_by_region(resolution="REGION", inc_low_vol=True, inc_geo_code=False)
+        reg = attempt(lambda: py.interest_by_region(resolution="REGION", inc_low_vol=True, inc_geo_code=False))
         regions = []
         for name, row in reg.iterrows():
             tot = sum(float(row[k] or 0) for k in kw)
@@ -259,7 +280,7 @@ def collect_regional():
                 regions.append({"name": str(name).replace(" Region", "").replace("Provincia de ", ""), "total": round(tot, 1), "share": _shares({n: row[k] for n, k in zip(names, kw)}, names)})
         regions.sort(key=lambda r: r["total"], reverse=True)
         time.sleep(3)
-        series = py.interest_over_time()
+        series = attempt(lambda: py.interest_over_time())
         timeline = [{"date": idx.strftime("%Y-%m-%d"), **{n: int(row[k]) for n, k in zip(names, kw)}} for idx, row in series.iterrows()]
         return {"ok": True, "terms": dict(zip(names, kw)), "window": "últimos 3 meses", "countries": countries, "peru_regions": regions[:24], "peru_timeline": timeline}
     except Exception as e:  # Google puede limitar las consultas desde servidores en la nube
@@ -289,6 +310,10 @@ def collect_news(previous_items, now_utc):
     kept = sorted((i for i in merged.values() if i["published"] >= limit), key=lambda i: i["published"], reverse=True)
     kept = kept[:NEWS_MAX_ITEMS]
     status["_traducidas"] = {"ok": True, "count": translate_items(kept)}
+    for i in kept:  # corrige también lo traducido en ejecuciones anteriores
+        for k in ("title_es", "summary_es"):
+            if i.get(k):
+                i[k] = fix_es(i[k])
     return kept, status
 
 
