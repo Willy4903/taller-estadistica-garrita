@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IA Radar | Últimos modelos de inteligencia artificial</title>
+<meta name="description" content="Panel diario con los últimos modelos de IA, comparaciones de precio y contexto, y gráficas de tendencias. Se actualiza todos los días a las 6:00 am (hora de Lima).">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1020'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%2322d3ee' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%23a78bfa'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg-grid" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#">
+      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" fill="none" stroke="url(#g)" stroke-width="2.5"/><circle cx="16" cy="16" r="3.5" fill="url(#g)"/><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs></svg>
+      <span>IA Radar</span>
+    </a>
+    <nav>
+      <a href="#lanzamientos">Lanzamientos</a>
+      <a href="#graficas">Gráficas</a>
+      <a href="#comparador">Comparador</a>
+      <a href="#abiertos">Modelos abiertos</a>
+    </nav>
+    <div class="status" id="status"><span class="dot"></span><span id="status-text">Cargando…</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Actualización diaria · 6:00 am (Lima)</p>
+    <h1>El pulso de los modelos de IA, <span class="grad">cada mañana</span></h1>
+    <p class="lead">Lanzamientos recientes, precios, ventanas de contexto y tendencias en un solo lugar.</p>
+    <div class="banner" id="banner" hidden></div>
+  </section>
+
+  <section class="kpis" id="kpis" aria-label="Indicadores"></section>
+
+  <section id="lanzamientos">
+    <h2><span class="tag">01</span> Últimos lanzamientos</h2>
+    <div class="cards" id="latest"></div>
+  </section>
+
+  <section id="graficas">
+    <h2><span class="tag">02</span> Gráficas</h2>
+    <div class="grid2">
+      <article class="panel"><h3>Lanzamientos por mes</h3><p class="sub">Últimos 12 meses, texto frente a multimodal</p><div class="chart"><canvas id="c-releases"></canvas></div></article>
+      <article class="panel"><h3>Proveedores más activos</h3><p class="sub">Modelos lanzados en los últimos 90 días</p><div class="chart"><canvas id="c-providers"></canvas></div></article>
+      <article class="panel"><h3>Precio frente a contexto</h3><p class="sub">Modelos de los últimos 180 días (escala logarítmica)</p><div class="chart"><canvas id="c-scatter"></canvas></div></article>
+      <article class="panel"><h3>Evolución del catálogo</h3><p class="sub" id="hist-sub">Un punto por cada actualización diaria</p><div class="chart"><canvas id="c-history"></canvas></div><p class="empty" id="hist-empty" hidden>El historial se acumula día a día. Vuelve en unos días para ver la tendencia.</p></article>
+    </div>
+  </section>
+
+  <section id="comparador">
+    <h2><span class="tag">03</span> Comparador</h2>
+    <p class="sub">Marca hasta 4 modelos para compararlos lado a lado.</p>
+    <div class="compare" id="compare" hidden>
+      <div class="grid2">
+        <article class="panel"><h3>Precio por millón de tokens (USD)</h3><div class="chart sm"><canvas id="c-cmp-price"></canvas></div></article>
+        <article class="panel"><h3>Ventana de contexto (tokens)</h3><div class="chart sm"><canvas id="c-cmp-ctx"></canvas></div></article>
+      </div>
+      <div class="table-wrap"><table class="cmp-table" id="cmp-table"></table></div>
+    </div>
+    <div class="filters">
+      <input type="search" id="q" placeholder="Buscar modelo o proveedor" aria-label="Buscar">
+      <select id="prov" aria-label="Proveedor"><option value="">Todos los proveedores</option></select>
+      <select id="flt" aria-label="Filtro">
+        <option value="">Todos</option><option value="multimodal">Solo multimodales</option><option value="reasoning">Solo razonamiento</option><option value="free">Solo gratuitos</option>
+      </select>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="table-wrap">
+      <table id="tbl">
+        <thead><tr>
+          <th></th>
+          <th data-k="name">Modelo</th><th data-k="provider">Proveedor</th><th data-k="created">Lanzamiento</th>
+          <th data-k="context" class="num">Contexto</th><th data-k="price_in" class="num">Entrada $/M</th><th data-k="price_out" class="num">Salida $/M</th><th>Capacidades</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button class="btn" id="more" hidden>Mostrar más</button>
+  </section>
+
+  <section id="abiertos">
+    <h2><span class="tag">04</span> Modelos abiertos en tendencia</h2>
+    <div class="grid2">
+      <article class="panel"><h3>Descargas</h3><p class="sub">Top 10 en Hugging Face</p><div class="chart"><canvas id="c-hf"></canvas></div></article>
+      <article class="panel"><h3>Ranking de tendencia</h3><ol class="hf-list" id="hf-list"></ol></article>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Fuentes: <a href="https://openrouter.ai/models" target="_blank" rel="noopener">OpenRouter</a> (catálogo, precios, contexto) y <a href="https://huggingface.co/models?sort=trending" target="_blank" rel="noopener">Hugging Face</a> (modelos abiertos en tendencia). Los precios son por millón de tokens y pueden variar según el proveedor.</p>
+    <p id="src-status"></p>
+  </div>
+</footer>
+
+<script src="vendor/chart.umd.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
