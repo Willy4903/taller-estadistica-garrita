@@ -1,0 +1,524 @@
+{
+ "pages": [
+  {
+   "slug": "que-es-un-system-prompt",
+   "title": "¿Qué es un system prompt? Definición, ejemplo y cómo escribir uno",
+   "h1": "¿Qué es un system prompt?",
+   "description": "Un system prompt define las reglas bajo las que trabaja un asistente de IA. Definición simple, ejemplo profesional, diferencia con el prompt del usuario y cómo escribir uno.",
+   "short": "Qué es un system prompt",
+   "answer": "Un system prompt es el conjunto de reglas que define cómo debe comportarse un asistente de IA antes de que escribas tu primera pregunta: su rol, sus límites, su tono y su formato de respuesta. El prompt del usuario, en cambio, es la tarea de ahora.",
+   "sections": [
+    {
+     "h": "Prompt y system prompt: la diferencia",
+     "p": [
+      "El prompt describe lo que quieres resolver en este momento: 'analiza este archivo y detecta anomalías'. El system prompt describe las reglas permanentes bajo las que quieres que el asistente trabaje: 'eres analista de datos de una institución pública; trabaja solo con los datos proporcionados; no inventes valores; diferencia hechos de inferencias'.",
+      "Dicho de forma simple, el system prompt define el comportamiento y el prompt define la tarea. Puedes cambiar la tarea sin tocar las reglas, o cambiar las reglas para que todas las tareas se hagan con otro criterio."
+     ]
+    },
+    {
+     "h": "Ejemplo profesional",
+     "p": [
+      "SYSTEM: Eres analista de datos de una institución pública. Trabaja únicamente con los datos proporcionados. No inventes valores faltantes. Diferencia hechos de inferencias. Comprueba los cálculos antes de concluir. Entrega primero los hallazgos críticos.",
+      "USER: Analiza este archivo y detecta anomalías."
+     ]
+    },
+    {
+     "h": "Cómo escribir un buen system prompt",
+     "p": [
+      "Define el rol y el público. Escribe reglas concretas y verificables ('cita siempre el número de página') en lugar de deseos generales ('sé preciso'). Indica qué hacer cuando falte información. Fija el formato de salida. Prueba con casos reales y ajusta.",
+      "En productos como Projects, GPTs, Gems o asistentes personalizados, el system prompt suele aparecer como 'instrucciones' del proyecto o del asistente."
+     ]
+    },
+    {
+     "h": "Límites",
+     "p": [
+      "Un system prompt no garantiza obediencia total: el modelo puede equivocarse o ser engañado por contenido externo (prompt injection). Para tareas críticas se combina con verificación humana y permisos acotados."
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "q": "¿El system prompt es lo mismo que las instrucciones personalizadas?",
+     "a": "Son conceptos cercanos: ambos fijan reglas persistentes. El nombre y el lugar donde se configuran dependen de cada producto."
+    },
+    {
+     "q": "¿Puedo ver el system prompt de un servicio?",
+     "a": "Normalmente no: lo define el proveedor o el equipo que construyó el asistente. En tus propios proyectos sí puedes escribirlo y editarlo."
+    }
+   ],
+   "related": [
+    "como-hacer-un-buen-prompt",
+    "prompt-engineering-vs-context-engineering",
+    "que-es-un-agente-de-ia"
+   ],
+   "cta": {
+    "text": "Prueba el Prompt Lab",
+    "href": "index.html#promptlab"
+   }
+  },
+  {
+   "slug": "como-hacer-un-buen-prompt",
+   "title": "Cómo hacer un buen prompt: guía práctica con ejemplo",
+   "h1": "Cómo hacer un buen prompt",
+   "description": "Aprende a escribir prompts claros con objetivo, contexto, fuentes, reglas, entregable y verificación. Con ejemplo paso a paso, sin frases mágicas.",
+   "short": "Cómo hacer un buen prompt",
+   "answer": "Un buen prompt dice qué quieres lograr, qué contexto tiene la IA, qué información debe usar, qué reglas debe respetar, cómo quieres el resultado y qué debe verificar antes de responder. No existe un prompt mágico: existe una instrucción adecuada al problema.",
+   "sections": [
+    {
+     "h": "Los seis bloques",
+     "p": [
+      "Objetivo: el resultado concreto que necesitas. Contexto: quién eres, para quién es y qué situación hay. Fuentes: los archivos o datos que debe usar. Reglas: lo que debe y no debe hacer. Entregable: formato, extensión y tono. Verificación: qué debe comprobar antes de responder."
+     ]
+    },
+    {
+     "h": "De débil a profesional",
+     "p": [
+      "Prompt débil: 'Analiza este Excel'. Mejorado: 'Identifica los principales cambios en ventas. Son ventas mensuales de 2024 a 2026. Actúa como analista comercial senior. Trabaja únicamente con el archivo proporcionado. Identifica variaciones superiores al 10 %. Comprueba los cálculos antes de concluir. Entrega 5 hallazgos, una tabla y recomendaciones.'",
+      "Cada bloque elimina una suposición que la IA tendría que hacer por su cuenta."
+     ]
+    },
+    {
+     "h": "Errores frecuentes",
+     "p": [
+      "Preguntas vagas que obligan a adivinar. Pegar demasiada información irrelevante. No pedir un formato. Aceptar la primera respuesta sin revisar cifras ni citas. No iterar: la primera versión rara vez es la mejor."
+     ]
+    },
+    {
+     "h": "Itera y evalúa",
+     "p": [
+      "Compara la respuesta con lo que esperabas, identifica qué faltó en la instrucción y mejórala. Si inventó un dato, añade la regla 'si falta un dato, responde Dato no disponible'."
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "q": "¿Los prompts largos son mejores?",
+     "a": "No necesariamente. Mejor es el que contiene la información necesaria y ninguna que distraiga."
+    },
+    {
+     "q": "¿Debo escribir en inglés?",
+     "a": "Los modelos actuales funcionan bien en español. Lo importante es la claridad, no el idioma."
+    }
+   ],
+   "related": [
+    "que-es-un-system-prompt",
+    "prompt-engineering-vs-context-engineering",
+    "que-es-rag"
+   ],
+   "cta": {
+    "text": "Construye tu prompt",
+    "href": "index.html#promptlab"
+   }
+  },
+  {
+   "slug": "prompt-engineering-vs-context-engineering",
+   "title": "Prompt engineering vs context engineering: diferencias y cuándo usar cada uno",
+   "h1": "Prompt engineering vs context engineering",
+   "description": "Prompt engineering se enfoca en cómo formular la instrucción; context engineering en qué información, herramientas y reglas necesita la IA. Diferencias y ejemplo.",
+   "short": "Prompt vs context engineering",
+   "answer": "Prompt engineering responde a '¿cómo formulo la instrucción?'. Context engineering responde a '¿qué información, herramientas y reglas necesita la IA para resolver correctamente el problema?'. El segundo incluye al primero y es lo que permite pasar de consultas sueltas a sistemas de trabajo.",
+   "sections": [
+    {
+     "h": "Prompt engineering",
+     "p": [
+      "Es el diseño de instrucciones: estructura, descomposición, ejemplos, criterios, restricciones, formatos, evaluación e iteración. Mejora el resultado sin cambiar de modelo."
+     ]
+    },
+    {
+     "h": "Context engineering",
+     "p": [
+      "Es el diseño de todo lo que el modelo recibe: system prompt, instrucciones, archivos, datos, memoria, herramientas, historial y reglas. Un buen modelo con mal contexto puede producir un mal resultado; un contexto bien construido puede transformar la calidad del trabajo."
+     ]
+    },
+    {
+     "h": "Un caso práctico",
+     "p": [
+      "Para un informe mensual de ventas, el prompt dice 'compara 2025 y 2026'. El contexto añade el rol de analista, el archivo con los datos, la política de redondeo, un informe aprobado como ejemplo, la decisión de excluir devoluciones tomada el mes anterior y una calculadora para comprobar variaciones."
+     ]
+    },
+    {
+     "h": "Cuándo usar cada uno",
+     "p": [
+      "Para tareas puntuales basta un buen prompt. Cuando la tarea se repite, depende de documentos o requiere herramientas, conviene diseñar el contexto: un Project, un asistente configurado, un workflow o un agente."
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "q": "¿El context engineering reemplaza al prompt engineering?",
+     "a": "No: lo contiene. Seguir escribiendo buenas instrucciones es parte de construir buen contexto."
+    }
+   ],
+   "related": [
+    "que-es-un-system-prompt",
+    "que-es-un-agente-de-ia",
+    "que-es-rag"
+   ],
+   "cta": {
+    "text": "Ver 'Del prompt al contexto'",
+    "href": "index.html#agentes"
+   }
+  },
+  {
+   "slug": "que-es-un-agente-de-ia",
+   "title": "¿Qué es un agente de IA? Diferencia con un chatbot y cómo usarlo con seguridad",
+   "h1": "¿Qué es un agente de IA?",
+   "description": "Un agente de IA se propone un objetivo, usa herramientas y actúa en varios pasos. Diferencia con un chatbot, ejemplos, riesgos y buenas prácticas.",
+   "short": "Qué es un agente de IA",
+   "answer": "Un agente de IA es un sistema que combina un modelo con herramientas, memoria y un bucle de decisión para cumplir un objetivo en varios pasos. Un chatbot responde; un agente planifica, usa herramientas y actúa.",
+   "sections": [
+    {
+     "h": "Chatbot, workflow y agente",
+     "p": [
+      "Un chatbot responde preguntas. Un workflow sigue una secuencia fija de pasos en la que la IA resuelve algunos. Un agente decide por sí mismo qué pasos dar y qué herramientas usar para llegar a un objetivo."
+     ]
+    },
+    {
+     "h": "Qué necesita un agente",
+     "p": [
+      "Un modelo capaz de razonar, herramientas (buscar, calcular, leer archivos, operar un computador), contexto suficiente y reglas claras. Estándares como MCP facilitan conectar herramientas y datos."
+     ]
+    },
+    {
+     "h": "Riesgos",
+     "p": [
+      "Más autonomía implica más riesgo: puede ejecutar acciones equivocadas, filtrar datos o seguir instrucciones maliciosas escondidas en el contenido que lee (prompt injection)."
+     ]
+    },
+    {
+     "h": "Buenas prácticas",
+     "p": [
+      "Limita los permisos al mínimo necesario. Registra cada acción. Define qué requiere aprobación humana. Empieza con un workflow fijo y da más autonomía solo cuando el riesgo sea bajo."
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "q": "¿Un agente reemplaza a una persona?",
+     "a": "Automatiza tareas, no responsabilidades: quien despliega y usa el resultado sigue respondiendo por él."
+    }
+   ],
+   "related": [
+    "que-es-mcp",
+    "prompt-engineering-vs-context-engineering",
+    "etica-de-la-inteligencia-artificial"
+   ],
+   "cta": {
+    "text": "De prompts a agentes",
+    "href": "index.html#agentes"
+   }
+  },
+  {
+   "slug": "que-es-mcp",
+   "title": "¿Qué es MCP (Model Context Protocol)? Explicación simple",
+   "h1": "¿Qué es MCP?",
+   "description": "MCP es un estándar abierto para conectar asistentes de IA con herramientas y datos. Qué resuelve, cómo funciona y qué cuidar al usarlo.",
+   "short": "Qué es MCP",
+   "answer": "MCP (Model Context Protocol) es un protocolo abierto, presentado por Anthropic, que define cómo un asistente de IA se conecta con herramientas y fuentes de datos de forma uniforme.",
+   "sections": [
+    {
+     "h": "El problema que resuelve",
+     "p": [
+      "Antes, conectar un asistente con una herramienta exigía una integración a medida para cada combinación. Con MCP, una herramienta expone sus capacidades mediante un servidor y cualquier cliente compatible puede usarlas."
+     ]
+    },
+    {
+     "h": "Cómo funciona",
+     "p": [
+      "Hay un cliente (el asistente o la aplicación) y servidores que exponen herramientas, recursos y plantillas de instrucciones. El modelo decide cuándo usar cada herramienta y el cliente ejecuta la llamada."
+     ]
+    },
+    {
+     "h": "Qué cuidar",
+     "p": [
+      "Cada conexión amplía lo que el asistente puede ver y hacer. Revisa permisos, usa acceso de solo lectura cuando baste, confía solo en servidores de fuentes conocidas y desconfía del contenido externo que pueda traer instrucciones maliciosas."
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "q": "¿MCP es lo mismo que un plugin o un conector?",
+     "a": "Son ideas cercanas. MCP es un estándar; los conectores y plugins son la forma en que cada producto lo presenta al usuario."
+    }
+   ],
+   "related": [
+    "que-es-un-agente-de-ia",
+    "que-es-rag",
+    "etica-de-la-inteligencia-artificial"
+   ],
+   "cta": {
+    "text": "Ver el glosario",
+    "href": "glosario.html"
+   }
+  },
+  {
+   "slug": "que-ia-es-mejor-para-analizar-documentos",
+   "title": "¿Qué IA es mejor para analizar documentos? Cómo elegir con criterios",
+   "h1": "¿Qué IA es mejor para analizar documentos?",
+   "description": "No hay una IA ganadora para todo. Estos son los criterios para elegir un modelo para analizar documentos: contexto, archivos, precio, verificación y privacidad.",
+   "short": "Qué IA elegir para documentos",
+   "answer": "No existe una IA mejor para todos los casos. Para analizar documentos importan cinco criterios: tamaño de contexto, soporte de archivos, capacidad de razonar, precio y política de datos. Compara por tarea y prueba con tus propios documentos.",
+   "sections": [
+    {
+     "h": "Criterios",
+     "p": [
+      "Contexto: cuántos tokens admite; un documento largo necesita una ventana grande. Archivos: si acepta PDF, hojas de cálculo e imágenes. Razonamiento: ayuda en análisis de varios pasos. Precio: se mide por millón de tokens. Privacidad: qué hace el proveedor con tus datos en el plan que usas."
+     ]
+    },
+    {
+     "h": "Cómo comparar con datos",
+     "p": [
+      "En el Radar de modelos de IA Radar puedes elegir el problema 'Analizar documentos' y ver tres opciones con su contexto, precio y capacidades, tomadas del catálogo público de OpenRouter. Los benchmarks de terceros se muestran por separado."
+     ]
+    },
+    {
+     "h": "Cómo evitar errores",
+     "p": [
+      "Pide citas textuales con página o sección, verifica las cifras clave y distingue hechos de inferencias. Un contexto grande no garantiza que el modelo atienda por igual a todo el documento."
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "q": "¿Puedo subir documentos confidenciales?",
+     "a": "Solo si tu organización lo autoriza y conoces cómo trata los datos la herramienta y el plan. Si no, usa versiones anonimizadas."
+    }
+   ],
+   "related": [
+    "que-es-una-ventana-de-contexto",
+    "chatgpt-vs-claude",
+    "que-es-rag"
+   ],
+   "cta": {
+    "text": "Usar el selector por problema",
+    "href": "index.html#modelos"
+   }
+  },
+  {
+   "slug": "chatgpt-vs-claude",
+   "title": "ChatGPT vs Claude: cómo compararlos sin elegir un ganador universal",
+   "h1": "ChatGPT vs Claude",
+   "description": "Comparación de ChatGPT y Claude por tarea y criterios, sin ganador universal: documentos, programación, agentes, integraciones, precio y datos.",
+   "short": "ChatGPT vs Claude",
+   "answer": "Ni ChatGPT ni Claude son mejores en todo. Cambian de versión con frecuencia, así que conviene compararlos por tarea con criterios claros y probarlos con tu propio trabajo.",
+   "sections": [
+    {
+     "h": "Qué comparar",
+     "p": [
+      "Tarea: documentos extensos, programación, investigación, escritura o análisis de datos. Espacios de trabajo: ambos ofrecen Projects. Agentes y programación: ChatGPT cuenta con modo agente y Codex; Claude con Claude Code y Cowork. Personalización: GPTs en ChatGPT; Skills y Artifacts en Claude. Precio y límites: dependen del plan. Datos: revisa la política de privacidad de cada plan."
+     ]
+    },
+    {
+     "h": "Cómo decidir con datos",
+     "p": [
+      "En el Radar de modelos de IA Radar puedes ver contexto, precio y capacidades de los modelos actuales de OpenAI y Anthropic y los benchmarks de terceros, cada uno por separado. Los rankings miden cosas distintas y una diferencia pequeña suele no ser significativa."
+     ]
+    },
+    {
+     "h": "Una prueba práctica",
+     "p": [
+      "Elige tres tareas reales, escribe la misma instrucción con buen contexto en ambos y compara calidad, tiempo, costo y facilidad de verificación. Repite cuando salgan versiones nuevas."
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "q": "¿Cuál es mejor para programar?",
+     "a": "Depende del lenguaje, del proyecto y de la herramienta que uses. Prueba ambos con una tarea real de tu código."
+    },
+    {
+     "q": "¿Puedo usar los dos?",
+     "a": "Sí, y muchas personas lo hacen: usan cada uno donde rinde mejor en su flujo de trabajo."
+    }
+   ],
+   "related": [
+    "que-ia-es-mejor-para-analizar-documentos",
+    "como-hacer-un-buen-prompt",
+    "que-es-un-agente-de-ia"
+   ],
+   "cta": {
+    "text": "Comparar modelos en el Radar",
+    "href": "modelos.html"
+   }
+  },
+  {
+   "slug": "que-es-rag",
+   "title": "¿Qué es RAG (generación aumentada por recuperación)? Explicación con ejemplo",
+   "h1": "¿Qué es RAG?",
+   "description": "RAG permite que un modelo busque en tus documentos y responda usando lo que encontró. Cómo funciona, para qué sirve y límites.",
+   "short": "Qué es RAG",
+   "answer": "RAG (retrieval-augmented generation) es un patrón en el que, antes de responder, el sistema busca fragmentos relevantes en tus documentos y se los entrega al modelo para que responda con fundamento en esa información.",
+   "sections": [
+    {
+     "h": "Cómo funciona",
+     "p": [
+      "Se divide la documentación en fragmentos, se convierten en embeddings (representaciones numéricas del significado) y se guardan en una base de datos vectorial. Ante una pregunta, se recuperan los fragmentos más parecidos y se incluyen en el contexto del modelo."
+     ]
+    },
+    {
+     "h": "Para qué sirve",
+     "p": [
+      "Responder con información propia o reciente sin reentrenar el modelo y reducir las alucinaciones al exigir que cite de dónde saca cada dato."
+     ]
+    },
+    {
+     "h": "Límites",
+     "p": [
+      "Si la búsqueda recupera fragmentos equivocados, la respuesta será equivocada aunque suene segura. Hay que evaluar la recuperación, mantener los documentos actualizados y pedir citas verificables."
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "q": "¿RAG o fine-tuning?",
+     "a": "Suele convenir probar primero buen contexto y RAG: son más baratos y fáciles de actualizar que reentrenar."
+    }
+   ],
+   "related": [
+    "que-es-una-ventana-de-contexto",
+    "que-ia-es-mejor-para-analizar-documentos",
+    "prompt-engineering-vs-context-engineering"
+   ],
+   "cta": {
+    "text": "Ver el glosario",
+    "href": "glosario.html"
+   }
+  },
+  {
+   "slug": "que-es-una-ventana-de-contexto",
+   "title": "¿Qué es una ventana de contexto? Tokens, límites y cómo aprovecharla",
+   "h1": "¿Qué es una ventana de contexto?",
+   "description": "La ventana de contexto es la cantidad de información que un modelo puede tener presente a la vez. Qué es un token, cuánto cabe y cómo usarla bien.",
+   "short": "Qué es una ventana de contexto",
+   "answer": "La ventana de contexto es el máximo de información, medida en tokens, que un modelo puede procesar en una sola interacción. Incluye tu mensaje, los archivos, el historial y la respuesta.",
+   "sections": [
+    {
+     "h": "Tokens y palabras",
+     "p": [
+      "Un token es una pieza de texto. En español, una palabra equivale a entre 1 y 2 tokens. Un contexto de 1 millón de tokens cabe aproximadamente en varios libros."
+     ]
+    },
+    {
+     "h": "Más contexto no es siempre mejor",
+     "p": [
+      "Un contexto grande permite cargar documentos largos, pero no garantiza que el modelo preste la misma atención a todo. Además, procesar más tokens cuesta más y tarda más."
+     ]
+    },
+    {
+     "h": "Cómo aprovecharla",
+     "p": [
+      "Incluye solo lo relevante, ordena la información, pide citas del documento para comprobar que lo leyó y, si el material es enorme, usa RAG o divide la tarea en partes."
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "q": "¿Qué pasa si supero el límite?",
+     "a": "Parte de la información queda fuera o el servicio rechaza la petición, según el producto."
+    }
+   ],
+   "related": [
+    "que-es-rag",
+    "que-ia-es-mejor-para-analizar-documentos",
+    "como-hacer-un-buen-prompt"
+   ],
+   "cta": {
+    "text": "Ver modelos y su contexto",
+    "href": "modelos.html"
+   }
+  },
+  {
+   "slug": "ley-de-inteligencia-artificial-en-peru",
+   "title": "Ley de inteligencia artificial en Perú: Ley 31814 y su reglamento",
+   "h1": "Ley de inteligencia artificial en Perú",
+   "description": "Qué establece la Ley 31814, el reglamento D.S. 115-2025-PCM y cómo se relacionan con la protección de datos personales (Ley 29733 y D.S. 016-2024-JUS).",
+   "short": "Ley de IA en Perú",
+   "answer": "Perú cuenta con la Ley N.º 31814, que promueve el uso de la inteligencia artificial en favor del desarrollo económico y social del país, y con su reglamento, aprobado por el D.S. N.º 115-2025-PCM. Este contenido es educativo y no constituye asesoría jurídica: consulta siempre el texto oficial.",
+   "sections": [
+    {
+     "h": "La ley y su reglamento",
+     "p": [
+      "La Ley 31814 se publicó en julio de 2023 y promueve el uso de la IA con un enfoque ético, sostenible, transparente, replicable y responsable. El reglamento (D.S. 115-2025-PCM) se publicó el 9 de setiembre de 2025 y, según las fuentes oficiales consultadas, entra en vigencia el 22 de enero de 2026.",
+      "El reglamento desarrolla la gobernanza con enfoque basado en riesgos. La PCM, mediante la Secretaría de Gobierno y Transformación Digital, es la autoridad técnico-normativa y supervisa su cumplimiento. Prevé transparencia algorítmica, supervisión humana en sistemas de alto riesgo, auditorías de seguridad y protección de datos desde el diseño."
+     ]
+    },
+    {
+     "h": "Protección de datos personales",
+     "p": [
+      "Cuando una herramienta de IA trata datos de personas, aplica la Ley 29733 y su nuevo reglamento (D.S. 016-2024-JUS), vigente desde el 30 de marzo de 2025, que introduce, entre otras figuras, el Oficial de Datos Personales y la notificación de incidentes en 48 horas. La autoridad es la ANPD."
+     ]
+    },
+    {
+     "h": "Qué no es normativa peruana",
+     "p": [
+      "El AI Act europeo, el marco NIST de Estados Unidos y las recomendaciones de la UNESCO son referencias útiles, pero no son normativa peruana."
+     ]
+    },
+    {
+     "h": "Fuentes oficiales",
+     "p": [
+      "Consulta el texto en gob.pe, la PCM, la ANPD y El Peruano. IA Radar comprueba cada día que esas fuentes respondan y señala si cambian."
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "q": "¿La ley me obliga como usuario individual?",
+     "a": "Depende del uso y del rol. Si tratas datos personales de terceros o desplegas sistemas en una organización, hay obligaciones. Consulta a un especialista."
+    }
+   ],
+   "related": [
+    "etica-de-la-inteligencia-artificial",
+    "que-es-un-agente-de-ia",
+    "que-es-rag"
+   ],
+   "cta": {
+    "text": "Ver normativa y cambios",
+    "href": "responsable.html#regulacion"
+   }
+  },
+  {
+   "slug": "etica-de-la-inteligencia-artificial",
+   "title": "Ética de la inteligencia artificial: principios y cómo aplicarlos",
+   "h1": "Ética de la inteligencia artificial",
+   "description": "Qué es la ética de la IA, sus principios (privacidad, verificación, transparencia, supervisión humana, propiedad intelectual y responsabilidad) y marcos de referencia como UNESCO y NIST.",
+   "short": "Ética de la IA",
+   "answer": "La ética de la inteligencia artificial es el conjunto de principios que orientan un uso de la IA que respete a las personas: privacidad, verificación, transparencia, supervisión humana, propiedad intelectual y responsabilidad.",
+   "sections": [
+    {
+     "h": "Seis principios prácticos",
+     "p": [
+      "Privacidad: no compartas contraseñas, documentos confidenciales ni datos sensibles sin autorización. Verificación: una respuesta convincente puede ser incorrecta. Transparencia: informa cuando un contenido fue generado o modificado de forma significativa con IA. Supervisión humana: las decisiones importantes no se delegan ciegamente. Propiedad intelectual: revisa derechos, licencias y atribución. Responsabilidad: usar IA no elimina la responsabilidad profesional."
+     ]
+    },
+    {
+     "h": "Marcos de referencia",
+     "p": [
+      "La Recomendación de la UNESCO sobre la ética de la IA (2021), el Marco de gestión de riesgos de IA del NIST y su perfil de IA generativa, y los Principios de la OCDE son guías voluntarias. La Ley 31814 y el AI Act son normas con efectos legales en sus jurisdicciones."
+     ]
+    },
+    {
+     "h": "Casos documentados",
+     "p": [
+      "Existen casos documentados de citas inventadas en documentos judiciales, fraudes con voces e imágenes sintéticas, filtraciones de datos por usar servicios no autorizados y decisiones automatizadas con sesgo. Todos comparten una lección: verificar, proteger la información y mantener supervisión humana."
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "q": "¿Usar IA es poco ético?",
+     "a": "No. Lo importante es cómo se usa: con criterio, con verificación y con responsabilidad por el resultado."
+    }
+   ],
+   "related": [
+    "ley-de-inteligencia-artificial-en-peru",
+    "como-hacer-un-buen-prompt",
+    "que-es-un-agente-de-ia"
+   ],
+   "cta": {
+    "text": "Ver casos reales y lecciones",
+    "href": "responsable.html#casos"
+   }
+  }
+ ]
+}

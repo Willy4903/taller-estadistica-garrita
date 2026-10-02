@@ -1,0 +1,181 @@
+{
+ "questions": [
+  {
+   "id": 0,
+   "area": "Frecuencia",
+   "q": "¿Con qué frecuencia usas IA en tu trabajo o estudio?",
+   "options": [
+    "Casi nunca",
+    "Algunas veces al mes",
+    "Varias veces por semana",
+    "Todos los días"
+   ]
+  },
+  {
+   "id": 1,
+   "area": "Prompts",
+   "q": "¿Cómo escribes tus instrucciones?",
+   "options": [
+    "Una frase corta",
+    "Una pregunta con algo de detalle",
+    "Indico objetivo, contexto y formato",
+    "Uso estructuras con reglas, ejemplos y criterios"
+   ]
+  },
+  {
+   "id": 2,
+   "area": "Archivos",
+   "q": "¿Trabajas con archivos (documentos, hojas de cálculo, imágenes)?",
+   "options": [
+    "No",
+    "Pego texto en el chat",
+    "Subo archivos y pido análisis",
+    "Combino varios archivos y datos con instrucciones precisas"
+   ]
+  },
+  {
+   "id": 3,
+   "area": "Verificación",
+   "q": "¿Qué haces con las respuestas antes de usarlas?",
+   "options": [
+    "Las uso tal cual",
+    "Las leo y corrijo lo evidente",
+    "Compruebo cifras y fuentes importantes",
+    "Tengo un procedimiento de verificación y registro lo que reviso"
+   ]
+  },
+  {
+   "id": 4,
+   "area": "Projects",
+   "q": "¿Usas espacios de trabajo persistentes (Projects, GPTs, Gems)?",
+   "options": [
+    "No sé qué son",
+    "Sé qué son pero no los uso",
+    "Uso alguno con instrucciones",
+    "Los configuro con archivos, reglas y ejemplos"
+   ]
+  },
+  {
+   "id": 5,
+   "area": "Agentes",
+   "q": "¿Has usado agentes o modos que actúan en varios pasos?",
+   "options": [
+    "No",
+    "Los he probado una vez",
+    "Los uso en tareas puntuales",
+    "Los uso con permisos y revisión definidos"
+   ]
+  },
+  {
+   "id": 6,
+   "area": "Automatización",
+   "q": "¿Has automatizado alguna tarea con IA?",
+   "options": [
+    "No",
+    "He pensado en hacerlo",
+    "Tengo alguna automatización sencilla",
+    "Tengo flujos que corren de forma recurrente"
+   ]
+  },
+  {
+   "id": 7,
+   "area": "Análisis",
+   "q": "¿Cómo usas la IA para analizar información?",
+   "options": [
+    "No la uso para analizar",
+    "Resumo textos",
+    "Analizo datos y pido hallazgos",
+    "Analizo con criterios, cálculos comprobados y entregables"
+   ]
+  },
+  {
+   "id": 8,
+   "area": "Contexto",
+   "q": "¿Cuánto contexto le das a la IA?",
+   "options": [
+    "Ninguno, solo la pregunta",
+    "El tema general",
+    "Documentos y antecedentes",
+    "Reglas, datos, ejemplos, historial y herramientas"
+   ]
+  },
+  {
+   "id": 9,
+   "area": "Integraciones",
+   "q": "¿Conectas la IA con otras herramientas (correo, calendario, archivos, bases de datos)?",
+   "options": [
+    "No",
+    "No sé cómo",
+    "Uso algún conector",
+    "Conecto varias fuentes con permisos controlados"
+   ]
+  }
+ ],
+ "tools": [
+  "ChatGPT",
+  "Claude",
+  "Ambas",
+  "Otras o ninguna"
+ ],
+ "levels": [
+  {
+   "max": 8,
+   "id": "explorador",
+   "name": "Explorador",
+   "text": "Estás comenzando. Un buen punto de partida es entender los fundamentos y aprender a pedir con claridad."
+  },
+  {
+   "max": 16,
+   "id": "usuario",
+   "name": "Usuario",
+   "text": "Ya utilizas IA, pero principalmente mediante consultas aisladas. El salto está en dar contexto y reglas."
+  },
+  {
+   "max": 23,
+   "id": "avanzado",
+   "name": "Usuario avanzado",
+   "text": "Ya incorporas contexto, archivos y herramientas. Puedes sistematizar y verificar con método."
+  },
+  {
+   "max": 30,
+   "id": "constructor",
+   "name": "Constructor",
+   "text": "Estás preparado para diseñar asistentes, automatizaciones y flujos de trabajo."
+  }
+ ],
+ "routes": {
+  "r1": {
+   "n": "Ruta 01",
+   "t": "Inteligencia artificial desde cero",
+   "for": [
+    "Recién comienzan",
+    "Usan IA ocasionalmente",
+    "Quieren aprender fundamentos",
+    "Quieren comparar herramientas"
+   ],
+   "cta": "Quiero aprender desde cero"
+  },
+  "r2": {
+   "n": "Ruta 02",
+   "t": "Especialización en ChatGPT",
+   "for": [
+    "Ya utilizan ChatGPT",
+    "Trabajan con archivos",
+    "Quieren Projects, GPTs, Work y Codex",
+    "Buscan integraciones y automatización"
+   ],
+   "cta": "Quiero dominar ChatGPT"
+  },
+  "r3": {
+   "n": "Ruta 03",
+   "t": "Especialización en Claude",
+   "for": [
+    "Trabajan con documentos extensos",
+    "Usan Projects, Skills y Artifacts",
+    "Quieren Cowork y Claude Code",
+    "Buscan razonamiento aplicado"
+   ],
+   "cta": "Quiero dominar Claude"
+  }
+ }
+}

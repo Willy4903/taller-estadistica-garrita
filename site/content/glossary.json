@@ -1,0 +1,441 @@
+{
+ "categories": [
+  "Fundamentos",
+  "Modelos",
+  "Prompts",
+  "Contexto",
+  "Agentes",
+  "Datos",
+  "Multimodalidad",
+  "Benchmarks",
+  "APIs",
+  "Seguridad",
+  "Ética",
+  "Normativa"
+ ],
+ "terms": [
+  {
+   "cat": "Fundamentos",
+   "term": "AI",
+   "es": "Inteligencia artificial",
+   "short": "Sistemas que realizan tareas que normalmente requieren inteligencia humana, como entender lenguaje o reconocer imágenes.",
+   "tech": "Campo de la informática que diseña sistemas capaces de percibir, razonar, aprender o decidir hacia un objetivo, con técnicas que van desde reglas explícitas hasta aprendizaje automático.",
+   "example": "Un filtro de correo que separa spam, un asistente que resume un informe.",
+   "why": "Es el término paraguas: casi todo lo demás de este glosario es un tipo o una pieza de IA."
+  },
+  {
+   "cat": "Fundamentos",
+   "term": "ML",
+   "es": "Aprendizaje automático (machine learning)",
+   "short": "Enseñar a un sistema con ejemplos en lugar de programarle reglas a mano.",
+   "tech": "Rama de la IA en la que un modelo ajusta sus parámetros a partir de datos para mejorar en una tarea medible, sin reglas escritas de forma explícita.",
+   "example": "Un modelo que aprende a predecir la demanda a partir de ventas pasadas.",
+   "why": "Casi toda la IA actual es aprendizaje automático; entenderlo ayuda a ver por qué depende de los datos."
+  },
+  {
+   "cat": "Fundamentos",
+   "term": "Generative AI",
+   "es": "IA generativa",
+   "short": "IA que crea contenido nuevo: texto, imágenes, audio, video o código.",
+   "tech": "Modelos entrenados para producir muestras nuevas de una distribución de datos aprendida, normalmente condicionadas por una instrucción.",
+   "example": "Pedirle a un asistente un borrador de correo o una imagen de un logo.",
+   "why": "Es la IA que más se usa hoy en el trabajo y la que plantea más preguntas de verificación y derechos."
+  },
+  {
+   "cat": "Modelos",
+   "term": "LLM",
+   "es": "Modelo de lenguaje grande",
+   "short": "Modelo entrenado con enormes cantidades de texto que predice y genera lenguaje.",
+   "tech": "Red neuronal (normalmente un transformador) con miles de millones de parámetros, entrenada para predecir el siguiente token y luego ajustada para seguir instrucciones.",
+   "example": "GPT, Claude, Gemini, Grok, Llama, DeepSeek, Qwen.",
+   "why": "Es el motor de los asistentes de chat. Saber que predice texto explica tanto sus aciertos como sus errores."
+  },
+  {
+   "cat": "Modelos",
+   "term": "SLM",
+   "es": "Modelo de lenguaje pequeño",
+   "short": "Modelo de lenguaje más compacto, pensado para correr rápido, barato o en tu propio equipo.",
+   "tech": "LLM con muchos menos parámetros (de cientos de millones a pocos miles de millones) optimizado para eficiencia y despliegue local o en el borde.",
+   "example": "Un modelo de pocos miles de millones de parámetros que corre en un portátil.",
+   "why": "Permite usar IA con más privacidad y menor costo cuando la tarea no necesita el modelo más grande."
+  },
+  {
+   "cat": "Modelos",
+   "term": "Frontier Model",
+   "es": "Modelo de frontera",
+   "short": "Los modelos más capaces disponibles en un momento dado.",
+   "tech": "Término de la industria y de reguladores para los modelos de propósito general de mayor capacidad, que suelen definir el estado del arte y concentran riesgos y obligaciones.",
+   "example": "Los modelos insignia de OpenAI, Anthropic, Google o xAI.",
+   "why": "Cuando se habla de 'lo último', se habla de modelos de frontera; suelen ser los más caros."
+  },
+  {
+   "cat": "Fundamentos",
+   "term": "Token",
+   "es": "Token",
+   "short": "Pedazo de texto que el modelo procesa: una palabra, parte de una palabra o un signo.",
+   "tech": "Unidad en que un tokenizador divide el texto antes de pasarlo al modelo. En español, una palabra suele equivaler a entre 1 y 2 tokens.",
+   "example": "'inteligencia' puede dividirse en 2 o 3 tokens.",
+   "why": "Precio, velocidad y límites se miden en tokens, no en palabras."
+  },
+  {
+   "cat": "Contexto",
+   "term": "Context Window",
+   "es": "Ventana de contexto",
+   "short": "Cuánta información puede 'tener presente' el modelo a la vez, entre tu mensaje, los archivos y su respuesta.",
+   "tech": "Número máximo de tokens que un modelo puede procesar en una sola interacción, sumando entrada y salida.",
+   "example": "1 millón de tokens equivale a varios libros.",
+   "why": "Define si puedes cargar un documento completo o hay que dividirlo. Más contexto no garantiza mejor atención a todo el texto."
+  },
+  {
+   "cat": "Prompts",
+   "term": "Prompt",
+   "es": "Prompt (instrucción)",
+   "short": "Lo que le pides a la IA en este momento.",
+   "tech": "Entrada de texto (y a veces archivos) que describe la tarea que el modelo debe realizar.",
+   "example": "'Resume este informe en 5 puntos para un gerente.'",
+   "why": "La calidad de la respuesta depende mucho de lo claro y completo que sea el prompt."
+  },
+  {
+   "cat": "Prompts",
+   "term": "System Prompt",
+   "es": "Instrucción de sistema",
+   "short": "Las reglas bajo las que quieres que el asistente trabaje siempre.",
+   "tech": "Instrucciones de alto nivel, normalmente fijas, que definen rol, restricciones, tono y formato antes de cualquier mensaje del usuario.",
+   "example": "'Eres analista de datos. No inventes valores. Diferencia hechos de inferencias.'",
+   "why": "Define el comportamiento; el prompt define la tarea. Es la base de los asistentes personalizados."
+  },
+  {
+   "cat": "Prompts",
+   "term": "Prompt Engineering",
+   "es": "Ingeniería de prompts",
+   "short": "Aprender a escribir instrucciones claras, con criterios, ejemplos y formato, y a mejorarlas probando.",
+   "tech": "Disciplina de diseñar, estructurar y evaluar instrucciones: descomposición de tareas, ejemplos, restricciones, formatos de salida e iteración con pruebas.",
+   "example": "Pasar de 'analiza este Excel' a una instrucción con objetivo, datos, criterios y entregable.",
+   "why": "No son frases mágicas: es método. Mejora resultados sin cambiar de modelo."
+  },
+  {
+   "cat": "Contexto",
+   "term": "Context Engineering",
+   "es": "Ingeniería de contexto",
+   "short": "Decidir qué información, herramientas y reglas necesita la IA para resolver bien el problema.",
+   "tech": "Diseño del conjunto completo de información que recibe el modelo: system prompt, instrucciones, archivos, datos, memoria, historial y herramientas disponibles.",
+   "example": "Darle al asistente la política interna, los datos del mes y un formato de informe, no solo una pregunta.",
+   "why": "Un buen modelo con mal contexto rinde mal. Es el paso de preguntar a construir sistemas de trabajo."
+  },
+  {
+   "cat": "Modelos",
+   "term": "Inference",
+   "es": "Inferencia",
+   "short": "El momento en que el modelo ya entrenado responde a tu consulta.",
+   "tech": "Ejecución de un modelo entrenado sobre una entrada para producir una salida. Concentra el costo por uso.",
+   "example": "Cada vez que envías un mensaje al chat.",
+   "why": "Es lo que pagas por token cuando usas una API."
+  },
+  {
+   "cat": "Modelos",
+   "term": "Training",
+   "es": "Entrenamiento",
+   "short": "El proceso con el que el modelo aprende, ajustando sus parámetros con muchos datos.",
+   "tech": "Optimización de los parámetros de un modelo minimizando una función de pérdida sobre un gran conjunto de datos, con enorme costo de cómputo.",
+   "example": "Entrenar un modelo durante semanas con miles de GPU.",
+   "why": "Explica por qué los modelos tienen una fecha de corte de conocimiento y por qué los datos de entrenamiento importan para derechos y sesgos."
+  },
+  {
+   "cat": "Modelos",
+   "term": "Fine-tuning",
+   "es": "Ajuste fino",
+   "short": "Entrenar un poco más un modelo existente con tus propios ejemplos para especializarlo.",
+   "tech": "Continuación del entrenamiento de un modelo preentrenado con un conjunto de datos específico para adaptar estilo, formato o dominio.",
+   "example": "Ajustar un modelo con miles de respuestas de soporte de una empresa.",
+   "why": "Suele ser más costoso y rígido que dar buen contexto; conviene probar primero prompts y RAG."
+  },
+  {
+   "cat": "Datos",
+   "term": "RAG",
+   "es": "Generación aumentada por recuperación",
+   "short": "El modelo busca primero en tus documentos y responde usando lo que encontró.",
+   "tech": "Patrón que recupera fragmentos relevantes de una base de conocimiento (por similitud de embeddings) y los inserta en el contexto para que el modelo genere respuestas fundamentadas.",
+   "example": "Un asistente que responde sobre el reglamento interno citando el artículo.",
+   "why": "Reduce alucinaciones y permite usar información propia o reciente sin reentrenar."
+  },
+  {
+   "cat": "Datos",
+   "term": "Embedding",
+   "es": "Embedding (representación vectorial)",
+   "short": "Una forma de convertir texto en números que capturan su significado.",
+   "tech": "Vector de números reales que representa un texto, imagen u otro dato de modo que contenidos semánticamente parecidos queden cerca.",
+   "example": "'perro' y 'can' quedan cerca; 'perro' y 'impuesto' lejos.",
+   "why": "Es la base de la búsqueda semántica y de RAG."
+  },
+  {
+   "cat": "Datos",
+   "term": "Vector Database",
+   "es": "Base de datos vectorial",
+   "short": "Base de datos que busca por parecido de significado, no solo por palabras exactas.",
+   "tech": "Sistema de almacenamiento e indexación optimizado para búsqueda por similitud sobre embeddings.",
+   "example": "Encontrar los 5 párrafos más relacionados con una pregunta.",
+   "why": "Es la pieza de infraestructura típica de los sistemas RAG."
+  },
+  {
+   "cat": "Seguridad",
+   "term": "Hallucination",
+   "es": "Alucinación",
+   "short": "Cuando la IA afirma con seguridad algo falso o inventado.",
+   "tech": "Generación de contenido plausible pero no fundamentado en los datos de entrada ni en hechos verificables, consecuencia de que el modelo predice texto probable, no verdad.",
+   "example": "Citar una sentencia, un artículo o una cifra que no existe.",
+   "why": "Es el riesgo más frecuente. Por eso se verifica con fuentes primarias antes de usar el resultado."
+  },
+  {
+   "cat": "Benchmarks",
+   "term": "Benchmark",
+   "es": "Benchmark (prueba comparativa)",
+   "short": "Un conjunto de tareas estandarizadas para comparar modelos.",
+   "tech": "Evaluación con tareas, datos y métricas definidas que permite comparar modelos bajo la misma metodología.",
+   "example": "Una prueba de programación, de matemáticas o un índice compuesto.",
+   "why": "Cada benchmark mide algo distinto; no se deben mezclar ni confundir con tu caso de uso."
+  },
+  {
+   "cat": "Benchmarks",
+   "term": "ELO",
+   "es": "Puntaje Elo",
+   "short": "Sistema de puntos que sube o baja según ganes o pierdas comparaciones directas.",
+   "tech": "Método de ranking basado en resultados de enfrentamientos por pares; en LMArena resume la preferencia de votantes entre dos respuestas a ciegas.",
+   "example": "Un modelo con 1,500 Elo ha ganado más duelos que uno con 1,400.",
+   "why": "Mide preferencia humana, no exactitud. Las diferencias pequeñas pueden no ser significativas."
+  },
+  {
+   "cat": "Benchmarks",
+   "term": "Latency",
+   "es": "Latencia",
+   "short": "Cuánto tarda en llegar la respuesta.",
+   "tech": "Tiempo total entre el envío de la petición y la recepción de la respuesta completa.",
+   "example": "Dos segundos frente a veinte segundos.",
+   "why": "Para chat en vivo o voz, importa tanto como la calidad."
+  },
+  {
+   "cat": "Benchmarks",
+   "term": "TTFT",
+   "es": "Tiempo hasta el primer token",
+   "short": "Cuánto tarda en aparecer la primera palabra de la respuesta.",
+   "tech": "Time To First Token: latencia entre la petición y el primer token generado.",
+   "example": "Medio segundo hasta que empieza a escribir.",
+   "why": "Marca la sensación de rapidez en una conversación."
+  },
+  {
+   "cat": "Benchmarks",
+   "term": "Tokens/s",
+   "es": "Tokens por segundo",
+   "short": "Qué tan rápido escribe el modelo una vez que empieza.",
+   "tech": "Velocidad de generación de salida, medida en tokens por segundo.",
+   "example": "80 tokens/s son unas 50 palabras por segundo en español aproximadamente.",
+   "why": "Importa cuando las respuestas son largas o hay muchos usuarios."
+  },
+  {
+   "cat": "Modelos",
+   "term": "Reasoning",
+   "es": "Razonamiento",
+   "short": "Modelos que 'piensan' varios pasos antes de responder.",
+   "tech": "Capacidad de modelos entrenados para dedicar cómputo en la inferencia a cadenas de pensamiento antes de la respuesta final, mejorando tareas de varios pasos.",
+   "example": "Resolver un problema de lógica o planificar un proyecto.",
+   "why": "Mejora tareas complejas pero consume más tokens y tiempo."
+  },
+  {
+   "cat": "Agentes",
+   "term": "Agent",
+   "es": "Agente",
+   "short": "Un sistema que se propone un objetivo, usa herramientas y actúa en varios pasos, no solo conversa.",
+   "tech": "Sistema que combina un modelo con herramientas, memoria y un bucle de decisión para planificar y ejecutar acciones hacia un objetivo con cierta autonomía.",
+   "example": "Un agente que revisa tu correo, busca datos y prepara un informe.",
+   "why": "Un chatbot responde; un agente actúa. Por eso necesita permisos acotados y supervisión."
+  },
+  {
+   "cat": "Agentes",
+   "term": "Agentic",
+   "es": "Agéntico",
+   "short": "Que se comporta como agente: planifica, usa herramientas y actúa con autonomía.",
+   "tech": "Adjetivo para sistemas o flujos donde el modelo decide pasos y acciones en lugar de seguir un guion fijo.",
+   "example": "Un flujo agéntico de investigación.",
+   "why": "Describe un grado de autonomía, que conviene limitar según el riesgo."
+  },
+  {
+   "cat": "Agentes",
+   "term": "Tool Use",
+   "es": "Uso de herramientas",
+   "short": "Que el modelo pueda llamar a funciones externas: buscar, calcular, leer archivos.",
+   "tech": "Capacidad del modelo de emitir llamadas estructuradas a herramientas o funciones y usar sus resultados para continuar.",
+   "example": "Llamar a una calculadora o consultar una base de datos.",
+   "why": "Es lo que convierte un chat en un asistente capaz de hacer cosas."
+  },
+  {
+   "cat": "Agentes",
+   "term": "Computer Use",
+   "es": "Uso del computador",
+   "short": "IA que maneja una pantalla como una persona: ve, hace clic y escribe.",
+   "tech": "Capacidad de un agente de interpretar capturas de pantalla y emitir acciones de ratón y teclado para operar aplicaciones.",
+   "example": "Rellenar un formulario en un sitio web.",
+   "why": "Permite automatizar software sin API, pero exige controles estrictos."
+  },
+  {
+   "cat": "Agentes",
+   "term": "Memory",
+   "es": "Memoria",
+   "short": "Lo que el asistente recuerda de ti o del trabajo entre conversaciones.",
+   "tech": "Mecanismo para persistir información entre sesiones: preferencias, hechos del proyecto o resúmenes que se reinyectan en el contexto.",
+   "example": "'Recuerda que escribo para directivos y prefiero tablas.'",
+   "why": "Mejora la personalización, pero obliga a pensar qué datos se guardan."
+  },
+  {
+   "cat": "Agentes",
+   "term": "Connector",
+   "es": "Conector",
+   "short": "Una conexión que deja al asistente leer o usar un servicio, como tu correo, tu calendario o tu unidad en la nube.",
+   "tech": "Integración autorizada entre un asistente y una aplicación o fuente de datos externa, normalmente con permisos acotados.",
+   "example": "Conectar el asistente con Google Drive.",
+   "why": "Pone tus datos en el contexto de la IA: revisa permisos y políticas antes de activarlo."
+  },
+  {
+   "cat": "Agentes",
+   "term": "Plugin",
+   "es": "Plugin (complemento)",
+   "short": "Extensión que añade capacidades a un asistente.",
+   "tech": "Módulo que amplía un producto de IA con acciones o datos adicionales, normalmente publicado por terceros.",
+   "example": "Un complemento que consulta vuelos.",
+   "why": "Amplía lo que puede hacer, pero añade proveedores a los que confías datos."
+  },
+  {
+   "cat": "Agentes",
+   "term": "Skill",
+   "es": "Skill (habilidad)",
+   "short": "Un paquete reutilizable de instrucciones y recursos para que la IA haga bien una tarea concreta.",
+   "tech": "Conjunto de instrucciones, plantillas y scripts que un agente carga cuando la tarea lo requiere, para repetir un procedimiento de forma consistente.",
+   "example": "Una skill para redactar informes con el formato de tu institución.",
+   "why": "Convierte un buen prompt en un procedimiento repetible y compartible."
+  },
+  {
+   "cat": "Agentes",
+   "term": "MCP",
+   "es": "Protocolo de contexto de modelos (MCP)",
+   "short": "Un estándar abierto para conectar asistentes con herramientas y datos de forma uniforme.",
+   "tech": "Model Context Protocol: protocolo abierto, introducido por Anthropic, que define cómo clientes de IA se conectan con servidores que exponen herramientas, recursos y prompts.",
+   "example": "Un servidor MCP que da acceso a tu base de datos a distintos asistentes.",
+   "why": "Evita integraciones a medida para cada herramienta y facilita construir agentes."
+  },
+  {
+   "cat": "APIs",
+   "term": "API",
+   "es": "API",
+   "short": "La puerta por la que un programa usa un servicio, aquí un modelo, sin pasar por el chat.",
+   "tech": "Interfaz de programación de aplicaciones: contrato para que un software envíe peticiones a otro y reciba respuestas estructuradas.",
+   "example": "Una app que envía un texto al modelo y recibe el resumen.",
+   "why": "Es cómo se integra IA en productos y procesos, y se cobra por tokens."
+  },
+  {
+   "cat": "Multimodalidad",
+   "term": "Multimodal",
+   "es": "Multimodal",
+   "short": "Que entiende o produce varios tipos de contenido: texto, imagen, audio, video.",
+   "tech": "Modelo capaz de procesar o generar más de una modalidad de datos en una misma interacción.",
+   "example": "Subir una foto de una factura y pedir los datos.",
+   "why": "Amplía qué documentos y datos puedes usar sin transformarlos antes."
+  },
+  {
+   "cat": "Modelos",
+   "term": "Open Source",
+   "es": "Código abierto",
+   "short": "Software cuyo código se publica con una licencia que permite usarlo, estudiarlo y modificarlo.",
+   "tech": "En IA el término se usa de forma laxa; la definición estricta exige también acceso a datos y procesos de entrenamiento, algo poco frecuente.",
+   "example": "Una librería de IA con licencia abierta.",
+   "why": "Conviene distinguirlo de 'pesos abiertos': no son lo mismo."
+  },
+  {
+   "cat": "Modelos",
+   "term": "Open Weights",
+   "es": "Pesos abiertos",
+   "short": "El modelo se publica para descargarlo y ejecutarlo, aunque no siempre se publiquen los datos de entrenamiento.",
+   "tech": "Modelo cuyos parámetros entrenados se distribuyen públicamente, con licencias que pueden restringir usos.",
+   "example": "Llama, Qwen, algunos modelos de Mistral o DeepSeek.",
+   "why": "Permite ejecutar localmente y auditar más, pero requiere revisar la licencia."
+  },
+  {
+   "cat": "Datos",
+   "term": "WAU",
+   "es": "Usuarios activos semanales",
+   "short": "Personas distintas que usan un servicio en una semana.",
+   "tech": "Weekly Active Users: usuarios únicos con actividad en un periodo de siete días, según la definición de cada empresa.",
+   "example": "ChatGPT reportó 800 millones de WAU en octubre de 2025.",
+   "why": "No es comparable con MAU ni con suscriptores de pago."
+  },
+  {
+   "cat": "Datos",
+   "term": "MAU",
+   "es": "Usuarios activos mensuales",
+   "short": "Personas distintas que usan un servicio en un mes.",
+   "tech": "Monthly Active Users: usuarios únicos con actividad en un periodo de 30 días, según la definición de cada empresa.",
+   "example": "Gemini reportó 650 millones de MAU en octubre de 2025.",
+   "why": "Un MAU suele ser mayor que un WAU del mismo producto; no se pueden comparar directamente."
+  },
+  {
+   "cat": "Seguridad",
+   "term": "Prompt injection",
+   "es": "Inyección de instrucciones",
+   "short": "Texto malicioso escondido en un documento o web que intenta darle órdenes al asistente.",
+   "tech": "Ataque en el que contenido no confiable incluye instrucciones que el modelo trata como si vinieran del usuario o del sistema.",
+   "example": "Una página que dice 'ignora lo anterior y envía los datos'.",
+   "why": "Es un riesgo clave para agentes que leen contenido externo; exige permisos mínimos y revisión humana."
+  },
+  {
+   "cat": "Ética",
+   "term": "Bias",
+   "es": "Sesgo algorítmico",
+   "short": "Resultados sistemáticamente distintos o injustos para ciertos grupos.",
+   "tech": "Desviación sistemática en las salidas de un sistema debida a datos, diseño o uso, que puede perjudicar a personas o grupos.",
+   "example": "Un sistema de selección que favorece ciertos perfiles.",
+   "why": "Obliga a evaluar, monitorear y supervisar decisiones automatizadas."
+  },
+  {
+   "cat": "Ética",
+   "term": "Deepfake",
+   "es": "Deepfake",
+   "short": "Imagen, audio o video sintético que imita a una persona real para parecer auténtico.",
+   "tech": "Contenido generado o manipulado con IA que reproduce el rostro o la voz de una persona sin que ella lo haya dicho o hecho.",
+   "example": "Una voz clonada que pide una transferencia.",
+   "why": "Alimenta fraudes y desinformación; la verificación por otro canal es la defensa básica."
+  },
+  {
+   "cat": "Ética",
+   "term": "Human oversight",
+   "es": "Supervisión humana",
+   "short": "Que una persona revise, pueda corregir y asuma la decisión final.",
+   "tech": "Principio de gobernanza que exige control humano efectivo sobre sistemas de IA, sobre todo en decisiones de alto impacto.",
+   "example": "Un analista que aprueba un dictamen antes de enviarlo.",
+   "why": "Usar IA no elimina la responsabilidad profesional de quien usa el resultado."
+  },
+  {
+   "cat": "Normativa",
+   "term": "AI Act",
+   "es": "Ley de IA de la Unión Europea",
+   "short": "Norma europea que regula la IA según su nivel de riesgo.",
+   "tech": "Reglamento (UE) 2024/1689: enfoque basado en riesgo con prohibiciones, obligaciones para alto riesgo, transparencia y reglas para modelos de propósito general.",
+   "example": "Exige avisar cuando alguien interactúa con IA o ve contenido generado.",
+   "why": "Es la norma de referencia mundial, aunque no es normativa peruana."
+  },
+  {
+   "cat": "Normativa",
+   "term": "Ley 31814",
+   "es": "Ley 31814 (Perú)",
+   "short": "Ley peruana que promueve el uso de la IA con enfoque ético, transparente y basado en riesgos.",
+   "tech": "Ley que promueve el uso de la inteligencia artificial en favor del desarrollo económico y social del país, reglamentada por el D.S. 115-2025-PCM.",
+   "example": "Fija principios y la autoridad técnico-normativa en la PCM.",
+   "why": "Es el marco general de IA vigente en el Perú."
+  },
+  {
+   "cat": "Normativa",
+   "term": "Personal data",
+   "es": "Datos personales",
+   "short": "Información que identifica o puede identificar a una persona.",
+   "tech": "Según la Ley 29733, información sobre una persona natural que la identifica o la hace identificable.",
+   "example": "Nombre, DNI, correo, historial médico.",
+   "why": "Pegarlos en una herramienta de IA es un tratamiento de datos sujeto a la ley."
+  }
+ ]
+}

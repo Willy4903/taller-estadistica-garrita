@@ -1,0 +1,173 @@
+{
+ "questions": [
+  {
+   "q": "¿Qué mide Google Trends?",
+   "options": [
+    "La cantidad de usuarios de cada herramienta",
+    "El interés relativo de búsqueda en un periodo y lugar",
+    "Las ventas de cada empresa",
+    "La calidad de cada modelo"
+   ],
+   "answer": 1,
+   "explain": "Mide interés relativo de búsqueda, no usuarios ni calidad. Sirve como señal de presencia y preferencia, y se lee con cuidado."
+  },
+  {
+   "q": "¿Qué es una alucinación?",
+   "options": [
+    "Un error de conexión",
+    "Una respuesta falsa dicha con seguridad",
+    "Una imagen generada de baja calidad",
+    "Un modelo que se apaga"
+   ],
+   "answer": 1,
+   "explain": "Es contenido plausible pero falso, como una cita o una cifra inventadas. Por eso se verifica con la fuente primaria."
+  },
+  {
+   "q": "¿Qué diferencia existe entre un prompt y un system prompt?",
+   "options": [
+    "Ninguna, son lo mismo",
+    "El prompt es la tarea de ahora; el system prompt son las reglas bajo las que trabaja el asistente",
+    "El system prompt solo lo escribe el proveedor del modelo",
+    "El prompt es más largo"
+   ],
+   "answer": 1,
+   "explain": "El prompt define la tarea; el system prompt define comportamiento, límites, tono y formato de forma persistente."
+  },
+  {
+   "q": "¿Qué hace una ventana de contexto?",
+   "options": [
+    "Define cuánto cuesta el modelo",
+    "Limita cuánta información puede tener presente el modelo a la vez",
+    "Mide qué tan rápido responde",
+    "Guarda tus conversaciones para siempre"
+   ],
+   "answer": 1,
+   "explain": "Es el máximo de tokens que el modelo procesa en una interacción, sumando lo que le das y lo que responde."
+  },
+  {
+   "q": "¿Qué distingue a un agente de un chatbot?",
+   "options": [
+    "El agente es más barato",
+    "El agente se propone un objetivo, usa herramientas y actúa en varios pasos; el chatbot responde",
+    "El agente solo funciona sin internet",
+    "No hay diferencia"
+   ],
+   "answer": 1,
+   "explain": "Un chatbot responde. Un agente planifica, usa herramientas y ejecuta acciones, por eso necesita permisos acotados y supervisión."
+  },
+  {
+   "q": "¿Qué significa MAU?",
+   "options": [
+    "Modelo de aprendizaje universal",
+    "Usuarios activos mensuales",
+    "Memoria de acceso unificado",
+    "Máximo de uso aceptado"
+   ],
+   "answer": 1,
+   "explain": "MAU (monthly active users) cuenta usuarios únicos activos en un mes. No es comparable con WAU ni con suscriptores de pago."
+  },
+  {
+   "q": "¿Qué es RAG?",
+   "options": [
+    "Un formato de imagen",
+    "Buscar en tus documentos y responder usando lo encontrado",
+    "Un tipo de chip",
+    "Un método para entrenar desde cero"
+   ],
+   "answer": 1,
+   "explain": "Generación aumentada por recuperación: se recuperan fragmentos relevantes de tus fuentes y se entregan al modelo para que responda con fundamento."
+  },
+  {
+   "q": "¿Qué es MCP?",
+   "options": [
+    "Un estándar abierto para conectar asistentes con herramientas y datos",
+    "Un tipo de modelo de imagen",
+    "Un plan de precios",
+    "Un lenguaje de programación"
+   ],
+   "answer": 0,
+   "explain": "Model Context Protocol: protocolo abierto para que clientes de IA se conecten con herramientas y fuentes de datos de forma uniforme."
+  },
+  {
+   "q": "¿Qué es un token?",
+   "options": [
+    "Una contraseña",
+    "Una unidad de texto que el modelo lee y escribe",
+    "Una moneda digital",
+    "Un archivo adjunto"
+   ],
+   "answer": 1,
+   "explain": "Es una pieza de texto: una palabra, parte de una palabra o un signo. Precios y límites se miden en tokens."
+  },
+  {
+   "q": "¿Por qué no conviene mezclar benchmarks distintos en un solo ranking?",
+   "options": [
+    "Porque son ilegales",
+    "Porque cada uno mide cosas diferentes con metodologías y escalas distintas",
+    "Porque siempre dan el mismo resultado",
+    "Porque solo sirven para modelos abiertos"
+   ],
+   "answer": 1,
+   "explain": "Un índice compuesto, un puntaje Elo de preferencia y una prueba de código no son comparables entre sí."
+  },
+  {
+   "q": "¿Qué diferencia hay entre código abierto y pesos abiertos?",
+   "options": [
+    "Ninguna",
+    "Pesos abiertos permite descargar el modelo; código abierto, en sentido estricto, exige además acceso a datos y procesos de entrenamiento",
+    "Los pesos abiertos son siempre gratuitos",
+    "El código abierto no permite uso comercial"
+   ],
+   "answer": 1,
+   "explain": "Muchos modelos 'abiertos' publican sus pesos pero no sus datos de entrenamiento. Conviene revisar la licencia."
+  },
+  {
+   "q": "La IA te entrega una cita con nombre de sentencia y fecha. ¿Qué haces antes de usarla?",
+   "options": [
+    "Usarla, porque suena correcta",
+    "Abrir la fuente primaria y comprobar que existe y dice lo que afirma",
+    "Pedirle a la misma IA que confirme",
+    "Quitar la fecha"
+   ],
+   "answer": 1,
+   "explain": "Una respuesta convincente puede ser incorrecta. La verificación con la fuente primaria es la defensa básica."
+  },
+  {
+   "q": "¿Qué mide el puntaje Elo de LMArena?",
+   "options": [
+    "La exactitud factual del modelo",
+    "La preferencia de votantes en comparaciones a ciegas",
+    "El precio por token",
+    "La velocidad"
+   ],
+   "answer": 1,
+   "explain": "Resume qué respuesta prefirieron los votantes entre dos modelos anónimos. No mide exactitud ni tu caso de uso."
+  }
+ ],
+ "levels": [
+  {
+   "min": 0,
+   "max": 2,
+   "name": "Explorador",
+   "text": "Estás comenzando, y es un buen punto de partida. Las microlecciones de la ruta te dan las bases en pocos minutos."
+  },
+  {
+   "min": 3,
+   "max": 3,
+   "name": "Usuario",
+   "text": "Ya manejas lo esencial. El siguiente paso es dirigir mejor a la IA con instrucciones y contexto."
+  },
+  {
+   "min": 4,
+   "max": 4,
+   "name": "Usuario avanzado",
+   "text": "Dominas buena parte de los conceptos. Puedes profundizar en contexto, agentes y verificación."
+  },
+  {
+   "min": 5,
+   "max": 5,
+   "name": "Profesional",
+   "text": "Tienes una base sólida. Lo que sigue es convertir estos conceptos en sistemas de trabajo y criterios de uso."
+  }
+ ]
+}

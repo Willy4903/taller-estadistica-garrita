@@ -1,0 +1,145 @@
+{
+ "method": [
+  {
+   "t": "Problema",
+   "d": "Formula qué necesitas resolver y para quién."
+  },
+  {
+   "t": "Prompt",
+   "d": "Escribe una instrucción con objetivo, contexto y entregable."
+  },
+  {
+   "t": "Herramienta",
+   "d": "Elige la herramienta adecuada para esa tarea."
+  },
+  {
+   "t": "Fuente",
+   "d": "Revisa de dónde sale cada dato o afirmación."
+  },
+  {
+   "t": "Verificación",
+   "d": "Comprueba cifras, citas, normas y fechas."
+  },
+  {
+   "t": "Entregable",
+   "d": "Convierte el resultado en un producto de trabajo útil."
+  }
+ ],
+ "context_parts": [
+  {
+   "t": "System prompt",
+   "q": "¿Qué rol y límites tengo?",
+   "ex": "Eres analista comercial; no inventes cifras."
+  },
+  {
+   "t": "Instrucciones",
+   "q": "¿Qué debo hacer exactamente?",
+   "ex": "Compara ventas de 2025 y 2026 y explica los cambios."
+  },
+  {
+   "t": "Archivos",
+   "q": "¿Con qué documentos trabajo?",
+   "ex": "ventas_2024_2026.xlsx y la política comercial en PDF."
+  },
+  {
+   "t": "Datos",
+   "q": "¿Qué cifras son la fuente de verdad?",
+   "ex": "Las ventas netas del sistema de facturación."
+  },
+  {
+   "t": "Memoria",
+   "q": "¿Qué ya sé de ti y del equipo?",
+   "ex": "Prefieres tablas y tono ejecutivo."
+  },
+  {
+   "t": "Herramientas",
+   "q": "¿Qué puedo calcular o consultar?",
+   "ex": "Hoja de cálculo para calcular variaciones."
+  },
+  {
+   "t": "Historial",
+   "q": "¿Qué se decidió antes?",
+   "ex": "El mes pasado se acordó excluir devoluciones."
+  },
+  {
+   "t": "Reglas",
+   "q": "¿Qué no debo hacer?",
+   "ex": "No usar datos externos; marcar lo que no pueda comprobar."
+  }
+ ],
+ "compare": {
+  "prompt": {
+   "t": "Prompt engineering",
+   "q": "¿Cómo formulo la instrucción?"
+  },
+  "context": {
+   "t": "Context engineering",
+   "q": "¿Qué información, herramientas y reglas necesita la IA para resolver correctamente el problema?"
+  }
+ },
+ "ladder": [
+  {
+   "t": "Prompt",
+   "what": "Una instrucción puntual que envías al modelo.",
+   "solves": "Tareas rápidas y de una sola vez.",
+   "when": "Cuando la tarea es simple y no se repite.",
+   "ex": "Resume este párrafo en dos líneas.",
+   "tools": "Cualquier chat: ChatGPT, Claude, Gemini, Grok."
+  },
+  {
+   "t": "Conversación",
+   "what": "Un intercambio con memoria de lo dicho en la sesión.",
+   "solves": "Refinar un resultado paso a paso.",
+   "when": "Cuando necesitas iterar sobre un borrador.",
+   "ex": "Mejora el tono; ahora hazlo más corto.",
+   "tools": "Los mismos chats, con el historial de la conversación."
+  },
+  {
+   "t": "Project",
+   "what": "Un espacio con instrucciones, archivos y conversaciones del mismo tema.",
+   "solves": "Que el contexto no se pierda entre sesiones.",
+   "when": "Cuando trabajas semanas en un mismo tema.",
+   "ex": "Un proyecto 'Informe mensual' con plantillas y datos.",
+   "tools": "Projects en ChatGPT y en Claude."
+  },
+  {
+   "t": "Asistente",
+   "what": "Un asistente configurado para una tarea, con rol, instrucciones y conocimiento propios.",
+   "solves": "Repetir un procedimiento con el mismo criterio.",
+   "when": "Cuando varias personas hacen la misma tarea.",
+   "ex": "Un asistente que revisa contratos con una lista de verificación.",
+   "tools": "GPTs en ChatGPT, Gems en Gemini, proyectos con instrucciones en Claude."
+  },
+  {
+   "t": "Workflow",
+   "what": "Una secuencia fija de pasos donde la IA resuelve algunos.",
+   "solves": "Procesos predecibles y repetibles.",
+   "when": "Cuando el camino es conocido y quieres control.",
+   "ex": "Clasificar correos, resumirlos y guardarlos en una hoja.",
+   "tools": "n8n, Zapier, Make y Power Automate, con modelos de IA en los pasos."
+  },
+  {
+   "t": "Agente",
+   "what": "Un sistema que se propone un objetivo, usa herramientas y decide sus pasos.",
+   "solves": "Tareas abiertas de varios pasos.",
+   "when": "Cuando el camino no está definido de antemano y puedes supervisar.",
+   "ex": "Investigar un tema, leer fuentes y redactar un informe preliminar.",
+   "tools": "Modo agente y Codex en ChatGPT; Claude Code y Cowork en Claude."
+  },
+  {
+   "t": "Sistema multiagente",
+   "what": "Varios agentes con roles distintos que se coordinan.",
+   "solves": "Trabajos grandes que se pueden dividir y revisar entre sí.",
+   "when": "Cuando una tarea excede lo que un agente maneja bien y hay controles.",
+   "ex": "Un agente investiga, otro verifica y otro redacta.",
+   "tools": "Subagentes en Claude Code y frameworks como LangGraph o el SDK de agentes de OpenAI."
+  }
+ ],
+ "agent_rules": [
+  "Limita los permisos: solo lo que la tarea necesita.",
+  "Registra cada acción para poder revisarla.",
+  "Define qué requiere aprobación humana.",
+  "Desconfía del contenido externo: puede traer instrucciones maliciosas (prompt injection).",
+  "Empieza con un workflow fijo y da más autonomía solo cuando el riesgo sea bajo."
+ ]
+}

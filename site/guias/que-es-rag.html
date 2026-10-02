@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es" class="js-off">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¿Qué es RAG (generación aumentada por recuperación)? Explicación con ejemplo | IA Radar</title>
+<meta name="description" content="RAG permite que un modelo busque en tus documentos y responda usando lo que encontró. Cómo funciona, para qué sirve y límites.">
+<link rel="canonical" href="https://willy4903.github.io/taller-estadistica-garrita/guias/que-es-rag.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="¿Qué es RAG (generación aumentada por recuperación)? Explicación con ejemplo">
+<meta property="og:description" content="RAG permite que un modelo busque en tus documentos y responda usando lo que encontró. Cómo funciona, para qué sirve y límites.">
+<meta property="og:url" content="https://willy4903.github.io/taller-estadistica-garrita/guias/que-es-rag.html">
+<meta property="og:locale" content="es_PE">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313151c'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M16 16 L24 10' stroke='%238da0ff' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.remove("js-off");</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "¿Qué es RAG?", "description": "RAG permite que un modelo busque en tus documentos y responda usando lo que encontró. Cómo funciona, para qué sirve y límites.", "inLanguage": "es", "dateModified": "2026-10-02", "author": {"@type": "Organization", "name": "IA Radar, iniciativa educativa de WGIA"}, "mainEntityOfPage": "https://willy4903.github.io/taller-estadistica-garrita/guias/que-es-rag.html"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿RAG o fine-tuning?", "acceptedAnswer": {"@type": "Answer", "text": "Suele convenir probar primero buen contexto y RAG: son más baratos y fáciles de actualizar que reentrenar."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "IA Radar", "item": "https://willy4903.github.io/taller-estadistica-garrita/"}, {"@type": "ListItem", "position": 2, "name": "Qué es RAG", "item": "https://willy4903.github.io/taller-estadistica-garrita/guias/que-es-rag.html"}]}</script>
+<link rel="stylesheet" href="../css/radar.css?v=__V__">
+<link rel="stylesheet" href="../css/sections.css?v=__V__">
+<link rel="stylesheet" href="../css/learn.css?v=__V__">
+<link rel="stylesheet" href="../css/pages.css?v=__V__">
+</head>
+<body data-page="page" data-root="../" data-v="__V__">
+<a class="skip" href="#main">Saltar al contenido</a>
+<div id="site-header"></div>
+<main id="main">
+<article class="wrap narrow page">
+<p class="crumb"><a href="../index.html">IA Radar</a> / Guías</p>
+<h1 class="pg-h1">¿Qué es RAG?</h1>
+<div class="answer"><span class="pl-k">Respuesta en 20 segundos</span><p>RAG (retrieval-augmented generation) es un patrón en el que, antes de responder, el sistema busca fragmentos relevantes en tus documentos y se los entrega al modelo para que responda con fundamento en esa información.</p></div>
+<section><h2>Cómo funciona</h2><p>Se divide la documentación en fragmentos, se convierten en embeddings (representaciones numéricas del significado) y se guardan en una base de datos vectorial. Ante una pregunta, se recuperan los fragmentos más parecidos y se incluyen en el contexto del modelo.</p></section><section><h2>Para qué sirve</h2><p>Responder con información propia o reciente sin reentrenar el modelo y reducir las alucinaciones al exigir que cite de dónde saca cada dato.</p></section><section><h2>Límites</h2><p>Si la búsqueda recupera fragmentos equivocados, la respuesta será equivocada aunque suene segura. Hay que evaluar la recuperación, mantener los documentos actualizados y pedir citas verificables.</p></section>
+<h2>Preguntas frecuentes</h2><details class='les'><summary><span class='les-t'>¿RAG o fine-tuning?</span></summary><div class='les-b'><p>Suele convenir probar primero buen contexto y RAG: son más baratos y fáciles de actualizar que reentrenar.</p></div></details>
+<div class="callout"><p><b>Practica lo que leíste.</b> <a href="../glosario.html">Ver el glosario</a></p></div>
+<h2>Sigue explorando</h2><ul class="rel"><li><a href='que-es-una-ventana-de-contexto.html'>Qué es una ventana de contexto</a></li><li><a href='que-ia-es-mejor-para-analizar-documentos.html'>Qué IA elegir para documentos</a></li><li><a href='prompt-engineering-vs-context-engineering.html'>Prompt vs context engineering</a></li><li><a href="../glosario.html">Glosario de IA</a></li><li><a href="../index.html#aprende">Ruta de aprendizaje de 5 niveles</a></li></ul>
+<p class="muted small">IA Radar es una iniciativa educativa de WGIA. Si quieres formación práctica en IA, ChatGPT y Claude, <a href="https://wgia.luisito4903.chatgpt.site/" target="_blank" rel="noopener">conoce los talleres</a>. Este contenido es educativo; verifica siempre las fuentes oficiales.</p>
+</article>
+</main>
+<div id="site-footer"></div>
+<script src="../vendor/chart.umd.js"></script>
+<script src="../js/core.js?v=__V__"></script>
+
+</body>
+</html>

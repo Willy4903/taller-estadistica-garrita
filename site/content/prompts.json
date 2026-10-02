@@ -1,0 +1,171 @@
+{
+ "weak": "Analiza este Excel.",
+ "steps": [
+  {
+   "id": "objetivo",
+   "label": "Objetivo",
+   "text": "Identifica los principales cambios en ventas.",
+   "effect": "La IA sabe qué buscar, aunque todavía no en qué periodo ni con qué criterio.",
+   "out": "Menciona subidas y bajadas de ventas, pero decide por su cuenta qué es 'principal'.",
+   "color": "#2441e0"
+  },
+  {
+   "id": "contexto",
+   "label": "Contexto",
+   "text": "Son ventas mensuales de 2024 a 2026.",
+   "effect": "Entiende la estructura temporal y puede comparar años y meses.",
+   "out": "Compara mes contra mes y año contra año, y habla de estacionalidad.",
+   "color": "#7a3bd6"
+  },
+  {
+   "id": "rol",
+   "label": "Rol",
+   "text": "Actúa como analista comercial senior.",
+   "effect": "Adopta el lenguaje y la mirada de ese perfil.",
+   "out": "Las conclusiones se redactan como las de un analista comercial, con foco en decisiones.",
+   "color": "#0b7a55"
+  },
+  {
+   "id": "datos",
+   "label": "Datos",
+   "text": "Trabaja únicamente con el archivo proporcionado.",
+   "effect": "Deja de añadir cifras externas y avisa cuando falta información.",
+   "out": "Señala los datos que faltan en lugar de suponerlos.",
+   "color": "#9a6200"
+  },
+  {
+   "id": "criterios",
+   "label": "Criterios",
+   "text": "Identifica variaciones superiores al 10 %.",
+   "effect": "Define qué cuenta como cambio relevante.",
+   "out": "Lista solo las variaciones por encima del umbral, con el porcentaje exacto.",
+   "color": "#b4237c"
+  },
+  {
+   "id": "verificacion",
+   "label": "Verificación",
+   "text": "Comprueba los cálculos antes de concluir.",
+   "effect": "Reduce errores de cálculo y vuelve visible lo que no pudo comprobar.",
+   "out": "Incluye una nota con los cálculos revisados y los que no pudo comprobar.",
+   "color": "#0b6f8a"
+  },
+  {
+   "id": "entregable",
+   "label": "Entregable",
+   "text": "Entrega 5 hallazgos, una tabla y recomendaciones.",
+   "effect": "El resultado llega en el formato que necesitas, listo para usar.",
+   "out": "Cinco hallazgos, una tabla de variaciones y recomendaciones priorizadas.",
+   "color": "#c2410c"
+  }
+ ],
+ "system_example": {
+  "system": [
+   "Eres analista de datos de una institución pública.",
+   "Trabaja únicamente con los datos proporcionados.",
+   "No inventes valores faltantes.",
+   "Diferencia hechos de inferencias.",
+   "Comprueba los cálculos antes de concluir.",
+   "Entrega primero los hallazgos críticos."
+  ],
+  "user": "Analiza este archivo y detecta anomalías."
+ },
+ "pillars": [
+  {
+   "t": "Estructura",
+   "d": "Ordena la instrucción en bloques claros: objetivo, contexto, datos, reglas y entregable.",
+   "ex": "Usa títulos o etiquetas para cada bloque."
+  },
+  {
+   "t": "Descomposición",
+   "d": "Divide una tarea grande en pasos que se puedan revisar uno a uno.",
+   "ex": "Primero limpia los datos, luego calcula, luego redacta."
+  },
+  {
+   "t": "Ejemplos",
+   "d": "Muestra cómo luce un buen resultado. Un ejemplo vale más que una descripción.",
+   "ex": "Adjunta un informe aprobado como modelo de formato."
+  },
+  {
+   "t": "Criterios",
+   "d": "Define qué significa 'bien hecho' con umbrales o reglas comprobables.",
+   "ex": "Variaciones superiores al 10 %."
+  },
+  {
+   "t": "Restricciones",
+   "d": "Declara lo que no debe hacer: usar fuentes externas, inventar, superar un largo.",
+   "ex": "Máximo 200 palabras; no uses datos fuera del archivo."
+  },
+  {
+   "t": "Formatos",
+   "d": "Pide la forma exacta de salida: tabla, lista, JSON, correo.",
+   "ex": "Una tabla con columnas mes, ventas, variación."
+  },
+  {
+   "t": "Evaluación",
+   "d": "Decide cómo comprobar el resultado antes de usarlo.",
+   "ex": "Revisa 3 cifras al azar contra el archivo original."
+  },
+  {
+   "t": "Iteración",
+   "d": "Mejora la instrucción con lo que aprendas de cada respuesta.",
+   "ex": "Si inventó un dato, añade la regla 'si falta, di Dato no disponible'."
+  }
+ ],
+ "evolution": [
+  {
+   "t": "Preguntar",
+   "d": "Una consulta suelta y esperar lo mejor."
+  },
+  {
+   "t": "Instruir",
+   "d": "Decir claramente qué hacer y para quién."
+  },
+  {
+   "t": "Estructurar",
+   "d": "Organizar objetivo, contexto, reglas y formato."
+  },
+  {
+   "t": "Evaluar",
+   "d": "Medir el resultado, corregir y repetir."
+  }
+ ],
+ "builder": [
+  {
+   "id": "objetivo",
+   "label": "¿Qué quieres lograr?",
+   "hint": "El resultado concreto que necesitas.",
+   "ph": "Identificar los principales cambios en las ventas de mi tienda."
+  },
+  {
+   "id": "contexto",
+   "label": "¿Qué contexto tiene la IA?",
+   "hint": "Quién eres, para quién es y qué situación hay.",
+   "ph": "Soy analista comercial. Son ventas mensuales de 2024 a 2026 y el informe es para gerencia."
+  },
+  {
+   "id": "fuentes",
+   "label": "¿Qué información debe utilizar?",
+   "hint": "Archivos, datos o textos que sirven de fuente.",
+   "ph": "Solo el archivo ventas.xlsx que adjunto."
+  },
+  {
+   "id": "reglas",
+   "label": "¿Qué restricciones existen?",
+   "hint": "Lo que debe y no debe hacer.",
+   "ph": "No inventes datos faltantes. Marca como cambio relevante toda variación superior al 10 %."
+  },
+  {
+   "id": "entregable",
+   "label": "¿Cómo quieres el resultado?",
+   "hint": "Formato, extensión y tono.",
+   "ph": "5 hallazgos, una tabla de variaciones y 3 recomendaciones, en tono ejecutivo."
+  },
+  {
+   "id": "verificacion",
+   "label": "¿Qué debe verificar antes de responder?",
+   "hint": "Cálculos, fuentes, supuestos.",
+   "ph": "Comprobar los cálculos y decir qué no pudo comprobar."
+  }
+ ],
+ "builder_note": "No existe un prompt mágico. Existe una instrucción adecuada al problema."
+}

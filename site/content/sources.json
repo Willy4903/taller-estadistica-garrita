@@ -1,0 +1,33 @@
+{
+  "levels": [
+    {"n": 1, "name": "Fuentes oficiales", "desc": "Anuncios, documentación y normas publicadas por quien produce el hecho: laboratorios, gobiernos y organismos."},
+    {"n": 2, "name": "Papers originales", "desc": "Investigación publicada, como los artículos de arXiv. Pueden no estar revisados por pares."},
+    {"n": 3, "name": "Benchmarks independientes", "desc": "Mediciones de terceros con metodología pública. Cada una mide algo distinto."},
+    {"n": 4, "name": "Prensa especializada confiable", "desc": "Medios con reputación y trabajo editorial. Sirven para contexto, no como prueba única."},
+    {"n": 5, "name": "Redes sociales", "desc": "Solo como señal inicial. Nunca como evidencia definitiva."}
+  ],
+  "items": [
+    {"name": "Blog de OpenAI", "url": "https://openai.com/news/", "level": 1, "use": "Anuncios de modelos y productos de OpenAI", "feed": "OpenAI"},
+    {"name": "Blog de Anthropic", "url": "https://www.anthropic.com/news", "level": 1, "use": "Anuncios de Claude y de política de IA", "feed": "Anthropic"},
+    {"name": "Google DeepMind y Google AI", "url": "https://deepmind.google/blog/", "level": 1, "use": "Anuncios de Gemini y de investigación", "feed": ["Google DeepMind", "Google AI"]},
+    {"name": "xAI", "url": "https://x.ai/news", "level": 1, "use": "Anuncios de Grok", "feed": "xAI"},
+    {"name": "Meta AI, Mistral, Microsoft Research, NVIDIA", "url": "https://ai.meta.com/blog/", "level": 1, "use": "Otros laboratorios y empresas", "feed": ["Meta AI", "Mistral AI", "Microsoft Research", "NVIDIA"]},
+    {"name": "arXiv cs.AI", "url": "https://arxiv.org/list/cs.AI/recent", "level": 2, "use": "Investigación reciente en inteligencia artificial", "src": "arxiv"},
+    {"name": "Artificial Analysis", "url": "https://artificialanalysis.ai/", "level": 3, "use": "Índice de inteligencia, precio y velocidad", "src": "artificial_analysis", "snapshot": true},
+    {"name": "LMArena", "url": "https://lmarena.ai/leaderboard", "level": 3, "use": "Preferencia humana en comparaciones a ciegas", "src": "lmarena"},
+    {"name": "BenchLM", "url": "https://benchlm.ai/", "level": 3, "use": "Tabla de benchmarks y fechas de lanzamiento", "snapshot": true},
+    {"name": "Hugging Face (modelos en tendencia)", "url": "https://huggingface.co/models", "level": 3, "use": "Ecosistema de modelos abiertos y de pesos abiertos", "src": "huggingface"},
+    {"name": "Hugging Face Open LLM Leaderboard", "url": "https://huggingface.co/open-llm-leaderboard", "level": 3, "use": "Referencia para modelos abiertos", "ref": true},
+    {"name": "OpenRouter (catálogo)", "url": "https://openrouter.ai/models", "level": 3, "use": "Fechas, precios, contexto y modalidades", "src": "openrouter"},
+    {"name": "OpenRouter (actividad)", "url": "https://openrouter.ai/rankings", "level": 3, "use": "Tokens procesados dentro de OpenRouter", "src": "openrouter_usage"},
+    {"name": "Google Trends", "url": "https://trends.google.com/trends/", "level": 3, "use": "Interés relativo de búsqueda por país y departamento", "src": "google_trends"},
+    {"name": "Hugging Face Blog", "url": "https://huggingface.co/blog", "level": 1, "use": "Artículos del ecosistema abierto", "feed": "Hugging Face"},
+    {"name": "MIT Technology Review", "url": "https://www.technologyreview.com/topic/artificial-intelligence/", "level": 4, "use": "Contexto y análisis", "feed": "MIT Technology Review"},
+    {"name": "The Verge y TechCrunch", "url": "https://www.theverge.com/ai-artificial-intelligence", "level": 4, "use": "Cobertura de lanzamientos y empresas", "feed": ["The Verge", "TechCrunch"]},
+    {"name": "The Rundown AI", "url": "https://www.therundown.ai/", "level": 4, "use": "Boletín diario de noticias de IA", "feed": "The Rundown AI"},
+    {"name": "The Neuron", "url": "https://www.theneurondaily.com/", "level": 4, "use": "Boletín diario; no tiene un feed abierto verificado", "ref": true},
+    {"name": "Normativa peruana: gob.pe, PCM, ANPD y El Peruano", "url": "https://www.gob.pe/pcm", "level": 1, "use": "Ley 31814, D.S. 115-2025-PCM, Ley 29733 y D.S. 016-2024-JUS", "src": "normativa_pe"},
+    {"name": "Normativa europea: EUR-Lex y Comisión Europea", "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj", "level": 1, "use": "AI Act y Digital Omnibus", "src": "normativa_eu"},
+    {"name": "Estándares: UNESCO, NIST, ISO y OCDE", "url": "https://www.nist.gov/itl/ai-risk-management-framework", "level": 1, "use": "Marcos y recomendaciones internacionales", "src": "normativa_int"}
+  ]
+}

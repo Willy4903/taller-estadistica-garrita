@@ -1,0 +1,233 @@
+{
+ "levels": [
+  {
+   "n": 1,
+   "name": "ENTENDER",
+   "verb": "Entender",
+   "desc": "Los conceptos que necesitas para no perderte cuando alguien habla de IA.",
+   "lessons": [
+    {
+     "id": "generativa",
+     "title": "¿Qué es IA generativa?",
+     "min": 2,
+     "one": "Es la IA que crea contenido nuevo (texto, imágenes, audio, código) a partir de una instrucción.",
+     "how": "Aprende patrones de enormes cantidades de ejemplos y genera algo nuevo que sigue esos patrones. No consulta una base de datos de respuestas: construye cada respuesta sobre la marcha.",
+     "example": "Pedir un borrador de correo, un resumen de un informe o una imagen para una presentación.",
+     "try_": "Pídele a un asistente: 'Explícame qué es la inflación como si tuviera 12 años'. Observa que no copió un texto, lo compuso."
+    },
+    {
+     "id": "llm",
+     "title": "¿Qué es un LLM?",
+     "min": 3,
+     "one": "Un modelo de lenguaje grande es un sistema entrenado con muchísimo texto para predecir cuál es la siguiente pieza de texto más probable.",
+     "how": "Al encadenar muchas predicciones produce párrafos coherentes. Esto explica por qué escribe tan bien y por qué a veces inventa: predice lo plausible, no consulta la verdad.",
+     "example": "GPT, Claude, Gemini, Grok, Llama y DeepSeek son familias de LLM.",
+     "try_": "Pregúntale por un dato muy específico de tu entorno y verifica la respuesta. Verás cuándo suena seguro sin saber."
+    },
+    {
+     "id": "modelo",
+     "title": "¿Qué es un modelo?",
+     "min": 2,
+     "one": "Un modelo es el 'cerebro' entrenado: el archivo de parámetros que transforma una entrada en una salida.",
+     "how": "Un producto como ChatGPT o Claude es una aplicación que usa uno o varios modelos. Cada versión (por ejemplo GPT-6.1 o Claude Sonnet 5.5) cambia en capacidad, velocidad, precio y contexto.",
+     "example": "El mismo producto puede ofrecer un modelo rápido y barato y otro más potente y caro.",
+     "try_": "En el Radar de modelos compara dos versiones de la misma familia y mira qué cambia en precio y contexto."
+    },
+    {
+     "id": "token",
+     "title": "¿Qué es un token?",
+     "min": 2,
+     "one": "Un token es la unidad en que el modelo lee y escribe: una palabra, parte de una palabra o un signo.",
+     "how": "Los modelos no cuentan palabras sino tokens. En español, una palabra equivale a entre 1 y 2 tokens. Los precios, la velocidad y los límites se miden en tokens.",
+     "example": "Un libro de 100,000 palabras son unos 133,000 tokens.",
+     "try_": "Mira en el Radar de modelos el precio por millón de tokens y calcula cuánto costaría resumir un informe de 50 páginas."
+    },
+    {
+     "id": "contexto",
+     "title": "¿Qué es una ventana de contexto?",
+     "min": 3,
+     "one": "Es la cantidad de información que el modelo puede tener presente a la vez: tu mensaje, tus archivos, el historial y su propia respuesta.",
+     "how": "Si superas el límite, parte de la información queda fuera. Un contexto grande permite cargar documentos largos, pero no garantiza que el modelo preste la misma atención a todo.",
+     "example": "Con 1 millón de tokens puedes cargar varios libros en una sola conversación.",
+     "try_": "Sube un documento largo y pide una cita textual de un detalle del medio. Comprueba si la encuentra."
+    },
+    {
+     "id": "multimodal",
+     "title": "¿Qué es multimodalidad?",
+     "min": 2,
+     "one": "Es la capacidad de entender o producir varios tipos de contenido: texto, imágenes, audio, video, archivos.",
+     "how": "Un modelo multimodal puede leer una foto de una factura, interpretar un gráfico o transcribir un audio sin que antes lo conviertas a texto.",
+     "example": "Subir la captura de un gráfico y pedir que explique la tendencia.",
+     "try_": "Sube una imagen de un gráfico y pregunta 'qué conclusión sacarías y qué dato no se ve claro'."
+    },
+    {
+     "id": "alucinacion",
+     "title": "¿Qué es una alucinación?",
+     "min": 3,
+     "one": "Es cuando la IA afirma con seguridad algo falso: una cifra, una cita, una norma o una sentencia que no existe.",
+     "how": "Ocurre porque el modelo genera lo probable, no lo verdadero. Por eso se verifica con fuentes primarias: la norma, el paper, el dato original. Pedir 'cita la fuente' no basta: hay que abrir la fuente.",
+     "example": "Documentos judiciales con precedentes inexistentes generados por IA, documentados en tribunales.",
+     "try_": "Pide una cita con enlace y ábrela. Si el enlace no existe o no dice lo que afirma, acabas de ver una alucinación."
+    }
+   ]
+  },
+  {
+   "n": 2,
+   "name": "CONVERSAR",
+   "verb": "Conversar",
+   "desc": "Cómo pedir bien: el primer salto de calidad.",
+   "lessons": [
+    {
+     "id": "prompt",
+     "title": "¿Qué es un prompt?",
+     "min": 2,
+     "one": "Es lo que le pides a la IA ahora: la tarea que quieres resolver.",
+     "how": "Puede ser una pregunta, una orden o un conjunto de datos con instrucciones. La IA no lee tu mente: solo trabaja con lo que le dices.",
+     "example": "'Resume este informe en 5 puntos para un gerente.'",
+     "try_": "Escribe un prompt para una tarea real de hoy y compáralo con el que construirás en el Prompt Lab."
+    },
+    {
+     "id": "informacion",
+     "title": "¿Qué información necesita la IA?",
+     "min": 3,
+     "one": "Necesita saber el objetivo, el contexto, los datos que debe usar, las reglas y cómo quieres el resultado.",
+     "how": "Si falta alguna de esas piezas, el modelo rellena con suposiciones. Cuanto más claro el objetivo y el entregable, menos suposiciones y menos correcciones.",
+     "example": "Objetivo: identificar cambios en ventas. Contexto: ventas mensuales 2024 a 2026. Entregable: 5 hallazgos y una tabla.",
+     "try_": "Toma una petición tuya y marca qué piezas faltan: objetivo, contexto, datos, reglas, formato."
+    },
+    {
+     "id": "vaga",
+     "title": "¿Por qué una pregunta vaga produce respuestas vagas?",
+     "min": 2,
+     "one": "Porque el modelo tiene que adivinar lo que no dijiste, y adivina lo más genérico.",
+     "how": "'Analiza este Excel' no dice qué analizar, para quién, con qué criterio ni en qué formato. La respuesta será correcta y poco útil.",
+     "example": "Pregunta vaga: 'Háblame del marketing'. Pregunta útil: 'Dame 3 ideas de campaña para una panadería en Lima con 500 soles'.",
+     "try_": "Reescribe una pregunta vaga tuya con público, objetivo y formato, y compara las dos respuestas."
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "name": "DIRIGIR",
+   "verb": "Dirigir",
+   "desc": "Controlar cómo trabaja el asistente, no solo qué responde.",
+   "lessons": [
+    {
+     "id": "system",
+     "title": "¿Qué es un system prompt?",
+     "min": 3,
+     "one": "Son las reglas bajo las que quieres que el asistente trabaje siempre. El prompt es la tarea; el system prompt es el marco.",
+     "how": "Define rol, límites, tono y formato antes de cualquier mensaje. En productos como Projects, GPTs o asistentes personalizados, esa es la 'instrucción del proyecto'.",
+     "example": "SYSTEM: 'Eres analista de datos de una institución pública. Trabaja solo con los datos proporcionados. No inventes valores. Diferencia hechos de inferencias.' USER: 'Analiza este archivo y detecta anomalías.'",
+     "try_": "En el Prompt Lab prueba el módulo 'Prompt vs System Prompt' y observa qué pertenece a cada uno."
+    },
+    {
+     "id": "control",
+     "title": "¿Cómo controlar comportamiento, restricciones, formato y criterios?",
+     "min": 3,
+     "one": "Escribiendo reglas concretas y verificables, no deseos generales.",
+     "how": "Mejor 'Cita siempre el número de página' que 'sé preciso'. Separa lo obligatorio (reglas), lo deseable (preferencias) y el formato de salida (tabla, lista, JSON). Pide que indique cuando no sepa algo.",
+     "example": "'Si falta un dato, responde exactamente: Dato no disponible. No lo estimes.'",
+     "try_": "Añade a una instrucción tuya tres reglas verificables y comprueba si el resultado las cumple."
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "name": "CONTEXTUALIZAR",
+   "verb": "Contextualizar",
+   "desc": "De escribir mejores prompts a construir mejor contexto.",
+   "lessons": [
+    {
+     "id": "context-eng",
+     "title": "¿Qué es context engineering?",
+     "min": 4,
+     "one": "Es decidir qué información, herramientas y reglas necesita la IA para resolver bien un problema.",
+     "how": "Prompt engineering pregunta '¿cómo formulo la instrucción?'. Context engineering pregunta '¿qué sabe, qué ve y qué puede usar el modelo?'. Un buen modelo con mal contexto produce un mal resultado; un contexto bien construido puede transformar la calidad.",
+     "example": "Para analizar ventas: el system prompt del analista, el archivo, el glosario de la empresa, un ejemplo de informe y la política de redondeo.",
+     "try_": "Mira la sección 'Del prompt al contexto' y arma tu propio contexto de trabajo con las ocho piezas."
+    },
+    {
+     "id": "aportar",
+     "title": "¿Cómo aportar documentos, datos, ejemplos, reglas, historial, herramientas y memoria?",
+     "min": 4,
+     "one": "Dando a cada pieza un papel claro y quitando lo que sobra.",
+     "how": "Documentos y datos: la fuente de verdad. Ejemplos: el estándar de calidad. Reglas: los límites. Historial: lo ya decidido. Herramientas: lo que puede hacer. Memoria: lo que debe recordar. Más no es mejor: el ruido también confunde.",
+     "example": "Un proyecto con tres archivos, un ejemplo de informe aprobado y una regla de formato.",
+     "try_": "Elige una tarea recurrente y escribe qué documento, ejemplo y regla pondrías en su contexto."
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "name": "AUTOMATIZAR",
+   "verb": "Automatizar",
+   "desc": "De conversar con la IA a que trabaje dentro de un proceso.",
+   "lessons": [
+    {
+     "id": "workflow",
+     "title": "¿Qué es un workflow?",
+     "min": 3,
+     "one": "Es una secuencia fija de pasos en la que la IA hace una parte: por ejemplo, leer, clasificar, redactar y enviar.",
+     "how": "El camino lo defines tú; el modelo resuelve los pasos. Es más predecible y fácil de controlar que un agente.",
+     "example": "Cada correo entrante se clasifica, se resume y se guarda en una hoja.",
+     "try_": "Dibuja un proceso tuyo de 4 pasos y marca en cuál ayudaría la IA."
+    },
+    {
+     "id": "agente",
+     "title": "¿Qué es un agente?",
+     "min": 4,
+     "one": "Es un sistema que se propone un objetivo, decide pasos, usa herramientas y actúa, en lugar de solo responder.",
+     "how": "Un agente combina modelo, herramientas, memoria y un bucle de decisión. Gana autonomía a cambio de riesgo: por eso necesita permisos acotados, registro de acciones y puntos de aprobación humana.",
+     "example": "Un agente que busca fuentes, lee documentos y redacta un informe preliminar.",
+     "try_": "Define para un agente imaginario qué puede hacer sin preguntar y qué siempre debe confirmar."
+    },
+    {
+     "id": "tool-use",
+     "title": "¿Qué es tool use?",
+     "min": 3,
+     "one": "Es la capacidad del modelo de llamar herramientas: buscar, calcular, leer archivos, consultar una API.",
+     "how": "El modelo decide qué herramienta usar y con qué datos, el sistema la ejecuta y devuelve el resultado. Así supera sus límites: la calculadora calcula, el buscador busca.",
+     "example": "Pedir una cifra y que el modelo la calcule con una herramienta en lugar de 'adivinarla'.",
+     "try_": "Pide un cálculo largo y observa si el asistente muestra que usó una herramienta."
+    },
+    {
+     "id": "computer-use",
+     "title": "¿Qué es computer use?",
+     "min": 3,
+     "one": "Es la IA operando un computador como una persona: ve la pantalla, hace clic y escribe.",
+     "how": "Sirve para automatizar software que no tiene API. Es potente y arriesgado: puede equivocarse de botón. Conviene usarlo en entornos aislados y con revisión.",
+     "example": "Rellenar un formulario en un sitio web interno.",
+     "try_": "Lista tres tareas de pantalla de tu trabajo y señala cuál no automatizarías sin supervisión."
+    },
+    {
+     "id": "mcp",
+     "title": "¿Qué es MCP?",
+     "min": 3,
+     "one": "Es un estándar abierto para conectar asistentes con herramientas y datos de forma uniforme.",
+     "how": "En lugar de integrar cada herramienta a mano para cada asistente, un servidor MCP expone sus capacidades y cualquier cliente compatible las usa. Es la base de muchos conectores y agentes.",
+     "example": "Un servidor MCP que da acceso de solo lectura a tu base de datos.",
+     "try_": "Busca en tu asistente si ofrece conectores y revisa qué permisos pide cada uno."
+    },
+    {
+     "id": "conector",
+     "title": "¿Qué es un conector?",
+     "min": 2,
+     "one": "Es una conexión autorizada entre el asistente y un servicio tuyo: correo, calendario, archivos.",
+     "how": "Pone tus datos en el contexto de la IA. Revisa qué permisos concedes, qué plan los protege y qué política de datos aplica antes de activarlo.",
+     "example": "Conectar la unidad en la nube para que el asistente lea un informe.",
+     "try_": "Antes de activar un conector, lee qué datos puede ver y si se usan para entrenamiento."
+    },
+    {
+     "id": "skill",
+     "title": "¿Qué es una skill?",
+     "min": 3,
+     "one": "Es un paquete reutilizable de instrucciones y recursos para que la IA haga bien una tarea concreta, siempre igual.",
+     "how": "Convierte un buen prompt en un procedimiento: instrucciones, plantillas y a veces scripts. Se activa cuando la tarea lo requiere y se puede compartir con un equipo.",
+     "example": "Una skill que genera informes con el formato de tu institución.",
+     "try_": "Piensa en una tarea que repites cada semana y escribe qué incluiría su skill."
+    }
+   ]
+  }
+ ]
+}

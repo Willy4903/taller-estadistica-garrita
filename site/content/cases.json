@@ -1,0 +1,123 @@
+{
+ "intro": "Solo casos documentados por tribunales, reguladores, empresas o prensa de alta reputación. Cada uno trae su fuente.",
+ "items": [
+  {
+   "id": "mata-avianca",
+   "cat": "Alucinaciones profesionales",
+   "title": "Abogados citan sentencias que no existen",
+   "year": 2023,
+   "what": "En el caso Mata contra Avianca (tribunal federal de Nueva York), los abogados de la parte demandante presentaron un escrito que citaba seis casos como precedente. Ninguno existía: los había generado ChatGPT, con nombres de jueces, números de expediente y citas que parecían reales. Cuando se les pidió explicaciones, el abogado pidió al propio ChatGPT que confirmara que eran reales, y la herramienta dijo que sí.",
+   "failed": "Confiaron en citas generadas sin comprobarlas en una base jurídica y usaron a la misma IA como verificador.",
+   "impact": "El 22 de junio de 2023 el juez P. Kevin Castel impuso una multa de USD 5,000 a los abogados y al despacho, y les ordenó informar por carta al cliente y a los jueces cuyos nombres se usaron falsamente.",
+   "should": "Buscar cada precedente en una fuente jurídica oficial antes de citarlo, y no usar la misma IA para validar sus propias respuestas.",
+   "lesson": "Nunca confiar en citas generadas sin verificar la fuente primaria.",
+   "sources": [
+    {
+     "name": "Resumen del caso Mata v. Avianca (Wikipedia, con referencias a la resolución judicial)",
+     "url": "https://en.wikipedia.org/wiki/Mata_v._Avianca,_Inc.",
+     "level": 4
+    }
+   ]
+  },
+  {
+   "id": "arup-deepfake",
+   "cat": "Deepfakes y fraude",
+   "title": "Videollamada con directivos falsos",
+   "year": 2024,
+   "what": "Un empleado de la oficina de Hong Kong de la firma de ingeniería Arup recibió un correo, supuestamente del director financiero del Reino Unido, que pedía una transacción secreta. Dudó, pero una videollamada con varias personas que parecían ser sus colegas lo convenció. Todos los demás participantes eran suplantaciones generadas con IA. Hizo 15 transferencias por unos USD 25 millones a cinco cuentas.",
+   "failed": "Se aprobaron pagos solo por reconocer rostros y voces en una llamada, sin verificar la orden por un canal independiente.",
+   "impact": "Pérdida de unos USD 25 millones. Arup informó a la policía de Hong Kong en enero de 2024 y confirmó el uso de voces e imágenes falsas; sus sistemas internos no fueron comprometidos.",
+   "should": "Exigir verificación por otro canal (una llamada al número conocido), doble aprobación para pagos y un protocolo para solicitudes urgentes o secretas.",
+   "lesson": "Verificación multicanal antes de aprobar pagos o cambios sensibles.",
+   "sources": [
+    {
+     "name": "CNN, \"Arup revealed as victim of $25 million deepfake scam involving Hong Kong employee\"",
+     "url": "https://www.cnn.com/2024/05/16/tech/arup-deepfake-scam-loss-hong-kong-intl-hnk",
+     "level": 4
+    }
+   ]
+  },
+  {
+   "id": "samsung-datos",
+   "cat": "Datos confidenciales",
+   "title": "Código interno pegado en un asistente público",
+   "year": 2023,
+   "what": "Según un memorando que Bloomberg revisó, ingenieros de Samsung subieron a ChatGPT código fuente de bases de datos de semiconductores y un acta de reunión interna para que los revisara o resumiera. La empresa había permitido el uso de la herramienta pocas semanas antes.",
+   "failed": "No había una política clara de qué información se podía introducir ni controles sobre el uso de servicios externos.",
+   "impact": "Samsung restringió temporalmente el uso de IA generativa por parte de su personal (memorando del 1 de mayo de 2023) mientras preparaba un entorno seguro.",
+   "should": "Clasificar la información, definir qué datos nunca salen de la organización y ofrecer una alternativa autorizada con condiciones contractuales claras.",
+   "lesson": "Políticas organizacionales claras y clasificación de información.",
+   "sources": [
+    {
+     "name": "Bloomberg, \"Samsung Bans ChatGPT and Other Generative AI Use by Staff After Leak\"",
+     "url": "https://www.bloomberg.com/news/articles/2023-05-02/samsung-bans-chatgpt-and-other-generative-ai-use-by-staff-after-leak",
+     "level": 4
+    }
+   ]
+  },
+  {
+   "id": "toeslagen",
+   "cat": "Sesgos y decisiones automatizadas",
+   "title": "Nacionalidad como indicador de riesgo en las ayudas por cuidado infantil",
+   "year": 2021,
+   "what": "En los Países Bajos, la administración tributaria usó la nacionalidad como indicador en un modelo de riesgo para detectar fraude en las ayudas por cuidado infantil. La autoridad de protección de datos concluyó que tratar datos de doble nacionalidad de ese modo era ilícito, discriminatorio e indebido. En 2018 aún había 1.4 millones de personas con doble nacionalidad registradas en sus sistemas.",
+   "failed": "Se usaron datos que no eran necesarios para la tarea y que producían trato discriminatorio, sin evaluación ni supervisión suficientes.",
+   "impact": "El 7 de diciembre de 2021 la autoridad neerlandesa de protección de datos impuso a la administración tributaria una multa de EUR 2.75 millones, un récord para esa autoridad. El caso forma parte del escándalo de las ayudas por cuidado infantil.",
+   "should": "Evaluar el impacto antes de desplegar, evitar variables que discriminen, monitorear resultados por grupos y mantener supervisión humana efectiva.",
+   "lesson": "Evaluación, monitoreo y supervisión de sistemas que influyen en decisiones sobre personas.",
+   "sources": [
+    {
+     "name": "Autoriteit Persoonsgegevens (autoridad neerlandesa de protección de datos), decisión de multa",
+     "url": "https://www.autoriteitpersoonsgegevens.nl/documenten/boete-belastingdienst-kinderopvangtoeslag",
+     "level": 1
+    }
+   ]
+  },
+  {
+   "id": "biden-robocall",
+   "cat": "Desinformación",
+   "title": "Voz sintética de un presidente en llamadas a votantes",
+   "year": 2024,
+   "what": "En enero de 2024, antes de las primarias de New Hampshire, miles de votantes recibieron una llamada con una voz generada por IA que imitaba al presidente Joe Biden y sugería no votar en la primaria. Un consultor político admitió haberla encargado.",
+   "failed": "Se presentó contenido sintético como auténtico para influir en una votación, sin ninguna señal de que era generado.",
+   "impact": "La FCC declaró ilegales las llamadas automáticas con voces generadas por IA en febrero de 2024 y finalizó una multa de USD 6 millones contra el consultor (3,000 llamadas con identificador falsificado). En 2025 un jurado lo absolvió de los cargos penales estatales, lo que muestra que el marco legal aún se está definiendo.",
+   "should": "Etiquetar el contenido sintético, verificar el origen de mensajes políticos antes de difundirlos y reforzar la trazabilidad de las llamadas.",
+   "lesson": "Trazabilidad, transparencia y verificación del origen del contenido.",
+   "sources": [
+    {
+     "name": "NPR, cargos penales y multa de la FCC por las llamadas con deepfake",
+     "url": "https://www.npr.org/2024/05/23/nx-s1-4977582/fcc-ai-deepfake-robocall-biden-new-hampshire-political-operative",
+     "level": 4
+    },
+    {
+     "name": "CyberScoop, multa final de la FCC",
+     "url": "https://cyberscoop.com/fcc-fine-joe-biden-deepfake-new-hampshire-robocall-steve-kramer/",
+     "level": 4
+    },
+    {
+     "name": "NHPR, absolución en el proceso penal (2025)",
+     "url": "https://www.nhpr.org/nh-news/2025-06-13/political-operative-fake-biden-robocalls-nh-primary-found-not-guilty",
+     "level": 4
+    }
+   ]
+  },
+  {
+   "id": "air-canada",
+   "cat": "Responsabilidad por lo que dice una IA",
+   "title": "El chatbot de una aerolínea inventó una política de reembolso",
+   "year": 2024,
+   "what": "Un cliente preguntó al chatbot de Air Canada por la tarifa por duelo. El chatbot dijo que podía comprar el pasaje a precio completo y pedir después un reembolso parcial en 90 días. La política real no permitía solicitarlo después del vuelo. Air Canada rechazó el reembolso y argumentó que el chatbot era una entidad separada.",
+   "failed": "La empresa puso un chatbot al público sin asegurarse de que sus respuestas coincidieran con su política oficial.",
+   "impact": "En Moffatt v. Air Canada (2024 BCCRT 149), el Tribunal de Resolución Civil de Columbia Británica rechazó ese argumento, responsabilizó a la aerolínea por todo lo que dice su sitio web, incluido el chatbot, y ordenó compensar al cliente (la disputa era de alrededor de CAD 880).",
+   "should": "Probar las respuestas del chatbot contra la política oficial, mostrar avisos claros y asumir que la organización responde por lo que su asistente dice.",
+   "lesson": "Utilizar IA no elimina la responsabilidad de quien la despliega.",
+   "sources": [
+    {
+     "name": "American Bar Association, análisis de la decisión",
+     "url": "https://www.americanbar.org/groups/business_law/resources/business-law-today/2024-february/bc-tribunal-confirms-companies-remain-liable-information-provided-ai-chatbot/",
+     "level": 4
+    }
+   ]
+  }
+ ]
+}

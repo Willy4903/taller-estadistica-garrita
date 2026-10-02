@@ -1,0 +1,230 @@
+{
+ "principles": [
+  {
+   "n": 1,
+   "t": "Privacidad",
+   "icon": "lock",
+   "d": "No compartas automáticamente información que no debe salir de tu control.",
+   "list": [
+    "Contraseñas y credenciales",
+    "Documentos confidenciales",
+    "Información financiera",
+    "Información sensible y datos personales"
+   ],
+   "how": "Antes de pegar algo, pregúntate si lo enviarías por correo a un desconocido. Usa versiones anonimizadas y herramientas autorizadas por tu organización."
+  },
+  {
+   "n": 2,
+   "t": "Verificación",
+   "icon": "shield-check",
+   "d": "Una respuesta convincente puede ser incorrecta.",
+   "list": [
+    "Datos y cálculos",
+    "Citas y normas",
+    "Fechas",
+    "Fuentes"
+   ],
+   "how": "Abre la fuente primaria. Comprueba al menos las cifras y citas que sostienen tu conclusión."
+  },
+  {
+   "n": 3,
+   "t": "Transparencia",
+   "icon": "eye",
+   "d": "Cuando corresponda, informa que un contenido fue generado o modificado de forma significativa con IA.",
+   "list": [
+    "Textos y documentos",
+    "Imágenes, audio y video",
+    "Decisiones asistidas"
+   ],
+   "how": "Algunas normas ya lo exigen en ciertos casos (por ejemplo la transparencia del AI Act en la UE). Aunque no sea obligatorio, genera confianza."
+  },
+  {
+   "n": 4,
+   "t": "Supervisión humana",
+   "icon": "user-check",
+   "d": "Las decisiones importantes no deben delegarse ciegamente.",
+   "list": [
+    "Decisiones sobre personas",
+    "Decisiones legales o financieras",
+    "Acciones irreversibles"
+   ],
+   "how": "Define quién revisa, con qué criterio y qué pasa si el resultado es dudoso."
+  },
+  {
+   "n": 5,
+   "t": "Propiedad intelectual",
+   "icon": "award",
+   "d": "Revisa derechos, licencias, atribución y condiciones de uso.",
+   "list": [
+    "Contenido protegido que subes",
+    "Licencias de lo que generas",
+    "Condiciones de cada herramienta"
+   ],
+   "how": "Lee qué derechos te da la herramienta sobre el resultado y evita imitar obras o estilos protegidos."
+  },
+  {
+   "n": 6,
+   "t": "Responsabilidad",
+   "icon": "scale",
+   "d": "Usar IA no elimina la responsabilidad profesional de quien usa el resultado.",
+   "list": [
+    "Quien firma, responde",
+    "Quien despliega, responde",
+    "Quien decide, responde"
+   ],
+   "how": "Trata la IA como un asistente que redacta borradores, no como una autoridad."
+  }
+ ],
+ "semaforo": {
+  "verde": {
+   "t": "Verde",
+   "d": "Uso razonable con las precauciones básicas.",
+   "items": [
+    [
+     "Brainstorming",
+     "Genera ideas que luego filtras tú."
+    ],
+    [
+     "Resumen de material propio",
+     "Ten cuidado solo si el material contiene datos de terceros."
+    ],
+    [
+     "Corrección de redacción",
+     "Revisa que no cambie el sentido."
+    ],
+    [
+     "Ideas",
+     "Úsalas como punto de partida."
+    ],
+    [
+     "Código de prueba",
+     "No lo lleves a producción sin revisar y probar."
+    ],
+    [
+     "Aprendizaje",
+     "Contrasta lo que aprendes con una fuente fiable."
+    ]
+   ]
+  },
+  "amarillo": {
+   "t": "Amarillo",
+   "d": "Requiere verificación y controles adicionales.",
+   "items": [
+    [
+     "Análisis financiero",
+     "Verifica cifras y supuestos; no cargues datos confidenciales sin autorización."
+    ],
+    [
+     "Documentos profesionales",
+     "Revisa contenido, citas y tono; tú firmas el resultado."
+    ],
+    [
+     "Contratos",
+     "Que lo revise un especialista; no sustituye asesoría legal."
+    ],
+    [
+     "Datos internos",
+     "Confirma que la herramienta y el plan están autorizados."
+    ],
+    [
+     "Investigaciones",
+     "Contrasta con fuentes primarias y distingue hechos de inferencias."
+    ],
+    [
+     "Decisiones empresariales",
+     "Usa la IA como insumo, no como decisor; documenta el criterio."
+    ]
+   ]
+  },
+  "rojo": {
+   "t": "Rojo",
+   "d": "Evítalo o hazlo solo con controles fuertes y autorización.",
+   "items": [
+    [
+     "Contraseñas",
+     "Nunca las compartas con una herramienta de IA."
+    ],
+    [
+     "Credenciales",
+     "Claves, tokens y accesos no deben salir de tu control."
+    ],
+    [
+     "Secretos empresariales",
+     "Si se filtran, no hay marcha atrás."
+    ],
+    [
+     "Datos sensibles sin autorización",
+     "Salud, biometría u otros datos protegidos requieren base legal y controles."
+    ],
+    [
+     "Suplantación",
+     "Hacerse pasar por otra persona es un engaño."
+    ],
+    [
+     "Fraude",
+     "Es ilegal sin importar la herramienta."
+    ],
+    [
+     "Deepfakes engañosos",
+     "Imitar a alguien para engañar causa daño y puede ser delito."
+    ],
+    [
+     "Decisiones críticas totalmente automatizadas sin controles",
+     "Falta supervisión humana donde hay impacto alto."
+    ]
+   ]
+  },
+  "nota": "El nivel de riesgo depende del contexto: el mismo uso puede ser verde con material público y amarillo o rojo con datos reales de clientes."
+ },
+ "check": {
+  "send": [
+   {
+    "id": "personales",
+    "q": "¿Contiene datos personales?",
+    "risk": "si"
+   },
+   {
+    "id": "confidencial",
+    "q": "¿Contiene información confidencial?",
+    "risk": "si"
+   },
+   {
+    "id": "autoriza",
+    "q": "¿Tengo autorización para usarla así?",
+    "risk": "no"
+   },
+   {
+    "id": "politica",
+    "q": "¿Conozco cómo utiliza los datos esta herramienta?",
+    "risk": "no"
+   }
+  ],
+  "use": [
+   {
+    "id": "cifras",
+    "q": "¿Verifiqué las cifras?",
+    "risk": "no"
+   },
+   {
+    "id": "fuentes",
+    "q": "¿Revisé las fuentes?",
+    "risk": "no"
+   },
+   {
+    "id": "citas",
+    "q": "¿Confirmé las citas?",
+    "risk": "no"
+   },
+   {
+    "id": "decision",
+    "q": "¿Existe una decisión importante basada en esto?",
+    "risk": "si"
+   },
+   {
+    "id": "especialista",
+    "q": "¿Necesita revisión especializada?",
+    "risk": "si"
+   }
+  ]
+ }
+}
