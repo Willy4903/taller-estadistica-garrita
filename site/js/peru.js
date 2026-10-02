@@ -63,6 +63,12 @@
       <div class="grid g2 pe-grid"><div class="card" id="pe-comp"></div><div class="card" id="pe-int"></div></div>
       <details class="more"><summary>Más gráficos: evolución en el tiempo y comparación con la región</summary><div class="grid g2 pe-grid"><div class="card" id="pe-time"></div><div class="card" id="pe-reg"></div></div></details>
       <div class="callout warn">${ico("triangle-alert")}<p><b>Lo que no se puede saber.</b> Ninguna empresa publica suscriptores o usuarios por país ni por departamento. Las búsquedas muestran presencia y preferencia, no cantidad. "ChatGPT" se usa a menudo como nombre genérico, por lo que su peso está inflado, y Copilot casi no se busca por separado. Los dos conjuntos se calculan por separado y no se suman.${rp ? ` Iniciativas regionales: ${rp.map((p) => esc(p.name) + " (" + esc(p.where) + ")").join("; ")}.` : ""}</p></div>
+      <div class="card pe-cov"><h3>Qué cubre IA Radar para Perú</h3><ul class="cov">
+        <li><span class="tag ok">Disponible</span> Normativa de IA y de protección de datos personales, con enlaces a fuentes oficiales.</li>
+        <li><span class="tag ok">Disponible</span> Interés de búsqueda por departamento y evolución en el tiempo.</li>
+        <li><span class="tag warn">En construcción</span> Noticias y políticas nacionales de IA: aún no hay una fuente automática verificada.</li>
+        <li><span class="tag warn">En construcción</span> Casos de uso en entidades públicas, iniciativas de universidades y empresas peruanas, y efectos en el empleo.</li></ul>
+        <p class="muted">Lo que no se puede verificar con una fuente no se publica. Las secciones en construcción se irán añadiendo cuando exista una fuente confiable.</p></div>
       <p class="muted">Marco normativo peruano: <a href="responsable.html#regulacion" data-track="clic_normativa_peru">Ley N.º 31814 y su reglamento</a>.</p>`;
     root.addEventListener("change", (e) => { if (e.target.id === "pe-dept") { st.dept = e.target.value; I.track("peru_departamento"); I.journey.mark("peru"); paint(D); } });
     root.addEventListener("click", (e) => {

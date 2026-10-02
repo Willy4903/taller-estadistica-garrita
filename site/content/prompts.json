@@ -167,5 +167,88 @@
    "ph": "Comprobar los cálculos y decir qué no pudo comprobar."
   }
  ],
- "builder_note": "No existe un prompt mágico. Existe una instrucción adecuada al problema."
+ "builder_note": "No existe un prompt mágico. Existe una instrucción adecuada al problema.",
+ "library": [
+  {
+   "id": "resumir",
+   "label": "Resumir",
+   "objetivo": "Quiero entender lo esencial de un texto largo sin perder los datos clave.",
+   "inicial": "Resume este documento.",
+   "mejorado": "OBJETIVO\nResumir el documento adjunto para una persona que no lo ha leído y debe decidir en 5 minutos.\n\nCONTEXTO\nEl lector es [cargo o rol]. Le importan [temas].\n\nREGLAS\nUsa solo el documento. No añadas información externa. Conserva cifras, fechas y nombres exactos.\n\nENTREGABLE\n1) Resumen de 5 líneas. 2) Tres puntos clave con la página o sección de donde salen. 3) Qué decisiones o pendientes menciona.\n\nVERIFICACIÓN\nSi algo no queda claro en el documento, dilo en lugar de suponerlo.",
+   "resultado": "Un resumen corto, con citas de dónde sale cada punto, que puedes contrastar con el original.",
+   "riesgos": "Puede omitir un detalle importante o simplificar de más. Contrasta las cifras clave con el documento."
+  },
+  {
+   "id": "analizar-datos",
+   "label": "Analizar datos",
+   "objetivo": "Quiero encontrar cambios, anomalías o patrones en una tabla.",
+   "inicial": "Analiza este Excel.",
+   "mejorado": "OBJETIVO\nIdentificar los principales cambios en ventas.\n\nCONTEXTO\nSon ventas mensuales de 2024 a 2026. Actúa como analista comercial senior.\n\nFUENTES\nTrabaja únicamente con el archivo proporcionado.\n\nREGLAS\nMarca como relevante toda variación superior al 10 %. No inventes valores faltantes.\n\nENTREGABLE\n5 hallazgos, una tabla de variaciones y 3 recomendaciones.\n\nVERIFICACIÓN\nComprueba los cálculos antes de concluir e indica cuáles no pudiste comprobar.",
+   "resultado": "Hallazgos con cifras, una tabla de variaciones y recomendaciones priorizadas, con los cálculos revisados.",
+   "riesgos": "Puede calcular mal o interpretar columnas de forma incorrecta. Recalcula a mano al menos tres cifras. No cargues datos personales o confidenciales sin autorización."
+  },
+  {
+   "id": "informes",
+   "label": "Redactar informes",
+   "objetivo": "Quiero un borrador de informe con la estructura que usa mi institución.",
+   "inicial": "Escribe un informe sobre el avance del proyecto.",
+   "mejorado": "OBJETIVO\nRedactar un borrador de informe de avance del proyecto [nombre] para [destinatario].\n\nCONTEXTO\nPeriodo: [fechas]. Tono formal y directo.\n\nFUENTES\nUsa solo las notas y cifras que pego abajo.\n\nREGLAS\nNo inventes logros ni cifras. Separa hechos de valoraciones. Si falta un dato, escribe [DATO PENDIENTE].\n\nENTREGABLE\nSecciones: resumen ejecutivo (máx. 120 palabras), avances, riesgos, próximos pasos.\n\nVERIFICACIÓN\nAl final lista los datos que debo confirmar.",
+   "resultado": "Un borrador ordenado, con marcas donde falta información, listo para que lo revises y lo firmes.",
+   "riesgos": "Puede sonar convincente aunque falten datos. Quien firma el informe responde por su contenido: revisa cada afirmación."
+  },
+  {
+   "id": "ensenar",
+   "label": "Enseñar y explicar",
+   "objetivo": "Quiero explicar un tema a un público concreto y comprobar si lo entendió.",
+   "inicial": "Explícame la inflación.",
+   "mejorado": "OBJETIVO\nExplicar la inflación a estudiantes de secundaria en 10 minutos.\n\nCONTEXTO\nNunca han estudiado economía. Usa ejemplos de precios de su vida diaria en el Perú.\n\nREGLAS\nSin tecnicismos; si usas uno, defínelo. No inventes cifras.\n\nENTREGABLE\n1) Explicación en 5 pasos. 2) Una analogía. 3) Tres preguntas para comprobar comprensión, con respuestas.\n\nVERIFICACIÓN\nIndica qué afirmaciones conviene contrastar con una fuente oficial.",
+   "resultado": "Una explicación adaptada, con ejemplos cercanos y preguntas de comprobación.",
+   "riesgos": "Puede simplificar hasta decir algo inexacto. Contrasta definiciones y cifras con una fuente oficial antes de enseñar."
+  },
+  {
+   "id": "revisar",
+   "label": "Revisar textos",
+   "objetivo": "Quiero mejorar la claridad de un texto sin que cambie lo que dice.",
+   "inicial": "Corrige este texto.",
+   "mejorado": "OBJETIVO\nRevisar el texto adjunto para que sea claro y breve sin cambiar su sentido.\n\nCONTEXTO\nLo leerá [público]. Tono [formal/cercano].\n\nREGLAS\nNo cambies cifras, nombres ni citas. Señala cada cambio importante.\n\nENTREGABLE\n1) Versión corregida. 2) Lista de los cambios principales y por qué. 3) Dudas que debo resolver yo.\n\nVERIFICACIÓN\nConfirma que no cambió ningún dato.",
+   "resultado": "Un texto más claro, con los cambios visibles para aceptarlos o rechazarlos.",
+   "riesgos": "Puede cambiar el matiz o suavizar una afirmación importante. Compara la versión corregida con el original."
+  },
+  {
+   "id": "programar",
+   "label": "Programar",
+   "objetivo": "Quiero código funcional y entendible, con pruebas.",
+   "inicial": "Hazme un script para limpiar datos.",
+   "mejorado": "OBJETIVO\nEscribir un script en Python que limpie un CSV de [descripción].\n\nCONTEXTO\nPython 3.12, solo biblioteca estándar y pandas. Columnas: [lista con tipos]. Problemas conocidos: [duplicados, fechas en formatos mixtos].\n\nREGLAS\nNo borres filas sin registrarlas. Maneja errores con mensajes claros.\n\nENTREGABLE\nEl código comentado, un ejemplo de uso y 3 pruebas con datos de ejemplo.\n\nVERIFICACIÓN\nExplica qué casos no cubre.",
+   "resultado": "Código con ejemplo y pruebas que puedes ejecutar, y la lista de casos que no cubre.",
+   "riesgos": "Puede inventar funciones o dejar fallos silenciosos. Ejecútalo y pruébalo con datos reales antes de usarlo; no pegues credenciales ni datos sensibles."
+  },
+  {
+   "id": "investigar",
+   "label": "Investigar",
+   "objetivo": "Quiero un panorama con fuentes que pueda verificar.",
+   "inicial": "Dime qué hay sobre IA en educación.",
+   "mejorado": "OBJETIVO\nElaborar un panorama de cómo se usa la IA generativa en educación superior.\n\nCONTEXTO\nLo usaré para una reunión de decisión; necesito hechos, no opiniones.\n\nFUENTES\nPrioriza fuentes oficiales, papers y organismos reconocidos. Indica el nivel de cada fuente.\n\nREGLAS\nCita título, autor, fecha y enlace. Distingue hechos, estimaciones e inferencias. Si no encuentras fuente, dilo.\n\nENTREGABLE\nTabla: afirmación, fuente, fecha, nivel de confianza. Luego 5 conclusiones.\n\nVERIFICACIÓN\nMarca lo que debo comprobar yo en la fuente original.",
+   "resultado": "Una tabla de afirmaciones con fuente y fecha, y conclusiones separadas de los hechos.",
+   "riesgos": "Puede inventar fuentes o enlaces. Abre cada enlace y comprueba que existe y dice lo que se afirma."
+  },
+  {
+   "id": "presentaciones",
+   "label": "Crear presentaciones",
+   "objetivo": "Quiero una presentación con historia clara, no solo diapositivas bonitas.",
+   "inicial": "Hazme una presentación sobre el proyecto.",
+   "mejorado": "OBJETIVO\nPreparar la estructura de una presentación de 10 diapositivas sobre [tema] para [público], de 12 minutos.\n\nCONTEXTO\nLa decisión que quiero lograr es: [decisión].\n\nFUENTES\nUsa solo estos datos: [pegar].\n\nREGLAS\nUn mensaje por diapositiva. Máximo 25 palabras por diapositiva. No inventes cifras.\n\nENTREGABLE\nPara cada diapositiva: título que diga la conclusión, 3 viñetas, qué gráfico usar y notas del orador.\n\nVERIFICACIÓN\nIndica qué diapositivas dependen de datos que debo confirmar.",
+   "resultado": "Un guion de diapositivas con mensaje, gráfico sugerido y notas, listo para llevarlo a tu herramienta de diseño.",
+   "riesgos": "El modelo estructura el contenido; el diseño final depende de la herramienta que uses. Revisa cifras y gráficos antes de presentar."
+  },
+  {
+   "id": "documentos",
+   "label": "Trabajar con documentos",
+   "objetivo": "Quiero preguntar a uno o varios documentos y obtener respuestas citadas.",
+   "inicial": "Qué dice este contrato.",
+   "mejorado": "OBJETIVO\nExtraer del contrato adjunto las obligaciones, plazos y penalidades.\n\nCONTEXTO\nSoy [rol] y debo preparar una lista de control, no una opinión legal.\n\nFUENTES\nSolo el documento adjunto.\n\nREGLAS\nCita siempre el número de cláusula. No interpretes: transcribe y luego resume. Si algo es ambiguo, márcalo.\n\nENTREGABLE\nTabla: cláusula, obligación, plazo, penalidad, observación.\n\nVERIFICACIÓN\nLista las cláusulas que no pudiste leer o que parecen contradictorias.",
+   "resultado": "Una tabla con cláusulas citadas que puedes cotejar rápido con el documento original.",
+   "riesgos": "No sustituye la revisión de un especialista. No cargues documentos confidenciales sin autorización y revisa la política de datos de la herramienta."
+  }
+ ]
 }

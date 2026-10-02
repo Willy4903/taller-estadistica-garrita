@@ -10,7 +10,7 @@
     catalog: ["history/catalog.json", []],
     regulation: ["content/regulation.json", null], glossary: ["content/glossary.json", { terms: [] }], academy: ["content/academy.json", null],
     cases: ["content/cases.json", null], prompts: ["content/prompts.json", null], ethics: ["content/ethics.json", null], quiz: ["content/quiz.json", null],
-    diag: ["content/diagnostic.json", null], agents: ["content/agents.json", null], recommender: ["content/recommender.json", null], sources: ["content/sources.json", null],
+    diag: ["content/diagnostic.json", null], agents: ["content/agents.json", null], usecases: ["content/usecases.json", null], recommender: ["content/recommender.json", null], sources: ["content/sources.json", null],
   };
   const need = (document.body.dataset.need || Object.keys(files).join(",")).split(",");
   const D = {};

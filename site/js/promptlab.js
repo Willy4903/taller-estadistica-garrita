@@ -66,6 +66,11 @@
             <p class="muted pb-note">${esc(P.builder_note)} <span id="pb-ok" role="status"></span></p></div></div>
       </div>
 
+      <div class="card pl-lab" id="pl-lib"><h3>Biblioteca de prompts por objetivo</h3>
+        <p class="muted">Elige qué quieres lograr. Cada ejemplo muestra el prompt inicial, el mejorado, el resultado esperado y los riesgos.</p>
+        <div class="chips" id="pl-lib-chips" role="group" aria-label="Objetivo">${(P.library || []).map((x, i) => `<button type="button" class="chip-btn" data-l="${esc(x.id)}" aria-pressed="${i === 0}">${esc(x.label)}</button>`).join("")}</div>
+        <div id="pl-lib-out" class="pl-libout" aria-live="polite"></div></div>
+
       <div class="grid g2">
         <div class="card"><h3>Prompt vs System Prompt</h3>
           <div class="sp"><div class="sp-sys"><span class="pl-k">System prompt</span><p class="muted">Las reglas bajo las cuales quieres que el asistente trabaje.</p><ul>${S.system.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
@@ -77,6 +82,23 @@
       </div>
       <details class="more"><summary>Ocho piezas de una buena instrucción</summary>
       <div class="grid g4 pillars">${P.pillars.map((p, i) => `<article class="pill"><span class="pill-n">${String(i + 1).padStart(2, "0")}</span><h4>${esc(p.t)}</h4><p>${esc(p.d)}</p><p class="muted"><b>Ejemplo:</b> ${esc(p.ex)}</p></article>`).join("")}</div></details>`;
+
+
+    const L = P.library || [];
+    const showLib = (id) => {
+      const x = L.find((y) => y.id === id) || L[0]; if (!x) return;
+      document.querySelectorAll("#pl-lib-chips [data-l]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.l === x.id));
+      document.getElementById("pl-lib-out").innerHTML = `<dl class="lib">
+        <div><dt>Objetivo</dt><dd>${esc(x.objetivo)}</dd></div>
+        <div><dt>Prompt inicial</dt><dd class="weak">${esc(x.inicial)}</dd></div>
+        <div class="wide"><dt>Prompt mejorado</dt><dd><pre class="pl-box">${esc(x.mejorado)}</pre><div class="row"><button type="button" class="btn sm" id="lib-copy">Copiar prompt</button><a class="btn sm ghost" id="lib-gpt" target="_blank" rel="noopener" href="https://chatgpt.com/?q=${encodeURIComponent(x.mejorado)}">Probar en ChatGPT</a><a class="btn sm ghost" id="lib-cl" target="_blank" rel="noopener" href="https://claude.ai/new?q=${encodeURIComponent(x.mejorado)}">Probar en Claude</a><span class="muted" id="lib-ok" role="status"></span></div></dd></div>
+        <div><dt>Resultado esperado</dt><dd>${esc(x.resultado)}</dd></div>
+        <div><dt>Riesgos o limitaciones</dt><dd>${esc(x.riesgos)}</dd></div></dl>`;
+      document.getElementById("lib-copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText(x.mejorado); document.getElementById("lib-ok").textContent = "Copiado."; } catch (e) { document.getElementById("lib-ok").textContent = "Selecciona el texto y cópialo."; } track("biblioteca_copiado", { id: x.id }); journey.mark("biblioteca"); });
+    };
+    document.getElementById("pl-lib-chips").addEventListener("click", (e) => { const b = e.target.closest("[data-l]"); if (b) { showLib(b.dataset.l); track("biblioteca_objetivo", { id: b.dataset.l }); journey.mark("biblioteca"); } });
+    document.addEventListener("iar:openlib", (e) => showLib(e.detail));
+    showLib(L[0] && L[0].id);
 
     document.getElementById("pl-add").addEventListener("click", () => { if (st.step < P.steps.length) { st.step++; lab(P); track("promptlab_paso", { n: st.step }); journey.mark("promptlab"); } });
     document.getElementById("pl-back").addEventListener("click", () => { if (st.step > 0) { st.step--; lab(P); } });

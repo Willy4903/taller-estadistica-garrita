@@ -140,9 +140,34 @@ def build_responsible():
           scripts=["data", "responsable"], need="cases,regulation,regchecks", ld=[crumbs([("IA Radar", ""), ("IA responsable", "responsable.html")])]))
 
 
+def build_about():
+    secs = [
+        ("Qué es IA Radar", ["IA Radar es un observatorio de inteligencia artificial en español. Reúne noticias, comparaciones de modelos, datos de uso, aprendizaje práctico y criterios de uso responsable en un solo lugar, siempre con la fuente a la vista."]),
+        ("Quién lo desarrolla", [f"IA Radar es una iniciativa educativa de WGIA, un proyecto de formación práctica en IA, ChatGPT y Claude. Puedes conocer más en <a href='{WGIA}' target='_blank' rel='noopener'>la página de formación</a>. El contenido educativo y editorial lo prepara la iniciativa; los datos se obtienen de forma automática de las fuentes que se listan en la sección Fuentes."]),
+        ("Cuál es su propósito", ["Que quien entre salga sabiendo más de lo que sabía: entender qué está pasando en IA, aprender cómo funciona y convertirla en una capacidad profesional, usándola con criterio y de forma responsable. No es un sitio de ventas: la formación aparece como una siguiente etapa opcional."]),
+        ("A quién está dirigido", ["A personas que no conocen la IA y quieren empezar, a profesionales que ya la usan y quieren hacerlo mejor, a docentes, funcionarios públicos, empresarios y analistas, y a quien necesite comparar herramientas con datos."]),
+        ("Cómo se seleccionan las noticias", ["Cada día se descargan los feeds de blogs oficiales de laboratorios (OpenAI, Anthropic, Google, xAI, Meta, Mistral, Microsoft Research, NVIDIA, Hugging Face) y de prensa especializada (MIT Technology Review, The Verge, TechCrunch, The Rundown AI).", "La sección Hoy en IA muestra como máximo cinco puntos. Se ordenan con una puntuación que pondera el origen (se prioriza a los laboratorios), la recencia, el tema (modelos, seguridad y regulación, negocios, productos, infraestructura, investigación) y señales de lanzamiento. Se limita a dos por fuente y se descartan historias de clientes y notas menores.", "Los puntos con lectura editorial tienen una explicación propia. En el resto, \"por qué importa\" y \"a quién afecta\" son una lectura general según el tema y así se indica. Las noticias se traducen automáticamente al español; el original está siempre enlazado."]),
+        ("Cómo se actualizan los contenidos", ["Una automatización de GitHub Actions se ejecuta cada día a las 11:00 UTC. Sigue estos pasos: recuperar, normalizar, validar, comparar, detectar cambios y publicar. Cada día guarda una copia en el histórico y no sobrescribe el dato anterior.", "Si una fuente falla, se muestra el último dato válido y la sección Fuentes indica el estado de cada una. Algunas cifras, como los índices de Artificial Analysis y BenchLM, son instantáneas revisadas a mano y llevan su fecha."]),
+        ("Qué criterios se usan para comparar modelos", ["Se comparan precio por millón de tokens (con una mezcla 3:1 entre entrada y salida), ventana de contexto, modalidades que acepta, razonamiento declarado y fecha de lanzamiento, a partir del catálogo público de OpenRouter.", "No se declara un ganador universal. Los benchmarks de terceros (Artificial Analysis, BenchLM, LMArena) se muestran por separado porque miden cosas distintas; nunca se promedian ni se mezclan. Las capacidades sin dato comparable se dejan sin dato. El selector por problema es una orientación calculada con precio, contexto y capacidades, no una medida de calidad real."]),
+        ("Cómo se verifican las fuentes", ["Cada dato guarda su valor, unidad, tipo de métrica, fuente, URL, fechas, proveedor, nivel de confianza y nota de metodología. Se usa una jerarquía de evidencia: fuentes oficiales, papers originales, benchmarks independientes, prensa especializada confiable y, solo como señal inicial, redes sociales.", "En normativa, el estado legal de cada norma (vigente, proyecto, guía) lo revisa una persona y la automatización comprueba cada día que las fuentes oficiales respondan y avisa si su contenido cambia. Los casos de la sección de uso responsable solo incluyen hechos documentados por tribunales, reguladores, empresas o prensa de alta reputación."]),
+        ("Límites y correcciones", ["IA Radar es contenido educativo y no constituye asesoría jurídica ni profesional. Los datos de usuarios de las empresas son cifras reportadas por ellas y pueden estar desactualizadas. Google Trends mide interés de búsqueda, no usuarios.", f"Si detectas un error o una fuente que debería incluirse, puedes comunicarlo a través de <a href='{WGIA}' target='_blank' rel='noopener'>la página de WGIA</a>."]),
+        ("Privacidad", ["El sitio no usa cookies ni cuentas. En tu navegador solo se guardan tu tema, tu progreso en la ruta y contadores de uso anónimos de las herramientas."]),
+    ]
+    body_secs = "".join(f"<section><h2>{e(h)}</h2>{''.join(f'<p>{t}</p>' for t in ps)}</section>" for h, ps in secs)
+    body = f'''<article class="wrap narrow page">
+<p class="crumb"><a href="index.html">IA Radar</a> / Acerca de</p>
+<h1 class="pg-h1">Acerca de IA Radar</h1>
+<p class="lead">Quién lo hace, para quién, con qué criterios y cómo se verifica lo que ves.</p>
+{body_secs}
+<p><a class="btn" href="index.html#fuentes">Ver el estado de las fuentes</a></p>
+</article>'''
+    ld = [{"@context": "https://schema.org", "@type": "AboutPage", "name": "Acerca de IA Radar", "inLanguage": "es", "url": BASE + "about.html"}, crumbs([("IA Radar", ""), ("Acerca de", "about.html")])]
+    write("about.html", shell("about.html", "Acerca de IA Radar: quién, cómo y con qué criterios", "Quién desarrolla IA Radar, a quién va dirigido, cómo se seleccionan las noticias, cómo se actualizan los datos, qué criterios se usan para comparar modelos y cómo se verifican las fuentes.", body, ld=ld))
+
+
 def build_sitemap(urls):
     today = date.today().isoformat()
-    allu = ["", "modelos.html", "glosario.html", "responsable.html"] + urls
+    allu = ["", "modelos.html", "glosario.html", "responsable.html", "about.html"] + urls
     items = "".join(f"<url><loc>{BASE}{u}</loc><lastmod>{today}</lastmod></url>" for u in allu)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}sitemap.xml\n")
@@ -153,6 +178,7 @@ def main():
     build_glossary()
     build_catalog()
     build_responsible()
+    build_about()
     build_sitemap(urls)
     print(f"Páginas generadas: {len(urls)} guías, glosario, catálogo, IA responsable, sitemap y robots")
 
