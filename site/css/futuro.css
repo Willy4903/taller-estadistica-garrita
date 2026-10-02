@@ -473,3 +473,23 @@ body{padding-bottom:0}
 .sb-foot{position:sticky;bottom:-14px;margin:0 -12px -14px;padding:12px 12px 14px;background:linear-gradient(180deg,rgba(3,12,24,0),rgba(3,12,24,.97) 18%)}
 :root[data-theme="light"] .sb-foot{background:linear-gradient(180deg,transparent,var(--surface) 18%)}
 @media(max-width:1120px){.sb-foot{background:linear-gradient(180deg,transparent,var(--bg) 18%)}}
+
+/* mapa de Perú */
+.pmap .mapw{position:relative;max-width:300px;margin:6px auto 0;overflow:visible;border-radius:0}
+.pmap svg{position:relative;display:block;width:100%;height:auto;overflow:visible}
+.pd2{stroke:rgba(2,12,24,.85);stroke-width:.7;stroke-linejoin:round;cursor:pointer;transition:fill-opacity .15s,stroke .15s;outline:none}
+.pd2:hover,.pd2:focus,.pd2.sel{stroke:#fff;stroke-width:1.6;fill-opacity:1!important;filter:drop-shadow(0 0 6px rgba(37,217,245,.9))}
+.pd2.sel{stroke:#25d9f5}
+.mtip{position:absolute;z-index:6;min-width:190px;max-width:260px;padding:10px 12px;border-radius:10px;border:1px solid var(--line2);background:var(--bg);box-shadow:0 10px 34px rgba(0,0,0,.6),0 0 22px rgba(37,217,245,.25);pointer-events:none;font-size:.78rem}
+.mtip[hidden]{display:none}
+.mtip b{display:block;font:700 .95rem "Inter",sans-serif;color:var(--ink);margin-bottom:2px}
+.mtip .mt-n{display:block;color:var(--muted);font-size:.68rem;line-height:1.35}
+.mtip table{width:100%;border-collapse:collapse;margin:6px 0;font-size:.76rem}
+.mtip td{padding:2px 4px;border:0;color:var(--ink)}
+.mtip td:nth-child(n+2){text-align:right;font:600 .74rem var(--mono)}
+.mtip tr.top td{font-weight:800;color:#7cecff}
+:root[data-theme="light"] .mtip tr.top td{color:var(--accent)}
+.mtip td i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.pe-mapc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:24px;align-items:center;margin:20px 0}
+.pe-mapc .pmap .mapw{max-width:380px}
+@media(max-width:800px){.pe-mapc{grid-template-columns:1fr}}

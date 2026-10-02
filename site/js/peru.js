@@ -9,6 +9,7 @@
   const pc = (v) => (v < 1 ? "menos de 1" : String(v).replace(".", ","));
 
   function paint(D) {
+    const sel0 = st.dept;
     const T = D.trends.sets[st.set] || D.trends.sets.A, names = Object.keys(T.terms);
     if (!names.includes(st.term)) st.term = names[0];
     const regs = T.peru_regions || [], pe = T.countries && T.countries.PE;
@@ -34,6 +35,8 @@
     if (withRaw.length) draw("c-pe-int", { type: "bar", data: { labels: top.map((r) => r.name), datasets: [{ data: top.map((r) => r.raw[st.term]), backgroundColor: COL[st.term], borderRadius: 6 }] },
       options: { indexAxis: "y", plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, max: 100 }, y: { grid: { display: false } } } } });
 
+    if (I.peruMap) I.peruMap(document.getElementById("pe-map"), T, { selected: st.dept, onPick: (n) => { const hit = (T.peru_regions || []).find((r) => r.name.replace(/^Departamento de /, "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace("cuzco", "cusco") === n.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")); st.dept = hit ? hit.name : ""; const selEl = document.getElementById("pe-dept"); if (selEl) selEl.value = st.dept; I.track("peru_mapa_clic"); I.journey.mark("peru"); paint(D); } });
+    const ps = document.getElementById("pe-sel"); if (ps) ps.textContent = st.dept ? "Departamento elegido: " + st.dept.replace(/^Departamento de /, "") + "." : "Sin departamento elegido: se muestra el total nacional.";
     const tl = T.peru_timeline || [];
     document.getElementById("pe-time").innerHTML = tl.length ? `<h3>Evolución del interés en el Perú</h3><p class="muted">Índice diario de búsqueda a escala nacional (100 = el día de mayor interés de cualquiera de las herramientas del conjunto).</p><div class="chart"><canvas id="c-pe-time"></canvas></div>
       ${chartMeta({ mide: "Interés relativo diario de búsqueda en el Perú.", nomide: "No mide usuarios. Solo hay serie nacional: no existe evolución por departamento en esta fuente.", fuente: "Google Trends", url: "https://trends.google.com/trends/", fecha: T.window })}` : "";
@@ -60,6 +63,7 @@
       <div class="callout">${ico("info")}<p><b>Dos lecturas distintas.</b> La composición responde "dentro de este lugar, qué herramienta se busca más". La intensidad responde "en qué lugares se busca más una herramienta". No son lo mismo y no se mezclan.</p></div>
       <div class="pe-ctl"><label class="f">Departamento<select id="pe-dept"><option value="">Perú (nacional)</option>${depts.map((d) => `<option>${esc(d)}</option>`).join("")}</select></label>
         <div><span class="f">Herramientas comparadas</span><div class="seg" role="group" aria-label="Conjunto"><button type="button" data-set="A" aria-pressed="true">ChatGPT, Gemini, Claude, Copilot, DeepSeek</button>${T.sets.B ? '<button type="button" data-set="B" aria-pressed="false">ChatGPT, Grok, Perplexity, Meta AI, Kimi</button>' : ""}</div></div></div>
+      <div class="card pe-mapc"><div class="pe-mapt"><h3>Mapa por departamentos</h3><p class="muted">Pasa el mouse (o toca) un departamento para ver su composición del interés y su intensidad. Haz clic para elegirlo y ver su detalle abajo.</p><p class="muted" id="pe-sel"></p></div><div id="pe-map"></div></div>
       <div class="grid g2 pe-grid"><div class="card" id="pe-comp"></div><div class="card" id="pe-int"></div></div>
       <details class="more"><summary>Más gráficos: evolución en el tiempo y comparación con la región</summary><div class="grid g2 pe-grid"><div class="card" id="pe-time"></div><div class="card" id="pe-reg"></div></div></details>
       <div class="callout warn">${ico("triangle-alert")}<p><b>Lo que no se puede saber.</b> Ninguna empresa publica suscriptores o usuarios por país ni por departamento. Las búsquedas muestran presencia y preferencia, no cantidad. "ChatGPT" se usa a menudo como nombre genérico, por lo que su peso está inflado, y Copilot casi no se busca por separado. Los dos conjuntos se calculan por separado y no se suman.${rp ? ` Iniciativas regionales: ${rp.map((p) => esc(p.name) + " (" + esc(p.where) + ")").join("; ")}.` : ""}</p></div>

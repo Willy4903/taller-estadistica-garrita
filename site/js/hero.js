@@ -41,26 +41,12 @@
     const set = new Set([].concat(slugs));
     return D.base.filter((m) => set.has(norm(m.provider)) && m.price_in != null).sort((a, b) => b.created.localeCompare(a.created)).slice(0, n);
   };
-  const DEPT = { Amazonas: [-77.9, -5.9], Apurímac: [-72.9, -14], Arequipa: [-72.5, -15.8], Ayacucho: [-74, -13.8], Cajamarca: [-78.5, -6.8], Callao: [-77.15, -12.05], Cuzco: [-72, -13.2], "Departamento de Lima": [-76.6, -11.6], Huancavelica: [-75, -13], Huánuco: [-76.2, -9.6], Ica: [-75.3, -14.2], Junín: [-75, -11.6], "La Libertad": [-78.4, -8], Lambayeque: [-79.6, -6.4], Loreto: [-74, -4.5], "Madre de Dios": [-70.5, -12], Moquegua: [-70.9, -16.9], Pasco: [-75.6, -10.5], Piura: [-80.3, -5.2], Puno: [-70, -14.5], "San Martín": [-76.7, -7], Tacna: [-70.3, -17.6], Tumbes: [-80.4, -3.8], Ucayali: [-73.4, -9.6] };
-  const OUT = [[-81.3, -4.7], [-80.3, -3.4], [-79.3, -4], [-78.9, -4.6], [-78.3, -3.4], [-77.8, -2.9], [-76.6, -2.6], [-75.6, -1.5], [-75.2, -0.1], [-74, -0.9], [-73.2, -2.4], [-71.5, -2.2], [-70.2, -4.2], [-70.8, -7.6], [-72.5, -9], [-73, -9.4], [-72, -10], [-70.6, -11], [-69.6, -10.9], [-69.1, -12.4], [-68.7, -12.6], [-69.4, -14.3], [-69.1, -15.3], [-69.5, -16.2], [-69.2, -17.7], [-70.4, -18.3], [-71.5, -17.3], [-73, -16.2], [-75, -14.7], [-76.3, -13.2], [-77.1, -12], [-78.5, -10], [-79.5, -8.2], [-80.4, -6.8], [-81.2, -5.9]];
-  const COLT = { ChatGPT: "#10a37f", Gemini: "#4f8cff", Claude: "#e8845f", Copilot: "#22d3ee", DeepSeek: "#8a6cff" };
   function map(D) {
     const T = D.trends && D.trends.sets && D.trends.sets.A;
     if (!T) return `<div class="hud-in"><h3>IA en Perú</h3><p class="hud-s">Los datos de Google Trends aún no están disponibles.</p></div>`;
-    const X = (lon) => (lon + 82) * 18, Y = (lat) => -lat * 18 + 6;
-    const poly = OUT.map((p) => X(p[0]).toFixed(1) + "," + Y(p[1]).toFixed(1)).join(" ");
-    const names = Object.keys(T.terms);
-    const dots = (T.peru_regions || []).filter((r) => DEPT[r.name]).map((r) => {
-      const lead = names.slice().sort((a, b) => r.share[b] - r.share[a])[0], inten = r.raw ? r.raw[lead] : r.total / 2;
-      return `<g><circle cx="${X(DEPT[r.name][0]).toFixed(1)}" cy="${Y(DEPT[r.name][1]).toFixed(1)}" r="${(3 + (inten / 100) * 7).toFixed(1)}" fill="${COLT[lead]}" class="pd"><title>${esc(r.name.replace("Departamento de ", ""))}: ${esc(lead)} ${r.share[lead]} %</title></circle></g>`;
-    }).join("");
-    const pe = T.countries && T.countries.PE;
-    const lead = pe ? names.slice().sort((a, b) => pe.share[b] - pe.share[a]) : [];
-    return `<div class="hud-in mapp"><h3>IA en Perú</h3><p class="hud-s">Herramienta con mayor interés de búsqueda en cada departamento (Google Trends).</p>
-      <div class="mapw"><div class="mrings" aria-hidden="true"></div><div class="msweep" aria-hidden="true"></div>
-      <svg viewBox="0 0 250 340" role="img" aria-label="Mapa de Perú con la herramienta de IA más buscada por departamento"><polygon points="${poly}" class="pe-shape"/>${dots}</svg></div>
-      <ul class="mleg">${names.slice(0, 4).map((n) => `<li><i style="background:${COLT[n]}"></i>${esc(n)}</li>`).join("")}</ul>
-      ${pe ? `<p class="hud-cap">A escala nacional, ${esc(lead[0])} concentra el ${pe.share[lead[0]]} % del interés. Es una señal de búsqueda, no de usuarios.</p>` : ""}</div>`;
+    const pe = T.countries && T.countries.PE, names = Object.keys(T.terms), lead = pe ? names.slice().sort((a, b) => pe.share[b] - pe.share[a]) : [];
+    return `<div class="hud-in mapp"><h3>IA en Perú</h3><p class="hud-s">Herramienta con mayor interés de búsqueda en cada departamento. Pasa el mouse sobre el mapa.</p><div id="hero-map"></div>
+      ${pe ? `<p class="hud-cap">A escala nacional, ${esc(lead[0])} concentra el ${String(pe.share[lead[0]]).replace(".", ",")} % del interés.</p>` : ""}</div>`;
   }
 
   function right(D) {
@@ -78,6 +64,7 @@
     const ds = latest(D, "deepseek")[0]; if (ds) t.push(tile("deepseek", "deepseek", "DeepSeek", nm(ds), fmtDate(ds.created), "deepseek"));
     const co = latest(D, "cohere")[0]; if (co) t.push(tile("cohere", "cohere", "Cohere", nm(co), fmtDate(co.created), "cohere"));
     R.innerHTML = `<section class="hud" aria-labelledby="hr-t"><h2 class="hud-t" id="hr-t">Herramientas clave y modelos activos</h2><div class="tiles">${t.join("")}</div>${map(D)}</section>`;
+    if (D.trends && D.trends.sets && I.peruMap) I.peruMap(document.getElementById("hero-map"), D.trends.sets.A);
   }
 
 
