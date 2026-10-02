@@ -2,9 +2,9 @@
 .ap-prog{display:flex;align-items:center;gap:16px;margin:0 0 28px;font:600 .9rem var(--mono);color:var(--muted)}
 .bar{flex:1;max-width:360px;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
-.levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+.levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:stretch}
 .lvl-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}
-.lvl-card:first-child{grid-row:span 2}
+
 .lvl-card header{margin-bottom:14px}
 .lvl-n{font:700 .74rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
 .lvl-card h3{font-size:1.7rem;margin:4px 0 6px;letter-spacing:.02em}
