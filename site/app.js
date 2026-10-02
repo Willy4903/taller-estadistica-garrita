@@ -848,7 +848,7 @@
   async function init() {
     theme();
     initEffects();
-    const [data, hist, newsData, fr] = await Promise.all([load("data/latest.json", null), load("data/history.json", []), load("data/news.json", null), load("data/frontier.json", null)]);
+    const [data, hist, newsData, fr] = await Promise.all([load("data/current/models.json", null), load("history/catalog.json", []), load("data/current/news.json", null), load("data/current/frontier.json", null)]);
     initNews(newsData);
     if (!data || !data.models) { $("#status-text").textContent = "Sin datos"; return; }
     allCount = data.models.length;
