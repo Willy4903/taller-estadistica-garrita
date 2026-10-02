@@ -1,12 +1,19 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" class="js-off">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IA Radar | Últimos modelos de inteligencia artificial</title>
-<meta name="description" content="Panel diario con los últimos modelos de IA, comparaciones de precio y contexto, y gráficas de tendencias.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1020'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%2322d3ee' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%23a78bfa'/%3E%3C/svg%3E">
-<script>document.documentElement.classList.add("js");</script>
+<title>IA Radar | Lo importante de la inteligencia artificial, explicado con datos</title>
+<meta name="description" content="Observatorio de inteligencia artificial en español: qué pasó hoy, qué cambió, qué modelo usar para cada problema, cómo escribir buenas instrucciones, riesgos y normativa. Con fuentes y fechas.">
+<link rel="canonical" href="https://willy4903.github.io/taller-estadistica-garrita/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="IA Radar: lo importante de la IA, explicado con datos">
+<meta property="og:description" content="Entiende qué está pasando en IA, aprende cómo funciona y conviértela en una capacidad profesional.">
+<meta property="og:url" content="https://willy4903.github.io/taller-estadistica-garrita/">
+<meta property="og:locale" content="es_PE">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313151c'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M16 16 L24 10' stroke='%238da0ff' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%238da0ff'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.remove("js-off");</script>
 <script>
 // Si hay una versión más nueva publicada, recarga una vez saltándose la copia guardada del navegador.
 (function () {
@@ -18,196 +25,55 @@
   }).catch(function () {});
 })();
 </script>
-<link rel="stylesheet" href="style.css?v=__V__">
-<link rel="stylesheet" href="guide.css?v=__V__">
-<link rel="stylesheet" href="week.css?v=__V__">
-<link rel="stylesheet" href="users.css?v=__V__">
-<link rel="stylesheet" href="frontier.css?v=__V__">
-<link rel="stylesheet" href="clock.css?v=__V__">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"IA Radar","url":"https://willy4903.github.io/taller-estadistica-garrita/","inLanguage":"es","description":"Observatorio de inteligencia artificial en español con datos, aprendizaje y uso responsable."}</script>
+<link rel="stylesheet" href="css/radar.css?v=__V__">
+<link rel="stylesheet" href="css/sections.css?v=__V__">
+<link rel="stylesheet" href="css/learn.css?v=__V__">
 </head>
-<body>
-<div id="progress" aria-hidden="true"></div>
-<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<body data-page="home" data-root="" data-v="__V__" id="top">
+<a class="skip" href="#hoy">Saltar al contenido</a>
+<div id="site-header"></div>
 
-<header class="top">
-  <div class="wrap top-in">
-    <a class="brand" href="#">
-      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" fill="none" stroke="url(#g)" stroke-width="2.5"/><circle cx="16" cy="16" r="3.5" fill="url(#g)"/><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs></svg>
-      <span>IA Radar</span>
-    </a>
-    <nav class="main" aria-label="Secciones">
-      <a href="#ultimo">Lo último</a>
-      <a href="#semana">Semana</a>
-      <a href="#noticias">Noticias</a>
-      <a href="#lanzamientos">Qué cambió</a>
-      <a href="#matriz">Matriz</a>
-      <a href="#usuarios">Usuarios</a>
-      <a href="#guia">Guía de IA</a>
-      <a href="#comparador">Comparador</a>
-      <a href="#fuentes">Fuentes</a>
-    </nav>
-    <div class="status clock" id="status" tabindex="0"><span class="clock-time" id="clock-time" aria-label="Hora en Lima">--:--:--</span><span class="clock-sub"><span class="dot"></span><span id="status-text">Cargando…</span></span></div>
-  </div>
-</header>
-
-<main class="wrap">
-  <section class="hero">
-    <p class="eyebrow" id="today-pill">Inteligencia artificial</p>
-    <h1>El pulso de los modelos de IA, <span class="grad">hoy</span></h1>
-    <p class="lead">Los lanzamientos más recientes de OpenAI, Anthropic, Google y xAI, quién va primero según terceros y qué cambia para ti, con las fuentes a la vista.</p>
-    <div class="banner" id="banner" hidden></div>
+<main>
+  <section class="hero wrap" aria-labelledby="h1">
+    <p class="kicker">Observatorio de inteligencia artificial en español</p>
+    <h1 id="h1">IA <em>Radar</em></h1>
+    <p class="lead">Lo importante de la inteligencia artificial, explicado con datos.</p>
+    <div class="hero-meta" id="hero-meta"><span><i class="live"></i><span id="updated">Cargando datos…</span></span><span id="hero-src"></span></div>
+    <ol class="path" aria-label="Recorrido de la página"><li>Informarse</li><li>Entender</li><li>Comparar</li><li>Aprender</li><li>Aplicar</li><li>Usar con criterio</li><li>Especializarse</li></ol>
   </section>
 
-  <section class="hero-car" aria-label="Destacados de hoy">
-    <div class="carousel"><div class="track slides" id="hero-track" tabindex="0"></div></div>
-    <div class="car-ctrl" id="hero-ctrl"></div>
-  </section>
-
-  <nav class="quick" aria-label="Accesos rápidos">
-    <a class="fx" href="#semana" style="--a:#fbbf24" data-tip="Infografía de la semana
-Lo más impactante de los últimos 7 días contado como una historia: ritmo, precios, quién domina y qué hacer."><span class="qi"><i class="ui" style="--i:url(icons/ui/calendar-days.svg)" aria-hidden="true"></i></span><b>Semana</b><small>Infografía</small></a>
-    <a class="fx" href="#noticias" style="--a:#22d3ee" data-tip="Noticias de IA
-Titulares del día de laboratorios y prensa, traducidos al español, con filtros por tema y fuente."><span class="qi"><i class="ui" style="--i:url(icons/ui/newspaper.svg)" aria-hidden="true"></i></span><b>Noticias</b><small>13 fuentes, traducidas</small></a>
-    <a class="fx" href="#lanzamientos" style="--a:#8b5cf6" data-tip="Qué cambió
-Cada lanzamiento reciente frente a la versión anterior de su familia: precio, contexto y capacidades."><span class="qi"><i class="ui" style="--i:url(icons/ui/git-compare.svg)" aria-hidden="true"></i></span><b>Qué cambió</b><small>Nuevo vs. anterior</small></a>
-    <a class="fx" href="#matriz" style="--a:#f43f9e" data-tip="Matriz de comparación
-Modelos vigentes de los laboratorios principales, agrupados por gama de precio."><span class="qi"><i class="ui" style="--i:url(icons/ui/table-2.svg)" aria-hidden="true"></i></span><b>Matriz</b><small>Modelos por gama</small></a>
-    <a class="fx" href="#guia" style="--a:#f43f9e" data-tip="Guía de IA
-IA generativa y agéntica, ética, normatividad (UE y Perú), verificador de riesgo y glosario."><span class="qi"><i class="ui" style="--i:url(icons/ui/book-open.svg)" aria-hidden="true"></i></span><b>Guía de IA</b><small>Ética y normas</small></a>
-    <a class="fx" href="#ultimo" style="--a:#22d3ee" data-tip="Lo último
-Gemini 4 Argon, Grok 4.7 y los demás lanzamientos recientes, con fecha, precio y fuente."><span class="qi"><i class="ui" style="--i:url(icons/ui/rocket.svg)" aria-hidden="true"></i></span><b>Lo último</b><small>Lanzamientos y rankings</small></a>
-    <a class="fx" href="#comparador" style="--a:#34d399" data-tip="Comparador
-Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."><span class="qi"><i class="ui" style="--i:url(icons/ui/scale.svg)" aria-hidden="true"></i></span><b>Comparador</b><small>Elige hasta 4</small></a>
-  </nav>
-
-  <section class="hubs" id="hubs" aria-label="Hora en los centros de la IA"></section>
-
-  <section class="kpis" id="kpis" aria-label="Indicadores"></section>
-
-  <section id="ultimo" class="rv"><div id="ultimo-root"></div></section>
-
-  <section id="semana" class="rv"><div id="week-root"></div></section>
-
-  <section id="noticias" class="rv">
-    <h2><span class="hi" style="--a:#22d3ee"><i class="ui" style="--i:url(icons/ui/newspaper.svg)" aria-hidden="true"></i></span> Panel de noticias de IA</h2>
-    <p class="sub" id="news-sub">Titulares de laboratorios y prensa especializada, traducidos al español.</p>
-    <div class="panel-bar">
-      <div class="seg" id="n-period" role="group" aria-label="Periodo">
-        <button data-p="1">Hoy</button><button data-p="7" class="on">7 días</button><button data-p="30">30 días</button>
-      </div>
-      <label class="search"><i class="ui" style="--i:url(icons/ui/search.svg)" aria-hidden="true"></i><input type="search" id="n-q" placeholder="Buscar en las noticias" aria-label="Buscar en las noticias"></label>
-      <button class="pill" id="n-reset" hidden><i class="ui" style="--i:url(icons/ui/x.svg)" aria-hidden="true"></i> Quitar filtros</button>
-    </div>
-    <div class="carousel" role="region" aria-roledescription="carrusel" aria-label="Noticias de IA">
-      <div class="track" id="news" tabindex="0"></div>
-    </div>
-    <div class="car-ctrl" id="news-ctrl"></div>
-    <div class="grid3">
-      <article class="panel fx" style="--a:#22d3ee"><h3>Noticias por día</h3><p class="sub">Toca una barra para filtrar</p><div class="chart xs"><canvas id="c-n-day"></canvas></div></article>
-      <article class="panel fx" style="--a:#8b5cf6"><h3>Por tema</h3><p class="sub">Toca un tema para filtrar</p><div class="chart xs"><canvas id="c-n-topic"></canvas></div></article>
-      <article class="panel fx" style="--a:#f43f9e"><h3>Por fuente</h3><p class="sub">Toca una fuente para filtrar</p><div class="chart xs"><canvas id="c-n-src"></canvas></div></article>
-    </div>
-  </section>
-
-  <section id="resumen" class="rv" hidden>
-    <h2><span class="hi" style="--a:#8b5cf6"><i class="ui" style="--i:url(icons/ui/sparkles.svg)" aria-hidden="true"></i></span> Lo que dicen los datos hoy</h2>
-    <p class="headline" id="headline"></p>
-    <p class="today" id="today"></p>
-    <div class="ins-grid" id="insights"></div>
-  </section>
-
-  <section id="lanzamientos" class="rv">
-    <h2><span class="hi" style="--a:#f43f9e"><i class="ui" style="--i:url(icons/ui/git-compare.svg)" aria-hidden="true"></i></span> Nuevas versiones: qué cambió</h2>
-    <p class="sub">Cada lanzamiento reciente de los laboratorios principales frente a la versión anterior de su misma familia. Precios en USD por millón de tokens; el verde indica que mejora.</p>
-    <div class="table-wrap">
-      <table id="versions">
-        <thead><tr><th>Nuevo</th><th>Reemplaza a</th><th>Entrada</th><th>Salida</th><th>Contexto</th><th>Capacidades</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section id="matriz" class="rv">
-    <h2><span class="hi" style="--a:#fb923c"><i class="ui" style="--i:url(icons/ui/table-2.svg)" aria-hidden="true"></i></span> Matriz de comparación por gama</h2>
-    <p class="sub">Modelos vigentes (últimos 150 días) de los laboratorios principales, agrupados por gama de precio para comparar solo lo comparable. El verde más intenso marca el mejor valor de cada columna. Toca una fila para ver para qué es bueno cada modelo.</p>
-    <div class="panel-bar">
-      <div class="seg" id="mx-tier" role="group" aria-label="Gama">
-        <button data-t="alta" class="on">Gama alta</button><button data-t="media">Gama media</button><button data-t="eco">Económicos</button><button data-t="todos">Todos</button>
-      </div>
-      <span class="count" id="mx-count"></span>
-    </div>
-    <div class="table-wrap">
-      <table id="matrix">
-        <thead><tr>
-          <th data-k="name">Modelo</th><th data-k="price_in" class="num">Entrada $/M</th><th data-k="price_out" class="num">Salida $/M</th>
-          <th data-k="blend" class="num" title="Promedio ponderado 3 partes de entrada y 1 de salida">Mixto 3:1 $/M</th><th data-k="context" class="num">Contexto</th><th data-k="multimodal">Multimodal</th><th data-k="reasoning">Razonamiento</th><th>Ideal para</th>
-        </tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <p class="sub" id="mx-note"></p>
-  </section>
-
-  <section id="usuarios" class="rv"><div id="users-root"></div></section>
-
-  <section id="guia" class="rv"><div id="guide-root"></div></section>
-
-
-  <section id="comparador" class="rv">
-    <h2><span class="hi" style="--a:#34d399"><i class="ui" style="--i:url(icons/ui/scale.svg)" aria-hidden="true"></i></span> Comparador</h2>
-    <p class="sub">Marca hasta 4 modelos para compararlos lado a lado. Toca una fila para ver para qué es bueno, con qué cuidado usarlo y cuánto costaría una tarea típica.</p>
-    <div class="compare" id="compare" hidden>
-      <div class="grid2">
-        <article class="panel fx" style="--a:#8b5cf6"><h3>Precio por millón de tokens (USD)</h3><div class="chart sm"><canvas id="c-cmp-price"></canvas></div></article>
-        <article class="panel fx" style="--a:#f43f9e"><h3>Ventana de contexto (tokens)</h3><div class="chart sm"><canvas id="c-cmp-ctx"></canvas></div></article>
-      </div>
-      <div class="table-wrap"><table class="cmp-table" id="cmp-table"></table></div>
-    </div>
-    <div class="filters">
-      <label class="search"><i class="ui" style="--i:url(icons/ui/search.svg)" aria-hidden="true"></i><input type="search" id="q" placeholder="Buscar modelo o proveedor" aria-label="Buscar"></label>
-      <select id="prov" aria-label="Proveedor"><option value="">Todos los proveedores</option></select>
-      <select id="flt" aria-label="Filtro">
-        <option value="">Todos</option><option value="multimodal">Solo multimodales</option><option value="reasoning">Solo razonamiento</option><option value="free">Solo gratuitos</option>
-      </select>
-      <span class="count" id="count"></span>
-    </div>
-    <div class="table-wrap">
-      <table id="tbl">
-        <thead><tr>
-          <th></th>
-          <th data-k="name">Modelo</th><th data-k="provider">Proveedor</th><th data-k="created">Lanzamiento</th>
-          <th data-k="context" class="num">Contexto</th><th data-k="price_in" class="num">Entrada $/M</th><th data-k="price_out" class="num">Salida $/M</th><th>Ideal para</th><th>Capacidades</th>
-        </tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <button class="btn" id="more" hidden>Mostrar más</button>
-  </section>
-
-  <section id="fuentes" class="rv"><div id="fuentes-root"></div></section>
-
-  <section id="abiertos" class="rv">
-    <h2><span class="hi" style="--a:#4f8cff"><i class="ui" style="--i:url(icons/ui/bot.svg)" aria-hidden="true"></i></span> Modelos abiertos en tendencia</h2>
-    <div class="grid2">
-      <article class="panel fx" style="--a:#fbbf24"><h3>Descargas</h3><p class="sub">Top 10 en Hugging Face</p><div class="chart"><canvas id="c-hf"></canvas></div></article>
-      <article class="panel fx" style="--a:#34d399"><h3>Ranking de tendencia</h3><ol class="hf-list" id="hf-list"></ol></article>
-    </div>
-  </section>
+  <section id="hoy" class="sec first" aria-labelledby="t-hoy"><div class="wrap"><div id="hoy-root"></div></div></section>
+  <section id="cambios" class="sec" aria-labelledby="t-cambios"><div class="wrap"><div id="cambios-root"></div></div></section>
+  <section id="modelos" class="sec alt" aria-labelledby="t-modelos"><div class="wrap"><div id="modelos-root"></div></div></section>
+  <section id="uso" class="sec" aria-labelledby="t-uso"><div class="wrap"><div id="uso-root"></div></div></section>
+  <section id="aprende" class="sec alt" aria-labelledby="t-aprende"><div class="wrap"><div id="aprende-root"></div></div></section>
+  <section id="promptlab" class="sec" aria-labelledby="t-promptlab"><div class="wrap"><div id="promptlab-root"></div></div></section>
+  <section id="agentes" class="sec alt" aria-labelledby="t-agentes"><div class="wrap"><div id="agentes-root"></div></div></section>
+  <section id="responsable" class="sec" aria-labelledby="t-responsable"><div class="wrap"><div id="responsable-root"></div></div></section>
+  <section id="peru" class="sec alt" aria-labelledby="t-peru"><div class="wrap"><div id="peru-root"></div></div></section>
+  <section id="nivel" class="sec" aria-labelledby="t-nivel"><div class="wrap"><div id="nivel-root"></div></div></section>
+  <section id="sigue" class="sec cta-sec" aria-labelledby="t-sigue"><div class="wrap"><div id="sigue-root"></div></div></section>
+  <section id="fuentes" class="sec" aria-labelledby="t-fuentes"><div class="wrap"><div id="fuentes-root"></div></div></section>
 </main>
 
-<footer class="foot">
-  <div class="wrap">
-    <p>Fuentes: titulares de OpenAI, Anthropic, Google, Meta, Mistral, xAI, Microsoft, NVIDIA, Hugging Face, The Verge, TechCrunch y MIT Technology Review; <a href="https://openrouter.ai/models" target="_blank" rel="noopener">OpenRouter</a> (catálogo, precios, contexto) y <a href="https://huggingface.co/models?sort=trending" target="_blank" rel="noopener">Hugging Face</a> (modelos abiertos en tendencia). Los precios son por millón de tokens y pueden variar según el proveedor.</p>
-    <p id="src-status"></p>
-  </div>
-</footer>
+<div id="site-footer"></div>
 
 <script src="vendor/chart.umd.js"></script>
-<script src="app.js?v=__V__"></script>
-<script src="guide.js?v=__V__"></script>
-<script src="week.js?v=__V__"></script>
-<script src="users.js?v=__V__"></script>
-<script src="frontier.js?v=__V__"></script>
-<script src="clock.js?v=__V__"></script>
+<script src="js/core.js?v=__V__"></script>
+<script src="js/models-lib.js?v=__V__"></script>
+<script src="js/data.js?v=__V__"></script>
+<script src="js/hoy.js?v=__V__"></script>
+<script src="js/cambios.js?v=__V__"></script>
+<script src="js/modelos.js?v=__V__"></script>
+<script src="js/uso.js?v=__V__"></script>
+<script src="js/peru.js?v=__V__"></script>
+<script src="js/aprende.js?v=__V__"></script>
+<script src="js/promptlab.js?v=__V__"></script>
+<script src="js/agentes.js?v=__V__"></script>
+<script src="js/responsable.js?v=__V__"></script>
+<script src="js/nivel.js?v=__V__"></script>
+<script src="js/sigue.js?v=__V__"></script>
+<script src="js/fuentes.js?v=__V__"></script>
 </body>
 </html>

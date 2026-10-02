@@ -75,7 +75,7 @@ def build_facts(models, usage, arena, users, frontier):
     """Capa de auditoría: cada cifra publicada con su fuente, fecha, qué mide y confianza."""
     facts = []
     for u in (users or {}).get("items", []):
-        facts.append(fact(u["value"], "millones de usuarios", "users", u.get("source", "Empresa"), u.get("source_url") or "https://openai.com/", provider=u.get("prov", ""),
+        facts.append(fact(u["value"], "millones de usuarios", "users", u.get("source", "Empresa"), u.get("url") or "https://openai.com/", provider=u.get("prov", ""),
                           published_at=u["asof"], confidence="media", methodology_note=f"Cifra reportada por la propia empresa ({u['what']}). No es auditada ni comparable de forma estricta.", name=u["name"]))
     for r in frontier.get("rankings", []):
         for i in r["items"]:

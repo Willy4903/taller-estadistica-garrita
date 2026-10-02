@@ -1,0 +1,170 @@
+{
+ "note": "Orientación calculada con precio, contexto y capacidades publicadas por el proveedor. No mide calidad real: prueba con tus propios casos antes de decidir.",
+ "problems": [
+  {
+   "id": "docs",
+   "label": "Analizar documentos",
+   "icon": "file-search",
+   "need": "Contexto grande y aceptar archivos o imágenes. Importa poder cargar el documento completo y que cite de dónde saca cada dato.",
+   "filter": {
+    "minContext": 400000,
+    "inputs": [
+     "file"
+    ]
+   },
+   "tip": "Pide siempre citas textuales con página o sección y verifica las cifras clave."
+  },
+  {
+   "id": "datos",
+   "label": "Analizar datos",
+   "icon": "chart-column",
+   "need": "Razonamiento y aceptar archivos. Importa que calcule sin inventar y que muestre cómo llegó al resultado.",
+   "filter": {
+    "reasoning": true,
+    "inputs": [
+     "file"
+    ]
+   },
+   "tip": "Pide que explique el cálculo y compruébalo con una muestra pequeña que ya conozcas."
+  },
+  {
+   "id": "codigo",
+   "label": "Programar",
+   "icon": "code",
+   "need": "Razonamiento, contexto amplio para leer el código del proyecto y herramientas.",
+   "filter": {
+    "reasoning": true,
+    "minContext": 200000,
+    "tag": "Programación"
+   },
+   "tip": "Dale los archivos relevantes y los criterios de aceptación; revisa y prueba siempre el código antes de usarlo."
+  },
+  {
+   "id": "investigar",
+   "label": "Investigar",
+   "icon": "search",
+   "need": "Razonamiento y, si es posible, búsqueda con fuentes. Importa poder rastrear cada afirmación hasta su origen.",
+   "filter": {
+    "reasoning": true,
+    "tag": "Búsqueda con fuentes"
+   },
+   "tip": "Pide fuentes primarias, fechas y distingue hechos de inferencias."
+  },
+  {
+   "id": "escribir",
+   "label": "Escribir",
+   "icon": "pen-line",
+   "need": "Buen manejo del lenguaje y estilo. El contexto grande importa poco; importa darle ejemplos de tu estilo.",
+   "filter": {},
+   "tip": "Entrega un ejemplo de tono y público objetivo; pide varias versiones y edita tú."
+  },
+  {
+   "id": "presentaciones",
+   "label": "Crear presentaciones",
+   "icon": "layers",
+   "need": "Más que el modelo importa la herramienta que genera las diapositivas. El modelo ayuda con estructura, mensajes y guion.",
+   "filter": {
+    "inputs": [
+     "image"
+    ]
+   },
+   "tip": "Primero pide la historia (mensaje, datos, estructura) y después el diseño."
+  },
+  {
+   "id": "imagenes",
+   "label": "Crear imágenes",
+   "icon": "image",
+   "need": "Modelos de generación de imágenes, que suelen ofrecerse como productos aparte de los modelos de texto.",
+   "filter": {
+    "tag": "Generación de imágenes"
+   },
+   "nodata": "El catálogo de modelos de texto no incluye datos comparables de generación de imágenes. Consulta las arenas de imagen de Artificial Analysis y LMArena.",
+   "tip": "Describe sujeto, estilo, luz y encuadre; revisa derechos y atribución antes de publicar."
+  },
+  {
+   "id": "video",
+   "label": "Crear video",
+   "icon": "video",
+   "need": "Modelos de video, un campo que cambia rápido y con pocas métricas comparables.",
+   "filter": {
+    "tag": "__ninguno__"
+   },
+   "nodata": "No hay datos comparables de video en las fuentes abiertas que usa IA Radar. Consulta la arena de video de Artificial Analysis y verifica condiciones de uso y derechos.",
+   "tip": "Etiqueta como contenido generado cuando corresponda y evita imitar a personas reales sin permiso."
+  },
+  {
+   "id": "automatizar",
+   "label": "Automatizar tareas",
+   "icon": "workflow",
+   "need": "Uso de herramientas, bajo costo por volumen y fiabilidad. Muchas automatizaciones no necesitan el modelo más caro.",
+   "filter": {
+    "tag": "Agentes y herramientas",
+    "cheapBias": true
+   },
+   "tip": "Empieza por un flujo fijo con una verificación humana antes de dar autonomía."
+  },
+  {
+   "id": "agentes",
+   "label": "Construir agentes",
+   "icon": "bot",
+   "need": "Razonamiento, uso de herramientas y contexto amplio para sostener tareas largas.",
+   "filter": {
+    "reasoning": true,
+    "minContext": 200000,
+    "tag": "Agentes y herramientas"
+   },
+   "tip": "Limita permisos, registra cada acción y define cuándo debe pedir confirmación."
+  },
+  {
+   "id": "archivos",
+   "label": "Trabajar con archivos",
+   "icon": "folder",
+   "need": "Aceptar archivos o imágenes y tener contexto suficiente para leerlos completos.",
+   "filter": {
+    "minContext": 128000,
+    "inputs": [
+     "file"
+    ]
+   },
+   "tip": "Indica qué archivo usar como fuente de verdad y qué hacer si falta un dato."
+  },
+  {
+   "id": "empresa",
+   "label": "Trabajo empresarial",
+   "icon": "briefcase",
+   "need": "Además del modelo importan contratos, privacidad de datos, controles de administración y soporte del proveedor.",
+   "filter": {
+    "reasoning": true,
+    "inputs": [
+     "file"
+    ]
+   },
+   "tip": "Antes de cargar datos internos revisa la política de datos del plan que contratas."
+  },
+  {
+   "id": "local",
+   "label": "Ejecutar localmente",
+   "icon": "cpu",
+   "need": "Modelos de pesos abiertos que puedas descargar y correr en tu equipo o servidor. Importan el tamaño y el hardware disponible.",
+   "filter": {
+    "local": true
+   },
+   "tip": "Empieza con un modelo pequeño y mide velocidad y calidad en tu propio equipo."
+  }
+ ],
+ "open_providers": [
+  "meta-llama",
+  "meta",
+  "qwen",
+  "mistralai",
+  "deepseek",
+  "nvidia",
+  "z-ai",
+  "moonshotai",
+  "minimax",
+  "ibm-granite",
+  "google",
+  "openai"
+ ],
+ "open_note": "Proveedores que publican algunos modelos con pesos abiertos. No todos sus modelos lo son."
+}
