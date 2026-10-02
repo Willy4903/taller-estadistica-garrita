@@ -162,7 +162,12 @@
    ],
    "source": "Artificial Analysis",
    "url": "https://artificialanalysis.ai/models/gemini-4-argon",
-   "level": 3
+   "level": 3,
+   "metric": {
+    "big": "≈60 %",
+    "label": "del costo por tarea de GPT-6 Astra, con el mismo puntaje",
+    "head": "Gemini 4 Argon iguala a GPT-6 Astra en el índice de Artificial Analysis"
+   }
   },
   {
    "id": "grok-4-7",
@@ -180,7 +185,12 @@
    ],
    "source": "Artificial Analysis",
    "url": "https://artificialanalysis.ai/articles/benchmarking-grok-4-7",
-   "level": 3
+   "level": 3,
+   "metric": {
+    "big": "46",
+    "label": "puntos de Grok 4.7 en el índice de Artificial Analysis, unos 7 menos que los tres líderes",
+    "head": "Grok 4.7 llega con buen precio, pero no al nivel de los líderes generales"
+   }
   },
   {
    "id": "claude-sonnet-5-5",
@@ -195,7 +205,12 @@
    ],
    "source": "BenchLM",
    "url": "https://benchlm.ai/benchmarks/artificialanalysis",
-   "level": 3
+   "level": 3,
+   "metric": {
+    "big": "56,0",
+    "label": "puntos de Claude Sonnet 5.5 en BenchLM, detrás de Opus 5.5 con 57,6",
+    "head": "Anthropic completó en septiembre una familia de tres modelos"
+   }
   },
   {
    "id": "gpt-6-1-sol",
