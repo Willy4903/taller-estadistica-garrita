@@ -71,16 +71,18 @@
   /* ---------- tema ---------- */
   function applyTheme(t) { document.documentElement.dataset.theme = t; }
   const savedTheme = store.get("iar_theme", null);
-  applyTheme(savedTheme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+  applyTheme(savedTheme || "dark");
 
   /* ---------- cabecera y pie ---------- */
   const NAV = [["#hoy", "Hoy"], ["#modelos", "Modelos"], ["#uso", "Uso"], ["#aprende", "Aprende"], ["#promptlab", "Prompt Lab"], ["#agentes", "Agentes"], ["#responsable", "IA responsable"], ["#peru", "Perú"], ["glosario.html", "Glosario"], ["#fuentes", "Fuentes"]];
   function chrome() {
     const h = $("#site-header");
     if (h) {
-      h.innerHTML = `<div class="wrap hd">
+      const orb = `<a class="logo-orb" href="${href(home ? "#top" : "index.html")}" aria-label="IA Radar, inicio"><span class="orb"><i></i><i></i><i></i><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="32" cy="32" r="11" fill="none" stroke="currentColor" stroke-width="2" opacity=".6"/><path d="M32 32 L50 17" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="32" r="3.4" fill="var(--accent)"/></svg><b>IA Radar</b></span></a>`;
+      const link = ([h2, t]) => `<a href="${href(h2)}">${esc(t)}</a>`;
+      h.innerHTML = `<div class="wrap wide hd">
         <a class="logo" href="${href(home ? "#top" : "index.html")}" aria-label="IA Radar, inicio"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/><path d="M16 16 L26 9" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="2.4" fill="var(--accent)"/></svg><span>IA Radar</span></a>
-        <nav class="nav" id="nav" aria-label="Secciones">${NAV.map(([h2, t]) => `<a href="${href(h2)}">${esc(t)}</a>`).join("")}<a class="nav-cta" href="${href("#sigue")}" data-track="clic_especializate_nav">Especialízate</a></nav>
+        <nav class="nav" id="nav" aria-label="Secciones"><div class="ng">${NAV.slice(0, 6).map(link).join("")}</div>${orb}<div class="ng">${NAV.slice(6).map(link).join("")}<a class="nav-cta" href="${href("#sigue")}" data-track="clic_especializate_nav">Especialízate</a></div></nav>
         <button class="icon-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">${ico("contrast")}</button>
         <button class="icon-btn burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav">${ico("menu")}</button>
       </div><div class="prog" id="prog" aria-hidden="true"></div>`;
