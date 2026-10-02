@@ -63,7 +63,7 @@
     const S = [
       ["arXiv cs.AI", "https://arxiv.org/list/cs.AI/recent", st.papers ? (st.papers.ok ? "auto" : "caida") : "pend", "Artículos recientes de investigación (panel de investigación)."],
       ["MIT Technology Review", "https://www.technologyreview.com/topic/artificial-intelligence/", feedOk("MIT Technology Review") ? "auto" : "caida", "Titulares en el panel de noticias."],
-      ["Blogs de OpenAI, Anthropic y Google DeepMind", "https://openai.com/news/", feedOk("OpenAI", "Anthropic", "Google DeepMind") ? "auto" : "caida", "Titulares de los laboratorios, traducidos."],
+      ["Blogs de OpenAI, Anthropic y Google", "https://openai.com/news/", feedOk("OpenAI", "Anthropic", "Google AI") ? "auto" : "caida", "Titulares de los laboratorios, traducidos."],
       ["The Rundown AI", "https://www.therundown.ai/", feedOk("The Rundown AI") ? "auto" : "caida", "Boletín diario en el panel de noticias. The Neuron no publica un feed abierto verificado; se consulta como referencia."],
       ["Hugging Face Blog", "https://huggingface.co/blog", feedOk("Hugging Face") ? "auto" : "caida", "Titulares y modelos abiertos en tendencia."],
       ["LMSYS Chatbot Arena (LMArena)", "https://lmarena.ai/leaderboard", st.arena && st.arena.ok ? "auto" : "ref", "Preferencia de usuarios. Se muestra solo si su dataset público responde; si no, queda como referencia."],
