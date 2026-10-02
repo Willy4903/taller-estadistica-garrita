@@ -163,7 +163,36 @@
   function onReady(fn) { ready.push(fn); }
   window.IAR = { CONFIG, $, $$, esc, nf, fmtCtx, fmtPrice, fmtDate, daysAgo, ico, load, store, journey, track, draw, chartMeta, lima, css, ROOT, page, home, onReady, href };
 
+
+  /* ---------- botones flotantes: volver al inicio y mapa de secciones ---------- */
+  const SECS = [["#top", "Inicio"], ["#hoy", "01 · Hoy en IA"], ["#cambios", "02 · Qué cambió"], ["#modelos", "03 · Radar de modelos"], ["#uso", "04 · Qué está usando la gente"], ["#aprende", "05 · Aprende en 5 minutos"], ["#promptlab", "06 · Prompt Lab"], ["#agentes", "07 · De prompts a agentes"], ["#responsable", "08 · Usa IA con criterio"], ["#peru", "09 · IA en Perú"], ["#nivel", "10 · ¿En qué nivel estás?"], ["#sigue", "11 · Sigue aprendiendo"], ["#fuentes", "Fuentes y metodología"]];
+  const MORE = [["glosario.html", "Glosario de IA"], ["modelos.html", "Catálogo de modelos"], ["responsable.html", "IA responsable y normativa"]];
+  function fab() {
+    const el = document.createElement("div");
+    el.className = "fab"; el.id = "fab"; el.hidden = true;
+    const li = ([h, t]) => `<li><a href="${h === "#top" && !home ? ROOT + "index.html" : href(h)}" data-h="${h}">${esc(t)}</a></li>`;
+    el.innerHTML = `<nav class="fab-panel" id="fab-panel" aria-label="Todas las secciones" hidden><p class="fab-t">Todas las secciones</p><ol>${SECS.map(li).join("")}</ol><p class="fab-t">Más páginas</p><ol>${MORE.map(li).join("")}</ol></nav>
+      <button type="button" class="fab-b" id="fab-menu" aria-expanded="false" aria-controls="fab-panel">${ico("list")}<span>Secciones</span></button>
+      <button type="button" class="fab-b fab-top" id="fab-top" aria-label="Volver al inicio de la página">${ico("arrow-up")}<span>Inicio</span></button>`;
+    document.body.appendChild(el);
+    const panel = $("#fab-panel", el), menu = $("#fab-menu", el);
+    const close = () => { panel.hidden = true; menu.setAttribute("aria-expanded", "false"); };
+    menu.addEventListener("click", () => { const o = panel.hidden; panel.hidden = !o; menu.setAttribute("aria-expanded", String(o)); if (o) track("fab_secciones"); });
+    $("#fab-top", el).addEventListener("click", () => { track("fab_inicio"); close(); window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); });
+    panel.addEventListener("click", (e) => { if (e.target.closest("a")) close(); });
+    document.addEventListener("click", (e) => { if (!el.contains(e.target)) close(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") { close(); menu.focus(); } });
+    const upd = () => { el.hidden = scrollY < 360; if (el.hidden) close(); };
+    addEventListener("scroll", upd, { passive: true }); upd();
+    if (home && "IntersectionObserver" in window) {
+      const links = $$("a[data-h]", panel);
+      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.dataset.h === "#" + e.target.id)); }), { rootMargin: "-30% 0px -65% 0px" });
+      SECS.forEach(([h]) => { const s = h !== "#top" && $(h); if (s) io.observe(s); });
+    }
+  }
+
   chrome();
+  fab();
   reveal();
   trackSections();
   document.addEventListener("DOMContentLoaded", () => {});

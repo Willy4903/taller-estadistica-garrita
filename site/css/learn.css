@@ -150,3 +150,6 @@
 .closing{margin-top:56px;padding-top:44px;border-top:1px solid #2e3558}
 .closing h2{font-size:clamp(2.2rem,5vw,3.8rem)}
 .ck-q .seg{flex-wrap:nowrap;flex:none}.ck-q .seg button{padding:6px 14px}
+.grid>*{min-width:0}
+.ck-q span{min-width:0}
+@media(max-width:900px){.ckc .g2{grid-template-columns:1fr}}
