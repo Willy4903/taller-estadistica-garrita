@@ -135,7 +135,7 @@ def build_responsible():
 <section id="evidencia"><h2>Jerarquía de evidencia</h2><p class="muted">No todas las fuentes pesan igual. Un tuit nunca es evidencia definitiva.</p><ol class="lvl">{lv}</ol></section>
 <p><a class="btn" href="index.html#responsable">Volver a las herramientas de uso responsable</a></p></div>'''
     write("responsable.html", shell("responsable.html", "IA responsable: casos reales, ética y normativa en Perú, UE y estándares", "Casos documentados de errores con IA, marco normativo de Perú (Ley 31814, D.S. 115-2025-PCM), AI Act de la UE y estándares UNESCO y NIST.", body,
-          scripts=["responsable"], need="cases,regulation,regchecks", ld=[crumbs([("IA Radar", ""), ("IA responsable", "responsable.html")])]))
+          scripts=["data", "responsable"], need="cases,regulation,regchecks", ld=[crumbs([("IA Radar", ""), ("IA responsable", "responsable.html")])]))
 
 
 def build_sitemap(urls):
