@@ -95,7 +95,8 @@ def fetch_models():
 def fetch_usage():
     """Tokens procesados por modelo en OpenRouter durante la última semana, leídos de su página pública de rankings.
     Mide actividad dentro de OpenRouter, no uso global ni usuarios. Lanza error si la estructura cambió."""
-    raw = fetch_text(RANKINGS_URL).replace('\\"', '"')
+    raw = fetch_text(RANKINGS_URL)
+    raw = (raw.decode("utf-8", "ignore") if isinstance(raw, bytes) else raw).replace('\\"', '"')
     rows = []
     for m in re.finditer(r'\{[^{}]*"model_permaslug"[^{}]*\}', raw):
         try:
