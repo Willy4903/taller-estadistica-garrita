@@ -1,0 +1,171 @@
+{
+ "intro": "Ejemplos por perfil para llevar lo aprendido a tu trabajo. Cada uno indica el nivel de riesgo y el prompt del Prompt Lab que puedes usar como punto de partida.",
+ "profiles": [
+  {
+   "id": "docente",
+   "name": "Docente",
+   "cases": [
+    {
+     "task": "Preparar una sesión de clase con actividades y preguntas de comprobación",
+     "lib": "ensenar",
+     "risk": "verde",
+     "result": "Guion de la sesión y banco de preguntas para revisar"
+    },
+    {
+     "task": "Dar retroalimentación a borradores de estudiantes",
+     "lib": "revisar",
+     "risk": "amarillo",
+     "result": "Comentarios por criterio; tú decides la nota"
+    },
+    {
+     "task": "Resumir lecturas largas para dejar guías de estudio",
+     "lib": "resumir",
+     "risk": "verde",
+     "result": "Guía con puntos clave y preguntas"
+    }
+   ]
+  },
+  {
+   "id": "publico",
+   "name": "Funcionario público",
+   "cases": [
+    {
+     "task": "Resumir normas y extraer plazos y obligaciones",
+     "lib": "documentos",
+     "risk": "amarillo",
+     "result": "Tabla de control para cotejar con el texto oficial"
+    },
+    {
+     "task": "Redactar borradores de oficios e informes con datos que tú entregas",
+     "lib": "informes",
+     "risk": "amarillo",
+     "result": "Borrador con marcas de datos pendientes"
+    },
+    {
+     "task": "Analizar registros administrativos sin datos personales",
+     "lib": "analizar-datos",
+     "risk": "amarillo",
+     "result": "Hallazgos y tabla de variaciones con cálculos revisados"
+    }
+   ]
+  },
+  {
+   "id": "analista",
+   "name": "Analista de datos",
+   "cases": [
+    {
+     "task": "Detectar anomalías y variaciones relevantes en una serie",
+     "lib": "analizar-datos",
+     "risk": "amarillo",
+     "result": "Lista de variaciones con umbral explícito"
+    },
+    {
+     "task": "Generar y probar scripts de limpieza",
+     "lib": "programar",
+     "risk": "verde",
+     "result": "Código con pruebas que tú ejecutas"
+    },
+    {
+     "task": "Convertir resultados en un resumen ejecutivo",
+     "lib": "informes",
+     "risk": "amarillo",
+     "result": "Resumen de una página con hallazgos y siguientes pasos"
+    }
+   ]
+  },
+  {
+   "id": "empresa",
+   "name": "Empresario o emprendedor",
+   "cases": [
+    {
+     "task": "Analizar ventas y detectar cambios en el mes",
+     "lib": "analizar-datos",
+     "risk": "amarillo",
+     "result": "Hallazgos y recomendaciones para decidir"
+    },
+    {
+     "task": "Estructurar una presentación para clientes o inversionistas",
+     "lib": "presentaciones",
+     "risk": "verde",
+     "result": "Guion de diapositivas con mensajes claros"
+    },
+    {
+     "task": "Revisar contratos con una lista de control",
+     "lib": "documentos",
+     "risk": "amarillo",
+     "result": "Tabla de cláusulas; la revisión legal la hace un especialista"
+    }
+   ]
+  },
+  {
+   "id": "estudiante",
+   "name": "Estudiante o investigador",
+   "cases": [
+    {
+     "task": "Armar un panorama de un tema con fuentes verificables",
+     "lib": "investigar",
+     "risk": "amarillo",
+     "result": "Tabla de afirmaciones con fuente y fecha"
+    },
+    {
+     "task": "Resumir artículos para una revisión de literatura",
+     "lib": "resumir",
+     "risk": "verde",
+     "result": "Resúmenes con citas de página"
+    },
+    {
+     "task": "Mejorar la redacción de un borrador",
+     "lib": "revisar",
+     "risk": "verde",
+     "result": "Versión más clara con cambios visibles"
+    }
+   ]
+  }
+ ],
+ "automation": {
+  "title": "Automatización: de la tarea suelta al proceso",
+  "intro": "Antes de automatizar, la tarea debe estar clara, ser repetitiva y tener un punto de revisión humana.",
+  "recipes": [
+   {
+    "t": "Clasificar y resumir correos entrantes",
+    "steps": [
+     "Llega un correo",
+     "La IA lo clasifica y resume",
+     "Se guarda en una hoja",
+     "Una persona revisa los casos dudosos"
+    ],
+    "tools": "n8n, Zapier, Make o Power Automate",
+    "control": "Revisión humana de lo que la IA marca como dudoso"
+   },
+   {
+    "t": "Informe semanal a partir de una hoja de datos",
+    "steps": [
+     "Se actualiza la hoja",
+     "La IA calcula variaciones y redacta el borrador",
+     "Se envía a revisión",
+     "Se publica tras aprobación"
+    ],
+    "tools": "Hoja de cálculo con un flujo en n8n o Power Automate",
+    "control": "Aprobación humana antes de enviar"
+   },
+   {
+    "t": "Extraer datos de documentos recibidos",
+    "steps": [
+     "Llega un PDF o imagen",
+     "La IA extrae campos definidos",
+     "Se validan formatos y totales",
+     "Se registra en el sistema"
+    ],
+    "tools": "Flujo con un modelo que acepte archivos",
+    "control": "Validación automática de formatos y muestreo manual"
+   }
+  ],
+  "rules": [
+   "Empieza con un flujo fijo y una sola tarea.",
+   "Registra cada ejecución para poder auditarla.",
+   "Define qué requiere aprobación humana.",
+   "Limita los permisos al mínimo necesario.",
+   "No automatices decisiones críticas sobre personas sin supervisión."
+  ]
+ }
+}

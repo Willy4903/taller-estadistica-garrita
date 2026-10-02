@@ -23,6 +23,12 @@
         <p class="ctx-eq mono">system prompt + instrucciones + archivos + datos + memoria + herramientas + historial + reglas = contexto de trabajo</p>
       </div>
 
+      <h3 class="sub-h">¿Chatbot, asistente, flujo o agente?</h3>
+      <div class="table-wrap"><table class="atypes"><thead><tr><th>Tipo</th><th>Qué hace</th><th>Ejemplo</th><th>Autonomía</th><th>Cuándo usarlo</th></tr></thead><tbody>${(G.types || []).map((t) => `<tr><td><b>${esc(t.t)}</b></td><td>${esc(t.does)}</td><td>${esc(t.ex)}</td><td><span class="auto a${t.auto}" role="img" aria-label="Autonomía ${t.auto} de 4"><i></i><i></i><i></i><i></i></span></td><td>${esc(t.use)}</td></tr>`).join("")}</tbody></table></div>
+      <h3 class="sub-h">Cómo trabaja un agente</h3>
+      <ol class="cycle">${(G.cycle || []).map((c, i) => `<li><span>${i + 1}</span><b>${esc(c.t)}</b><small>${esc(c.d)}</small></li>`).join("")}</ol>
+      <p class="muted cycle-n">${ico("repeat")} Si la verificación falla, el ciclo vuelve a la planificación o pide ayuda a una persona.</p>
+
       <h3 class="sub-h">De un prompt a un sistema multiagente</h3>
       <div class="ladder">${G.ladder.map((l, i) => `<details class="rung" ${i === 0 ? "open" : ""}><summary><span class="rg-n">${i + 1}</span><b>${esc(l.t)}</b><span class="muted">${esc(l.what)}</span></summary>
         <dl><div><dt>Qué resuelve</dt><dd>${esc(l.solves)}</dd></div><div><dt>Cuándo usarlo</dt><dd>${esc(l.when)}</dd></div><div><dt>Ejemplo</dt><dd>${esc(l.ex)}</dd></div><div><dt>Herramientas actuales</dt><dd>${esc(l.tools)}</dd></div></dl></details>`).join("")}</div>

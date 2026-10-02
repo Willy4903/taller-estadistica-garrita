@@ -74,37 +74,25 @@
   applyTheme(savedTheme || "dark");
 
   /* ---------- cabecera y pie ---------- */
-  const NAV = [["#hoy", "Hoy"], ["#modelos", "Modelos"], ["#uso", "Uso"], ["#aprende", "Aprende"], ["#promptlab", "Prompt Lab"], ["#agentes", "Agentes"], ["#responsable", "IA responsable"], ["#peru", "Perú"], ["glosario.html", "Glosario"], ["#fuentes", "Fuentes"]];
   function chrome() {
     const h = $("#site-header");
     if (h) {
-      const orb = `<a class="logo-orb" href="${href(home ? "#top" : "index.html")}" aria-label="IA Radar, inicio"><span class="orb"><i></i><i></i><i></i><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="32" cy="32" r="11" fill="none" stroke="currentColor" stroke-width="2" opacity=".6"/><path d="M32 32 L50 17" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="32" r="3.4" fill="var(--accent)"/></svg><b>IA Radar</b></span></a>`;
-      const link = ([h2, t]) => `<a href="${href(h2)}">${esc(t)}</a>`;
       h.innerHTML = `<div class="wrap wide hd">
+        <button class="icon-btn burger" id="burger" type="button" aria-label="Abrir el menú de secciones" aria-expanded="false" aria-controls="sidebar">${ico("menu")}</button>
         <a class="logo" href="${href(home ? "#top" : "index.html")}" aria-label="IA Radar, inicio"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/><path d="M16 16 L26 9" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="2.4" fill="var(--accent)"/></svg><span>IA Radar</span></a>
-        <nav class="nav" id="nav" aria-label="Secciones"><div class="ng">${NAV.slice(0, 6).map(link).join("")}</div>${orb}<div class="ng">${NAV.slice(6).map(link).join("")}<a class="nav-cta" href="${href("#sigue")}" data-track="clic_especializate_nav">Especialízate</a></div></nav>
         <button class="icon-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">${ico("contrast")}</button>
-        <button class="icon-btn burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav">${ico("menu")}</button>
       </div><div class="prog" id="prog" aria-hidden="true"></div>`;
-      const nav = $("#nav"), b = $("#burger");
-      b.addEventListener("click", () => { const o = nav.classList.toggle("open"); b.setAttribute("aria-expanded", o); b.innerHTML = ico(o ? "x" : "menu"); });
-      nav.addEventListener("click", (e) => { if (e.target.closest("a")) { nav.classList.remove("open"); b.setAttribute("aria-expanded", "false"); b.innerHTML = ico("menu"); } });
       $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "dark" ? "light" : "dark"; applyTheme(t); store.set("iar_theme", t); document.dispatchEvent(new CustomEvent("iar:theme")); });
       const prog = $("#prog");
       const onScroll = () => { const m = document.documentElement.scrollHeight - innerHeight; prog.style.transform = `scaleX(${m > 0 ? scrollY / m : 0})`; };
       addEventListener("scroll", onScroll, { passive: true }); onScroll();
-      if (home && "IntersectionObserver" in window) {
-        const links = $$("#nav a");
-        const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), { rootMargin: "-30% 0px -65% 0px" });
-        links.forEach((a) => { const s = a.getAttribute("href").startsWith("#") && $(a.getAttribute("href")); if (s) io.observe(s); });
-      }
     }
     const f = $("#site-footer");
     if (f) {
       f.innerHTML = `<div class="wrap ft">
         <div><strong class="ft-t">IA Radar</strong><p>Lo importante de la inteligencia artificial, explicado con datos.</p>
           <p class="ft-sm">IA Radar es una iniciativa educativa de WGIA. <a href="${CONFIG.wgia}" target="_blank" rel="noopener" data-track="clic_instructor">Conoce al instructor</a>.</p></div>
-        <div><strong>Explora</strong><ul><li><a href="${href("#hoy")}">Hoy en IA</a></li><li><a href="${href("#modelos")}">Radar de modelos</a></li><li><a href="${ROOT}glosario.html">Glosario</a></li><li><a href="${ROOT}responsable.html">IA responsable y normativa</a></li><li><a href="${href("#fuentes")}">Fuentes y metodología</a></li></ul></div>
+        <div><strong>Explora</strong><ul><li><a href="${href("#hoy")}">Hoy en IA</a></li><li><a href="${href("#modelos")}">Radar de modelos</a></li><li><a href="${ROOT}glosario.html">Glosario</a></li><li><a href="${ROOT}responsable.html">IA responsable y normativa</a></li><li><a href="${ROOT}about.html">Acerca de IA Radar</a></li><li><a href="${href("#fuentes")}">Fuentes y metodología</a></li></ul></div>
         <div><strong>Guías</strong><ul id="ft-guides"></ul></div>
         <div><strong>Privacidad</strong><p class="ft-sm">Sin cookies ni cuentas. Solo se guardan en tu navegador tu tema, tu progreso y contadores de uso anónimos de las herramientas.</p></div>
       </div>`;
@@ -164,51 +152,85 @@
   window.IAR = { CONFIG, $, $$, esc, nf, fmtCtx, fmtPrice, fmtDate, daysAgo, ico, load, store, journey, track, draw, chartMeta, lima, css, ROOT, page, home, onReady, href };
 
 
-  /* ---------- botones flotantes: volver al inicio y mapa de secciones ---------- */
-  const SECS = [["#top", "Inicio"], ["#hoy", "01 · Hoy en IA"], ["#cambios", "02 · Qué cambió"], ["#modelos", "03 · Radar de modelos"], ["#uso", "04 · Qué está usando la gente"], ["#aprende", "05 · Aprende en 5 minutos"], ["#promptlab", "06 · Prompt Lab"], ["#agentes", "07 · De prompts a agentes"], ["#responsable", "08 · Usa IA con criterio"], ["#peru", "09 · IA en Perú"], ["#nivel", "10 · ¿En qué nivel estás?"], ["#sigue", "11 · Sigue aprendiendo"], ["#fuentes", "Fuentes y metodología"]];
-  const MORE = [["glosario.html", "Glosario de IA"], ["modelos.html", "Catálogo de modelos"], ["responsable.html", "IA responsable y normativa"]];
-  function fab() {
-    const el = document.createElement("div");
-    el.className = "fab"; el.id = "fab"; el.hidden = true;
-    const li = ([h, t]) => `<li><a href="${h === "#top" && !home ? ROOT + "index.html" : href(h)}" data-h="${h}">${esc(t)}</a></li>`;
-    el.innerHTML = `<nav class="fab-panel" id="fab-panel" aria-label="Todas las secciones" hidden><p class="fab-t">Todas las secciones</p><ol>${SECS.map(li).join("")}</ol><p class="fab-t">Más páginas</p><ol>${MORE.map(li).join("")}</ol></nav>
-      <button type="button" class="fab-b" id="fab-menu" aria-expanded="false" aria-controls="fab-panel">${ico("list")}<span>Secciones</span></button>
-      <button type="button" class="fab-b fab-top" id="fab-top" aria-label="Volver al inicio de la página">${ico("arrow-up")}<span>Inicio</span></button>`;
-    document.body.appendChild(el);
-    const panel = $("#fab-panel", el), menu = $("#fab-menu", el);
-    const close = () => { panel.hidden = true; menu.setAttribute("aria-expanded", "false"); };
-    menu.addEventListener("click", () => { const o = panel.hidden; panel.hidden = !o; menu.setAttribute("aria-expanded", String(o)); if (o) track("fab_secciones"); });
-    $("#fab-top", el).addEventListener("click", () => { track("fab_inicio"); close(); window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); });
-    panel.addEventListener("click", (e) => { if (e.target.closest("a")) close(); });
-    document.addEventListener("click", (e) => { if (!el.contains(e.target)) close(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") { close(); menu.focus(); } });
-    const upd = () => { el.hidden = scrollY < 360; if (el.hidden) close(); };
-    addEventListener("scroll", upd, { passive: true }); upd();
-    if (home && "IntersectionObserver" in window) {
-      const links = $$("a[data-h]", panel);
-      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.dataset.h === "#" + e.target.id)); }), { rootMargin: "-30% 0px -65% 0px" });
-      SECS.forEach(([h]) => { const s = h !== "#top" && $(h); if (s) io.observe(s); });
-    }
-  }
-
-  /* ---------- barra lateral (escritorio) ---------- */
+  /* ---------- barra lateral (escritorio) y cajón (móvil) ---------- */
   const SIDE = [
-    { g: "", items: [["#top", "Inicio", "house"]] },
-    { g: "Actualidad y datos", items: [["#hoy", "Hoy", "newspaper"], ["#modelos", "Modelos", "cpu"], ["#uso", "Uso", "chart-column"], ["#peru", "Perú", "map-pin"]] },
-    { g: "Aprender", items: [["#aprende", "Aprende", "graduation-cap"], ["#promptlab", "Prompt Lab", "flask-conical"], ["#agentes", "Agentes", "bot"], ["glosario.html", "Glosario", "book-open"]] },
-    { g: "Confianza", items: [["#responsable", "IA responsable", "shield-check"], ["#fuentes", "Fuentes", "database"]] },
+    { g: "", items: [["#top", "Inicio", "house", "Volver al comienzo"]] },
+    { g: "Qué está pasando", items: [["#hoy", "Hoy en IA", "newspaper", "Noticias y hechos recientes"], ["#modelos", "Modelos de IA", "cpu", "Comparar capacidades, precio y contexto"], ["#uso", "Uso", "chart-column", "Qué usa la gente, con datos"], ["#peru", "IA en Perú", "map-pin", "Búsquedas, normativa y contexto"]] },
+    { g: "Aprende a usarla", items: [["#ruta", "Tu ruta", "list-checks", "Seis pasos con tu progreso"], ["#aprende", "Aprende desde cero", "graduation-cap", "Microlecciones de 2 a 4 minutos"], ["#promptlab", "Prompt Lab", "flask-conical", "Instrucciones por objetivo"], ["#agentes", "Agentes", "bot", "De chatbot a multiagente"], ["glosario.html", "Glosario", "book-open", "Conceptos clave explicados"]] },
+    { g: "Úsala con criterio", items: [["#responsable", "IA responsable", "shield-check", "Principios, riesgos y normativa"], ["#fuentes", "Fuentes", "database", "De dónde sale cada dato"]] },
+    { g: "Lleva la IA a tu trabajo", items: [["#casos", "Casos de uso", "briefcase", "Por perfil y automatización"], ["#nivel", "Tu nivel", "target", "Diagnóstico de 60 segundos"]] },
+    { g: "", items: [["about.html", "Acerca de IA Radar", "info", "Quién, cómo y con qué criterios"]] },
   ];
+  const MORE = [["glosario.html", "Glosario de IA"], ["modelos.html", "Catálogo de modelos"], ["responsable.html", "IA responsable y normativa"], ["about.html", "Acerca de IA Radar"]];
+  const norm = (t) => String(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  let SEARCH = null;
+  async function searchIndex() {
+    if (SEARCH) return SEARCH;
+    const [g, a, seo, pr, uc] = await Promise.all([load("content/glossary.json", { terms: [] }), load("content/academy.json", null), load("content/seo.json", { pages: [] }), load("content/prompts.json", null), load("content/usecases.json", null)]);
+    const out = [];
+    SIDE.forEach((gr) => gr.items.forEach(([h, t, , d]) => out.push({ k: "Sección", t, d, h: href(h) })));
+    (g.terms || []).forEach((x) => out.push({ k: "Glosario", t: x.term + " · " + x.es, d: x.short, h: ROOT + "glosario.html#t-" + x.term.toLowerCase().replace(/ /g, "-").replace(/\//g, "-") }));
+    ((a && a.levels) || []).forEach((l) => l.lessons.forEach((x) => out.push({ k: "Microlección", t: x.title, d: x.one, h: href("#aprende") })));
+    (seo.pages || []).forEach((x) => out.push({ k: "Guía", t: x.h1, d: x.description, h: ROOT + "guias/" + x.slug + ".html" }));
+    ((pr && pr.library) || []).forEach((x) => out.push({ k: "Prompt Lab", t: "Prompt para " + x.label.toLowerCase(), d: x.objetivo, h: href("#promptlab") }));
+    ((uc && uc.profiles) || []).forEach((p) => p.cases.forEach((c) => out.push({ k: "Caso de uso · " + p.name, t: c.task, d: c.result, h: href("#casos") })));
+    SEARCH = out.map((x) => ({ ...x, n: norm(x.t + " " + (x.d || "")) }));
+    return SEARCH;
+  }
+  function searchBox(el) {
+    const q = $("#sb-q", el), res = $("#sb-res", el);
+    let sel = -1, items = [];
+    const show = (list) => {
+      items = list; sel = -1;
+      res.hidden = !q.value.trim();
+      res.innerHTML = list.length ? list.map((x, i) => `<li role="option" id="sr${i}"><a href="${x.h}"><span class="sr-k">${esc(x.k)}</span><b>${esc(x.t)}</b></a></li>`).join("") : `<li class="sr-none">Sin resultados. Prueba con otra palabra.</li>`;
+    };
+    const run = async () => {
+      const t = norm(q.value.trim()); if (!t) { res.hidden = true; return; }
+      const words = t.split(/\s+/), idx = await searchIndex();
+      const sc = idx.map((x) => { let s = 0; for (const w of words) { if (!x.n.includes(w)) return null; s += norm(x.t).includes(w) ? 3 : 1; } return { x, s }; }).filter(Boolean).sort((a, b) => b.s - a.s).slice(0, 8).map((o) => o.x);
+      show(sc); track("buscar");
+    };
+    let to; q.addEventListener("input", () => { clearTimeout(to); to = setTimeout(run, 120); });
+    q.addEventListener("focus", () => searchIndex());
+    q.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); if (!items.length) return; sel = (sel + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length; $$("li", res).forEach((li, i) => li.classList.toggle("on", i === sel)); q.setAttribute("aria-activedescendant", "sr" + sel); }
+      else if (e.key === "Enter") { const a = $$("li a", res)[Math.max(sel, 0)]; if (a) { e.preventDefault(); a.click(); } }
+      else if (e.key === "Escape") { q.value = ""; res.hidden = true; }
+    });
+    res.addEventListener("click", (e) => { if (e.target.closest("a")) { q.value = ""; res.hidden = true; closeDrawer(); } });
+    document.addEventListener("click", (e) => { if (!el.contains(e.target)) res.hidden = true; });
+  }
+  const drawer = { open: false };
+  function closeDrawer() {
+    const sb = $("#sidebar"), b = $("#burger"); if (!sb || !drawer.open) return;
+    drawer.open = false; sb.classList.remove("open"); document.body.classList.remove("nav-open"); if (b) { b.setAttribute("aria-expanded", "false"); b.innerHTML = ico("menu"); b.setAttribute("aria-label", "Abrir el menú de secciones"); }
+  }
+  function openDrawer() {
+    const sb = $("#sidebar"), b = $("#burger"); if (!sb) return;
+    drawer.open = true; sb.classList.add("open"); document.body.classList.add("nav-open"); if (b) { b.setAttribute("aria-expanded", "true"); b.innerHTML = ico("x"); b.setAttribute("aria-label", "Cerrar el menú de secciones"); }
+    const f = $("#sb-q", sb); if (f) setTimeout(() => f.focus({ preventScroll: true }), 50);
+  }
   function sidebar() {
     const el = document.createElement("aside");
     el.id = "sidebar"; el.setAttribute("aria-label", "Navegación principal");
-    const link = ([h, t, ic]) => `<a href="${h === "#top" && !home ? ROOT + "index.html" : href(h)}" data-h="${h}">${ico(ic)}<span>${esc(t)}</span></a>`;
+    const link = ([h, t, ic, d]) => `<a href="${h === "#top" && !home ? ROOT + "index.html" : href(h)}" data-h="${h}">${ico(ic)}<span class="sb-t"><b>${esc(t)}</b><small>${esc(d)}</small></span></a>`;
     el.innerHTML = `<a class="sb-logo" href="${home ? "#top" : ROOT + "index.html"}" aria-label="IA Radar, inicio"><span class="orb sm"><i></i><i></i><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="32" cy="32" r="10" fill="none" stroke="currentColor" stroke-width="2.4" opacity=".6"/><path d="M32 32 L50 17" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="3.6" fill="var(--accent)"/></svg></span><span class="sb-name"><b>IA Radar</b><small>Observatorio de IA</small></span></a>
-      <nav class="sb-nav">${SIDE.map((g) => `<div class="sb-g">${g.g ? `<p>${esc(g.g)}</p>` : ""}${g.items.map(link).join("")}</div>`).join("")}</nav>
-      <div class="sb-foot"><a class="sb-cta" href="${href("#sigue")}" data-track="clic_especializate_nav">${ico("rocket")}<span>Especialízate</span></a>
+      <div class="sb-search" role="search"><label class="sr" for="sb-q">Buscar en IA Radar</label>${ico("search")}<input id="sb-q" type="search" placeholder="Buscar términos, guías, prompts" autocomplete="off" role="combobox" aria-expanded="true" aria-controls="sb-res"><ul id="sb-res" class="sb-res" role="listbox" hidden></ul></div>
+      <nav class="sb-nav" aria-label="Secciones">${SIDE.map((g) => `<div class="sb-g">${g.g ? `<p>${esc(g.g)}</p>` : ""}${g.items.map(link).join("")}</div>`).join("")}</nav>
+      <div class="sb-route" id="sb-route" hidden></div>
+      <div class="sb-foot"><p class="sb-orient">Empieza entendiendo la IA, aprende a conversar con ella, dirige sus respuestas, intégrala en tus procesos y úsala con responsabilidad.</p>
+        <a class="sb-cta" href="${href("#sigue")}" data-track="clic_especializate_nav">${ico("rocket")}<span>Especialízate</span></a>
         <button type="button" class="sb-theme" id="theme2">${ico("contrast")}<span>Cambiar tema</span></button>
         <p>IA Radar es una iniciativa educativa de WGIA.</p></div>`;
     document.body.prepend(el);
+    const back = document.createElement("div"); back.className = "sb-back"; back.addEventListener("click", closeDrawer); document.body.appendChild(back);
     $("#theme2", el).addEventListener("click", () => $("#theme") && $("#theme").click());
+    searchBox(el);
+    const burger = $("#burger"); if (burger) burger.addEventListener("click", () => (drawer.open ? closeDrawer() : openDrawer()));
+    el.addEventListener("click", (e) => { if (e.target.closest(".sb-nav a, .sb-cta")) closeDrawer(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && drawer.open) { closeDrawer(); if (burger) burger.focus(); } });
+    addEventListener("resize", () => { if (innerWidth > 1120) closeDrawer(); });
     const pd = document.createElement("div"); pd.className = "progd"; pd.setAttribute("aria-hidden", "true"); document.body.appendChild(pd);
     const on = () => { const m = document.documentElement.scrollHeight - innerHeight; pd.style.transform = `scaleX(${m > 0 ? scrollY / m : 0})`; };
     addEventListener("scroll", on, { passive: true }); on();
@@ -222,6 +244,18 @@
       const here = location.pathname.split("/").pop();
       $$("a[data-h]", el).forEach((a) => { if (a.dataset.h === here) a.classList.add("on"); });
     }
+  }
+
+  /* ---------- botones flotantes: inicio y (en móvil) menú ---------- */
+  function fab() {
+    const el = document.createElement("div");
+    el.className = "fab"; el.id = "fab"; el.hidden = true;
+    el.innerHTML = `<button type="button" class="fab-b fab-menu" id="fab-menu" aria-controls="sidebar" aria-expanded="false">${ico("list")}<span>Secciones</span></button><button type="button" class="fab-b fab-top" id="fab-top" aria-label="Volver al inicio de la página">${ico("arrow-up")}<span>Inicio</span></button>`;
+    document.body.appendChild(el);
+    $("#fab-menu", el).addEventListener("click", () => { openDrawer(); track("fab_secciones"); });
+    $("#fab-top", el).addEventListener("click", () => { track("fab_inicio"); window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); });
+    const upd = () => { el.hidden = scrollY < 360; };
+    addEventListener("scroll", upd, { passive: true }); upd();
   }
 
   chrome();

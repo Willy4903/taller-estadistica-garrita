@@ -141,5 +141,71 @@
   "Define qué requiere aprobación humana.",
   "Desconfía del contenido externo: puede traer instrucciones maliciosas (prompt injection).",
   "Empieza con un workflow fijo y da más autonomía solo cuando el riesgo sea bajo."
+ ],
+ "cycle": [
+  {
+   "t": "Objetivo",
+   "d": "Qué debe lograr, para quién y con qué límites."
+  },
+  {
+   "t": "Planificación",
+   "d": "Divide la tarea en pasos y decide el orden."
+  },
+  {
+   "t": "Uso de herramientas",
+   "d": "Busca, calcula, lee archivos o llama a otros sistemas."
+  },
+  {
+   "t": "Verificación",
+   "d": "Comprueba el resultado y, si falla, corrige o pide ayuda."
+  },
+  {
+   "t": "Resultado",
+   "d": "Entrega un producto y registra lo que hizo."
+  }
+ ],
+ "types": [
+  {
+   "t": "Chatbot",
+   "does": "Responde preguntas en una conversación.",
+   "ex": "Un asistente de atención al cliente con respuestas guiadas.",
+   "auto": 1,
+   "use": "Consultas simples y repetitivas."
+  },
+  {
+   "t": "Asistente con instrucciones",
+   "does": "Responde bajo reglas y conocimiento que tú defines.",
+   "ex": "Un GPT o un proyecto con tus políticas internas.",
+   "auto": 1,
+   "use": "Tareas recurrentes de una persona o un equipo."
+  },
+  {
+   "t": "Sistema con herramientas",
+   "does": "Además de responder, puede buscar, calcular o leer archivos.",
+   "ex": "Un asistente que consulta una hoja de cálculo y calcula variaciones.",
+   "auto": 2,
+   "use": "Cuando la respuesta depende de datos o cálculos."
+  },
+  {
+   "t": "Flujo automatizado",
+   "does": "Sigue pasos fijos; la IA resuelve algunos de ellos.",
+   "ex": "Cada correo entrante se clasifica, se resume y se guarda.",
+   "auto": 2,
+   "use": "Procesos predecibles que quieres controlar."
+  },
+  {
+   "t": "Agente con memoria",
+   "does": "Decide pasos, usa herramientas y recuerda lo trabajado.",
+   "ex": "Un agente que investiga un tema durante varios días y retoma su avance.",
+   "auto": 3,
+   "use": "Tareas abiertas con supervisión y permisos acotados."
+  },
+  {
+   "t": "Sistema multiagente",
+   "does": "Varios agentes con roles distintos se coordinan y se revisan entre sí.",
+   "ex": "Uno investiga, otro verifica y otro redacta.",
+   "auto": 4,
+   "use": "Trabajos grandes con controles fuertes."
+  }
  ]
 }
