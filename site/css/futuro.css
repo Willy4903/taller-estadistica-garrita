@@ -269,4 +269,20 @@ th{background:rgba(9,40,70,.6)}
 :root[data-theme="light"] .tile .mdl,:root[data-theme="light"] .start .tx b{color:var(--ink)}
 .obs{overflow:clip}
 .mapw{overflow:hidden;border-radius:12px}
-html{overflow-x:clip}
+
+/* botones flotantes */
+.fab{position:fixed;right:18px;bottom:18px;z-index:70;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.fab[hidden]{display:none!important}
+.fab-b{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:99px;border:1px solid var(--line2);background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);color:#7cecff;font:700 .9rem "Inter",sans-serif;cursor:pointer;box-shadow:0 0 0 1px rgba(37,217,245,.1) inset,0 0 24px rgba(37,217,245,.3);transition:transform .15s,box-shadow .15s}
+:root[data-theme="light"] .fab-b{color:var(--accent)}
+.fab-b:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(37,217,245,.6)}
+.fab-top{background:linear-gradient(135deg,#1597ff,#25d9f5);color:#021722;border-color:transparent}
+:root[data-theme="light"] .fab-top{color:#021722}
+.fab-panel{width:min(320px,calc(100vw - 36px));max-height:min(70vh,560px);overflow-y:auto;padding:14px 10px 10px;border-radius:16px;border:1px solid var(--line2);background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(14px);box-shadow:0 0 40px rgba(37,217,245,.25)}
+.fab-panel[hidden]{display:none}
+.fab-t{margin:4px 10px 8px;font:600 .68rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.fab-panel ol{list-style:none;margin:0 0 8px;padding:0}
+.fab-panel a{display:block;padding:9px 12px;border-radius:9px;color:var(--ink);text-decoration:none;font-size:.92rem;border:1px solid transparent}
+.fab-panel a:hover,.fab-panel a.on{background:var(--accent-soft);border-color:var(--line2);color:#7cecff}
+:root[data-theme="light"] .fab-panel a:hover,:root[data-theme="light"] .fab-panel a.on{color:var(--accent)}
+@media(max-width:560px){.fab{right:12px;bottom:12px}.fab-b span{display:none}.fab-b{padding:13px}}
