@@ -191,7 +191,41 @@
     }
   }
 
+  /* ---------- barra lateral (escritorio) ---------- */
+  const SIDE = [
+    { g: "", items: [["#top", "Inicio", "house"]] },
+    { g: "Actualidad y datos", items: [["#hoy", "Hoy", "newspaper"], ["#modelos", "Modelos", "cpu"], ["#uso", "Uso", "chart-column"], ["#peru", "Perú", "map-pin"]] },
+    { g: "Aprender", items: [["#aprende", "Aprende", "graduation-cap"], ["#promptlab", "Prompt Lab", "flask-conical"], ["#agentes", "Agentes", "bot"], ["glosario.html", "Glosario", "book-open"]] },
+    { g: "Confianza", items: [["#responsable", "IA responsable", "shield-check"], ["#fuentes", "Fuentes", "database"]] },
+  ];
+  function sidebar() {
+    const el = document.createElement("aside");
+    el.id = "sidebar"; el.setAttribute("aria-label", "Navegación principal");
+    const link = ([h, t, ic]) => `<a href="${h === "#top" && !home ? ROOT + "index.html" : href(h)}" data-h="${h}">${ico(ic)}<span>${esc(t)}</span></a>`;
+    el.innerHTML = `<a class="sb-logo" href="${home ? "#top" : ROOT + "index.html"}" aria-label="IA Radar, inicio"><span class="orb sm"><i></i><i></i><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="32" cy="32" r="10" fill="none" stroke="currentColor" stroke-width="2.4" opacity=".6"/><path d="M32 32 L50 17" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="3.6" fill="var(--accent)"/></svg></span><span class="sb-name"><b>IA Radar</b><small>Observatorio de IA</small></span></a>
+      <nav class="sb-nav">${SIDE.map((g) => `<div class="sb-g">${g.g ? `<p>${esc(g.g)}</p>` : ""}${g.items.map(link).join("")}</div>`).join("")}</nav>
+      <div class="sb-foot"><a class="sb-cta" href="${href("#sigue")}" data-track="clic_especializate_nav">${ico("rocket")}<span>Especialízate</span></a>
+        <button type="button" class="sb-theme" id="theme2">${ico("contrast")}<span>Cambiar tema</span></button>
+        <p>IA Radar es una iniciativa educativa de WGIA.</p></div>`;
+    document.body.prepend(el);
+    $("#theme2", el).addEventListener("click", () => $("#theme") && $("#theme").click());
+    const pd = document.createElement("div"); pd.className = "progd"; pd.setAttribute("aria-hidden", "true"); document.body.appendChild(pd);
+    const on = () => { const m = document.documentElement.scrollHeight - innerHeight; pd.style.transform = `scaleX(${m > 0 ? scrollY / m : 0})`; };
+    addEventListener("scroll", on, { passive: true }); on();
+    if (home && "IntersectionObserver" in window) {
+      const links = $$("a[data-h]", el);
+      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.dataset.h === "#" + e.target.id)); }), { rootMargin: "-30% 0px -65% 0px" });
+      links.forEach((a) => { const h = a.dataset.h; const sec = h.startsWith("#") && h !== "#top" && $(h); if (sec) io.observe(sec); });
+      const top = $('a[data-h="#top"]', el); if (top) top.classList.add("on");
+      addEventListener("scroll", () => { if (scrollY < 300) links.forEach((a) => a.classList.toggle("on", a.dataset.h === "#top")); }, { passive: true });
+    } else {
+      const here = location.pathname.split("/").pop();
+      $$("a[data-h]", el).forEach((a) => { if (a.dataset.h === here) a.classList.add("on"); });
+    }
+  }
+
   chrome();
+  sidebar();
   fab();
   reveal();
   trackSections();
