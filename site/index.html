@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="guide.css?v=__V__">
 <link rel="stylesheet" href="week.css?v=__V__">
 <link rel="stylesheet" href="users.css?v=__V__">
+<link rel="stylesheet" href="frontier.css?v=__V__">
 <link rel="stylesheet" href="clock.css?v=__V__">
 </head>
 <body>
@@ -35,15 +36,15 @@
       <span>IA Radar</span>
     </a>
     <nav class="main" aria-label="Secciones">
+      <a href="#ultimo">Lo último</a>
       <a href="#semana">Semana</a>
       <a href="#noticias">Noticias</a>
       <a href="#lanzamientos">Qué cambió</a>
       <a href="#matriz">Matriz</a>
       <a href="#usuarios">Usuarios</a>
       <a href="#guia">Guía de IA</a>
-      <a href="#graficas">Gráficas</a>
       <a href="#comparador">Comparador</a>
-      
+      <a href="#fuentes">Fuentes</a>
     </nav>
     <div class="status clock" id="status" tabindex="0"><span class="clock-time" id="clock-time" aria-label="Hora en Lima">--:--:--</span><span class="clock-sub"><span class="dot"></span><span id="status-text">Cargando…</span></span></div>
   </div>
@@ -53,7 +54,7 @@
   <section class="hero">
     <p class="eyebrow" id="today-pill">Inteligencia artificial</p>
     <h1>El pulso de los modelos de IA, <span class="grad">hoy</span></h1>
-    <p class="lead">Lanzamientos recientes, precios, ventanas de contexto y tendencias en un solo lugar.</p>
+    <p class="lead">Los lanzamientos más recientes de OpenAI, Anthropic, Google y xAI, quién va primero según terceros y qué cambia para ti, con las fuentes a la vista.</p>
     <div class="banner" id="banner" hidden></div>
   </section>
 
@@ -73,8 +74,8 @@ Cada lanzamiento reciente frente a la versión anterior de su familia: precio, c
 Modelos vigentes de los laboratorios principales, agrupados por gama de precio."><span class="qi"><i class="ui" style="--i:url(icons/ui/table-2.svg)" aria-hidden="true"></i></span><b>Matriz</b><small>Modelos por gama</small></a>
     <a class="fx" href="#guia" style="--a:#f43f9e" data-tip="Guía de IA
 IA generativa y agéntica, ética, normatividad (UE y Perú), verificador de riesgo y glosario."><span class="qi"><i class="ui" style="--i:url(icons/ui/book-open.svg)" aria-hidden="true"></i></span><b>Guía de IA</b><small>Ética y normas</small></a>
-    <a class="fx" href="#graficas" style="--a:#fbbf24" data-tip="Gráficas
-Lanzamientos por mes, proveedores activos y relación entre precio y contexto."><span class="qi"><i class="ui" style="--i:url(icons/ui/chart-column.svg)" aria-hidden="true"></i></span><b>Gráficas</b><small>Tendencias</small></a>
+    <a class="fx" href="#ultimo" style="--a:#22d3ee" data-tip="Lo último
+Gemini 4 Argon, Grok 4.7 y los demás lanzamientos recientes, con fecha, precio y fuente."><span class="qi"><i class="ui" style="--i:url(icons/ui/rocket.svg)" aria-hidden="true"></i></span><b>Lo último</b><small>Lanzamientos y rankings</small></a>
     <a class="fx" href="#comparador" style="--a:#34d399" data-tip="Comparador
 Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."><span class="qi"><i class="ui" style="--i:url(icons/ui/scale.svg)" aria-hidden="true"></i></span><b>Comparador</b><small>Elige hasta 4</small></a>
   </nav>
@@ -82,6 +83,8 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
   <section class="hubs" id="hubs" aria-label="Hora en los centros de la IA"></section>
 
   <section class="kpis" id="kpis" aria-label="Indicadores"></section>
+
+  <section id="ultimo" class="rv"><div id="ultimo-root"></div></section>
 
   <section id="semana" class="rv"><div id="week-root"></div></section>
 
@@ -106,7 +109,7 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
     </div>
   </section>
 
-  <section id="resumen" class="rv">
+  <section id="resumen" class="rv" hidden>
     <h2><span class="hi" style="--a:#8b5cf6"><i class="ui" style="--i:url(icons/ui/sparkles.svg)" aria-hidden="true"></i></span> Lo que dicen los datos hoy</h2>
     <p class="headline" id="headline"></p>
     <p class="today" id="today"></p>
@@ -149,15 +152,6 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
 
   <section id="guia" class="rv"><div id="guide-root"></div></section>
 
-  <section id="graficas" class="rv">
-    <h2><span class="hi" style="--a:#fbbf24"><i class="ui" style="--i:url(icons/ui/chart-column.svg)" aria-hidden="true"></i></span> Gráficas</h2>
-    <div class="grid2">
-      <article class="panel fx" style="--a:#fbbf24"><h3>Lanzamientos por mes</h3><p class="sub">Últimos 12 meses, texto frente a multimodal</p><div class="chart"><canvas id="c-releases"></canvas></div></article>
-      <article class="panel fx" style="--a:#34d399"><h3>Proveedores más activos</h3><p class="sub">Modelos lanzados en los últimos 90 días</p><div class="chart"><canvas id="c-providers"></canvas></div></article>
-      <article class="panel fx" style="--a:#fb923c"><h3>Precio frente a contexto</h3><p class="sub">Modelos de los últimos 180 días (escala logarítmica)</p><div class="chart"><canvas id="c-scatter"></canvas></div></article>
-      <article class="panel fx" style="--a:#22d3ee"><h3>Evolución del catálogo</h3><p class="sub" id="hist-sub">Un punto por día</p><div class="chart"><canvas id="c-history"></canvas></div><p class="empty" id="hist-empty" hidden>El historial se acumula día a día. Vuelve en unos días para ver la tendencia.</p></article>
-    </div>
-  </section>
 
   <section id="comparador" class="rv">
     <h2><span class="hi" style="--a:#34d399"><i class="ui" style="--i:url(icons/ui/scale.svg)" aria-hidden="true"></i></span> Comparador</h2>
@@ -190,6 +184,8 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
     <button class="btn" id="more" hidden>Mostrar más</button>
   </section>
 
+  <section id="fuentes" class="rv"><div id="fuentes-root"></div></section>
+
   <section id="abiertos" class="rv">
     <h2><span class="hi" style="--a:#4f8cff"><i class="ui" style="--i:url(icons/ui/bot.svg)" aria-hidden="true"></i></span> Modelos abiertos en tendencia</h2>
     <div class="grid2">
@@ -211,6 +207,7 @@ Busca cualquier modelo del catálogo y compáralo lado a lado con hasta 3 más."
 <script src="guide.js?v=__V__"></script>
 <script src="week.js?v=__V__"></script>
 <script src="users.js?v=__V__"></script>
+<script src="frontier.js?v=__V__"></script>
 <script src="clock.js?v=__V__"></script>
 </body>
 </html>

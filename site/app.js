@@ -69,8 +69,10 @@
     tt.padding = 14; tt.cornerRadius = 14; tt.borderColor = "rgba(255,255,255,.2)"; tt.borderWidth = 1; tt.boxPadding = 5;
   }
   function draw(id, cfg) {
+    const cv = $("#" + id);
+    if (!cv) return;
     if (charts[id]) charts[id].destroy();
-    charts[id] = new Chart($("#" + id), cfg);
+    charts[id] = new Chart(cv, cfg);
   }
 
   async function load(path, fallback) {
@@ -389,6 +391,7 @@
 
     // Historial
     const ok = hist.length > 1;
+    if (!$("#hist-empty")) return;
     $("#hist-empty").hidden = ok;
     $("#c-history").parentElement.hidden = !ok;
     if (ok) draw("c-history", { type: "line", data: { labels: hist.map((h) => fmtDate(h.date)), datasets: [
@@ -822,12 +825,14 @@
   }
 
   // ---- Banner de destacados ----
-  function renderHero(meta) {
+  function renderHero(meta, fr) {
     const slides = [];
     const link = (href, txt, ext = "") => `<a class="cta" href="${href}"${ext}>${txt}${ico("arrow-right")}</a>`;
     const slide = (acc, ic, k, body, long = false) => ({ acc, long, html: `<span class="bgi">${ico(ic)}</span><div class="k">${ico(ic)}${esc(k)}</div>${body}` });
     const head = $("#headline").textContent;
-    if (head) slides.push(slide(C.violet, "sparkles", "Resumen de hoy", `<p class="big">${esc(head)}</p>${link("#resumen", "Ver las conclusiones")}`, head.length > 110));
+    const lt = fr && fr.latest && fr.latest.slice(0, 2);
+    if (lt && lt.length === 2) slides.push(slide(C.cyan, "rocket", "Lo último", `<p class="big">${esc(lt[0].name)} y ${esc(lt[1].name)}</p><p class="sm">${esc(lt[0].name)} salió el ${esc(fmtDate(lt[0].date))} y ${esc(lt[1].name)} el ${esc(fmtDate(lt[1].date))}. Fechas, precios y fuentes en la sección.</p>${link("#ultimo", "Ver lo último")}`));
+    if (head) slides.push(slide(C.violet, "sparkles", "Resumen de hoy", `<p class="big">${esc(head)}</p>${link("#lanzamientos", "Ver qué cambió")}`, head.length > 110));
     const top = news.items.find((n) => n.kind === "lab" && ageDays(n.published) <= 1) || news.items[0];
     if (top) slides.push(slide(C.cyan, "newspaper", "Noticia destacada", `<p class="big">${esc(tTitle(top))}</p><span class="tg">${newsIcon(top)}<span>${esc(top.source)} · ${esc(relLabel(top.published)[1])}</span></span>${link(esc(top.link), "Leer la fuente", ' target="_blank" rel="noopener noreferrer"')}`, tTitle(top).length > 90));
     const cut = versionPairs(models.filter(isMajor)).filter((p) => p.dIn != null && p.dIn <= -10).sort((x, y) => x.dIn - y.dIn)[0];
@@ -843,7 +848,7 @@
   async function init() {
     theme();
     initEffects();
-    const [data, hist, newsData] = await Promise.all([load("data/latest.json", null), load("data/history.json", []), load("data/news.json", null)]);
+    const [data, hist, newsData, fr] = await Promise.all([load("data/latest.json", null), load("data/history.json", []), load("data/news.json", null), load("data/frontier.json", null)]);
     initNews(newsData);
     if (!data || !data.models) { $("#status-text").textContent = "Sin datos"; return; }
     allCount = data.models.length;
@@ -853,7 +858,7 @@
     renderInsights(data.meta);
     renderVersions();
     initMatrix();
-    renderHero(data.meta);
+    renderHero(data.meta, fr);
     renderCharts(hist);
     renderHF(data.hf || []);
     bindTable();

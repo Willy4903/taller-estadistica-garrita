@@ -49,6 +49,7 @@ FEEDS = [
     ("press", "The Verge", "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "press", False),
     ("press", "TechCrunch", "https://techcrunch.com/category/artificial-intelligence/feed/", "press", False),
     ("press", "MIT Technology Review", "https://www.technologyreview.com/topic/artificial-intelligence/feed", "press", False),
+    ("press", "The Rundown AI", "https://rss.beehiiv.com/feeds/2R3C6Bt5wj.xml", "press", False),
 ]
 # Clasificación temática por palabras clave (sobre el texto original en inglés); gana la primera coincidencia.
 TOPICS = [
@@ -317,6 +318,38 @@ def collect_news(previous_items, now_utc):
     return kept, status
 
 
+ARXIV_URL = ("https://export.arxiv.org/api/query?search_query=cat:cs.AI&sortBy=submittedDate"
+             "&sortOrder=descending&max_results=25")
+LMARENA_URL = ("https://datasets-server.huggingface.co/rows?dataset=lmarena-ai%2Fleaderboard-dataset"
+               "&config=text&split=latest&offset=0&length=100")
+
+
+def collect_papers():
+    """Últimos artículos de arXiv cs.AI (feed Atom oficial), con título y resumen traducidos."""
+    import xml.etree.ElementTree as ET
+    ns = {"a": "http://www.w3.org/2005/Atom"}
+    root = ET.fromstring(fetch_text(ARXIV_URL))
+    out = []
+    for e in root.findall("a:entry", ns):
+        g = lambda t: (e.findtext("a:" + t, "", ns) or "").strip()
+        link = g("id")
+        authors = [(a.findtext("a:name", "", ns) or "").strip() for a in e.findall("a:author", ns)]
+        out.append({"title": re.sub(r"\s+", " ", g("title")), "summary": clean(g("summary"), 300),
+                    "link": link, "published": g("published"),
+                    "authors": ", ".join(authors[:3]) + (" y otros" if len(authors) > 3 else "")})
+    return out
+
+
+def collect_arena():
+    """Intenta leer el ranking de LMArena desde su dataset público; devuelve filas o lanza error."""
+    rows = fetch_json(LMARENA_URL).get("rows", [])
+    data = [r["row"] for r in rows if r.get("row", {}).get("category") == "overall"] or [r["row"] for r in rows]
+    data = [r for r in data if r.get("model_name") and r.get("rating")]
+    data.sort(key=lambda r: -r["rating"])
+    return [{"name": r["model_name"], "org": r.get("organization", ""), "rating": round(r["rating"]),
+             "votes": r.get("vote_count")} for r in data[:12]]
+
+
 def read_json(path, default):
     try:
         return json.loads(path.read_text(encoding="utf-8"))
@@ -527,6 +560,30 @@ def main():
             print(f"Interés regional: no disponible ({reg.get('error')}); se conservan los últimos datos válidos", file=sys.stderr)
             if not old.get("ok"):
                 (DATA / "regional.json").write_text(json.dumps({"ok": False, "error": reg.get("error"), "updated_at": now.isoformat(timespec="minutes")}, ensure_ascii=False), encoding="utf-8")
+
+    if not sample:
+        live = {}
+        prev_live = read_json(DATA / "live.json", {})
+        for key, fn in (("papers", collect_papers), ("arena", collect_arena)):
+            try:
+                live[key] = fn()
+                live.setdefault("status", {})[key] = {"ok": True, "count": len(live[key])}
+                print(f"{key}: ok, {len(live[key])} filas")
+            except Exception as e:
+                print(f"{key}: no disponible ({e})", file=sys.stderr)
+                live[key] = prev_live.get(key, [])
+                live.setdefault("status", {})[key] = {"ok": False, "count": len(live[key]), "error": str(e)[:160]}
+        if live.get("papers"):
+            for pp in live["papers"]:
+                old = next((x for x in prev_live.get("papers", []) if x["link"] == pp["link"]), None)
+                pp["title_es"] = old.get("title_es", "") if old else ""
+                pp["summary_es"] = old.get("summary_es", "") if old else ""
+            try:
+                translate_items(live["papers"], limit=25)
+            except Exception as e:
+                print(f"papers traducción: {e}", file=sys.stderr)
+        live["updated_at"] = now.isoformat(timespec="minutes")
+        (DATA / "live.json").write_text(json.dumps(live, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     print(f"OK {today}: {len(models)} modelos, {len(hf)} HF, nuevos hoy: {new_today}, sample={sample}")
     return 0
