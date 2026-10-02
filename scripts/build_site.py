@@ -41,6 +41,7 @@ def shell(path, title, desc, body, root="", scripts=(), need="", ld=None, page="
 <link rel="stylesheet" href="{root}css/sections.css?v=__V__">
 <link rel="stylesheet" href="{root}css/learn.css?v=__V__">
 <link rel="stylesheet" href="{root}css/pages.css?v=__V__">
+<link rel="stylesheet" href="{root}css/futuro.css?v=__V__">
 </head>
 <body data-page="{page}" data-root="{root}" data-v="__V__"{f' data-need="{need}"' if need else ""}>
 <a class="skip" href="#main">Saltar al contenido</a>
@@ -51,6 +52,7 @@ def shell(path, title, desc, body, root="", scripts=(), need="", ld=None, page="
 <div id="site-footer"></div>
 <script src="{root}vendor/chart.umd.js"></script>
 <script src="{root}js/core.js?v=__V__"></script>
+<script src="{root}js/fx.js?v=__V__"></script>
 {scripts_html}
 </body>
 </html>
