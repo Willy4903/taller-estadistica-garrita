@@ -26,7 +26,12 @@
     if (el && upd) {
       const s = D.status && D.status.sources ? Object.values(D.status.sources) : [];
       el.textContent = "Actualizado: " + I.lima(upd).replace(" · ", " • ") + (s.length ? ` • ${s.filter((x) => x.ok).length} de ${s.length} fuentes respondieron en la última actualización.` : "");
-      if ((Date.now() - new Date(upd)) / 36e5 > 36) document.getElementById("hero-meta").classList.add("stale");
+      // La automatización corre una vez al día (GitHub puede demorarla varias horas). Pasadas 26 h se avisa de forma explícita.
+      const horas = (Date.now() - new Date(upd)) / 36e5;
+      if (horas > 26) {
+        document.getElementById("hero-meta").classList.add("stale");
+        el.textContent += ` Atención: estos datos tienen ${Math.floor(horas)} horas; la actualización de hoy aún no llega.`;
+      }
     } else if (el) el.textContent = "Datos no disponibles por ahora";
     document.dispatchEvent(new CustomEvent("iar:data"));
     return D;

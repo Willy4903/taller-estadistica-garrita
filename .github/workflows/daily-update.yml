@@ -21,6 +21,7 @@ concurrency:
 jobs:
   update-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 25   # un paso colgado debe fallar rápido en vez de bloquear la actualización del día
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -40,12 +41,14 @@ jobs:
 
       - name: Instalar traductor al español (versión CPU)
         continue-on-error: true
+        timeout-minutes: 10
         run: |
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install argostranslate
           pip install pytrends
 
       - name: Descargar datos y generar JSON
+        timeout-minutes: 12
         env:
           AA_API_KEY: ${{ secrets.AA_API_KEY }}
         run: python scripts/update_data.py
