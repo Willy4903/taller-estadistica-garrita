@@ -21,12 +21,12 @@
       <h2 id="t-sigue">Ya entendiste qué está cambiando.<br>Ahora aprende a convertirlo en resultados.</h2>
       <p class="lead light">Pasa de consultar una IA a utilizarla profesionalmente en tu trabajo.</p>
       <ol class="seq">${st.map(([t, ok]) => `<li class="${ok ? "ok" : ""}"><i>${ok ? ico("check") : ""}</i>${esc(t)}</li>`).join("")}</ol>
-      <p><a class="btn big light" href="${esc(I.CONFIG.wgia)}" target="_blank" rel="noopener" data-track="clic_descubrir_ruta">Descubrir mi ruta de aprendizaje ${ico("arrow-up-right")}</a></p>
-      ${routes.length ? `<div class="grid g3 routes">${routes.map(([k, r]) => `<article class="route ${rec.has(k) ? "rec" : ""}">${rec.has(k) ? '<span class="tag acc">Sugerida para tu nivel</span>' : ""}<span class="rt-n">${esc(r.n)}</span><h3>${esc(r.t)}</h3><p class="rt-f">Para personas que:</p><ul>${r.for.map((f) => `<li>${esc(f)}</li>`).join("")}</ul><a class="btn light ghost" href="${esc(I.CONFIG.wgia)}" target="_blank" rel="noopener" data-track="clic_ruta_${k}">${esc(r.cta)}</a></article>`).join("")}</div>` : ""}
+      <p><a class="btn big light" href="${esc(I.ROOT + "talleres.html")}" data-track="clic_descubrir_ruta">Descubrir mi ruta de aprendizaje ${ico("arrow-right")}</a></p>
+      ${routes.length ? `<div class="grid g3 routes">${routes.map(([k, r]) => `<article class="route ${rec.has(k) ? "rec" : ""}">${rec.has(k) ? '<span class="tag acc">Sugerida para tu nivel</span>' : ""}<span class="rt-n">${esc(r.n)}</span><h3>${esc(r.t)}</h3><p class="rt-f">Para personas que:</p><ul>${r.for.map((f) => `<li>${esc(f)}</li>`).join("")}</ul><a class="btn light ghost" href="${esc(I.routeHref(k))}" data-track="clic_ruta_${k}">${esc(r.cta)}</a></article>`).join("")}</div>` : ""}
       <blockquote class="quotes"><p>Leer sobre IA te mantiene informado. Saber utilizarla cambia cómo trabajas.</p><p>Un buen prompt ayuda. Un buen sistema de trabajo transforma el resultado.</p><p>La diferencia no está en tener acceso a IA. Está en saber dirigirla, contextualizarla y verificarla.</p></blockquote>
       <div class="closing"><h2>Entender la IA es el primer paso.</h2><p class="lead light">Aprender a utilizarla profesionalmente es el siguiente.</p>
-        <div class="row"><a class="btn big light" href="${esc(I.CONFIG.wgia)}" target="_blank" rel="noopener" data-track="clic_ver_talleres">Ver talleres y especializaciones</a><a class="btn big light ghost" href="#nivel" data-track="clic_evaluar_nivel">Evaluar mi nivel</a></div>
-        <p class="light small">Formación práctica en IA, ChatGPT y Claude. <a href="${esc(I.CONFIG.wgia)}" target="_blank" rel="noopener">${esc(I.CONFIG.wgia.replace("https://", ""))}</a></p></div>`;
+        <div class="row"><a class="btn big light" href="${esc(I.ROOT + "talleres.html")}" data-track="clic_ver_talleres">Ver talleres y especializaciones</a><a class="btn big light ghost" href="#nivel" data-track="clic_evaluar_nivel">Evaluar mi nivel</a></div>
+        <p class="light small">Formación práctica en IA, ChatGPT y Claude de WG IA Estratégica. <a href="${esc(I.CONFIG.wgia)}" target="_blank" rel="noopener" data-track="clic_instructor">Conoce al instructor</a></p></div>`;
   }
   document.addEventListener("iar:data", paint, { once: true });
   document.addEventListener("iar:journey", () => { if (I.D && I.D.diag) paint(); });

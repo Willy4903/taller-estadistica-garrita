@@ -1,5 +1,7 @@
-# taller-estadistica-garrita
-Taller de Estadística Aplicada para la Recolección e Interpretación de Datos - INEI
+# IA Radar
+Observatorio de inteligencia artificial en español y talleres de IA de WG IA Estratégica.
+
+Nota: el repositorio conserva el nombre histórico `taller-estadistica-garrita`, que forma parte de la URL de GitHub Pages. Para renombrarlo, ver "Renombrar el repositorio" más abajo.
 
 ## IA Radar
 
@@ -43,3 +45,27 @@ python -m http.server -d site 8000
 Analítica: sin cookies. Los eventos se cuentan en el navegador; para agregarlos define `CONFIG.endpoint` en `site/js/core.js`.
 
 Chart.js 4 está incluido en `site/vendor/` (licencia MIT), por lo que el sitio no depende de CDNs.
+
+## Talleres, contacto y medición
+
+Los datos comerciales viven en un solo archivo: `site/content/talleres.json`. Los campos vacíos no se muestran en el sitio.
+
+- `contacto.whatsapp` (con código de país, solo dígitos, por ejemplo `51999999999`) y `contacto.email`: habilitan el formulario de inscripción, el botón de WhatsApp y el contacto flotante. Sin ellos, el formulario deriva a la web de WG IA Estratégica.
+- `talleres[].datos`: modalidad, duración, fechas, horario, precio y certificado de cada taller.
+- `testimonios`: lista de `{ "nombre", "cargo", "texto" }`. Solo se publican testimonios reales y autorizados.
+- `analitica.endpoint`: URL del receptor de eventos (ver abajo).
+
+Las páginas `site/talleres.html` y `site/talleres/*.html` las genera `scripts/build_site.py` a partir de ese archivo.
+
+### Medición central
+
+El sitio envía eventos anónimos (clic en talleres, formulario iniciado, inscripción enviada, secciones vistas) sin cookies ni datos personales. Para recibirlos:
+
+1. Sigue las instrucciones de `scripts/analitica/receptor.gs` (Google Apps Script sobre una hoja de cálculo).
+2. Pega la URL `/exec` en `analitica.endpoint` de `site/content/talleres.json`.
+
+Los datos personales del formulario (nombre y contacto) nunca se envían al receptor: viajan solo por WhatsApp o correo.
+
+### Renombrar el repositorio
+
+En GitHub: Settings > General > Repository name (por ejemplo `ia-radar`). Después actualiza `BASE` en `scripts/build_site.py`, las URL absolutas de `site/index.html` y `site/about.html`, y vuelve a ejecutar el workflow. GitHub redirige el nombre anterior, pero la URL pública de Pages cambia.

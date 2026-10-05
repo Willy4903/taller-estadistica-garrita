@@ -1,4 +1,5 @@
 """Utilidades compartidas: rutas, descarga, lectura/escritura de JSON y esquema de datos con procedencia."""
+import gzip
 import html
 import json
 import re
@@ -25,9 +26,13 @@ def fetch_json(url):
 
 
 def fetch_text(url):
-    req = urllib.request.Request(url, headers=UA)
+    """Descarga el cuerpo como bytes. Pide gzip explícitamente y lo descomprime, porque algunos servidores lo envían comprimido."""
+    req = urllib.request.Request(url, headers={**UA, "Accept": "application/rss+xml, application/atom+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.5", "Accept-Encoding": "gzip"})
     with urllib.request.urlopen(req, timeout=30) as r:
-        return r.read()
+        raw = r.read()
+        if r.headers.get("Content-Encoding", "").lower() == "gzip" or raw[:2] == b"\x1f\x8b":
+            raw = gzip.decompress(raw)
+        return raw
 
 
 def clean(text, limit=240):

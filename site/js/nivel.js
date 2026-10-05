@@ -38,7 +38,7 @@
       document.getElementById("dg-res").innerHTML = `<div class="dg-out"><p class="kicker">Tu resultado</p><h3>${esc(lvl.name)} <span class="muted">· ${score} de ${Z.questions.length * 3}</span></h3><p class="lead">${esc(lvl.text)}</p>
         <div class="bar big"><i style="width:${(score / (Z.questions.length * 3)) * 100}%"></i></div>
         <p><b>Dónde está tu mayor oportunidad:</b> ${areas.slice(0, 3).map((a) => esc(a.a.toLowerCase())).join(", ")}.</p>
-        <h4>Ruta educativa sugerida</h4><div class="grid g2">${recs.map((r) => `<article class="card"><span class="tag acc">${esc(r.n)}</span><h4>${esc(r.t)}</h4><a class="btn sm" href="${esc(I.CONFIG.wgia)}" target="_blank" rel="noopener" data-track="clic_ruta_${r.k}">${esc(r.cta)} ${ico("arrow-up-right")}</a></article>`).join("")}</div></div>`;
+        <h4>Ruta educativa sugerida</h4><div class="grid g2">${recs.map((r) => `<article class="card"><span class="tag acc">${esc(r.n)}</span><h4>${esc(r.t)}</h4><a class="btn sm" href="${esc(I.routeHref(r.k))}" data-track="clic_ruta_${r.k}">${esc(r.cta)} ${ico("arrow-right")}</a></article>`).join("")}</div></div>`;
       document.getElementById("dg-res").scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
     count();

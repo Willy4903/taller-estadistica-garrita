@@ -1,0 +1,188 @@
+{
+  "_ayuda": "Fuente única de datos comerciales. Los campos vacíos no se muestran en el sitio. Completa 'contacto', 'analitica', los datos de cada taller y los testimonios, y ejecuta scripts/build_site.py (o espera al despliegue automático).",
+  "marca": {
+    "nombre": "WG IA Estratégica",
+    "corto": "WGIA",
+    "web": "https://wgia.luisito4903.chatgpt.site/",
+    "instructor": {
+      "nombre": "Willy",
+      "perfil": "Formación práctica en IA, ChatGPT y Claude para profesionales, docentes y servidores públicos.",
+      "web": "https://wgia.luisito4903.chatgpt.site/"
+    }
+  },
+  "contacto": {
+    "whatsapp": "",
+    "email": "",
+    "mensaje": "Hola, quiero información sobre el taller: "
+  },
+  "analitica": {
+    "endpoint": ""
+  },
+  "talleres": [
+    {
+      "slug": "claude",
+      "ruta": "r3",
+      "nombre": "Especialización en Claude",
+      "gancho": "Chat, Cowork y Claude Code: de conversar con la IA a que trabaje dentro de tus procesos.",
+      "resumen": "Un taller práctico para usar Claude en tres frentes: Claude Chat para pensar, redactar y analizar documentos; Cowork para delegar tareas completas con tus archivos; y Claude Code para construir herramientas y automatizar procesos sin ser programador.",
+      "para_quien": [
+        "Trabajan con documentos extensos",
+        "Usan Projects, Skills y Artifacts",
+        "Quieren Cowork y Claude Code",
+        "Buscan razonamiento aplicado"
+      ],
+      "modulos": [
+        {
+          "t": "Claude Chat: conversar con criterio",
+          "d": "Cómo pedir con contexto, organizar tu trabajo en Projects, analizar documentos largos, crear Artifacts y verificar lo que responde.",
+          "marca": "chat"
+        },
+        {
+          "t": "Cowork: delegar tareas completas",
+          "d": "Poner a Claude a trabajar con tus carpetas y archivos: ordenar, resumir, preparar informes y repetir un proceso con Skills y conectores.",
+          "marca": "cowork"
+        },
+        {
+          "t": "Claude Code: construir y automatizar",
+          "d": "Describir en lenguaje natural una herramienta o automatización, revisar lo que genera y corregirlo, aunque no seas programador.",
+          "marca": "code"
+        },
+        {
+          "t": "Proyecto aplicado",
+          "d": "Armas un flujo de trabajo propio que combina los tres frentes, con criterios de verificación y uso responsable.",
+          "marca": "proyecto"
+        }
+      ],
+      "resultados": [
+        "Una biblioteca de prompts y un Project configurado para tu trabajo.",
+        "Un flujo en Cowork que reemplaza una tarea repetitiva.",
+        "Una automatización o herramienta construida con Claude Code.",
+        "Un criterio claro para verificar y usar la IA con responsabilidad."
+      ],
+      "datos": {
+        "modalidad": "",
+        "duracion": "",
+        "fechas": "",
+        "horario": "",
+        "precio": "",
+        "certificado": ""
+      }
+    },
+    {
+      "slug": "chatgpt",
+      "ruta": "r2",
+      "nombre": "Especialización en ChatGPT",
+      "gancho": "Projects, GPTs, modo agente y Codex para llevar ChatGPT a tu trabajo diario.",
+      "resumen": "Un taller práctico para quienes ya usan ChatGPT y quieren trabajar con archivos, organizar su trabajo en Projects y GPTs, delegar tareas con el modo agente y conectar la herramienta con otros procesos.",
+      "para_quien": [
+        "Ya utilizan ChatGPT",
+        "Trabajan con archivos",
+        "Quieren Projects, GPTs, Work y Codex",
+        "Buscan integraciones y automatización"
+      ],
+      "modulos": [
+        {
+          "t": "ChatGPT con método",
+          "d": "Instrucciones claras, contexto y verificación para obtener resultados consistentes.",
+          "marca": "chat"
+        },
+        {
+          "t": "Projects, GPTs y archivos",
+          "d": "Organizar el trabajo, trabajar con documentos y crear asistentes propios.",
+          "marca": "proyectos"
+        },
+        {
+          "t": "Modo agente, Work y Codex",
+          "d": "Delegar tareas de varios pasos y automatizar con herramientas de programación asistida.",
+          "marca": "agentes"
+        },
+        {
+          "t": "Integraciones y proyecto aplicado",
+          "d": "Conectar ChatGPT con tus procesos y construir un flujo propio de punta a punta.",
+          "marca": "proyecto"
+        }
+      ],
+      "resultados": [
+        "Un Project y un GPT configurados para tu trabajo.",
+        "Un flujo con modo agente que ahorra horas semanales.",
+        "Un criterio para elegir entre ChatGPT y otras herramientas."
+      ],
+      "datos": {
+        "modalidad": "",
+        "duracion": "",
+        "fechas": "",
+        "horario": "",
+        "precio": "",
+        "certificado": ""
+      }
+    },
+    {
+      "slug": "ia-desde-cero",
+      "ruta": "r1",
+      "nombre": "Inteligencia artificial desde cero",
+      "gancho": "Entender, conversar, dirigir, contextualizar y automatizar: cinco niveles para empezar bien.",
+      "resumen": "El punto de partida para quienes recién comienzan o usan IA de forma ocasional. Recorre los cinco niveles de la Academia de IA Radar con práctica guiada y comparación de herramientas.",
+      "para_quien": [
+        "Recién comienzan",
+        "Usan IA ocasionalmente",
+        "Quieren aprender fundamentos",
+        "Quieren comparar herramientas"
+      ],
+      "modulos": [
+        {
+          "t": "Entender",
+          "d": "Los conceptos que necesitas para no perderte cuando alguien habla de IA.",
+          "marca": "n1"
+        },
+        {
+          "t": "Conversar",
+          "d": "Cómo pedir bien: el primer salto de calidad.",
+          "marca": "n2"
+        },
+        {
+          "t": "Dirigir",
+          "d": "Controlar cómo trabaja el asistente, no solo qué responde.",
+          "marca": "n3"
+        },
+        {
+          "t": "Contextualizar",
+          "d": "De escribir mejores prompts a construir mejor contexto.",
+          "marca": "n4"
+        },
+        {
+          "t": "Automatizar",
+          "d": "De conversar con la IA a que trabaje dentro de un proceso.",
+          "marca": "n5"
+        }
+      ],
+      "resultados": [
+        "Vocabulario y criterio para entender qué es y qué no es la IA.",
+        "Prompts que funcionan y una forma de verificarlos.",
+        "Una primera automatización sencilla en tu trabajo."
+      ],
+      "datos": {
+        "modalidad": "",
+        "duracion": "",
+        "fechas": "",
+        "horario": "",
+        "precio": "",
+        "certificado": ""
+      }
+    }
+  ],
+  "testimonios": [],
+  "faq": [
+    {
+      "q": "¿Necesito saber programar?",
+      "a": "No. Claude Code y las herramientas de programación asistida se trabajan describiendo lo que quieres en lenguaje natural y revisando el resultado."
+    },
+    {
+      "q": "¿Qué taller me conviene?",
+      "a": "Si recién empiezas, la ruta desde cero. Si ya usas ChatGPT o Claude y quieres llevarlo a tu trabajo, la especialización de esa herramienta. Puedes hacer el diagnóstico de nivel de IA Radar para una recomendación."
+    },
+    {
+      "q": "¿Cómo me inscribo?",
+      "a": "Completa el formulario de esta página: te responderemos por el canal de contacto con fechas, precio y forma de pago."
+    }
+  ]
+}

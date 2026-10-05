@@ -16,7 +16,7 @@ NEWS_MAX_ITEMS = 150
 FEEDS = [
     ("openai", "OpenAI", "https://openai.com/news/rss.xml", "lab", False),
     ("anthropic", "Anthropic", "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_news.xml", "lab", False),
-    ("google", "Google DeepMind", "https://deepmind.google/blog/rss.xml", "lab", False),
+    ("google", "Google DeepMind", ["https://deepmind.google/blog/rss.xml", "https://deepmind.google/discover/blog/rss.xml"], "lab", False),
     ("google", "Google AI", "https://blog.google/technology/ai/rss/", "lab", True),
     ("meta", "Meta AI", "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_meta_ai.xml", "lab", False),
     ("mistralai", "Mistral AI", "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_mistral.xml", "lab", False),
@@ -57,9 +57,21 @@ AI_WORDS = re.compile(
     r"agent|agents|chatbot|transformer|diffusion|reasoning|machine learning|neural|copilot|inference)\b", re.I)
 
 
+def _feed_root(raw):
+    """Valida que la respuesta sea XML (quita BOM y espacios) y da un error legible si no lo es."""
+    if isinstance(raw, str):
+        raw = raw.encode("utf-8")
+    raw = raw.lstrip(b"\xef\xbb\xbf \t\r\n")
+    if not raw.startswith(b"<"):
+        raise ValueError(f"la respuesta no es XML (empieza con {raw[:30]!r})")
+    if re.match(rb"<!doctype html|<html", raw[:200], re.I):
+        raise ValueError("la respuesta es una página HTML, no un feed (¿cambió la URL del feed?)")
+    return ET.fromstring(raw)
+
+
 def parse_feed(raw, key, source, kind, only_ai):
     """Lee RSS 2.0 o Atom y devuelve una lista de noticias normalizadas."""
-    root = ET.fromstring(raw)
+    root = _feed_root(raw)
     strip = lambda tag: tag.rsplit("}", 1)[-1]
     items = []
     for node in root.iter():
@@ -95,13 +107,18 @@ def fetch_feeds(sources):
     for key, source, url, kind, only_ai in FEEDS:
         if source not in sources:
             continue
-        try:
-            items = parse_feed(fetch_text(url), key, source, kind, only_ai)
-            status[source] = {"ok": True, "count": len(items)}
-            found.extend(items)
-        except Exception as e:  # un feed caído no debe tumbar la actualización
-            print(f"Feed {source} falló: {e}", file=sys.stderr)
-            status[source] = {"ok": False, "count": 0, "error": str(e)[:160]}
+        errors = []
+        for u in ([url] if isinstance(url, str) else url):  # una fuente puede tener varias URL de respaldo
+            try:
+                items = parse_feed(fetch_text(u), key, source, kind, only_ai)
+                status[source] = {"ok": True, "count": len(items)}
+                found.extend(items)
+                break
+            except Exception as e:  # un feed caído no debe tumbar la actualización
+                errors.append(f"{u}: {e}")
+        else:
+            print(f"Feed {source} falló: {' | '.join(errors)}", file=sys.stderr)
+            status[source] = {"ok": False, "count": 0, "error": " | ".join(errors)[:300]}
     return found, status
 
 

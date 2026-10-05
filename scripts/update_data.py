@@ -191,6 +191,9 @@ def main():
         aa = step(status, "artificial_analysis", fetch_artificial_analysis.fetch, None)
         if aa:
             write_json(DATA / "aa.json", {"updated_at": now.isoformat(timespec="minutes"), "items": aa})
+        elif not (DATA / "aa.json").exists():
+            # Sin AA_API_KEY el sitio usa la instantánea curada; este archivo vacío evita un 404 en cada carga.
+            write_json(DATA / "aa.json", {"updated_at": None, "items": [], "nota": "Sin AA_API_KEY: se usa la instantánea curada de content/frontier.json."})
 
         # ---- Google Trends ----
         reg = step(status, "google_trends", fetch_trends.collect_all, None, good=lambda o: o.get("ok"))

@@ -3,9 +3,9 @@
   "use strict";
   const CONFIG = {
     wgia: "https://wgia.luisito4903.chatgpt.site/",
-    // Analítica respetuosa: sin cookies ni identificadores. Solo cuenta eventos agregados.
-    // Para centralizarlos, define un endpoint que reciba POST JSON (por ejemplo un contador propio). Vacío = solo en este navegador.
-    endpoint: "",
+    // Rutas del diagnóstico -> página propia de cada taller (talleres/<slug>.html).
+    routes: { r1: "ia-desde-cero", r2: "chatgpt", r3: "claude" },
+    // El WhatsApp, el correo y el endpoint de analítica se definen en content/talleres.json (fuente única).
   };
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -43,14 +43,28 @@
     get() { return store.get("iar_journey", {}); },
     mark(k) { const j = this.get(); if (!j[k]) { j[k] = new Date().toISOString().slice(0, 10); store.set("iar_journey", j); document.dispatchEvent(new CustomEvent("iar:journey", { detail: j })); } },
   };
+  // Datos comerciales y de contacto (content/talleres.json). Se cargan una vez y se comparten.
+  const siteCfg = () => load("content/talleres.json", {});
+  const routeHref = (k) => (CONFIG.routes[k] ? ROOT + "talleres/" + CONFIG.routes[k] + ".html" : ROOT + "talleres.html");
+  function contactLink(cfg, text) {
+    const c = (cfg && cfg.contacto) || {};
+    const wa = String(c.whatsapp || "").replace(/\D/g, "");
+    if (wa) return { kind: "whatsapp", href: "https://wa.me/" + wa + "?text=" + encodeURIComponent(text || c.mensaje || "") };
+    if (c.email) return { kind: "email", href: "mailto:" + c.email + "?subject=" + encodeURIComponent("Consulta sobre talleres de IA") + "&body=" + encodeURIComponent(text || c.mensaje || "") };
+    return { kind: "web", href: CONFIG.wgia };
+  }
   function track(name, props) {
     const ev = store.get("iar_events", {});
     ev[name] = (ev[name] || 0) + 1;
     store.set("iar_events", ev);
     if (window.dataLayer) window.dataLayer.push({ event: "iar_" + name, ...props });
-    if (CONFIG.endpoint && navigator.sendBeacon) {
-      try { navigator.sendBeacon(CONFIG.endpoint, JSON.stringify({ e: name, p: props || {}, page, t: Date.now() })); } catch (e) { /* sin red */ }
-    }
+    // Medición central: sin cookies ni identificadores; solo el evento, la página y la hora.
+    siteCfg().then((cfg) => {
+      const url = cfg && cfg.analitica && cfg.analitica.endpoint;
+      if (url && navigator.sendBeacon) {
+        try { navigator.sendBeacon(url, JSON.stringify({ e: name, p: props || {}, page, t: Date.now() })); } catch (e) { /* sin red */ }
+      }
+    });
   }
   function trackSections() {
     if (!("IntersectionObserver" in window)) return;
@@ -80,6 +94,7 @@
       h.innerHTML = `<div class="wrap wide hd">
         <button class="icon-btn burger" id="burger" type="button" aria-label="Abrir el menú de secciones" aria-expanded="false" aria-controls="sidebar">${ico("menu")}</button>
         <a class="logo" href="${href(home ? "#top" : "index.html")}" aria-label="IA Radar, inicio"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/><path d="M16 16 L26 9" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="2.4" fill="var(--accent)"/></svg><span>IA Radar</span></a>
+        <a class="hd-cta" href="${ROOT}talleres.html" data-track="clic_talleres_header">Talleres</a>
         <button class="icon-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">${ico("contrast")}</button>
       </div><div class="prog" id="prog" aria-hidden="true"></div>`;
       $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "dark" ? "light" : "dark"; applyTheme(t); store.set("iar_theme", t); document.dispatchEvent(new CustomEvent("iar:theme")); });
@@ -91,8 +106,8 @@
     if (f) {
       f.innerHTML = `<div class="wrap ft">
         <div><strong class="ft-t">IA Radar</strong><p>Lo importante de la inteligencia artificial, explicado con datos.</p>
-          <p class="ft-sm">IA Radar es una iniciativa educativa de WGIA. <a href="${CONFIG.wgia}" target="_blank" rel="noopener" data-track="clic_instructor">Conoce al instructor</a>.</p></div>
-        <div><strong>Explora</strong><ul><li><a href="${href("#hoy")}">Hoy en IA</a></li><li><a href="${href("#modelos")}">Radar de modelos</a></li><li><a href="${ROOT}glosario.html">Glosario</a></li><li><a href="${ROOT}responsable.html">IA responsable y normativa</a></li><li><a href="${ROOT}about.html">Acerca de IA Radar</a></li><li><a href="${href("#fuentes")}">Fuentes y metodología</a></li></ul></div>
+          <p class="ft-sm">IA Radar es una iniciativa educativa de WG IA Estratégica. <a href="${ROOT}talleres.html" data-track="clic_talleres_footer">Ver talleres</a> · <a href="${CONFIG.wgia}" target="_blank" rel="noopener" data-track="clic_instructor">Conoce al instructor</a>.</p></div>
+        <div><strong>Explora</strong><ul><li><a href="${href("#hoy")}">Hoy en IA</a></li><li><a href="${href("#modelos")}">Radar de modelos</a></li><li><a href="${ROOT}talleres.html">Talleres y especializaciones</a></li><li><a href="${ROOT}glosario.html">Glosario</a></li><li><a href="${ROOT}responsable.html">IA responsable y normativa</a></li><li><a href="${ROOT}about.html">Acerca de IA Radar</a></li><li><a href="${href("#fuentes")}">Fuentes y metodología</a></li></ul></div>
         <div><strong>Guías</strong><ul id="ft-guides"></ul></div>
         <div><strong>Privacidad</strong><p class="ft-sm">Sin cookies ni cuentas. Solo se guardan en tu navegador tu tema, tu progreso y contadores de uso anónimos de las herramientas.</p></div>
       </div>`;
@@ -149,7 +164,7 @@
 
   const ready = [];
   function onReady(fn) { ready.push(fn); }
-  window.IAR = { CONFIG, $, $$, esc, nf, fmtCtx, fmtPrice, fmtDate, daysAgo, ico, load, store, journey, track, draw, chartMeta, lima, css, ROOT, page, home, onReady, href };
+  window.IAR = { CONFIG, $, $$, esc, nf, fmtCtx, fmtPrice, fmtDate, daysAgo, ico, load, store, journey, track, draw, chartMeta, lima, css, ROOT, page, home, onReady, href, siteCfg, routeHref, contactLink };
 
 
   /* ---------- barra lateral (escritorio) y cajón (móvil) ---------- */
@@ -159,9 +174,9 @@
     { g: "Aprende a usarla", items: [["#ruta", "Tu ruta", "list-checks", "Seis pasos con tu progreso"], ["#aprende", "Aprende desde cero", "graduation-cap", "Microlecciones de 2 a 4 minutos"], ["#promptlab", "Prompt Lab", "flask-conical", "Instrucciones por objetivo"], ["#agentes", "Agentes", "bot", "De chatbot a multiagente"], ["glosario.html", "Glosario", "book-open", "Conceptos clave explicados"]] },
     { g: "Úsala con criterio", items: [["#responsable", "IA responsable", "shield-check", "Principios, riesgos y normativa"], ["#fuentes", "Fuentes", "database", "De dónde sale cada dato"]] },
     { g: "Lleva la IA a tu trabajo", items: [["#casos", "Casos de uso", "briefcase", "Por perfil y automatización"], ["#nivel", "Tu nivel", "target", "Diagnóstico de 60 segundos"]] },
-    { g: "", items: [["about.html", "Acerca de IA Radar", "info", "Quién, cómo y con qué criterios"]] },
+    { g: "", items: [["talleres.html", "Talleres", "rocket", "Especialización en Claude y ChatGPT"], ["about.html", "Acerca de IA Radar", "info", "Quién, cómo y con qué criterios"]] },
   ];
-  const MORE = [["glosario.html", "Glosario de IA"], ["modelos.html", "Catálogo de modelos"], ["responsable.html", "IA responsable y normativa"], ["about.html", "Acerca de IA Radar"]];
+  const MORE = [["talleres.html", "Talleres y especializaciones"], ["glosario.html", "Glosario de IA"], ["modelos.html", "Catálogo de modelos"], ["responsable.html", "IA responsable y normativa"], ["about.html", "Acerca de IA Radar"]];
   const norm = (t) => String(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   let SEARCH = null;
   async function searchIndex() {
@@ -220,9 +235,9 @@
       <nav class="sb-nav" aria-label="Secciones">${SIDE.map((g) => `<div class="sb-g">${g.g ? `<p>${esc(g.g)}</p>` : ""}${g.items.map(link).join("")}</div>`).join("")}</nav>
       <div class="sb-route" id="sb-route" hidden></div>
       <div class="sb-foot"><p class="sb-orient">Empieza entendiendo la IA, aprende a conversar con ella, dirige sus respuestas, intégrala en tus procesos y úsala con responsabilidad.</p>
-        <a class="sb-cta" href="${href("#sigue")}" data-track="clic_especializate_nav">${ico("rocket")}<span>Especialízate</span></a>
+        <a class="sb-cta" href="${ROOT}talleres.html" data-track="clic_especializate_nav">${ico("rocket")}<span>Especialízate</span></a>
         <button type="button" class="sb-theme" id="theme2">${ico("contrast")}<span>Cambiar tema</span></button>
-        <p>IA Radar es una iniciativa educativa de WGIA.</p></div>`;
+        <p>IA Radar es una iniciativa educativa de WG IA Estratégica.</p></div>`;
     document.body.prepend(el);
     const back = document.createElement("div"); back.className = "sb-back"; back.addEventListener("click", closeDrawer); document.body.appendChild(back);
     $("#theme2", el).addEventListener("click", () => $("#theme") && $("#theme").click());
@@ -258,9 +273,24 @@
     addEventListener("scroll", upd, { passive: true }); upd();
   }
 
+  /* ---------- contacto directo: botón flotante si hay WhatsApp o correo configurado ---------- */
+  function contactFab() {
+    siteCfg().then((cfg) => {
+      const c = (cfg && cfg.contacto) || {};
+      if (!c.whatsapp && !c.email) return;
+      const l = contactLink(cfg, c.mensaje || "");
+      const a = document.createElement("a");
+      a.className = "fab-contact"; a.href = l.href; a.rel = "noopener"; if (l.kind === "whatsapp") a.target = "_blank";
+      a.dataset.track = "clic_contacto_flotante";
+      a.innerHTML = `${ico("message-square")}<span>${l.kind === "whatsapp" ? "Escríbenos por WhatsApp" : "Escríbenos"}</span>`;
+      document.body.appendChild(a);
+    });
+  }
+
   chrome();
   sidebar();
   fab();
+  contactFab();
   reveal();
   trackSections();
   document.addEventListener("DOMContentLoaded", () => {});

@@ -1,0 +1,39 @@
+/* Talleres: botón de cabecera, contacto flotante, páginas de taller y formulario */
+.hd-cta{margin-left:auto;display:inline-flex;align-items:center;padding:9px 16px;border-radius:99px;background:var(--accent);color:var(--accent-ink);font:700 .9rem "Inter",system-ui,sans-serif;text-decoration:none;white-space:nowrap}
+.hd-cta:hover{filter:brightness(1.1)}
+.hd-cta + .icon-btn{margin-left:0}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0 0}
+
+.fab-contact{position:fixed;left:16px;bottom:16px;z-index:40;display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:99px;background:#1fa855;color:#fff;font:700 .92rem "Inter",system-ui,sans-serif;text-decoration:none;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.fab-contact:hover{filter:brightness(1.08)}
+.fab-contact .ui{width:18px;height:18px}
+@media(max-width:560px){.fab-contact span{display:none}.fab-contact{padding:14px}}
+
+.tl-cta{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0 34px}
+.tl-list{padding-left:20px;display:grid;gap:8px}
+.tl-list.sm{font-size:.92rem;color:var(--muted);margin:10px 0 18px}
+.tl-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media(max-width:900px){.tl-grid{grid-template-columns:1fr}}
+.tl-card{display:flex;flex-direction:column;gap:6px;padding:22px}
+.tl-card h3{margin:6px 0 0;font-size:1.25rem}
+.tl-card .btn{margin-top:auto;align-self:flex-start}
+.tl-mods{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.tl-mods li{display:flex;gap:16px;padding:18px 20px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.tl-mods .n{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font:700 .95rem var(--mono)}
+.tl-mods h3{margin:0 0 4px;font-size:1.1rem}.tl-mods p{margin:0;color:var(--muted)}
+.tl-datos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0}
+.tl-datos>div{padding:14px 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.tl-datos dt{font:600 .68rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.tl-datos dd{margin:4px 0 0;font-weight:600}
+@media(max-width:560px){.tl-datos{grid-template-columns:1fr}}
+.tl-quotes{display:grid;gap:14px}
+.tl-quote{margin:0;padding:20px 24px;border-left:3px solid var(--accent);background:var(--surface);border-radius:var(--r)}
+.tl-quote blockquote{margin:0 0 8px;font:600 1.1rem/1.5 var(--serif)}.tl-quote figcaption{color:var(--muted);font-size:.9rem}
+
+.tl-form-sec{padding:26px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface)}
+.enroll{display:grid;gap:14px;margin-top:14px}
+.enroll .f{display:grid;gap:6px;font-weight:600;font-size:.92rem}
+.enroll input:not([type=checkbox]),.enroll select,.enroll textarea{width:100%;padding:12px 14px;border:1px solid var(--line2);border-radius:10px;background:var(--bg);color:var(--ink);font:400 1rem "Inter",system-ui,sans-serif}
+.enroll .chk{display:flex;gap:10px;align-items:flex-start;font-size:.9rem;color:var(--muted)}
+.enroll .chk input{margin-top:3px}
+.enroll .btn{justify-self:start}
+.enroll-st{min-height:1.4em;margin:0}
