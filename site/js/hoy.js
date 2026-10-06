@@ -81,6 +81,9 @@
     more.querySelector("ul").innerHTML = rest.map((n) => `<li><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title_es || n.title)}</a><span class="muted">${esc(n.source)} · ${esc(fmtDate(n.published.slice(0, 10)))}</span></li>`).join("");
   }
 
+  I.hoyPick = (period) => { const old = { ...st }; st.period = period; st.cat = "Todas"; const r = pick(I.D); Object.assign(st, old); return r; };
+  I.hoyLevel = LEVEL;
+
   document.addEventListener("iar:data", () => {
     const D = I.D;
     root.innerHTML = `
