@@ -59,7 +59,7 @@ jobs:
             echo "Sin cambios en los datos"
           else
             git commit -m "Actualización diaria de datos ($(date -u +%F))"
-            git push
+            git pull --rebase origin main && git push
           fi
 
       - name: Generar páginas de guías, sitemap y robots
