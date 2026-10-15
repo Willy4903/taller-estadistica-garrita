@@ -76,7 +76,7 @@
   document.addEventListener("iar:data", () => {
     const D = I.D;
     root.innerHTML = `
-      <div class="sec-head"><p class="kicker"><b>04</b> Qué está usando la gente</p><h2 id="t-uso">Seis medidas, seis preguntas distintas</h2>
+      <div class="sec-head"><p class="kicker"><b>05</b> Qué está usando la gente</p><h2 id="t-uso">Seis medidas, seis preguntas distintas</h2>
         <p class="lead">Usuarios, tráfico, búsquedas, tokens, uso de API y benchmarks miden cosas diferentes. Aquí van separados a propósito: nunca se mezclan en un mismo ranking.</p></div>
       <div class="seg tabs" role="tablist" aria-label="Medida">${TABS.map(([k, l]) => `<button type="button" role="tab" data-t="${k}" aria-pressed="${k === st.tab}">${esc(l)}</button>`).join("")}</div>
       <div id="uso-body" aria-live="polite"></div>`;

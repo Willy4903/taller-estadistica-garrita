@@ -9,9 +9,15 @@ from common import clean
 ES_FIXES = [("Antrópico", "Anthropic"), ("Antrópica", "Anthropic"), ("Antropic", "Anthropic"), ("Antropico", "Anthropic")]
 
 
+# Siglas y giros que el traductor deja en inglés o calca.
+ES_REGEX_FIXES = [(r"\bAI\b", "IA"), (r"\bAIs\b", "IA"), (r"\bde código abierto IA\b", "de IA de código abierto")]
+
+
 def fix_es(text):
     for bad, good in ES_FIXES:
         text = text.replace(bad, good)
+    for pat, good in ES_REGEX_FIXES:
+        text = re.sub(pat, good, text)
     return text
 
 

@@ -362,7 +362,7 @@
    "es": "Usuarios activos semanales",
    "short": "Personas distintas que usan un servicio en una semana.",
    "tech": "Weekly Active Users: usuarios únicos con actividad en un periodo de siete días, según la definición de cada empresa.",
-   "example": "ChatGPT reportó 800 millones de WAU en octubre de 2025.",
+   "example": "ChatGPT reportó 1,000 millones de WAU en agosto de 2026.",
    "why": "No es comparable con MAU ni con suscriptores de pago."
   },
   {
@@ -371,7 +371,7 @@
    "es": "Usuarios activos mensuales",
    "short": "Personas distintas que usan un servicio en un mes.",
    "tech": "Monthly Active Users: usuarios únicos con actividad en un periodo de 30 días, según la definición de cada empresa.",
-   "example": "Gemini reportó 650 millones de MAU en octubre de 2025.",
+   "example": "Gemini reportó 1,000 millones de MAU en agosto de 2026.",
    "why": "Un MAU suele ser mayor que un WAU del mismo producto; no se pueden comparar directamente."
   },
   {

@@ -14,6 +14,9 @@
     Imagen: /\bimage|imagen|diffusion|dall|midjourney|flux|nano banana/, Video: /\bvideo|sora|\bveo\b|runway|kling/, Voz: /\bvoice|\bvoz\b|speech|audio|whisper|\btts\b/,
     APIs: /\bapi\b|\bsdk\b|openrouter|developer platform/, Empresa: /enterprise|empresa|business|funding|raises|valuation|revenue|partnership|acquir|\bipo\b|negocio/,
     Precios: /pric|precio|cheaper|cost|\$\d/,
+    Seguridad: /safety|seguridad|lawsuit|sue[sd]?\b|demanda|regulat|regulaci|privacy|privacidad|copyright|deepfake|jailbreak|vulnerab|cyber|ciber/,
+    "Investigación": /\bpaper\b|research|arxiv|investigaci|\bstudy\b|estudio|benchmark/,
+    "Perú": /per[uú]\b|peruan|latin america|am[eé]rica latina/,
   };
   const WHY = {
     modelos: ["Un modelo nuevo o actualizado cambia lo que se puede hacer y cuánto cuesta. Conviene comparar versión, precio y contexto antes de migrar.", "Equipos que usan IA en sus productos, desarrolladores y quien elige herramienta."],
@@ -34,6 +37,7 @@
   const overlap = (a, b) => { const A = words(a), B = words(b); let n = 0; A.forEach((w) => { if (B.has(w)) n++; }); return n >= 3; };
   const text = (n) => (n.title + " " + (n.summary || "") + " " + (n.title_es || "") + " " + (n.summary_es || "")).toLowerCase();
   const catsOf = (t) => Object.keys(CATS).filter((c) => CATS[c].test(t));
+  const fixIA = (t) => String(t).replace(/\bAIs?\b/g, "IA");
   const ageDays = (iso) => (Date.now() - new Date(iso)) / 864e5;
 
   function pick(D) {
@@ -53,7 +57,7 @@
       if (bySrc[x.n.source] > 2) continue;
       if (pinned.length + auto.length >= 5) break;
       const w = WHY[x.topic] || WHY.modelos;
-      auto.push({ title: x.n.title_es || x.n.title, what: x.n.summary_es || x.n.summary || "", why: w[0], affects: w[1], date: x.n.published.slice(0, 10), source: x.n.source, url: x.n.link, level: x.n.kind === "lab" ? 1 : 4, topic: TOPIC_NAME[x.topic], editorial: false });
+      auto.push({ title: x.n.title_es ? fixIA(x.n.title_es) : x.n.title, what: x.n.summary_es ? fixIA(x.n.summary_es) : x.n.summary || "", why: w[0], affects: w[1], date: x.n.published.slice(0, 10), source: x.n.source, url: x.n.link, level: x.n.kind === "lab" ? 1 : 4, topic: TOPIC_NAME[x.topic], editorial: false, orig: x.n.title_es && x.n.title_es !== x.n.title ? x.n.title : "" });
     }
     const rest = pool.map((x) => x.n).filter((n) => !auto.some((a) => a.url === n.link)).slice(0, 12);
     return { items: pinned.concat(auto).slice(0, 5), rest };
@@ -68,17 +72,18 @@
         <div class="hoy-body">
           <div class="hoy-top"><span class="tag acc">${esc(x.topic)}</span><span class="tag">${esc(LEVEL[x.level] || "")}</span><time class="muted mono" datetime="${esc(x.date)}">${esc(fmtDate(x.date))}</time></div>
           <h3>${esc(x.title)}</h3>
+          ${x.orig ? `<p class="muted hoy-orig" lang="en">Título original: ${esc(x.orig)}</p>` : ""}
           <dl class="hoy-q">
             <div><dt>Qué pasó</dt><dd>${esc(x.what)}</dd></div>
-            <div><dt>Por qué importa</dt><dd>${esc(x.why)}${x.editorial ? "" : ' <span class="muted">(lectura por tema)</span>'}</dd></div>
-            <div><dt>A quién afecta</dt><dd>${esc(x.affects)}</dd></div>
+            ${x.editorial ? `<div><dt>Por qué importa</dt><dd>${esc(x.why)}</dd></div>
+            <div><dt>A quién afecta</dt><dd>${esc(x.affects)}</dd></div>` : ""}
           </dl>
           <p class="hoy-src">Fuente: <a href="${esc(x.url)}" target="_blank" rel="noopener" data-track="clic_fuente_hoy">${esc(x.source)}</a></p>
         </div>
       </article>`).join("") : `<div class="callout">${ico("info")}<p>No hay acontecimientos relevantes que cumplan este filtro en el periodo elegido. Amplía el periodo a 7D o 30D, o quita la categoría.</p></div>`;
     const more = document.getElementById("hoy-more");
     more.hidden = !rest.length;
-    more.querySelector("ul").innerHTML = rest.map((n) => `<li><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title_es || n.title)}</a><span class="muted">${esc(n.source)} · ${esc(fmtDate(n.published.slice(0, 10)))}</span></li>`).join("");
+    more.querySelector("ul").innerHTML = rest.map((n) => `<li><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title_es ? fixIA(n.title_es) : n.title)}</a><span class="muted">${esc(n.source)} · ${esc(fmtDate(n.published.slice(0, 10)))}</span></li>`).join("");
   }
 
   I.hoyPick = (period) => { const old = { ...st }; st.period = period; st.cat = "Todas"; const r = pick(I.D); Object.assign(st, old); return r; };
@@ -87,7 +92,7 @@
   document.addEventListener("iar:data", () => {
     const D = I.D;
     root.innerHTML = `
-      <div class="sec-head"><p class="kicker"><b>01</b> Qué está pasando</p><h2 id="t-hoy">Hoy en IA</h2>
+      <div class="sec-head"><p class="kicker"><b>02</b> Qué está pasando</p><h2 id="t-hoy">Hoy en IA</h2>
         <p class="lead">Lo que de verdad importa, sin llenar la pantalla de noticias menores. Cada punto dice qué pasó, por qué importa y a quién afecta.</p></div>
       <div class="hoy-bar">
         <div class="seg" role="group" aria-label="Periodo">${Object.keys(PERIODS).map((p) => `<button type="button" data-p="${p}" aria-pressed="${p === st.period}">${p}</button>`).join("")}</div>
@@ -95,7 +100,7 @@
       </div>
       <div id="hoy-list" aria-live="polite"></div>
       <details id="hoy-more" class="hoy-more"><summary>Otras noticias del periodo</summary><ul></ul></details>
-      <p class="muted hoy-note">${ico("info")} Los puntos con etiqueta editorial tienen lectura propia. En los demás, "por qué importa" y "a quién afecta" son una lectura general según el tema de la noticia, no un análisis específico. Las noticias se traducen automáticamente; el original está en la fuente.</p>`;
+      <p class="muted hoy-note">${ico("info")} "Por qué importa" y "a quién afecta" aparecen solo en los puntos con lectura editorial propia; en el resto se muestra únicamente lo que pasó, tomado de la fuente. Las noticias se traducen automáticamente: el título original se muestra debajo y el texto completo está en la fuente.</p>`;
     root.addEventListener("click", (e) => {
       const p = e.target.closest("[data-p]"), c = e.target.closest("[data-c]");
       if (p) st.period = p.dataset.p;

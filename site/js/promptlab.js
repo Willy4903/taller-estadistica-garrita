@@ -44,7 +44,7 @@
     if (!P) { root.innerHTML = ""; return; }
     const S = P.system_example;
     root.innerHTML = `
-      <div class="sec-head"><p class="kicker"><b>06</b> Aplicar</p><h2 id="t-promptlab">Prompt Lab</h2>
+      <div class="sec-head"><p class="kicker"><b>08</b> Aplicar</p><h2 id="t-promptlab">Prompt Lab</h2>
         <p class="lead">De una pregunta débil a una instrucción profesional. Prueba, construye la tuya y llévala a tu herramienta.</p></div>
 
       <div class="card pl-lab">

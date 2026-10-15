@@ -155,10 +155,11 @@
   /* ---------- barra lateral (escritorio) y cajón (móvil) ---------- */
   const SIDE = [
     { g: "", items: [["#top", "Inicio", "house", "Volver al comienzo"]] },
+    { g: "Empieza aquí", items: [["#nivel", "Tu nivel", "target", "Diagnóstico de 60 segundos"], ["#ruta", "Tu ruta", "list-checks", "Seis pasos con tu progreso"]] },
     { g: "Qué está pasando", items: [["#hoy", "Hoy en IA", "newspaper", "Noticias y hechos recientes"], ["#modelos", "Modelos de IA", "cpu", "Comparar capacidades, precio y contexto"], ["#uso", "Uso", "chart-column", "Qué usa la gente, con datos"], ["#peru", "IA en Perú", "map-pin", "Búsquedas, normativa y contexto"]] },
-    { g: "Aprende a usarla", items: [["#ruta", "Tu ruta", "list-checks", "Seis pasos con tu progreso"], ["#aprende", "Aprende desde cero", "graduation-cap", "Microlecciones de 2 a 4 minutos"], ["#promptlab", "Prompt Lab", "flask-conical", "Instrucciones por objetivo"], ["#agentes", "Agentes", "bot", "De chatbot a multiagente"], ["glosario.html", "Glosario", "book-open", "Conceptos clave explicados"]] },
+    { g: "Aprende a usarla", items: [["#aprende", "Aprende desde cero", "graduation-cap", "Microlecciones de 2 a 4 minutos"], ["#promptlab", "Prompt Lab", "flask-conical", "Instrucciones por objetivo"], ["#agentes", "Agentes", "bot", "De chatbot a multiagente"], ["glosario.html", "Glosario", "book-open", "Conceptos clave explicados"]] },
+    { g: "Lleva la IA a tu trabajo", items: [["#casos", "Casos de uso", "briefcase", "Por perfil y automatización"]] },
     { g: "Úsala con criterio", items: [["#responsable", "IA responsable", "shield-check", "Principios, riesgos y normativa"], ["#fuentes", "Fuentes", "database", "De dónde sale cada dato"]] },
-    { g: "Lleva la IA a tu trabajo", items: [["#casos", "Casos de uso", "briefcase", "Por perfil y automatización"], ["#nivel", "Tu nivel", "target", "Diagnóstico de 60 segundos"]] },
     { g: "", items: [["about.html", "Acerca de IA Radar", "info", "Quién, cómo y con qué criterios"]] },
   ];
   const MORE = [["glosario.html", "Glosario de IA"], ["modelos.html", "Catálogo de modelos"], ["responsable.html", "IA responsable y normativa"], ["about.html", "Acerca de IA Radar"]];

@@ -29,6 +29,8 @@
       if ((Date.now() - new Date(upd)) / 36e5 > 36) document.getElementById("hero-meta").classList.add("stale");
     } else if (el) el.textContent = "Datos no disponibles por ahora";
     document.dispatchEvent(new CustomEvent("iar:data"));
+    /* Si los datos llegan antes de que se ejecuten los últimos módulos, sus escuchas (una sola vez) quedarían sin pintar: se vuelve a avisar al terminar de cargar. Los módulos que ya pintaron no se repiten. */
+    if (document.readyState !== "complete") window.addEventListener("load", () => document.dispatchEvent(new CustomEvent("iar:data")), { once: true });
     return D;
   });
 })();
