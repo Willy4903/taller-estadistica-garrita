@@ -2,9 +2,9 @@
   "reviewed": "2026-10",
   "note": "Cifras publicadas por cada empresa en sus resultados o eventos. Las métricas no son equivalentes entre sí (semanal frente a mensual, app frente a ecosistema) y pueden estar desactualizadas: confirma siempre con la fuente.",
   "items": [
-    { "name": "ChatGPT", "provider": "OpenAI", "prov": "openai", "metric": "weekly", "value": 800, "asof": "2025-10", "what": "usuarios activos semanales", "source": "OpenAI, DevDay 2025", "url": "https://openai.com/news/", "color": "#10a37f" },
+    { "name": "ChatGPT", "provider": "OpenAI", "prov": "openai", "metric": "weekly", "value": 1000, "asof": "2026-08", "what": "usuarios activos semanales", "source": "OpenAI, anuncio del 6 de agosto de 2026 (vía Yahoo Tech)", "url": "https://tech.yahoo.com/ai/chatgpt/articles/chatgpt-tops-1b-weekly-users-191537749.html", "color": "#10a37f" },
     { "name": "Meta AI", "provider": "Meta", "prov": "meta", "metric": "monthly", "value": 1000, "asof": "2025-05", "what": "usuarios activos mensuales entre las apps de Meta", "source": "Meta, 2025", "url": "https://about.fb.com/news/", "color": "#0866ff" },
-    { "name": "Gemini (app)", "provider": "Google", "prov": "google", "metric": "monthly", "value": 650, "asof": "2025-10", "what": "usuarios activos mensuales de la app", "source": "Alphabet, resultados del tercer trimestre de 2025", "url": "https://abc.xyz/investor/", "color": "#4285f4" },
+    { "name": "Gemini (app)", "provider": "Google", "prov": "google", "metric": "monthly", "value": 1000, "asof": "2026-08", "what": "usuarios activos mensuales de la app", "source": "Google, blog oficial del 11 de agosto de 2026", "url": "https://blog.google/innovation-and-ai/products/gemini-app/one-billion-monthly-users/", "color": "#4285f4" },
     { "name": "Microsoft Copilot", "provider": "Microsoft", "prov": "microsoft", "metric": "monthly", "value": 150, "asof": "2025-10", "what": "usuarios activos mensuales de la familia Copilot", "source": "Microsoft, primer trimestre del año fiscal 2026", "url": "https://www.microsoft.com/investor", "color": "#00a4ef" }
   ],
   "undisclosed": [

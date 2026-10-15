@@ -41,7 +41,7 @@
       el.querySelectorAll("[data-p]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.p === p));
       const r = I.hoyPick ? I.hoyPick(p) : { items: [] }, x = r.items[0];
       body.innerHTML = x ? `<div class="gl-meta"><span class="tag acc">${esc(x.topic)}</span><time class="muted mono">${esc(fmtDate(x.date))}</time></div><h3>${esc(clip(x.title, 90))}</h3>
-        <div class="qa3"><div><b>Qué pasó</b><p>${esc(clip(x.what, 150))}</p></div><div><b>Por qué importa</b><p>${esc(clip(x.why, 130))}</p></div><div><b>A quién afecta</b><p>${esc(clip(x.affects, 110))}</p></div></div>
+        <div class="qa3"><div><b>Qué pasó</b><p>${esc(clip(x.what, x.editorial ? 150 : 320))}</p></div>${x.editorial ? `<div><b>Por qué importa</b><p>${esc(clip(x.why, 130))}</p></div><div><b>A quién afecta</b><p>${esc(clip(x.affects, 110))}</p></div>` : ""}</div>
         <p class="gl-src">${ico("link")} <a href="${esc(x.url)}" target="_blank" rel="noopener" data-track="clic_card_hoy_fuente">${esc(x.source)}</a> · ${r.items.length} punto${r.items.length === 1 ? "" : "s"} en este periodo</p>`
         : `<p class="muted">No hay acontecimientos relevantes en este periodo. Prueba con un rango mayor.</p>`;
     };
@@ -82,7 +82,7 @@
       el.querySelector("#us-q").textContent = m === "u" ? "¿Cuántas personas usan cada IA, según las propias empresas?" : "¿Qué modelos procesan más tokens dentro de OpenRouter?";
       const max = Math.max(1, ...rows.map((r) => r.v));
       el.querySelector("#us-bars").innerHTML = rows.length ? rows.map((r) => `<div class="vb" tabindex="0" data-tip="${esc(r.tip)}"><span class="vb-v">${esc(r.lab)}</span><i class="${r.hot ? "hot" : ""}" style="--h:${Math.max(6, (r.v / max) * 100)}%"></i><span class="vb-n">${esc(clip(r.n, 14))}</span></div>`).join("") : '<p class="muted">Sin datos por ahora.</p>';
-      el.querySelector("#us-cap").textContent = m === "u" ? "Azul brillante: activos semanales. Gris: mensuales. Cifras reportadas por las empresas, no auditadas ni comparables de forma estricta." : "Solo refleja a quienes usan OpenRouter, no el uso total del mercado.";
+      el.querySelector("#us-cap").textContent = m === "u" ? "Azul brillante: activos semanales. Gris: mensuales. Cifras reportadas por las empresas, no auditadas ni comparables de forma estricta." + (U.length && Math.max(...U.map((x) => ageM(x.asof))) >= 6 ? ` Ojo: algunas cifras tienen entre ${Math.min(...U.map((x) => ageM(x.asof)))} y ${Math.max(...U.map((x) => ageM(x.asof)))} meses de antigüedad.` : "") : "Solo refleja a quienes usan OpenRouter, no el uso total del mercado.";
       bindTips(el);
     };
     el.addEventListener("click", (e) => { const b = e.target.closest("[data-m]"); if (b) { paint(b.dataset.m); track("card_usuarios_medida", { m: b.dataset.m }); } });
@@ -159,7 +159,7 @@
     Object.entries(by).forEach(([p, ms]) => { if (ms.length < 2) return; const a = [...ms].sort((x, y) => blend(y) - blend(x)), hi = a[0], lo = a[a.length - 1], r = blend(hi) / blend(lo); if (!best || r > best.r) best = { p, hi, lo, r }; });
     if (best && best.r >= 5) out.push({ big: Math.round(best.r) + "×", head: `En un mismo laboratorio, el precio puede variar ${Math.round(best.r)} veces`, text: `${nm(best.hi)} cuesta unos $${blend(best.hi).toFixed(2)} por millón de tokens (mezcla 3:1) y ${nm(best.lo)}, de ${I.provName(best.p)}, unos $${blend(best.lo).toFixed(2)}. Elegir la gama correcta importa tanto como elegir el laboratorio.`, src: "Catálogo de OpenRouter", url: "https://openrouter.ai/models", date: D.models.meta.updated_date });
     const big = cur.filter((m) => m.context >= 1e6).length;
-    if (cur.length >= 10 && big / cur.length >= 0.2) out.push({ big: Math.round((big / cur.length) * 100) + " %", head: "El millón de tokens de contexto ya es cosa común", text: `${big} de ${cur.length} modelos vigentes de laboratorios principales aceptan 1 millón de tokens o más, equivalente a varios libros en una sola conversación. Más contexto no garantiza que preste atención a todo.`, src: "Catálogo de OpenRouter", url: "https://openrouter.ai/models", date: D.models.meta.updated_date });
+    if (cur.length >= 10 && big / cur.length >= 0.2) out.push({ big: Math.round((big / cur.length) * 100) + " %", head: "El millón de tokens de contexto ya es cosa común", text: `${big} de ${cur.length} modelos vigentes de laboratorios principales aceptan 1 millón de tokens o más, equivalente a varios libros en una sola conversación. Ese es el contexto nominal: el efectivo, donde el modelo recupera bien los datos, suele ser menor.`, src: "Catálogo de OpenRouter", url: "https://openrouter.ai/models", date: D.models.meta.updated_date });
     const n30 = D.base.filter((m) => I.isMajor(m) && I.daysAgo(m.created) <= 30).length;
     if (n30 >= 5) out.push({ big: String(n30), head: "Un ritmo de lanzamientos que obliga a comparar de nuevo cada mes", text: `Los laboratorios principales publicaron ${n30} modelos en los últimos 30 días según el catálogo de OpenRouter, sin contar variantes. Las decisiones de hace un trimestre pueden haber quedado desactualizadas.`, src: "Catálogo de OpenRouter", url: "https://openrouter.ai/models", date: D.models.meta.updated_date });
     const T = D.trends && D.trends.sets && D.trends.sets.A, pe = T && T.countries && T.countries.PE;
@@ -193,8 +193,9 @@
     const t = [];
     const o = latest(D, "openai")[0]; if (o) t.push(tile("openai", "OpenAI", nm(o), fmtDate(o.created), "openai"));
     const arg = D.frontier && D.frontier.latest && D.frontier.latest.find((x) => x.prov === "google"), go = latest(D, "google")[0];
-    if (arg) t.push(tile("google", "Google", arg.name, "acceso limitado", "google"));
-    if (go) t.push(tile("google", "Google", nm(go), fmtDate(go.created), "google2"));
+    const mismo = arg && go && String(arg.name).toLowerCase() === nm(go).toLowerCase();
+    if (arg && !mismo) t.push(tile("google", "Google", arg.name, "acceso limitado", "google"));
+    if (go) t.push(tile("google", "Google", nm(go), (mismo ? "acceso limitado · " : "") + fmtDate(go.created), "google2"));
     const an = latest(D, "anthropic")[0]; if (an) t.push(tile("anthropic", "Anthropic", nm(an), fmtDate(an.created), "anthropic"));
     const me = latest(D, ["meta", "meta-llama"])[0]; if (me) t.push(tile("meta", "Meta", nm(me), fmtDate(me.created), "meta"));
     const cp = D.users && D.users.items.find((x) => /copilot/i.test(x.name));

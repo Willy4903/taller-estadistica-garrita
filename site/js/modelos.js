@@ -91,20 +91,23 @@
   }
 
   /* ---------- capacidades por laboratorio ---------- */
-  const LABS = [["openai", "OpenAI"], ["anthropic", "Anthropic"], ["google", "Google"], ["x-ai", "xAI"], ["meta-llama", "Meta"], ["deepseek", "DeepSeek"], ["mistralai", "Mistral"], ["qwen", "Qwen"], ["moonshotai", "Kimi"]];
+  const isImg = (m) => uses(m).tags.some((t) => t.t === "Generación de imágenes");
+  const LABS = [["openai", "OpenAI"], ["anthropic", "Anthropic"], ["google", "Google"], ["x-ai", "xAI"], ["meta-llama", "Meta"], ["deepseek", "DeepSeek"], ["mistralai", "Mistral"], ["qwen", "Qwen"], ["moonshotai", "Kimi"], ["z-ai", "Z.ai (GLM)"], ["minimax", "MiniMax"], ["nvidia", "NVIDIA"], ["amazon", "Amazon"]];
+  const LABS_BASE = new Set(LABS.slice(0, 9).map((x) => x[0]));
   function labMatrix(D) {
     const open = new Set((D.recommender && D.recommender.open_providers) || []);
     const cur = current(D, 365);
     const rows = LABS.map(([slugp, label]) => {
       const ms = cur.filter((m) => I.norm(m.provider) === slugp || (slugp === "meta-llama" && I.norm(m.provider) === "meta")).sort((a, b) => b.created.localeCompare(a.created));
-      if (!ms.length) return `<tr><td><b>${esc(label)}</b></td><td colspan="7" class="muted">Sin modelos vigentes en el catálogo de OpenRouter durante el último año.</td></tr>`;
+      if (!ms.length) return LABS_BASE.has(slugp) ? `<tr><td><b>${esc(label)}</b></td><td colspan="7" class="muted">Sin modelos vigentes en el catálogo de OpenRouter durante el último año.</td></tr>` : "";
       const top = ms[0], ctx = Math.max(...ms.map((m) => m.context)), pr = ms.map((m) => m.blend), any = (f) => ms.some(f);
-      const yes = '<span class="tag ok">Sí</span>', no = '<span class="tag">No declarado</span>';
+      const yes = '<span class="tag ok">Sí</span>', no = '<span class="tag">No declarado</span>', none = '<span class="tag">Ninguno</span>';
+      const flag = [...ms].filter((m) => !isImg(m)).sort((a, b) => b.blend - a.blend)[0];
       const bench = ms.flatMap((m) => benchOf(D, m)).filter((b, i, a) => a.findIndex((x) => x.src === b.src) === i);
-      return `<tr><td>${provTag(slugp)}<small>Más reciente: ${esc(nm(top))} (${esc(fmtDate(top.created))})</small></td>
+      return `<tr><td>${provTag(slugp)}<small>Más reciente: ${esc(nm(top))} (${esc(fmtDate(top.created))})</small>${flag && flag.id !== top.id ? `<small>Insignia (mayor precio): ${esc(nm(flag))}</small>` : ""}</td>
         <td>${any((m) => m.reasoning) ? yes : no}</td><td>${any((m) => m.multimodal) ? yes : no}</td><td>${fmtCtx(ctx)}</td>
         <td>${money(Math.min(...pr))} a ${money(Math.max(...pr))}<small>por millón (mixto 3:1)</small></td>
-        <td>${open.has(slugp) ? '<span class="tag acc">Algunos modelos</span>' : no}</td><td>${benchHtml(bench)}</td></tr>`;
+        <td>${open.has(slugp) ? '<span class="tag acc">Algunos modelos</span>' : slugp === "anthropic" ? none : no}</td><td>${benchHtml(bench)}</td></tr>`;
     }).join("");
     return `<div class="table-wrap"><table><thead><tr><th>Laboratorio</th><th>Razonamiento</th><th>Multimodal</th><th>Contexto máx.</th><th>Precio</th><th>Pesos abiertos</th><th>Benchmarks</th></tr></thead><tbody>${rows}</tbody></table></div>
       <p class="muted">${ico("info")} Código, investigación, agentes, imagen, video, voz y velocidad dependen de benchmarks específicos. IA Radar no los mezcla ni los inventa: consúltalos en <a href="https://artificialanalysis.ai/" target="_blank" rel="noopener">Artificial Analysis</a> y <a href="https://lmarena.ai/leaderboard" target="_blank" rel="noopener">LMArena</a>. "Pesos abiertos: algunos modelos" indica que el laboratorio publica modelos descargables, no que todos lo sean.</p>`;
@@ -131,7 +134,7 @@
     return `<div class="table-wrap"><table class="radar"><thead><tr><th>Seleccionar</th><th>Modelo</th><th>Contexto</th><th>Precio por millón</th><th>Modalidades</th><th>Benchmarks</th><th></th></tr></thead><tbody>
       ${curated}
       ${list.map((m) => `<tr data-id="${esc(m.id)}"><td><input type="checkbox" class="pk" aria-label="Comparar ${esc(nm(m))}" ${picked.has(m.id) ? "checked" : ""}></td>
-        <td>${provTag(m.provider)}<br><b>${esc(nm(m))}</b><small>${esc(fmtDate(m.created))}</small></td><td>${fmtCtx(m.context)}</td>
+        <td>${provTag(m.provider)}<br><b>${esc(nm(m))}</b>${isImg(m) ? ' <span class="tag">generación de imágenes</span>' : ""}<small>${esc(fmtDate(m.created))}</small></td><td>${fmtCtx(m.context)}</td>
         <td>${fmtPrice(m.price_in)} / ${fmtPrice(m.price_out)}</td><td>${esc(modal(m))}${m.reasoning ? ", razonamiento" : ""}</td><td>${benchHtml(benchOf(D, m))}</td>
         <td><button type="button" class="chip-btn tg" aria-expanded="false">Detalle</button></td></tr>`).join("")}</tbody></table></div>`;
   }
@@ -171,21 +174,51 @@
       <p class="muted">Cada benchmark pertenece a una fuente distinta y no se suman ni se promedian.</p>`;
   }
 
+  /* ---------- calculadora de costo en soles ---------- */
+  const TOK_PAGINA = 700; // ≈ 35,000 tokens por 50 páginas, el mismo supuesto de los ejemplos de costo
+  function calcHtml(D) {
+    const ms = current(D).filter((m) => !isImg(m)).sort((a, b) => a.blend - b.blend);
+    if (!ms.length) return "";
+    return `<details class="more" id="calc"><summary>Calculadora de costo: ¿cuánto cuesta procesar mis documentos?</summary>
+      <div class="pe-ctl" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr))">
+        <label class="f">Modelo<select id="cc-m">${ms.map((m) => `<option value="${esc(m.id)}">${esc(nm(m))} (${esc(provName(m.provider))})</option>`).join("")}</select></label>
+        <label class="f">Documentos<input type="number" id="cc-n" min="1" value="100" inputmode="numeric"></label>
+        <label class="f">Páginas por documento<input type="number" id="cc-p" min="1" value="20" inputmode="numeric"></label>
+        <label class="f">Tokens de respuesta por documento<input type="number" id="cc-o" min="0" value="800" inputmode="numeric"></label>
+        <label class="f">Tipo de cambio (S/ por US$)<input type="number" id="cc-t" min="0.1" step="0.01" value="3.75" inputmode="decimal"><small>Referencial: cámbialo por el vigente.</small></label>
+      </div>
+      <p class="pe-big" id="cc-out" aria-live="polite"></p>
+      <p class="muted">Supuestos: unas ${TOK_PAGINA} tokens por página y precios por millón de tokens del catálogo de OpenRouter. Es una estimación de la factura por API, sin descuentos por lote ni impuestos; no incluye suscripciones ni el costo de revisar los resultados.</p></details>`;
+  }
+  function bindCalc(D, rootEl) {
+    const el = rootEl.querySelector("#calc"); if (!el) return;
+    const $ = (id) => el.querySelector(id), cur = current(D);
+    const paintCalc = () => {
+      const m = cur.find((x) => x.id === $("#cc-m").value), n = Math.max(0, +$("#cc-n").value || 0), pg = Math.max(0, +$("#cc-p").value || 0), o = Math.max(0, +$("#cc-o").value || 0), t = Math.max(0.1, +$("#cc-t").value || 3.75);
+      if (!m) { $("#cc-out").textContent = ""; return; }
+      const usd = (n * pg * TOK_PAGINA * m.price_in + n * o * m.price_out) / 1e6;
+      $("#cc-out").innerHTML = `<b>${esc(nf.format(n))}</b> documentos con ${esc(nm(m))}: unos <b>US$ ${usd.toLocaleString("es-PE", { maximumFractionDigits: usd < 10 ? 2 : 0, minimumFractionDigits: usd < 10 ? 2 : 0 })}</b>, es decir, unos <b>S/ ${(usd * t).toLocaleString("es-PE", { maximumFractionDigits: usd * t < 10 ? 2 : 0, minimumFractionDigits: usd * t < 10 ? 2 : 0 })}</b>.`;
+    };
+    el.addEventListener("input", () => { paintCalc(); track("calculadora_costo"); });
+    paintCalc();
+  }
+
   document.addEventListener("iar:data", () => {
     const D = I.D;
     if (!D.base) { (root || cat).innerHTML = '<div class="callout warn">' + ico("triangle-alert") + "<p>No se pudo cargar el catálogo de modelos.</p></div>"; return; }
     if (root) {
       const rank = (m) => { const i = LABS.findIndex(([k]) => k === I.norm(m.provider) || (k === "meta-llama" && I.norm(m.provider) === "meta")); return i < 0 ? 99 : i; };
-      const list = current(D).filter((m) => rank(m) < 99).sort((a, b) => b.created.localeCompare(a.created) || b.blend - a.blend).slice(0, 8);
+      const list = current(D).filter((m) => rank(m) < 99).sort((a, b) => (isImg(a) - isImg(b)) || b.created.localeCompare(a.created) || b.blend - a.blend).slice(0, 8);
       const curated = ((D.frontier && D.frontier.latest) || []).filter((x) => x.ctx && x.price && !D.base.some((m) => slug(nm(m)) === slug(x.name)));
       root.innerHTML = `
-        <div class="sec-head"><p class="kicker"><b>03</b> Quién destaca y en qué</p><h2 id="t-modelos">Radar de modelos</h2>
+        <div class="sec-head"><p class="kicker"><b>04</b> Quién destaca y en qué</p><h2 id="t-modelos">Radar de modelos</h2>
           <p class="lead">No hay un ganador universal. Cada modelo destaca en cosas distintas, así que se compara por tarea, precio y contexto.</p></div>
         ${selector(D)}
         <h3 class="sub-h">Capacidades por laboratorio</h3>${labMatrix(D)}
         <h3 class="sub-h">Modelos vigentes</h3>
         ${radarTable(D, list, { curated })}
         <div id="cmp-out" class="cmp-out" aria-live="polite"></div>
+        ${calcHtml(D)}
         <p><a class="btn ghost" href="modelos.html" data-track="clic_catalogo_completo">Ver el catálogo completo ${ico("arrow-right")}</a></p>`;
       const first = D.recommender && D.recommender.problems[0];
       if (first) paintSelector(D, first.id);
@@ -194,7 +227,7 @@
         root.querySelectorAll("#selector [data-p]").forEach((x) => x.setAttribute("aria-pressed", x === b));
         paintSelector(D, b.dataset.p); track("selector_problema", { p: b.dataset.p }); journey.mark("selector");
       });
-      bindTable(D, root); paintCompare(D);
+      bindTable(D, root); paintCompare(D); bindCalc(D, root);
     }
     if (cat) {
       const st = { q: "", prov: "", n: 30 };

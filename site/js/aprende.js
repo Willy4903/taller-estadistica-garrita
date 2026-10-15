@@ -57,7 +57,7 @@
     const A = I.D.academy, Z = I.D.quiz;
     if (!A) { root.innerHTML = ""; return; }
     root.innerHTML = `
-      <div class="sec-head"><p class="kicker"><b>05</b> Aprende en 5 minutos</p><h2 id="t-aprende">Aprende IA mientras exploras</h2>
+      <div class="sec-head"><p class="kicker"><b>07</b> Aprende en 5 minutos</p><h2 id="t-aprende">Aprende IA mientras exploras</h2>
         <p class="lead">Una ruta de cinco niveles en microlecciones de 2 a 4 minutos. Cada una termina con algo que puedes probar ahora mismo.</p></div>
       <div id="ap-prog" class="ap-prog"></div>
       <div class="levels">${A.levels.map((l) => `<article class="lvl-card"><header><span class="lvl-n">Nivel ${l.n}</span><h3>${esc(l.name)}</h3><p class="muted">${esc(l.desc)}</p></header>${l.lessons.map(lessonHtml).join("")}</article>`).join("")}</div>

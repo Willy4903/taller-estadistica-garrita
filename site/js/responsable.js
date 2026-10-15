@@ -102,7 +102,7 @@
     const D = I.D, E = D.ethics;
     if (home && E) {
       home.innerHTML = `
-        <div class="sec-head"><p class="kicker"><b>08</b> Usar con criterio</p><h2 id="t-responsable">Usa IA. Pero úsala con criterio.</h2>
+        <div class="sec-head"><p class="kicker"><b>11</b> Usar con criterio</p><h2 id="t-responsable">Usa IA. Pero úsala con criterio.</h2>
           <p class="lead">No se trata de tener miedo, sino de combinar capacidad con responsabilidad. Seis principios y dos herramientas para decidir en segundos.</p></div>
         <div class="grid g3 princ">${E.principles.map((p) => `<article class="card pr"><span class="pr-n">${ico(p.icon)} ${p.n}</span><h3>${esc(p.t)}</h3><p>${esc(p.d)}</p><ul>${p.list.map((x) => `<li>${esc(x)}</li>`).join("")}</ul><p class="muted">${esc(p.how)}</p></article>`).join("")}</div>
         <div class="grid g2 tools">${traffic(E)}${checklist(E)}</div>

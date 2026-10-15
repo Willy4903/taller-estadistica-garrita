@@ -9,7 +9,7 @@
     { n: 1, t: "Entender la IA", nivel: "Básico", href: "#aprende", levels: [1], extras: [], gets: "Los conceptos clave: modelo, token, contexto y alucinación.", after: "Leer noticias de IA y entender qué significan." },
     { n: 2, t: "Aprender a conversar", nivel: "Básico", href: "#promptlab", levels: [2, 3], extras: [["Prompt Lab: constructor y biblioteca por objetivo", 12]], gets: "Escribir instrucciones con objetivo, contexto, reglas y entregable.", after: "Pedir a una IA resultados claros y verificables." },
     { n: 3, t: "Usar modelos", nivel: "Intermedio", href: "#modelos", levels: [], extras: [["Selector por problema", 4], ["Comparador de modelos", 5], ["Seis medidas de uso", 5]], gets: "Elegir un modelo según tarea, precio y contexto.", after: "Justificar tu elección con datos y no con intuición." },
-    { n: 4, t: "Diseñar agentes", nivel: "Intermedio", href: "#agentes", levels: [4], extras: [["Del prompt al contexto y ciclo del agente", 8]], gets: "Construir contexto de trabajo y distinguir chatbot, flujo y agente.", after: "Diseñar un asistente con reglas, archivos y herramientas." },
+    { n: 4, t: "Diseñar agentes", nivel: "Intermedio", href: "#agentes", levels: [4], extras: [["Del prompt al contexto y ciclo del agente", 8]], gets: "Construir contexto de trabajo (con RAG y evaluación de respuestas) y distinguir chatbot, flujo y agente.", after: "Diseñar un asistente con reglas, archivos y herramientas." },
     { n: 5, t: "Automatizar procesos", nivel: "Avanzado", href: "#casos", levels: [5], extras: [["Casos de uso y recetas de automatización", 8]], gets: "Convertir una tarea repetitiva en un proceso con revisión humana.", after: "Diseñar una automatización sencilla y auditable." },
     { n: 6, t: "Aplicar IA responsablemente", nivel: "Todos los niveles", href: "#responsable", levels: [], extras: [["Principios, semáforo y lista de verificación", 6], ["Casos reales y normativa", 10]], gets: "Decidir qué usar, qué proteger y qué verificar.", after: "Usar IA con criterio y explicar por qué es seguro hacerlo." },
   ];
@@ -22,12 +22,12 @@
     const st = (c, p) => (c ? "done" : p ? "prog" : "todo");
     const f1 = frac([1]), f23 = frac([2, 3]), f4 = frac([4]), f5 = frac([5]);
     const state = [
-      st(f1.n === f1.t, f1.n > 0 || j.leyo_aprende),
+      st(f1.n === f1.t, f1.n > 0),
       st(f23.n === f23.t && j.prompt_construido, f23.n > 0 || j.promptlab || j.prompt_construido),
-      st(j.selector && j.comparo, j.selector || j.comparo || j.leyo_modelos || j.uso),
-      st(f4.n === f4.t && j.contexto, f4.n > 0 || j.contexto || j.leyo_agentes),
+      st(j.selector && j.comparo, j.selector || j.comparo || j.uso),
+      st(f4.n === f4.t && j.contexto, f4.n > 0 || j.contexto),
       st(f5.n === f5.t, f5.n > 0 || j.casos),
-      st(j.semaforo && j.checklist, j.semaforo || j.checklist || j.regulacion || j.leyo_responsable),
+      st(j.semaforo && j.checklist, j.semaforo || j.checklist || j.regulacion),
     ];
     return STEPS.map((s, i) => {
       const L = les(s.levels), min = L.reduce((a, x) => a + x.min, 0) + s.extras.reduce((a, x) => a + x[1], 0);
@@ -55,10 +55,10 @@
     const A = I.D.academy;
     if (!A) { root.innerHTML = ""; return; }
     root.innerHTML = `
-      <div class="sec-head"><p class="kicker"><b>00</b> Por dónde empezar</p><h2 id="t-ruta">Tu ruta recomendada</h2>
+      <div class="sec-head"><p class="kicker"><b>01</b> Por dónde empezar</p><h2 id="t-ruta">Tu ruta recomendada</h2>
         <p class="lead">Empieza entendiendo la IA, aprende a conversar con ella, dirige sus respuestas, intégrala en tus procesos y úsala con responsabilidad. Cada paso indica su nivel, cuánto toma y qué obtendrás.</p></div>
       <div class="ap-prog rt-bar"></div><div class="rt-grid"></div>
-      <p class="muted rt-note">${ico("info")} Los tiempos son estimados de lectura y práctica. El estado de cada paso se calcula con lo que haces en la página (microlecciones completadas, herramientas usadas) y no sale de tu navegador.</p>`;
+      <p class="muted rt-note">${ico("info")} Los tiempos son estimados de lectura y práctica. El estado de cada paso se calcula con lo que haces en la página (microlecciones completadas, herramientas usadas) y no sale de tu navegador. Solo cuenta lo que haces (lecciones, herramientas usadas), no haber pasado por la sección. Los seis pasos se apoyan en las cinco etapas de microlecciones de "Aprende desde cero".</p>`;
     paint(A);
     document.addEventListener("iar:journey", () => paint(A));
     document.addEventListener("click", (e) => { if (e.target.closest(".mk")) setTimeout(() => paint(A), 50); });

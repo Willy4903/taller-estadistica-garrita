@@ -17,7 +17,7 @@
     if (!Z) { root.innerHTML = ""; return; }
     const ans = {};
     root.innerHTML = `
-      <div class="sec-head"><p class="kicker"><b>10</b> Tu punto de partida</p><h2 id="t-nivel">¿En qué nivel estás usando IA?</h2>
+      <div class="sec-head"><p class="kicker"><b>00</b> Tu punto de partida</p><h2 id="t-nivel">¿En qué nivel estás usando IA?</h2>
         <p class="lead">Un diagnóstico de 60 segundos. Sin registro ni datos personales: el resultado se queda en tu navegador.</p></div>
       <div class="card" id="dg"><form id="dg-form">${Z.questions.map((q) => `<fieldset class="dq"><legend><span class="dq-n">${q.id + 1}</span>${esc(q.q)}</legend><div class="dq-o">${q.options.map((o, k) => `<label><input type="radio" name="q${q.id}" value="${k}"><span>${esc(o)}</span></label>`).join("")}</div></fieldset>`).join("")}
         <fieldset class="dq"><legend><span class="dq-n">+</span>¿Qué herramienta usas más?</legend><div class="dq-o">${Z.tools.map((t) => `<label><input type="radio" name="tool" value="${esc(t)}"><span>${esc(t)}</span></label>`).join("")}</div></fieldset>

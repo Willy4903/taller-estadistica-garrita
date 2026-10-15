@@ -56,7 +56,7 @@
     const down = w.filter((c) => c.kind.startsWith("precio") && c.after < c.before).length, up = w.filter((c) => c.kind.startsWith("precio") && c.after > c.before).length;
     const tabs = [["modelos", "Modelos"], ["capacidades", "Capacidades"], ["contexto", "Contexto"], ["precios", "Precios"], ["benchmarks", "Benchmarks"], ["anuncios", "APIs, planes, agentes y productos"]];
     root.innerHTML = `
-      <div class="sec-head"><p class="kicker"><b>02</b> Qué cambió</p><h2 id="t-cambios">Antes → ahora</h2>
+      <div class="sec-head"><p class="kicker"><b>03</b> Qué cambió</p><h2 id="t-cambios">Antes → ahora</h2>
         <p class="lead">Cada cambio frente a la versión anterior, con la fuente al lado. Si no hay fuente verificable, no aparece.</p></div>
       <div class="stats">
         <div><b>${n("nuevo")}</b><span>modelos nuevos detectados (30 días)</span></div>
