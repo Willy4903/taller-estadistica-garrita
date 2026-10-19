@@ -64,6 +64,7 @@
       return { opts: hf.map((h, i) => ({ name: h.id, prov: h.id.split("/")[0], why: `${roles[i]} en Hugging Face (${nf.format(h.downloads)} descargas, ${nf.format(h.likes)} me gusta). Antes de descargarlo revisa la licencia, el tamaño y si tu equipo tiene memoria suficiente.`, url: "https://huggingface.co/" + h.id })), note: "La tendencia indica popularidad, no calidad. Confirma licencia y requisitos de hardware." };
     }
     const f = p.filter;
+    if (p.curated) return { opts: p.curated.map((c) => ({ ...c, curated: true })), note: p.nodata };
     if (p.nodata) return { opts: [], note: p.nodata };
     const { list, relaxed } = candidates(D, f);
     const picked = pickABC(list, f.cheapBias);
@@ -85,7 +86,7 @@
     const L = ["A", "B", "C"];
     document.getElementById("sel-out").innerHTML = `
       <div class="sel-need"><b>Qué importa para ${esc(p.label.toLowerCase())}:</b> ${esc(p.need)}</div>
-      ${opts.length ? `<div class="grid g3">${opts.map((o, i) => `<article class="opt"><span class="opt-l">Opción ${L[i]}</span>${provTag(o.prov)}<h4>${esc(o.name)}</h4><p>${esc(o.why)}</p><a href="${esc(o.url)}" target="_blank" rel="noopener">Ver ficha</a></article>`).join("")}</div>` : ""}
+      ${opts.length ? `<div class="grid g3">${opts.map((o, i) => `<article class="opt"><span class="opt-l">Opción ${L[i]}</span>${provTag(o.prov)}<h4>${esc(o.name)}</h4><p>${esc(o.why)}</p><a href="${esc(o.url)}" target="_blank" rel="noopener">${o.curated ? "Ver sitio oficial" : "Ver ficha"}</a></article>`).join("")}</div>` : ""}
       ${note ? `<div class="callout warn">${ico("info")}<p>${esc(note)}</p></div>` : ""}
       <div class="callout ok">${ico("lightbulb")}<p><b>Consejo:</b> ${esc(p.tip)}</p></div>`;
   }
