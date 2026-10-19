@@ -91,3 +91,15 @@ code{font:.85em var(--mono);background:var(--surface2);padding:2px 6px;border-ra
 .more>summary::before{content:"+ ";color:var(--accent);font-family:var(--mono)}
 .more[open]>summary::before{content:"− "}
 .more>div,.more>.grid{padding-bottom:22px}
+
+.top5{margin:6px 0 22px}
+.top5-h{margin:20px 0 10px;font:700 1rem "Inter",sans-serif}
+.top5 ol{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.top5-i{display:grid;grid-template-columns:34px minmax(0,1fr);gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.top5-n{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 .95rem var(--mono)}
+.top5-t{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-bottom:6px}
+.top5-t b{font-size:1.02rem}
+.top5-b p{margin:4px 0;font-size:.93rem;color:var(--muted)}
+.top5-k{font-weight:600;color:var(--ink)}
+.top5-b a{display:inline-block;margin-top:4px;font-size:.9rem}
+.top5-src{margin:12px 0 0;font-size:.82rem}

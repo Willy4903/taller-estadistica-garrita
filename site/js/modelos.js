@@ -64,7 +64,6 @@
       return { opts: hf.map((h, i) => ({ name: h.id, prov: h.id.split("/")[0], why: `${roles[i]} en Hugging Face (${nf.format(h.downloads)} descargas, ${nf.format(h.likes)} me gusta). Antes de descargarlo revisa la licencia, el tamaño y si tu equipo tiene memoria suficiente.`, url: "https://huggingface.co/" + h.id })), note: "La tendencia indica popularidad, no calidad. Confirma licencia y requisitos de hardware." };
     }
     const f = p.filter;
-    if (p.curated) return { opts: p.curated.map((c) => ({ ...c, curated: true })), note: p.nodata };
     if (p.nodata) return { opts: [], note: p.nodata };
     const { list, relaxed } = candidates(D, f);
     const picked = pickABC(list, f.cheapBias);
@@ -80,15 +79,31 @@
       <div class="chips" role="group" aria-label="Problema">${R.problems.map((p, i) => `<button type="button" class="chip-btn" data-p="${p.id}" aria-pressed="${i === 0}">${ico(p.icon)} ${esc(p.label)}</button>`).join("")}</div>
       <div id="sel-out" aria-live="polite"></div><p class="muted sel-note">${esc(R.note)}</p></div>`;
   }
+  const ACC = { free: "ok", trial: "warn", paid: "", bundle: "", unclear: "warn" };
+  function topTools(D, id) {
+    const T = D.tools, set = T && T.sets[T.map[id]];
+    if (!set) return { html: "", tip: "" };
+    const items = set.items.map((t, i) => `<li class="top5-i"><span class="top5-n" aria-hidden="true">${i + 1}</span><div class="top5-b">
+        <div class="top5-t">${I.PROV[t.maker] ? provTag(t.maker) : ""}<b>${esc(t.name)}</b><span class="tag ${ACC[t.access]}">${esc(T.access[t.access])}</span>${t.caution && t.access !== "unclear" ? '<span class="tag warn">Verifica los términos</span>' : ""}</div>
+        <p><span class="top5-k">Planes:</span> ${esc(t.plans)}</p>
+        <p><span class="top5-k">Para qué sirve:</span> ${esc(t.why)}</p>
+        <a href="${esc(t.url)}" target="_blank" rel="noopener" data-track="clic_top5">Sitio oficial</a></div></li>`).join("");
+    const src = set.sources.map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.name)}</a>`).join(", ");
+    return { tip: set.tip || "", html: `<div class="top5"><h4 class="top5-h">Top 5 recomendadas: ${esc(set.label.toLowerCase())}</h4><ol>${items}</ol>
+      <p class="muted top5-src">Fuentes consultadas: ${src}. Revisado el ${esc(fmtDate(T.reviewed))}. ${esc(T.note)}</p></div>` };
+  }
   function paintSelector(D, id) {
     const p = D.recommender.problems.find((x) => x.id === id);
     const { opts, note } = optionsFor(D, p);
+    const top = topTools(D, id);
     const L = ["A", "B", "C"];
     document.getElementById("sel-out").innerHTML = `
       <div class="sel-need"><b>Qué importa para ${esc(p.label.toLowerCase())}:</b> ${esc(p.need)}</div>
-      ${opts.length ? `<div class="grid g3">${opts.map((o, i) => `<article class="opt"><span class="opt-l">Opción ${L[i]}</span>${provTag(o.prov)}<h4>${esc(o.name)}</h4><p>${esc(o.why)}</p><a href="${esc(o.url)}" target="_blank" rel="noopener">${o.curated ? "Ver sitio oficial" : "Ver ficha"}</a></article>`).join("")}</div>` : ""}
+      ${top.html}
+      ${opts.length && top.html ? '<h4 class="top5-h">Modelos del catálogo (acceso por API, pago por uso)</h4>' : ""}
+      ${opts.length ? `<div class="grid g3">${opts.map((o, i) => `<article class="opt"><span class="opt-l">Opción ${L[i]}</span>${provTag(o.prov)}<h4>${esc(o.name)}</h4><p>${esc(o.why)}</p><a href="${esc(o.url)}" target="_blank" rel="noopener">Ver ficha</a></article>`).join("")}</div>` : ""}
       ${note ? `<div class="callout warn">${ico("info")}<p>${esc(note)}</p></div>` : ""}
-      <div class="callout ok">${ico("lightbulb")}<p><b>Consejo:</b> ${esc(p.tip)}</p></div>`;
+      <div class="callout ok">${ico("lightbulb")}<p><b>Consejo:</b> ${esc(p.tip)}${top.tip ? " " + esc(top.tip) : ""}</p></div>`;
   }
 
   /* ---------- capacidades por laboratorio ---------- */

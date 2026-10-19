@@ -78,28 +78,8 @@
    "filter": {
     "tag": "Generación de imágenes"
    },
-   "nodata": "El catálogo de modelos de texto no incluye datos comparables de generación de imágenes, así que estas opciones son una orientación curada, sin precio ni puntaje. Compara en las arenas de imagen de Artificial Analysis y LMArena, y confirma versión y precio vigentes en cada sitio.",
-   "tip": "Describe sujeto, estilo, luz y encuadre; revisa derechos y atribución antes de publicar. Si necesitas control o respaldo legal, mira también FLUX (pesos abiertos) y Adobe Firefly (pensado para uso comercial).",
-   "curated": [
-    {
-     "name": "GPT Image (ChatGPT)",
-     "prov": "openai",
-     "why": "Se usa dentro de ChatGPT. Destaca en seguir instrucciones con detalle y en editar una imagen conversando, por ejemplo cambiar un elemento sin rehacerla.",
-     "url": "https://openai.com/"
-    },
-    {
-     "name": "Nano Banana (Gemini)",
-     "prov": "google",
-     "why": "Es la generación y edición de imágenes de Gemini. Es una buena opción para fotos realistas, para texto dentro de la imagen y para ediciones rápidas.",
-     "url": "https://gemini.google/"
-    },
-    {
-     "name": "Midjourney",
-     "prov": "Midjourney",
-     "why": "Es una herramienta independiente, muy usada por la calidad artística y el estilo visual de sus resultados. Se usa por suscripción.",
-     "url": "https://www.midjourney.com/"
-    }
-   ]
+   "nodata": "El catálogo de modelos de texto no incluye datos comparables de generación de imágenes. Consulta las arenas de imagen de Artificial Analysis y LMArena.",
+   "tip": "Describe sujeto, estilo, luz y encuadre; revisa derechos y atribución antes de publicar."
   },
   {
    "id": "video",
@@ -109,28 +89,8 @@
    "filter": {
     "tag": "__ninguno__"
    },
-   "nodata": "No hay datos comparables de video en las fuentes abiertas que usa IA Radar, así que estas opciones son una orientación curada, sin precio ni puntaje. Este campo cambia rápido: consulta la arena de video de Artificial Analysis y confirma versión, precio y condiciones de uso en cada sitio.",
-   "tip": "Etiqueta como contenido generado cuando corresponda y evita imitar a personas reales sin permiso.",
-   "curated": [
-    {
-     "name": "Veo (Google)",
-     "prov": "google",
-     "why": "Es el modelo de video de Google. Suele valorarse por el realismo, la física de los movimientos y porque puede generar audio junto con la imagen.",
-     "url": "https://deepmind.google/models/veo/"
-    },
-    {
-     "name": "Runway",
-     "prov": "Runway",
-     "why": "Es una plataforma de video con herramientas de edición y control sobre la escena. Sirve cuando necesitas dirigir el resultado y no solo generarlo.",
-     "url": "https://runwayml.com/"
-    },
-    {
-     "name": "Kling",
-     "prov": "Kling",
-     "why": "Es un generador de video con buena relación entre calidad y costo, y escenas con mucho movimiento. Suele tener un plan gratuito limitado.",
-     "url": "https://klingai.com/"
-    }
-   ]
+   "nodata": "No hay datos comparables de video en las fuentes abiertas que usa IA Radar. Consulta la arena de video de Artificial Analysis y verifica condiciones de uso y derechos.",
+   "tip": "Etiqueta como contenido generado cuando corresponda y evita imitar a personas reales sin permiso."
   },
   {
    "id": "automatizar",

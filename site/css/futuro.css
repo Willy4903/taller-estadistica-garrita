@@ -82,7 +82,7 @@ th{background:rgba(9,40,70,.6)}
 .pl-box,.q-opt,.dq-o span{background:color-mix(in srgb,var(--bg) 65%,transparent)}
 .callout{background:rgba(37,217,245,.08);border-color:var(--line2)}
 .les-try,.answer,.sel-need,.pl-fx{background:rgba(37,217,245,.09)}
-.opt{background-color:rgba(5,20,38,.7)}
+.opt,.top5-i{background-color:rgba(5,20,38,.7)}
 .chart canvas{filter:drop-shadow(0 0 6px rgba(37,217,245,.18))}
 #site-footer{background:rgba(2,9,19,.78);border-top-color:var(--line2);box-shadow:0 -20px 60px rgba(37,217,245,.06)}
 :root[data-theme="light"] #site-footer{background:var(--surface2)}
