@@ -10,7 +10,7 @@
     if (!G) { root.innerHTML = ""; return; }
     const on = new Set();
     root.innerHTML = `
-      <div class="sec-head"><p class="kicker"><b>07</b> Aplicar a escala</p><h2 id="t-agentes">Del prompt al contexto, y de ahí a los agentes</h2>
+      <div class="sec-head"><p class="kicker"><b>07</b> Del prompt al agente</p><h2 id="t-agentes">Del prompt al contexto, y de ahí a los agentes</h2>
         <p class="lead">Usar IA no es escribir una pregunta y copiar la respuesta. Es formular el problema, elegir herramienta, dar contexto, revisar fuentes, verificar y convertir el resultado en un entregable.</p></div>
       <ol class="method">${G.method.map((m, i) => `<li><span>${i + 1}</span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></li>`).join("")}</ol>
 

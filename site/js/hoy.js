@@ -88,7 +88,8 @@
     const D = I.D;
     root.innerHTML = `
       <div class="sec-head"><p class="kicker"><b>01</b> Qué está pasando</p><h2 id="t-hoy">Hoy en IA</h2>
-        <p class="lead">Lo que de verdad importa, sin llenar la pantalla de noticias menores. Cada punto dice qué pasó, por qué importa y a quién afecta.</p></div>
+        <p class="lead">Lo que de verdad importa, sin llenar la pantalla de noticias menores. Cada punto dice qué pasó, por qué importa y a quién afecta.</p>
+        ${D.news && D.news.updated_at ? `<p class="muted mono">Datos al ${esc(fmtDate(D.news.updated_at.slice(0, 10)))}</p>` : ""}</div>
       <div class="hoy-bar">
         <div class="seg" role="group" aria-label="Periodo">${Object.keys(PERIODS).map((p) => `<button type="button" data-p="${p}" aria-pressed="${p === st.period}">${p}</button>`).join("")}</div>
         <div class="chips" role="group" aria-label="Categorías">${["Todas", ...Object.keys(CATS)].map((c) => `<button type="button" class="chip-btn" data-c="${esc(c)}" aria-pressed="${c === st.cat}">${esc(c)}</button>`).join("")}</div>

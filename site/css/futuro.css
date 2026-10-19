@@ -296,6 +296,7 @@ th{background:rgba(9,40,70,.6)}
   body{padding-left:224px}
   #sidebar{position:fixed;left:0;top:0;bottom:0;width:224px;z-index:60;display:flex;flex-direction:column;gap:6px;padding:16px 12px 14px;background:linear-gradient(180deg,rgba(5,20,38,.94),rgba(3,12,24,.96));border-right:1px solid var(--line2);box-shadow:0 0 44px rgba(37,217,245,.14),inset -1px 0 0 rgba(37,217,245,.08);backdrop-filter:blur(14px);overflow-y:auto}
   :root[data-theme="light"] #sidebar{background:var(--surface)}
+  #sidebar>*{flex-shrink:0}
   .progd{display:block;position:fixed;top:0;left:224px;right:0;height:2px;z-index:61;background:linear-gradient(90deg,#25d9f5,#34e0a1);box-shadow:0 0 10px #25d9f5;transform:scaleX(0);transform-origin:0 50%}
   .fab{right:22px}
 }
@@ -470,9 +471,9 @@ body{padding-bottom:0}
 .cov li{display:flex;gap:10px;align-items:flex-start}
 .cov .tag{flex:none}
 .pe-cov{margin-bottom:20px}
-.sb-foot{position:sticky;bottom:-14px;margin:0 -12px -14px;padding:12px 12px 14px;background:linear-gradient(180deg,rgba(3,12,24,0),rgba(3,12,24,.97) 18%)}
-:root[data-theme="light"] .sb-foot{background:linear-gradient(180deg,transparent,var(--surface) 18%)}
-@media(max-width:1120px){.sb-foot{background:linear-gradient(180deg,transparent,var(--bg) 18%)}}
+.sb-foot{position:sticky;bottom:-14px;margin:0 -12px -14px;padding:12px 12px 14px;background:rgb(3,12,24)}
+:root[data-theme="light"] .sb-foot{background:var(--surface)}
+@media(max-width:1120px){.sb-foot{background:var(--bg)}}
 
 /* mapa de Perú */
 .pmap .mapw{position:relative;max-width:300px;margin:6px auto 0;overflow:visible;border-radius:0}

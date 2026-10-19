@@ -6,9 +6,10 @@ body{background:
   radial-gradient(900px 600px at 108% -4%,rgba(139,92,246,.34),transparent 60%),
   radial-gradient(1100px 700px at 50% -12%,rgba(18,86,140,.40),transparent 70%),
   radial-gradient(800px 560px at 104% 96%,rgba(37,217,245,.16),transparent 65%),var(--bg);background-attachment:fixed}
-.stage{position:relative;padding-top:26px;padding-bottom:20px;overflow:clip}
+html,body{overflow-x:clip}
+.stage{position:relative;padding-top:26px;padding-bottom:20px;overflow:clip;max-width:100%}
 .sphere{position:absolute;left:50%;top:-30px;width:min(980px,96%);aspect-ratio:1;transform:translateX(-50%);pointer-events:none;z-index:0;opacity:.62}
-.stage-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(290px,25%) minmax(0,1fr) minmax(290px,25%);gap:18px;align-items:start}
+.stage-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr);max-width:860px;margin:0 auto;gap:18px;align-items:start}
 .st-col{display:flex;flex-direction:column;gap:16px;min-width:0}
 .st-head{text-align:center;padding:clamp(24px,4vw,56px) 8px 6px}
 .st-badge{display:inline-block;margin:0 0 18px;padding:7px 16px;border-radius:99px;font:700 .68rem var(--mono);letter-spacing:.2em;text-transform:uppercase;color:#d8f5ff;background:linear-gradient(135deg,rgba(21,151,255,.5),rgba(139,92,246,.5));border:1px solid rgba(124,236,255,.45);box-shadow:0 0 26px rgba(37,217,245,.35)}
