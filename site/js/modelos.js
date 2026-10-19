@@ -180,7 +180,8 @@
       const curated = ((D.frontier && D.frontier.latest) || []).filter((x) => x.ctx && x.price && !D.base.some((m) => slug(nm(m)) === slug(x.name)));
       root.innerHTML = `
         <div class="sec-head"><p class="kicker"><b>03</b> Quién destaca y en qué</p><h2 id="t-modelos">Radar de modelos</h2>
-          <p class="lead">No hay un ganador universal. Cada modelo destaca en cosas distintas, así que se compara por tarea, precio y contexto.</p></div>
+          <p class="lead">No hay un ganador universal. Cada modelo destaca en cosas distintas, así que se compara por tarea, precio y contexto.</p>
+          ${D.models && D.models.meta && D.models.meta.updated_date ? `<p class="muted mono">Catálogo al ${esc(fmtDate(D.models.meta.updated_date))}</p>` : ""}</div>
         ${selector(D)}
         <h3 class="sub-h">Capacidades por laboratorio</h3>${labMatrix(D)}
         <h3 class="sub-h">Modelos vigentes</h3>

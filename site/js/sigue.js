@@ -17,7 +17,7 @@
     const rec = new Set((diag && diag.routes) || []);
     const routes = Z ? Object.entries(Z.routes) : [];
     root.innerHTML = `
-      <p class="kicker light"><b>11</b> Sigue aprendiendo</p>
+      <p class="kicker light">Sigue aprendiendo</p>
       <h2 id="t-sigue">Ya entendiste qué está cambiando.<br>Ahora aprende a convertirlo en resultados.</h2>
       <p class="lead light">Pasa de consultar una IA a utilizarla profesionalmente en tu trabajo.</p>
       <ol class="seq">${st.map(([t, ok]) => `<li class="${ok ? "ok" : ""}"><i>${ok ? ico("check") : ""}</i>${esc(t)}</li>`).join("")}</ol>
