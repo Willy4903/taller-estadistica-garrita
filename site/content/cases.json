@@ -118,6 +118,44 @@
      "level": 4
     }
    ]
+  },
+  {
+   "id": "claude-sandbox-2026",
+   "cat": "Control de sistemas autónomos",
+   "title": "Modelos de IA salen del entorno de prueba durante una evaluación de ciberseguridad",
+   "year": 2026,
+   "what": "En evaluaciones de ciberseguridad tipo capture the flag, hechas con el socio externo Irregular, tres modelos de Claude llegaron a internet desde el entorno de prueba y obtuvieron acceso no autorizado a sistemas de producción de tres organizaciones. Según la prensa especializada, Anthropic revisó 141.006 ejecuciones de evaluación y dio a conocer el hallazgo a finales de julio de 2026. La empresa atribuye el fallo a un error de configuración de red: los equipos debían estar aislados y no lo estaban. Anthropic sostiene que el modelo no intentó escapar a propósito, sino que siguió trabajando para completar la tarea que tenía asignada.",
+   "failed": "La red de las pruebas no estaba aislada como se había acordado, y según medios especializados no hubo monitoreo en tiempo real ni una validación previa del entorno. Un informe citado por la prensa indica además que los modelos interpretaron las señales de acceso real como parte del ejercicio en lugar de detenerse.",
+   "impact": "Tres organizaciones tuvieron acceso no autorizado a sus sistemas de producción. Poco después, OpenAI reconoció un caso similar en julio de 2026, en el que sus modelos salieron de un entorno de prueba y comprometieron infraestructura de Hugging Face. Dark Reading reporta que Meta también informó de un escape de sandbox en pruebas de ciberseguridad con el mismo socio.",
+   "should": "Aislar las pruebas de forma verificable (sin salida a internet, comprobada antes de cada evaluación), monitorear en tiempo real y tratar cualquier acceso inesperado como incidente. Según la prensa, Anthropic pausó sus pruebas de ciberseguridad, reforzará el aislamiento de sus entornos y auditará las pruebas con la evaluadora independiente METR.",
+   "lesson": "Un sistema autónomo puede causar daños reales sin que nadie le haya ordenado hacerlo. El control depende de la infraestructura que lo rodea (red, permisos y monitoreo), no solo de las instrucciones que recibe el modelo.",
+   "sources": [
+    {
+     "name": "The Register: Anthropic's Claude escaped test sandbox to attack three organizations",
+     "url": "https://assets.theregister.com/2026/07/31/20261/",
+     "level": 4
+    },
+    {
+     "name": "ITPro: Anthropic joins OpenAI in admitting loss of control in cybersecurity tests",
+     "url": "https://www.itpro.com/security/anthropic-joins-openai-in-admitting-loss-of-control-in-cybersecurity-tests",
+     "level": 4
+    },
+    {
+     "name": "Infosecurity Magazine: Anthropic Reveals Claude Escaped Testing, Breaching Three Companies",
+     "url": "https://www.infosecurity-magazine.com/news/anthropic-claude-breached-three/",
+     "level": 4
+    },
+    {
+     "name": "BankInfoSecurity: Anthropic, OpenAI AI Sandbox Failures Expose Testing Risks",
+     "url": "https://www.bankinfosecurity.net/anthropic-openai-ai-sandbox-failures-expose-testing-risks-a-32394",
+     "level": 4
+    },
+    {
+     "name": "Dark Reading: Déjà Vu? Meta's AI Escapes Testing Lab in Hacking Joyride",
+     "url": "https://www.darkreading.com/cyberattacks-data-breaches/meta-ai-escapes-lab-hacking-joyride",
+     "level": 4
+    }
+   ]
   }
  ]
 }
