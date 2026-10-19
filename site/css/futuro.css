@@ -82,7 +82,7 @@ th{background:rgba(9,40,70,.6)}
 .pl-box,.q-opt,.dq-o span{background:color-mix(in srgb,var(--bg) 65%,transparent)}
 .callout{background:rgba(37,217,245,.08);border-color:var(--line2)}
 .les-try,.answer,.sel-need,.pl-fx{background:rgba(37,217,245,.09)}
-.opt{background-color:rgba(5,20,38,.7)}
+.opt,.top5-i{background-color:rgba(5,20,38,.7)}
 .chart canvas{filter:drop-shadow(0 0 6px rgba(37,217,245,.18))}
 #site-footer{background:rgba(2,9,19,.78);border-top-color:var(--line2);box-shadow:0 -20px 60px rgba(37,217,245,.06)}
 :root[data-theme="light"] #site-footer{background:var(--surface2)}
@@ -474,6 +474,7 @@ body{padding-bottom:0}
 .sb-foot{position:sticky;bottom:-14px;margin:0 -12px -14px;padding:12px 12px 14px;background:rgb(3,12,24)}
 :root[data-theme="light"] .sb-foot{background:var(--surface)}
 @media(max-width:1120px){.sb-foot{background:var(--bg)}}
+@media(min-width:1121px) and (max-height:860px){.sb-foot .sb-orient,.sb-foot>p:last-child{display:none}}
 
 /* mapa de Perú */
 .pmap .mapw{position:relative;max-width:300px;margin:6px auto 0;overflow:visible;border-radius:0}

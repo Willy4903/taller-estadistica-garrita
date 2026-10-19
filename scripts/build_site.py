@@ -123,7 +123,7 @@ def build_catalog():
 <noscript><p>Esta página necesita JavaScript para mostrar el catálogo.</p></noscript>
 <div id="catalog-root"></div></div>'''
     write("modelos.html", shell("modelos.html", "Catálogo de modelos de IA: precios, contexto y capacidades", "Catálogo actualizado a diario de modelos de IA con fecha de lanzamiento, ventana de contexto, precio por millón de tokens, modalidades y comparador.", body,
-          scripts=["models-lib", "data", "modelos"], need="models,frontier,arena,recommender", ld=[crumbs([("IA Radar", ""), ("Modelos", "modelos.html")])]))
+          scripts=["models-lib", "data", "modelos"], need="models,frontier,arena,recommender,tools", ld=[crumbs([("IA Radar", ""), ("Modelos", "modelos.html")])]))
 
 
 def build_responsible():

@@ -1,0 +1,199 @@
+{
+ "reviewed": "2026-10-19",
+ "note": "Las herramientas se ordenan por el consenso de las reseñas consultadas (cuántas las recomiendan y para qué), no por un benchmark propio. Los planes y precios vienen de esas reseñas y no se pudieron contrastar con las páginas oficiales: son aproximados, cambian seguido y a veces las fuentes se contradicen. Confirma siempre en el sitio oficial antes de pagar.",
+ "access": {
+  "free": "Gratis con límites",
+  "trial": "Crédito de prueba",
+  "paid": "Solo de pago",
+  "bundle": "Incluido en una suscripción",
+  "unclear": "Las fuentes discrepan"
+ },
+ "sets": {
+  "imagenes": {
+   "label": "Generadores de imágenes",
+   "sources": [
+    {"name": "Guideflow", "url": "https://www.guideflow.com/blog/best-ai-image-generators"},
+    {"name": "AI Weekly", "url": "https://aiweekly.co/learning-ai/ai-applications/best-ai-image-generators"},
+    {"name": "Dupple", "url": "https://dupple.com/learn/best-ai-image-generators"},
+    {"name": "Pixelift", "url": "https://pixelift.pl/en/blog/best-free-ai-image-generators-2026-comparison"},
+    {"name": "Prism Poster", "url": "https://www.prismposter.com/blog/best-ai-image-generator-2026"}
+   ],
+   "items": [
+    {"name": "GPT Image (ChatGPT)", "maker": "openai", "url": "https://chatgpt.com/", "access": "free",
+     "plans": "Pocas imágenes al día en el plan gratuito. El plan Plus cuesta unos US$20 al mes.",
+     "why": "Sigue instrucciones detalladas y permite editar la imagen conversando. Puede tardar más porque razona antes de generar."},
+    {"name": "Nano Banana (Gemini)", "maker": "google", "url": "https://gemini.google/", "access": "free",
+     "plans": "Gratis en la app de Gemini con topes diarios que no se publican. AI Pro cuesta unos US$19.99 al mes; hay un nivel AI Plus más barato (entre US$4.99 y US$9.99 según la fuente).",
+     "why": "Se destaca en fotos realistas, texto dentro de la imagen y ediciones rápidas."},
+    {"name": "Midjourney", "maker": "Midjourney", "url": "https://www.midjourney.com/", "access": "paid",
+     "plans": "No tiene plan gratuito. Los planes empiezan en unos US$10 al mes.",
+     "why": "Es la más elogiada por la calidad artística y el estilo visual de sus resultados."},
+    {"name": "Adobe Firefly", "maker": "Adobe", "url": "https://firefly.adobe.com/", "access": "free",
+     "plans": "El plan gratuito da 25 créditos al mes. Los planes de pago empiezan en unos US$9.99 al mes.",
+     "why": "Se recomienda cuando importa la seguridad comercial y los derechos de uso."},
+    {"name": "Leonardo AI", "maker": "Leonardo", "url": "https://leonardo.ai/", "access": "free",
+     "plans": "Plan gratuito con unos 150 tokens rápidos al día. Los planes de pago empiezan en unos US$12 al mes.",
+     "why": "Tiene la cuota gratuita más generosa de las fuentes. Una fuente dice que el plan gratis permite uso comercial y otra que no: verifica los términos antes de publicar.",
+     "caution": true}
+   ],
+   "tip": "Ideogram suele nombrarse para texto dentro de imágenes, pero sus cuotas gratuitas varían mucho entre fuentes. FLUX ofrece pesos abiertos para quien quiera ejecutarlo por su cuenta."
+  },
+  "video": {
+   "label": "Generadores de video",
+   "sources": [
+    {"name": "Vidico", "url": "https://vidico.com/news/best-ai-video-generators/"},
+    {"name": "Rework", "url": "https://resources.rework.com/tools/ai-tools/best-ai-video-generators-2026"},
+    {"name": "Layer3 Labs", "url": "https://www.layer3labs.io/guides/best-ai-video-generators"},
+    {"name": "Fello AI", "url": "https://felloai.com/best-free-ai-video-generators/"},
+    {"name": "AI Tools Bakery", "url": "https://aitoolsbakery.com/blog/ai-video-generator-pricing-compared/"}
+   ],
+   "items": [
+    {"name": "Veo (Google)", "maker": "google", "url": "https://deepmind.google/models/veo/", "access": "free",
+     "plans": "En Google Flow, una fuente indica 50 créditos gratis al día para cuentas de adultos. En la app de Gemini es de pago, desde el plan AI Plus (unos US$4.99 al mes).",
+     "why": "Casi todas las reseñas lo ponen al frente por el realismo, la física de los movimientos y el audio nativo."},
+    {"name": "Runway", "maker": "Runway", "url": "https://runwayml.com/", "access": "trial",
+     "plans": "El plan gratuito da 125 créditos una sola vez. Los planes de pago empiezan en unos US$15 al mes (625 créditos).",
+     "why": "Ofrece control y herramientas de edición. Los créditos se gastan rápido en calidad alta."},
+    {"name": "Kling", "maker": "Kling", "url": "https://klingai.com/", "access": "unclear",
+     "plans": "Las fuentes discrepan: una habla de 66 créditos diarios gratis y otras de ninguno. El plan Standard cuesta unos US$10 al mes (660 créditos).",
+     "why": "Se le ve como la mejor relación calidad y precio, y es fuerte en escenas con mucho movimiento.",
+     "caution": true},
+    {"name": "Pika", "maker": "Pika", "url": "https://pika.art/", "access": "free",
+     "plans": "Plan gratuito con 80 créditos al mes y salida en 480p. Los planes de pago empiezan en unos US$10 al mes (700 créditos).",
+     "why": "Tiene el plan gratuito más consistente entre las fuentes, útil para probar."},
+    {"name": "Luma", "maker": "Luma", "url": "https://lumalabs.ai/", "access": "unclear",
+     "plans": "Las fuentes discrepan: una dice que retiró el plan gratuito a inicios de 2026 y otra habla de unos 80 créditos diarios. El plan Plus se cotiza en unos US$30 al mes.",
+     "why": "Aparece entre las opciones fuertes por calidad de imagen, pero su acceso gratuito es incierto.",
+     "caution": true}
+   ],
+   "tip": "Sora de OpenAI no se incluye: varias reseñas dicen que se cerró en 2026, aunque una guía aún lo lista. Confirma su estado en el sitio de OpenAI."
+  },
+  "presentaciones": {
+   "label": "Creadores de presentaciones",
+   "sources": [
+    {"name": "The Neuron", "url": "https://www.theneuron.ai/guides/best-ai-presentation-makers/"},
+    {"name": "Dupple", "url": "https://dupple.com/learn/best-ai-presentation-tools"},
+    {"name": "Deckary", "url": "https://deckary.com/blog/best-ai-presentation-maker"},
+    {"name": "Costbench", "url": "https://costbench.com/best/best-ai-presentation-tools"}
+   ],
+   "items": [
+    {"name": "Gamma", "maker": "Gamma", "url": "https://gamma.app/", "access": "free",
+     "plans": "Tiene plan gratuito. Las cifras de pago varían entre US$8 y US$18 al mes según la fuente.",
+     "why": "Varias reseñas lo nombran la mejor opción general: convierte un texto o documento en una presentación y la exporta a PowerPoint o Google Slides. Ojo: sus presentaciones son páginas web y al exportar a .pptx el diseño puede descuadrarse.",
+     "caution": true},
+    {"name": "Canva", "maker": "Canva", "url": "https://www.canva.com/", "access": "free",
+     "plans": "El plan gratuito tiene un número limitado de usos de IA. Canva Pro se cotiza entre US$12.99 y US$15 al mes.",
+     "why": "Es la mejor para flexibilidad de diseño: la misma pieza sirve para presentaciones, redes y material impreso."},
+    {"name": "Beautiful.ai", "maker": "Beautiful.ai", "url": "https://www.beautiful.ai/", "access": "unclear",
+     "plans": "El plan Pro se cotiza en unos US$12 al mes. Las fuentes consultadas no confirman un plan gratuito.",
+     "why": "Pensada para equipos que quieren presentaciones coherentes. Su IA trabaja dentro de plantillas fijas, lo que da orden pero menos libertad.",
+     "caution": true},
+    {"name": "Microsoft Copilot en PowerPoint", "maker": "microsoft", "url": "https://www.microsoft.com/microsoft-365/powerpoint", "access": "bundle",
+     "plans": "Se contrata como complemento de Microsoft 365. Las fuentes lo cotizan entre US$18 y US$30 por usuario al mes (una indica US$21).",
+     "why": "Es la opción natural si tu organización ya trabaja con Microsoft 365."},
+    {"name": "Plus AI", "maker": "Plus AI", "url": "https://plusai.com/", "access": "trial",
+     "plans": "Prueba gratuita de 7 días según el sitio oficial. Las fuentes cotizan el plan de pago en unos US$10 al mes.",
+     "why": "Funciona dentro de Google Slides y PowerPoint, sin cambiar de herramienta."}
+   ],
+   "tip": "Gemini dentro de Google Slides no apareció en las fuentes consultadas, así que no se evalúa aquí."
+  },
+  "codigo": {
+   "label": "Asistentes para programar",
+   "sources": [
+    {"name": "Tembo", "url": "https://www.tembo.io/blog/top-ai-coding-assistants"},
+    {"name": "Scrimba", "url": "https://scrimba.com/articles/best-ai-coding-assistants-2026/"},
+    {"name": "DEV Community (octubre de 2026)", "url": "https://dev.to/paullovelace/7-ai-coding-assistants-tested-honest-ranking-october-2026-2ehd"},
+    {"name": "Verdent", "url": "https://www.verdent.ai/guides/best-ai-coding-assistant-2026"},
+    {"name": "Nxcode", "url": "https://www.nxcode.io/resources/news/best-free-ai-coding-tools-2026"}
+   ],
+   "items": [
+    {"name": "Claude Code", "maker": "anthropic", "url": "https://www.anthropic.com/claude-code", "access": "bundle",
+     "plans": "No está en el plan gratuito. Se incluye con Claude Pro (unos US$20 al mes, o US$17 si se paga por año). Para uso intenso, las fuentes mencionan Max de US$100 a US$200.",
+     "why": "Las reseñas lo señalan como la opción agéntica más fuerte, pero también la menos amigable con el uso gratuito."},
+    {"name": "GitHub Copilot", "maker": "microsoft", "url": "https://github.com/features/copilot", "access": "free",
+     "plans": "El plan gratuito incluye unos 2,000 autocompletados y 50 chats al mes. El plan de pago empieza en unos US$10 al mes.",
+     "why": "Es el punto de partida gratuito más citado, integrado en los editores más comunes."},
+    {"name": "Cursor", "maker": "Cursor", "url": "https://cursor.com/", "access": "free",
+     "plans": "Plan Hobby gratuito y limitado. Pro se cotiza en unos US$20 al mes.",
+     "why": "Es un editor de código con IA integrada, muy elegido para trabajar sobre proyectos completos."},
+    {"name": "OpenAI Codex", "maker": "openai", "url": "https://openai.com/codex/", "access": "bundle",
+     "plans": "Suele ir incluido en ChatGPT Plus (unos US$20 al mes). Algunas listas indican una prueba limitada en el plan gratuito.",
+     "why": "Es una buena opción si ya pagas ChatGPT y quieres un agente de programación en la misma cuenta."},
+    {"name": "Windsurf", "maker": "Windsurf", "url": "https://windsurf.com/", "access": "unclear",
+     "plans": "Una fuente indica autocompletado gratuito sin tope mensual; otras lo ponen de pago en unos US$15 al mes.",
+     "why": "Se menciona como opción gratuita fuerte, pero las condiciones varían según la fuente.",
+     "caution": true}
+   ],
+   "tip": "Cline, Aider y OpenCode son gratuitos de instalar: solo pagas la API del modelo que conectes. Gemini Code Assist figura con un nivel gratuito generoso en una fuente, sin precio verificado."
+  },
+  "investigar": {
+   "label": "Asistentes de investigación",
+   "sources": [
+    {"name": "Dupple (herramientas)", "url": "https://dupple.com/learn/best-ai-research-tools"},
+    {"name": "Dupple (gratuitas)", "url": "https://dupple.com/learn/best-free-ai-research-assistants"},
+    {"name": "Pokee", "url": "https://pokee.ai/blog/best-ai-tools-for-research-2026"},
+    {"name": "WsCube Tech", "url": "https://www.wscubetech.com/blog/?p=23366"},
+    {"name": "Analytics Insight", "url": "https://www.analyticsinsight.net/ai-tools/best-ai-research-tools-in-2026-which-one-is-right-for-you"}
+   ],
+   "items": [
+    {"name": "Perplexity", "maker": "perplexity", "url": "https://www.perplexity.ai/", "access": "free",
+     "plans": "Plan gratuito disponible. Pro cuesta unos US$20 al mes.",
+     "why": "Responde rápido con citas a la web. Una reseña advierte que la precisión de las citas baja en consultas académicas complejas."},
+    {"name": "ChatGPT Deep Research", "maker": "openai", "url": "https://chatgpt.com/", "access": "free",
+     "plans": "Hay uso limitado en el plan gratuito. Plus cuesta unos US$20 al mes.",
+     "why": "Es la más fuerte para informes largos y estructurados. Una reseña cita una auditoría con una tasa alta de citas erróneas: verifica cada cita.",
+     "caution": true},
+    {"name": "NotebookLM", "maker": "google", "url": "https://notebooklm.google/", "access": "free",
+     "plans": "Las fuentes lo describen como gratuito.",
+     "why": "Responde solo con los documentos que subes. No busca en la web abierta, lo que ayuda a acotar la investigación a tu material."},
+    {"name": "Consensus", "maker": "Consensus", "url": "https://consensus.app/", "access": "free",
+     "plans": "Plan gratuito. Premium se cotiza en unos US$9.99 al mes.",
+     "why": "Resume lo que dicen los estudios revisados por pares, útil para preguntas de sí o no."},
+    {"name": "Elicit", "maker": "Elicit", "url": "https://elicit.com/", "access": "free",
+     "plans": "El plan básico gratuito es limitado. Plus se cotiza en unos US$10 al mes, aunque otra fuente da un rango de US$12 a US$49.",
+     "why": "Está diseñada para revisiones de literatura científica."}
+   ],
+   "tip": "Una combinación gratuita razonable: NotebookLM para tus documentos, Consensus o Elicit para literatura y Perplexity para preguntas generales de la web."
+  },
+  "asistentes": {
+   "label": "Asistentes generales",
+   "sources": [
+    {"name": "Sentisight", "url": "https://www.sentisight.ai/ai-price-comparison-gemini-chatgpt-claude-grok/"},
+    {"name": "Tech Insider", "url": "https://tech-insider.org/best-ai-chatbots-2026/"},
+    {"name": "AIViewer", "url": "https://aiviewer.ai/guides/ai-pricing-comparison-2026/"},
+    {"name": "Explore AI Together", "url": "https://exploreaitogether.com/llm-usage-limits-comparison/"},
+    {"name": "Perspective AI", "url": "https://perspectiveai.xyz/ai-pricing-guide-2026-every-plan-compared/"}
+   ],
+   "items": [
+    {"name": "ChatGPT", "maker": "openai", "url": "https://chatgpt.com/", "access": "free",
+     "plans": "Plan gratuito (una fuente indica que lleva anuncios en EE. UU. y Europa). Hay un plan Go de unos US$8, Plus de US$20 y Pro de US$100 a US$200 al mes.",
+     "why": "Las reseñas lo ponen entre los dos más fuertes para escritura, documentos y análisis."},
+    {"name": "Claude", "maker": "anthropic", "url": "https://claude.ai/", "access": "free",
+     "plans": "Plan gratuito con límites de uso diarios. Pro cuesta US$20 al mes (unos US$17 si se paga por año). Max va de US$100 a US$200.",
+     "why": "Es muy bien valorado para escritura y documentos largos."},
+    {"name": "Gemini", "maker": "google", "url": "https://gemini.google/", "access": "free",
+     "plans": "Plan gratuito (una fuente indica que usa modelos más ligeros). AI Plus entre US$4.99 y US$9.99 y AI Pro unos US$19.99 al mes.",
+     "why": "Su ventaja es la integración con Google Workspace."},
+    {"name": "Microsoft Copilot", "maker": "microsoft", "url": "https://copilot.microsoft.com/", "access": "free",
+     "plans": "Versión gratuita para consumidores. El acceso de pago suele venir con Microsoft 365; Copilot Business se cotiza en unos US$21 por usuario al mes.",
+     "why": "Es la opción natural para trabajar en Word, Excel y el resto de Office."},
+    {"name": "Grok", "maker": "x-ai", "url": "https://grok.com/", "access": "free",
+     "plans": "Acceso gratuito limitado. SuperGrok se cotiza en unos US$30 al mes, con niveles de US$100 y US$300.",
+     "why": "Se destaca por la búsqueda en tiempo real en X y en la web."}
+   ],
+   "tip": "Para uso ligero, los planes gratuitos alcanzan. El trabajo pesado con documentos o datos suele requerir un plan de unos US$20 al mes."
+  }
+ },
+ "map": {
+  "imagenes": "imagenes",
+  "video": "video",
+  "presentaciones": "presentaciones",
+  "codigo": "codigo",
+  "investigar": "investigar",
+  "escribir": "asistentes",
+  "docs": "asistentes",
+  "datos": "asistentes",
+  "archivos": "asistentes",
+  "empresa": "asistentes"
+ }
+}
