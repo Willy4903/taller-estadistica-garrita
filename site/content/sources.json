@@ -18,6 +18,8 @@
     {"name": "BenchLM", "url": "https://benchlm.ai/", "level": 3, "use": "Tabla de benchmarks y fechas de lanzamiento", "snapshot": true},
     {"name": "Hugging Face (modelos en tendencia)", "url": "https://huggingface.co/models", "level": 3, "use": "Ecosistema de modelos abiertos y de pesos abiertos", "src": "huggingface"},
     {"name": "Hugging Face Open LLM Leaderboard", "url": "https://huggingface.co/open-llm-leaderboard", "level": 3, "use": "Referencia para modelos abiertos", "ref": true},
+    {"name": "Epoch AI", "url": "https://epoch.ai/data", "level": 3, "use": "Datos abiertos sobre modelos, cómputo y hardware; referencia para tendencias de capacidad", "ref": true},
+    {"name": "Stanford AI Index", "url": "https://hai.stanford.edu/ai-index", "level": 3, "use": "Informe anual con datos de IA; referencia de contexto anual", "ref": true},
     {"name": "OpenRouter (catálogo)", "url": "https://openrouter.ai/models", "level": 3, "use": "Fechas, precios, contexto y modalidades", "src": "openrouter"},
     {"name": "OpenRouter (actividad)", "url": "https://openrouter.ai/rankings", "level": 3, "use": "Tokens procesados dentro de OpenRouter", "src": "openrouter_usage"},
     {"name": "Google Trends", "url": "https://trends.google.com/trends/", "level": 3, "use": "Interés relativo de búsqueda por país y departamento", "src": "google_trends"},
