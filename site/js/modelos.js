@@ -57,6 +57,22 @@
     const cost = ex ? ` Como referencia, 1,000 conversaciones de soporte costarían unos ${money(ex[2])}.` : "";
     return `${role}. ${bits.join(", ")}. Cuesta ${fmtPrice(m.price_in)} de entrada y ${fmtPrice(m.price_out)} de salida por millón de tokens.${cost}`;
   }
+  /* Arenas de imagen y video: Elo de LMArena por arena, nunca mezclado con el de texto. */
+  function arenaRows(D, p) {
+    const a = D.arenaMedia && D.arenaMedia.arenas && D.arenaMedia.arenas[p.id];
+    return a && a.length ? a : null;
+  }
+  function arenaHtml(D, p) {
+    const rows = arenaRows(D, p);
+    if (!rows) return "";
+    const date = D.arenaMedia.dates && D.arenaMedia.dates[p.id];
+    const also = (p.arena.also || []).map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.name)}</a>`).join(", ");
+    return `<div class="top5"><h4 class="top5-h">Comparación por preferencia humana: ${esc(p.label.toLowerCase())}</h4>
+      <ol>${rows.slice(0, 5).map((r, i) => `<li class="top5-i"><span class="top5-n" aria-hidden="true">${i + 1}</span><div class="top5-b">
+        <div class="top5-t">${I.PROV[r.org] ? provTag(r.org) : `<span class="tag">${esc(r.org || "n/d")}</span>`}<b>${esc(r.name)}</b><span class="tag acc">Elo ${nf.format(r.rating)}</span></div>
+        ${r.votes ? `<p><span class="top5-k">Votos:</span> ${nf.format(r.votes)}</p>` : ""}</div></li>`).join("")}</ol>
+      <p class="muted top5-src">Fuente: <a href="${esc(p.arena.url)}" target="_blank" rel="noopener">${esc(p.arena.name)}</a>${date ? `, consultada el ${esc(fmtDate(date))}` : ""}. Verifica también ${also}. ${esc(D.recommender.arena_note || "")}</p></div>`;
+  }
   function optionsFor(D, p) {
     if (p.filter.local) {
       const hf = ((D.models && D.models.hf) || []).slice(0, 3);
@@ -64,6 +80,7 @@
       return { opts: hf.map((h, i) => ({ name: h.id, prov: h.id.split("/")[0], why: `${roles[i]} en Hugging Face (${nf.format(h.downloads)} descargas, ${nf.format(h.likes)} me gusta). Antes de descargarlo revisa la licencia, el tamaño y si tu equipo tiene memoria suficiente.`, url: "https://huggingface.co/" + h.id })), note: "La tendencia indica popularidad, no calidad. Confirma licencia y requisitos de hardware." };
     }
     const f = p.filter;
+    if (p.arena && arenaRows(D, p)) return { opts: [], note: "" };
     if (p.nodata) return { opts: [], note: p.nodata };
     const { list, relaxed } = candidates(D, f);
     const picked = pickABC(list, f.cheapBias);
@@ -100,6 +117,7 @@
     document.getElementById("sel-out").innerHTML = `
       <div class="sel-need"><b>Qué importa para ${esc(p.label.toLowerCase())}:</b> ${esc(p.need)}</div>
       ${top.html}
+      ${p.arena ? arenaHtml(D, p) : ""}
       ${opts.length && top.html ? '<h4 class="top5-h">Modelos del catálogo (acceso por API, pago por uso)</h4>' : ""}
       ${opts.length ? `<div class="grid g3">${opts.map((o, i) => `<article class="opt"><span class="opt-l">Opción ${L[i]}</span>${provTag(o.prov)}<h4>${esc(o.name)}</h4><p>${esc(o.why)}</p><a href="${esc(o.url)}" target="_blank" rel="noopener">Ver ficha</a></article>`).join("")}</div>` : ""}
       ${note ? `<div class="callout warn">${ico("info")}<p>${esc(note)}</p></div>` : ""}

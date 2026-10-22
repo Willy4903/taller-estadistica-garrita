@@ -5,7 +5,7 @@
   const files = {
     models: ["data/current/models.json", null], news: ["data/current/news.json", { items: [], feeds: {} }], changes: ["data/current/changes.json", { items: [] }],
     frontier: ["data/current/frontier.json", null], status: ["data/current/status.json", { sources: {} }], trends: ["data/current/trends.json", null],
-    users: ["data/current/users.json", null], usage: ["data/current/usage.json", null], arena: ["data/current/arena.json", null],
+    users: ["data/current/users.json", null], usage: ["data/current/usage.json", null], arena: ["data/current/arena.json", null], arenaMedia: ["data/current/arena_media.json", null],
     research: ["data/current/research.json", null], regchecks: ["data/current/regulation_checks.json", { checks: {} }],
     catalog: ["history/catalog.json", []],
     regulation: ["content/regulation.json", null], glossary: ["content/glossary.json", { terms: [] }], academy: ["content/academy.json", null],

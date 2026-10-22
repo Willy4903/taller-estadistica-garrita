@@ -181,6 +181,12 @@ def main():
         if arena:
             write_json(DATA / "arena.json", {"updated_at": now.isoformat(timespec="minutes"), "rows": arena})
         arena = arena or old_a.get("rows", [])
+        media = step(status, "lmarena_media", fetch_arena.collect_media_arenas, None)
+        old_m = read_json(DATA / "arena_media.json", {})
+        if media:
+            merged = {**old_m.get("arenas", {}), **media}
+            dates = {**old_m.get("dates", {}), **{k: now.strftime("%Y-%m-%d") for k in media}}
+            write_json(DATA / "arena_media.json", {"updated_at": now.isoformat(timespec="minutes"), "arenas": merged, "dates": dates})
 
         # ---- uso en OpenRouter y Artificial Analysis ----
         usage = step(status, "openrouter_usage", fetch_openrouter.fetch_usage, None)

@@ -78,8 +78,18 @@
    "filter": {
     "tag": "Generación de imágenes"
    },
-   "nodata": "El catálogo de modelos de texto no incluye datos comparables de generación de imágenes. Consulta las arenas de imagen de Artificial Analysis y LMArena.",
-   "tip": "Describe sujeto, estilo, luz y encuadre; revisa derechos y atribución antes de publicar."
+   "nodata": "No hay datos comparables de generación de imágenes en esta actualización. Consulta la arena de LMArena y la de Artificial Analysis, y verifica condiciones de uso y derechos.",
+   "tip": "Describe sujeto, estilo, luz y encuadre; revisa derechos y atribución antes de publicar.",
+   "arena": {
+    "name": "LMArena: arena de texto a imagen",
+    "url": "https://lmarena.ai/leaderboard/text-to-image",
+    "also": [
+     {
+      "name": "Artificial Analysis: arena de imagen",
+      "url": "https://artificialanalysis.ai/image/arena"
+     }
+    ]
+   }
   },
   {
    "id": "video",
@@ -89,8 +99,18 @@
    "filter": {
     "tag": "__ninguno__"
    },
-   "nodata": "No hay datos comparables de video en las fuentes abiertas que usa IA Radar. Consulta la arena de video de Artificial Analysis y verifica condiciones de uso y derechos.",
-   "tip": "Etiqueta como contenido generado cuando corresponda y evita imitar a personas reales sin permiso."
+   "nodata": "No hay datos comparables de video en esta actualización. Consulta la arena de video de LMArena y la de Artificial Analysis, y verifica condiciones de uso y derechos.",
+   "tip": "Etiqueta como contenido generado cuando corresponda y evita imitar a personas reales sin permiso.",
+   "arena": {
+    "name": "LMArena: arena de texto a video",
+    "url": "https://lmarena.ai/leaderboard/text-to-video",
+    "also": [
+     {
+      "name": "Artificial Analysis: arena de video",
+      "url": "https://artificialanalysis.ai/video/arena"
+     }
+    ]
+   }
   },
   {
    "id": "automatizar",
@@ -166,5 +186,6 @@
   "google",
   "openai"
  ],
- "open_note": "Proveedores que publican algunos modelos con pesos abiertos. No todos sus modelos lo son."
+ "open_note": "Proveedores que publican algunos modelos con pesos abiertos. No todos sus modelos lo son.",
+ "arena_note": "Elo de preferencia humana en comparaciones a ciegas dentro de una misma arena. No se compara con el Elo de otras arenas ni mide precisión, seguridad o derechos de uso."
 }
