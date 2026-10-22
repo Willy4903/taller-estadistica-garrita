@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registro uLIMA: perfil de asistentes</title>
+<meta name="description" content="Panel interactivo del registro de asistentes uLIMA con conteos agregados por facultad, ciclo, carrera y edad.">
+<style>
+/* Estilo de consultoría: fondo blanco, azul marino para titulares, un solo color de acento, texto de acción arriba de cada gráfico. */
+:root{
+  --bg:#ffffff; --panel:#f4f6f9; --ink:#0b1f3a; --body:#2b3445; --muted:#6b7589; --line:#d9dee8;
+  --accent:#1f6feb; --accent-soft:#e8f0fe; --ok:#0f7b5f;
+  --c1:#0b1f3a; --c2:#1f6feb; --c3:#5b8def; --c4:#9fbcf0; --c5:#b8c2d3; --c6:#e0e5ee;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1322; --panel:#121d31; --ink:#f1f5fb; --body:#c9d3e3; --muted:#8fa0ba; --line:#22314d;
+    --accent:#5b9bff; --accent-soft:#16294a; --ok:#4fd1ae;
+    --c1:#e8efff; --c2:#5b9bff; --c3:#3a6fd1; --c4:#2a4d86; --c5:#22345a; --c6:#1a2740;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b1322; --panel:#121d31; --ink:#f1f5fb; --body:#c9d3e3; --muted:#8fa0ba; --line:#22314d;
+  --accent:#5b9bff; --accent-soft:#16294a; --ok:#4fd1ae;
+  --c1:#e8efff; --c2:#5b9bff; --c3:#3a6fd1; --c4:#2a4d86; --c5:#22345a; --c6:#1a2740;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--body);font:15px/1.5 "Helvetica Neue",Arial,system-ui,sans-serif;padding-block:env(safe-area-inset-top,0px) env(safe-area-inset-bottom,0px);padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+main{max-width:1120px;margin:0 auto;padding-block:28px 48px}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* Encabezado: tema, fecha y confidencialidad */
+.top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);letter-spacing:.02em;border-bottom:1px solid var(--line);padding-bottom:10px}
+.top .tools{display:flex;gap:8px}
+.tbtn{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--ink)}
+
+h1{font-size:30px;line-height:1.2;color:var(--ink);margin:18px 0 6px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.lead{font-size:16px;color:var(--body);margin:0 0 22px;max-width:760px}
+
+/* Resumen ejecutivo: lo primero que se lee */
+.summary{background:var(--panel);border-left:4px solid var(--accent);padding:18px 20px;border-radius:4px;margin-bottom:28px}
+.summary h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:0 0 10px}
+.summary ol{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.summary li{display:grid;grid-template-columns:28px 1fr;gap:6px;align-items:start}
+.summary .n{width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.summary .hk{color:var(--ink)}
+
+/* Filtros */
+.filters{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:24px}
+.fg{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.fg>span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-right:4px}
+.chip{background:transparent;border:1px solid var(--line);border-radius:4px;padding:3px 9px;font-size:12.5px;color:var(--body)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip:hover{border-color:var(--accent)}
+.reset{margin-left:auto;background:none;border:none;color:var(--accent);font-weight:600;padding:4px}
+
+/* Indicadores */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border:1px solid var(--line);border-radius:4px;margin-bottom:28px}
+.kpi{padding:16px 18px;border-right:1px solid var(--line)}
+.kpi:last-child{border-right:none}
+.kpi .v{font-size:28px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.kpi .l{font-size:13px;color:var(--body)}
+.kpi .d{font-size:12px;color:var(--muted);margin-top:4px;min-height:17px}
+
+/* Bloques de análisis: titular de acción + gráfico + qué significa */
+.block{display:grid;gap:18px;grid-template-columns:1fr;padding:22px 0;border-top:1px solid var(--line)}
+@media (min-width:860px){.block{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}}
+.block.full{grid-template-columns:1fr}
+.idx{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.06em;margin-bottom:4px}
+.block h3{font-size:20px;line-height:1.3;color:var(--ink);margin:0 0 6px;font-weight:700;text-wrap:balance}
+.unit{font-size:12px;color:var(--muted);margin-bottom:12px}
+.so{background:var(--panel);border-radius:4px;padding:16px 18px;align-self:start}
+.so h4{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px}
+.so ul{margin:0;padding-left:18px;display:grid;gap:8px}
+.so li{font-size:14px}
+.hint{font-size:12px;color:var(--muted);margin:0 0 10px}
+
+/* Barras horizontales (carreras) */
+.bars{display:grid;gap:6px}
+.br{display:grid;grid-template-columns:minmax(0,190px) 1fr 52px;gap:10px;align-items:center;cursor:pointer;padding:3px 4px;border-radius:3px}
+.br:hover{background:var(--accent-soft)}
+.br.off{opacity:.35}
+.br .lab{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;color:var(--body)}
+.track{height:14px;background:var(--c6);border-radius:2px;overflow:hidden}
+.fill{height:100%;background:var(--c2);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.num{text-align:right;font-variant-numeric:tabular-nums;color:var(--body);font-size:13px}
+
+/* Dona con leyenda */
+.donut{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.legend{display:grid;gap:6px;flex:1;min-width:200px}
+.lg{display:flex;justify-content:space-between;gap:8px;cursor:pointer;font-size:14px;padding:3px 4px;border-radius:3px}
+.lg:hover{background:var(--accent-soft)}
+.lg.off{opacity:.35}
+.dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:8px;vertical-align:middle}
+
+svg text{fill:var(--body);font-size:12px}
+.heat{display:grid;gap:4px;overflow-x:auto}
+.hcell{height:30px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;font-size:12px;cursor:pointer;min-width:34px;transition:background .4s,color .4s}
+.hcell:hover{outline:2px solid var(--accent)}
+.hl{color:var(--body);display:flex;align-items:center;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);padding:5px 8px;border-radius:4px;font-size:12px;opacity:0;transform:translate(-50%,-125%);transition:opacity .12s;z-index:9;white-space:nowrap}
+
+.foot{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:grid;gap:6px}
+.next{background:var(--ink);color:var(--bg);border-radius:4px;padding:18px 20px;margin-top:28px}
+.next h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;color:var(--c4)}
+.next ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.next li{color:var(--bg)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+
+<div class="top">
+  <span>Registro uLIMA · Asistentes · Datos al 22 de octubre de 2026 · Confidencial, uso interno</span>
+  <div class="tools"><button class="tbtn" id="theme" aria-label="Cambiar tema">Cambiar tema</button></div>
+</div>
+
+<h1 id="title">Perfil de asistentes: la facultad de Negocios concentra la mitad del registro</h1>
+<p class="lead">Este panel resume quiénes se registraron, de qué facultad y carrera, en qué ciclo y con qué edad. Use los filtros o haga clic en cualquier gráfico para ver el detalle.</p>
+
+<section class="summary" aria-labelledby="sum-h">
+  <h2 id="sum-h">Resumen</h2>
+  <ol id="summary"></ol>
+</section>
+
+<section class="filters" aria-label="Filtros">
+  <div class="fg" id="f-grupo"><span>Facultad</span></div>
+  <div class="fg" id="f-ciclo"><span>Ciclo</span></div>
+  <div class="fg" id="f-edad"><span>Edad</span></div>
+  <button class="reset" id="reset">Quitar filtros</button>
+</section>
+
+<section class="kpis" aria-live="polite">
+  <div class="kpi"><div class="v" id="k-total">0</div><div class="l">registros en la vista</div><div class="d" id="k-total-d"></div></div>
+  <div class="kpi"><div class="v" id="k-share">0%</div><div class="l">del total del registro</div><div class="d" id="k-share-d"></div></div>
+  <div class="kpi"><div class="v" id="k-top">Cargando</div><div class="l">carrera principal declarada</div><div class="d" id="k-top-d"></div></div>
+  <div class="kpi"><div class="v" id="k-young">0%</div><div class="l">tienen entre 18 y 25 años</div><div class="d" id="k-young-d"></div></div>
+</section>
+
+<!-- 1. Facultad -->
+<section class="block">
+  <div>
+    <div class="idx">1</div>
+    <h3 id="h-grupo"></h3>
+    <div class="unit">Número de registros por grupo de facultad. Clic para filtrar.</div>
+    <div class="donut">
+      <svg id="donut" width="200" height="200" viewBox="0 0 200 200" role="img" aria-label="Registros por facultad"></svg>
+      <div class="legend" id="leg-grupo"></div>
+    </div>
+  </div>
+  <aside class="so">
+    <h4>Qué significa</h4>
+    <ul id="so-grupo"></ul>
+  </aside>
+</section>
+
+<!-- 2. Ciclo -->
+<section class="block">
+  <div>
+    <div class="idx">2</div>
+    <h3 id="h-ciclo"></h3>
+    <div class="unit">Número de registros por ciclo declarado. Clic en una barra para filtrar.</div>
+    <svg id="ciclo" width="100%" height="250" role="img" aria-label="Registros por ciclo"></svg>
+  </div>
+  <aside class="so">
+    <h4>Qué significa</h4>
+    <ul id="so-ciclo"></ul>
+  </aside>
+</section>
+
+<!-- 3. Carrera -->
+<section class="block">
+  <div>
+    <div class="idx">3</div>
+    <h3 id="h-carrera"></h3>
+    <div class="unit">Número de registros por carrera, con nombres estandarizados. Clic para filtrar.</div>
+    <div class="bars" id="carreras"></div>
+  </div>
+  <aside class="so">
+    <h4>Qué significa</h4>
+    <ul id="so-carrera"></ul>
+  </aside>
+</section>
+
+<!-- 4. Edad -->
+<section class="block">
+  <div>
+    <div class="idx">4</div>
+    <h3 id="h-edad"></h3>
+    <div class="unit">Número de registros por tramo de edad. Clic en un tramo para filtrar.</div>
+    <svg id="edad" width="100%" height="240" role="img" aria-label="Registros por edad"></svg>
+  </div>
+  <aside class="so">
+    <h4>Qué significa</h4>
+    <ul id="so-edad"></ul>
+  </aside>
+</section>
+
+<!-- 5. Facultad por ciclo -->
+<section class="block full">
+  <div>
+    <div class="idx">5</div>
+    <h3 id="h-heat"></h3>
+    <div class="unit">Cada celda es el número de registros de una facultad en un ciclo. Más color, más registros. Clic para filtrar.</div>
+    <div class="heat" id="heat"></div>
+  </div>
+</section>
+
+<section class="next" aria-labelledby="next-h">
+  <h2 id="next-h">Próximos pasos sugeridos</h2>
+  <ol>
+    <li>Revisar con la coordinación si los registros duplicados corresponden a una misma persona antes de comunicar cifras de personas únicas.</li>
+    <li>Estandarizar la columna de facultad en el formulario de registro para eliminar texto libre.</li>
+    <li>Usar estos perfiles para decidir en qué ciclos y carreras concentrar la convocatoria del próximo taller.</li>
+  </ol>
+</section>
+
+<div class="foot">
+  <div>Fuente: hoja TOTAL REGISTRADOS del archivo Registro uLIMA-ASISTENTES. Cifras agregadas; el panel no muestra datos personales.</div>
+  <div>Facultad se agrupó desde texto libre. "Sin facultad" incluye celdas vacías y ciudades escritas en esa columna. "Otras" agrupa carreras no estandarizadas.</div>
+</div>
+
+</main>
+<div class="tip" id="tip"></div>
+
+<script>
+const RAW = [{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"6","e":"41+","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"8","e":"31-40","n":2},{"g":"Negocios y Empresariales","c":"Administracion","ci":"6","e":"18-21","n":14},{"g":"Negocios y Empresariales","c":"Administracion","ci":"8","e":"18-21","n":10},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"7","e":"18-21","n":3},{"g":"Negocios y Empresariales","c":"Administracion","ci":"4","e":"18-21","n":24},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"Egresado","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"9","e":"22-25","n":7},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"1","e":"18-21","n":13},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"4","e":"18-21","n":19},{"g":"Negocios y Empresariales","c":"Administracion","ci":"6","e":"31-40","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"6","e":"22-25","n":2},{"g":"Negocios y Empresariales","c":"Administracion","ci":"Egresado","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"6","e":"18-21","n":22},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"6","e":"22-25","n":4},{"g":"Negocios y Empresariales","c":"Administracion","ci":"Egresado","e":"18-21","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"6","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"7","e":"22-25","n":3},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"7","e":"26-30","n":2},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"8","e":"22-25","n":3},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"1","e":"26-30","n":2},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"6","e":"31-40","n":1},{"g":"Sin facultad","c":"Otras","ci":"Sin dato","e":"31-40","n":49},{"g":"Sin facultad","c":"Otras","ci":"Sin dato","e":"41+","n":29},{"g":"Sin facultad","c":"Otras","ci":"Sin dato","e":"26-30","n":35},{"g":"Sin facultad","c":"Otras","ci":"Sin dato","e":"18-21","n":1},{"g":"Sin facultad","c":"Otras","ci":"Sin dato","e":"22-25","n":4},{"g":"Otras","c":"Otras","ci":"Sin dato","e":"26-30","n":5},{"g":"Otras","c":"Otras","ci":"Sin dato","e":"41+","n":15},{"g":"Otras","c":"Otras","ci":"Sin dato","e":"31-40","n":5},{"g":"Otras","c":"Otras","ci":"Sin dato","e":"22-25","n":2},{"g":"Sin facultad","c":"Sin dato","ci":"Sin dato","e":"Sin dato","n":57},{"g":"Negocios y Empresariales","c":"Sin dato","ci":"Sin dato","e":"18-21","n":28},{"g":"Otras","c":"Sin dato","ci":"Sin dato","e":"18-21","n":7},{"g":"Negocios y Empresariales","c":"Sin dato","ci":"Sin dato","e":"<18","n":2},{"g":"Otras","c":"Sin dato","ci":"Sin dato","e":"<18","n":1},{"g":"Negocios y Empresariales","c":"Otras","ci":"Sin dato","e":"41+","n":5},{"g":"Negocios y Empresariales","c":"Sin dato","ci":"Sin dato","e":"22-25","n":1},{"g":"Ingenieria y Computacion","c":"Sin dato","ci":"Sin dato","e":"18-21","n":35},{"g":"Ingenieria y Computacion","c":"Sin dato","ci":"Sin dato","e":"22-25","n":6},{"g":"Ingenieria y Computacion","c":"Sin dato","ci":"Sin dato","e":"<18","n":1},{"g":"Otras","c":"Otras","ci":"8","e":"18-21","n":1},{"g":"Otras","c":"Otras","ci":"10","e":"26-30","n":1},{"g":"Ingenieria y Computacion","c":"Administracion","ci":"5","e":"18-21","n":1},{"g":"Ingenieria y Computacion","c":"Administracion","ci":"6","e":"18-21","n":2},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"Egresado","e":"41+","n":1},{"g":"Ingenieria y Computacion","c":"Administracion","ci":"8","e":"22-25","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"10","e":"22-25","n":3},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"7","e":"22-25","n":4},{"g":"Ingenieria y Computacion","c":"Administracion","ci":"7","e":"18-21","n":2},{"g":"Otras","c":"Otras","ci":"Egresado","e":"Sin dato","n":1},{"g":"Ingenieria y Computacion","c":"Economia","ci":"4","e":"31-40","n":1},{"g":"Ingenieria y Computacion","c":"Administracion","ci":"Docente","e":"26-30","n":1},{"g":"Ingenieria y Computacion","c":"Administracion","ci":"2","e":"18-21","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"7","e":"18-21","n":4},{"g":"Negocios y Empresariales","c":"Economia","ci":"4","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Administracion","ci":"8","e":"22-25","n":5},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"3","e":"18-21","n":5},{"g":"Negocios y Empresariales","c":"Administracion","ci":"9","e":"22-25","n":6},{"g":"Negocios y Empresariales","c":"Administracion","ci":"10","e":"22-25","n":7},{"g":"Negocios y Empresariales","c":"Administracion","ci":"9","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"8","e":"18-21","n":3},{"g":"Negocios y Empresariales","c":"Administracion","ci":"9","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"2","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"2","e":"18-21","n":4},{"g":"Ingenieria y Computacion","c":"Administracion","ci":"Sin dato","e":"31-40","n":2},{"g":"Economia","c":"Administracion","ci":"3","e":"18-21","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"Sin dato","e":"31-40","n":1},{"g":"Economia","c":"Administracion","ci":"4","e":"22-25","n":1},{"g":"Economia","c":"Economia","ci":"4","e":"18-21","n":14},{"g":"Economia","c":"Administracion","ci":"8","e":"22-25","n":2},{"g":"Ingenieria y Computacion","c":"Otras","ci":"Egresado","e":"31-40","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"Sin dato","e":"41+","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"Egresado","e":"31-40","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"8","e":"18-21","n":2},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"10","e":"18-21","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Administracion","ci":"Egresado","e":"31-40","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Administracion","ci":"Docente","e":"41+","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Administracion","ci":"Docente","e":"31-40","n":1},{"g":"Economia","c":"Administracion","ci":"Docente","e":"31-40","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Administracion","ci":"4","e":"18-21","n":5},{"g":"Otras","c":"Negocios Internacionales","ci":"9","e":"22-25","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Psicologia","ci":"8","e":"18-21","n":1},{"g":"Otras","c":"Negocios Internacionales","ci":"7","e":"26-30","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"Sin dato","e":"41+","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"2","e":"18-21","n":3},{"g":"Ingenieria y Computacion","c":"Otras","ci":"2","e":"18-21","n":3},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"2","e":"18-21","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"4","e":"18-21","n":3},{"g":"Otras","c":"Negocios Internacionales","ci":"9","e":"18-21","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"3","e":"18-21","n":1},{"g":"Otras","c":"Administracion","ci":"Egresado","e":"31-40","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"10","e":"22-25","n":8},{"g":"Economia","c":"Administracion","ci":"3","e":"41+","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"4","e":"26-30","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"7","e":"22-25","n":7},{"g":"Otras","c":"Psicologia","ci":"10","e":"22-25","n":2},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"5","e":"31-40","n":1},{"g":"Otras","c":"Negocios Internacionales","ci":"3","e":"22-25","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"10","e":"18-21","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"9","e":"22-25","n":4},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"9","e":"26-30","n":2},{"g":"Otras","c":"Negocios Internacionales","ci":"4","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"1","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"2","e":"31-40","n":1},{"g":"Otras","c":"Negocios Internacionales","ci":"8","e":"22-25","n":1},{"g":"Otras","c":"Administracion","ci":"6","e":"26-30","n":1},{"g":"Otras","c":"Administracion","ci":"1","e":"26-30","n":1},{"g":"Otras","c":"Psicologia","ci":"9","e":"41+","n":1},{"g":"Economia","c":"Administracion","ci":"5","e":"41+","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"9","e":"22-25","n":6},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"8","e":"22-25","n":4},{"g":"Otras","c":"Administracion","ci":"10","e":"31-40","n":1},{"g":"Otras","c":"Administracion","ci":"2","e":"41+","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"7","e":"18-21","n":11},{"g":"Otras","c":"Administracion","ci":"6","e":"41+","n":1},{"g":"Otras","c":"Contabilidad y Finanzas","ci":"3","e":"26-30","n":1},{"g":"Otras","c":"Marketing","ci":"3","e":"18-21","n":3},{"g":"Economia","c":"Contabilidad y Finanzas","ci":"6","e":"22-25","n":3},{"g":"Economia","c":"Administracion","ci":"10","e":"26-30","n":1},{"g":"Economia","c":"Contabilidad y Finanzas","ci":"8","e":"22-25","n":1},{"g":"Economia","c":"Contabilidad y Finanzas","ci":"7","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Marketing","ci":"9","e":"22-25","n":3},{"g":"Negocios y Empresariales","c":"Marketing","ci":"8","e":"26-30","n":2},{"g":"Economia","c":"Marketing","ci":"4","e":"18-21","n":5},{"g":"Economia","c":"Negocios Internacionales","ci":"4","e":"18-21","n":5},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"5","e":"22-25","n":1},{"g":"Economia","c":"Economia","ci":"5","e":"18-21","n":7},{"g":"Economia","c":"Administracion","ci":"6","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"5","e":"18-21","n":11},{"g":"Economia","c":"Negocios Internacionales","ci":"5","e":"18-21","n":3},{"g":"Otras","c":"Sin dato","ci":"6","e":"Sin dato","n":1},{"g":"Economia","c":"Contabilidad y Finanzas","ci":"Egresado","e":"22-25","n":1},{"g":"Economia","c":"Economia","ci":"3","e":"22-25","n":2},{"g":"Economia","c":"Negocios Internacionales","ci":"7","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Marketing","ci":"5","e":"18-21","n":4},{"g":"Economia","c":"Administracion","ci":"5","e":"18-21","n":4},{"g":"Negocios y Empresariales","c":"Marketing","ci":"7","e":"18-21","n":7},{"g":"Negocios y Empresariales","c":"Marketing","ci":"8","e":"18-21","n":7},{"g":"Economia","c":"Marketing","ci":"8","e":"18-21","n":2},{"g":"Economia","c":"Economia","ci":"10","e":"26-30","n":1},{"g":"Economia","c":"Economia","ci":"9","e":"22-25","n":3},{"g":"Economia","c":"Economia","ci":"4","e":"22-25","n":4},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"Egresado","e":"26-30","n":1},{"g":"Economia","c":"Contabilidad y Finanzas","ci":"5","e":"18-21","n":2},{"g":"Economia","c":"Contabilidad y Finanzas","ci":"3","e":"18-21","n":3},{"g":"Negocios y Empresariales","c":"Administracion","ci":"Sin dato","e":"41+","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Derecho","ci":"4","e":"18-21","n":1},{"g":"Economia","c":"Economia","ci":"2","e":"<18","n":1},{"g":"Economia","c":"Administracion","ci":"4","e":"18-21","n":4},{"g":"Economia","c":"Contabilidad y Finanzas","ci":"6","e":"26-30","n":1},{"g":"Economia","c":"Economia","ci":"6","e":"18-21","n":9},{"g":"Economia","c":"Negocios Internacionales","ci":"6","e":"18-21","n":2},{"g":"Economia","c":"Economia","ci":"3","e":"18-21","n":9},{"g":"Economia","c":"Economia","ci":"7","e":"22-25","n":3},{"g":"Negocios y Empresariales","c":"Administracion","ci":"5","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"6","e":"18-21","n":5},{"g":"Otras","c":"Negocios Internacionales","ci":"5","e":"26-30","n":1},{"g":"Economia","c":"Negocios Internacionales","ci":"8","e":"18-21","n":1},{"g":"Economia","c":"Negocios Internacionales","ci":"10","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Marketing","ci":"5","e":"22-25","n":4},{"g":"Negocios y Empresariales","c":"Administracion","ci":"5","e":"18-21","n":8},{"g":"Negocios y Empresariales","c":"Marketing","ci":"3","e":"22-25","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Derecho","ci":"Egresado","e":"18-21","n":1},{"g":"Economia","c":"Marketing","ci":"7","e":"18-21","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"7","e":"18-21","n":5},{"g":"Negocios y Empresariales","c":"Marketing","ci":"4","e":"18-21","n":11},{"g":"Economia","c":"Administracion","ci":"6","e":"18-21","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"6","e":"18-21","n":7},{"g":"Negocios y Empresariales","c":"Marketing","ci":"3","e":"18-21","n":3},{"g":"Negocios y Empresariales","c":"Marketing","ci":"Sin dato","e":"41+","n":2},{"g":"Economia","c":"Marketing","ci":"6","e":"18-21","n":3},{"g":"Economia","c":"Economia","ci":"2","e":"18-21","n":5},{"g":"Economia","c":"Economia","ci":"8","e":"22-25","n":2},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"4","e":"18-21","n":5},{"g":"Economia","c":"Contabilidad y Finanzas","ci":"6","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Economia","ci":"4","e":"22-25","n":1},{"g":"Economia","c":"Economia","ci":"Egresado","e":"18-21","n":1},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"5","e":"18-21","n":2},{"g":"Economia","c":"Contabilidad y Finanzas","ci":"4","e":"18-21","n":3},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"5","e":"18-21","n":3},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"Egresado","e":"31-40","n":1},{"g":"Economia","c":"Economia","ci":"7","e":"18-21","n":3},{"g":"Economia","c":"Marketing","ci":"9","e":"18-21","n":1},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"8","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"1","e":"<18","n":2},{"g":"Otras","c":"Negocios Internacionales","ci":"2","e":"<18","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"Egresado","e":"41+","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"6","e":"22-25","n":2},{"g":"Economia","c":"Contabilidad y Finanzas","ci":"9","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"4","e":"26-30","n":1},{"g":"Economia","c":"Economia","ci":"Egresado","e":"22-25","n":2},{"g":"Economia","c":"Economia","ci":"10","e":"22-25","n":2},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"8","e":"22-25","n":7},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"6","e":"18-21","n":12},{"g":"Economia","c":"Marketing","ci":"6","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"4","e":"22-25","n":2},{"g":"Economia","c":"Economia","ci":"1","e":"18-21","n":1},{"g":"Negocios y Empresariales","c":"Economia","ci":"2","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"8","e":"18-21","n":3},{"g":"Negocios y Empresariales","c":"Administracion","ci":"3","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Administracion","ci":"4","e":"26-30","n":1},{"g":"Economia","c":"Administracion","ci":"3","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"4","e":"22-25","n":1},{"g":"Otras","c":"Psicologia","ci":"Egresado","e":"31-40","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"Egresado","e":"41+","n":1},{"g":"Economia","c":"Marketing","ci":"7","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"8","e":"22-25","n":5},{"g":"Economia","c":"Marketing","ci":"9","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"9","e":"26-30","n":1},{"g":"Economia","c":"Economia","ci":"6","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"6","e":"26-30","n":1},{"g":"Economia","c":"Marketing","ci":"5","e":"18-21","n":1},{"g":"Economia","c":"Economia","ci":"10","e":"18-21","n":1},{"g":"Otras","c":"Administracion","ci":"2","e":"22-25","n":1},{"g":"Otras","c":"Contabilidad y Finanzas","ci":"6","e":"22-25","n":1},{"g":"Otras","c":"Contabilidad y Finanzas","ci":"6","e":"18-21","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Psicologia","ci":"4","e":"18-21","n":3},{"g":"Psicologia, Comunicaciones y Derecho","c":"Administracion","ci":"6","e":"18-21","n":10},{"g":"Psicologia, Comunicaciones y Derecho","c":"Administracion","ci":"4","e":"26-30","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Psicologia","ci":"6","e":"18-21","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Administracion","ci":"6","e":"22-25","n":3},{"g":"Psicologia, Comunicaciones y Derecho","c":"Administracion","ci":"6","e":"26-30","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Psicologia","ci":"2","e":"22-25","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Psicologia","ci":"4","e":"26-30","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Psicologia","ci":"10","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Otras","ci":"Sin dato","e":"18-21","n":103},{"g":"Negocios y Empresariales","c":"Otras","ci":"Sin dato","e":"22-25","n":46},{"g":"Negocios y Empresariales","c":"Otras","ci":"Sin dato","e":"26-30","n":8},{"g":"Ingenieria y Computacion","c":"Otras","ci":"Sin dato","e":"18-21","n":1},{"g":"Negocios y Empresariales","c":"Otras","ci":"Sin dato","e":"<18","n":7},{"g":"Negocios y Empresariales","c":"Otras","ci":"Sin dato","e":"31-40","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"8","e":"26-30","n":2},{"g":"Negocios y Empresariales","c":"Administracion","ci":"10","e":"26-30","n":3},{"g":"Otras","c":"Otras","ci":"Docente","e":"41+","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"6","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"3","e":"26-30","n":1},{"g":"Otras","c":"Administracion","ci":"10","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"10","e":"26-30","n":2},{"g":"Negocios y Empresariales","c":"Administracion","ci":"10","e":"41+","n":2},{"g":"Negocios y Empresariales","c":"Marketing","ci":"10","e":"22-25","n":2},{"g":"Psicologia, Comunicaciones y Derecho","c":"Marketing","ci":"8","e":"41+","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"Sin dato","e":"26-30","n":2},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"5","e":"26-30","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Derecho","ci":"3","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Marketing","ci":"Docente","e":"41+","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"2","e":"31-40","n":1},{"g":"Negocios y Empresariales","c":"Otras","ci":"10","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Otras","ci":"Egresado","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Otras","ci":"9","e":"18-21","n":1},{"g":"Economia","c":"Administracion","ci":"9","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Otras","ci":"6","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Otras","ci":"4","e":"18-21","n":5},{"g":"Negocios y Empresariales","c":"Administracion","ci":"10","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Economia","ci":"7","e":"18-21","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"9","e":"18-21","n":1},{"g":"Negocios y Empresariales","c":"Economia","ci":"Docente","e":"31-40","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Negocios Internacionales","ci":"8","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"2","e":"26-30","n":1},{"g":"Economia","c":"Contabilidad y Finanzas","ci":"10","e":"31-40","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"4","e":"31-40","n":1},{"g":"Negocios y Empresariales","c":"Otras","ci":"2","e":"<18","n":3},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"2","e":"<18","n":2},{"g":"Negocios y Empresariales","c":"Economia","ci":"9","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"7","e":"31-40","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"3","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"10","e":"18-21","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"Sin dato","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"7","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"Egresado","e":"22-25","n":2},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"4","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Otras","ci":"8","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Economia","ci":"10","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"10","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"5","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Marketing","ci":"7","e":"22-25","n":1},{"g":"Otras","c":"Contabilidad y Finanzas","ci":"4","e":"31-40","n":1},{"g":"Otras","c":"Administracion","ci":"Sin dato","e":"41+","n":1},{"g":"Otras","c":"Administracion","ci":"Egresado","e":"26-30","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"10","e":"22-25","n":3},{"g":"Negocios y Empresariales","c":"Contabilidad y Finanzas","ci":"4","e":"31-40","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"7","e":"26-30","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"7","e":"18-21","n":6},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"7","e":"22-25","n":4},{"g":"Otras","c":"Marketing","ci":"7","e":"22-25","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"9","e":"22-25","n":4},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"6","e":"18-21","n":2},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"5","e":"18-21","n":4},{"g":"Negocios y Empresariales","c":"Marketing","ci":"Egresado","e":"26-30","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"6","e":"22-25","n":9},{"g":"Otras","c":"Otras","ci":"9","e":"18-21","n":2},{"g":"Otras","c":"Otras","ci":"8","e":"22-25","n":1},{"g":"Otras","c":"Comunicaciones","ci":"6","e":"22-25","n":1},{"g":"Otras","c":"Otras","ci":"2","e":"18-21","n":2},{"g":"Negocios y Empresariales","c":"Economia","ci":"8","e":"18-21","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Derecho","ci":"2","e":"18-21","n":1},{"g":"Otras","c":"Otras","ci":"9","e":"22-25","n":2},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"4","e":"18-21","n":4},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"8","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Otras","ci":"8","e":"18-21","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"1","e":"18-21","n":3},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"2","e":"22-25","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Marketing","ci":"2","e":"22-25","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"2","e":"18-21","n":4},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"6","e":"26-30","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Derecho","ci":"6","e":"26-30","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"4","e":"22-25","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"3","e":"18-21","n":1},{"g":"Otras","c":"Otras","ci":"4","e":"18-21","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"6","e":"18-21","n":4},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"4","e":"18-21","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Negocios Internacionales","ci":"10","e":"22-25","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Marketing","ci":"6","e":"18-21","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Otras","ci":"Docente","e":"31-40","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"10","e":"31-40","n":2},{"g":"Negocios y Empresariales","c":"Economia","ci":"6","e":"22-25","n":2},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"1","e":"<18","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"5","e":"18-21","n":3},{"g":"Negocios y Empresariales","c":"Administracion","ci":"7","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Negocios Internacionales","ci":"5","e":"26-30","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Derecho","ci":"2","e":"<18","n":1},{"g":"Ingenieria y Computacion","c":"Administracion","ci":"Sin dato","e":"41+","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"5","e":"22-25","n":1},{"g":"Otras","c":"Administracion","ci":"9","e":"41+","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"Sin dato","e":"31-40","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Derecho","ci":"5","e":"18-21","n":1},{"g":"Otras","c":"Administracion","ci":"9","e":"26-30","n":1},{"g":"Economia","c":"Ingenieria Industrial","ci":"6","e":"26-30","n":1},{"g":"Negocios y Empresariales","c":"Otras","ci":"5","e":"18-21","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Derecho","ci":"2","e":"22-25","n":1},{"g":"Economia","c":"Marketing","ci":"8","e":"26-30","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"6","e":"22-25","n":2},{"g":"Negocios y Empresariales","c":"Marketing","ci":"10","e":"18-21","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Marketing","ci":"9","e":"22-25","n":1},{"g":"Psicologia, Comunicaciones y Derecho","c":"Comunicaciones","ci":"Egresado","e":"18-21","n":1},{"g":"Otras","c":"Negocios Internacionales","ci":"10","e":"18-21","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"10","e":"22-25","n":2},{"g":"Negocios y Empresariales","c":"Administracion","ci":"Docente","e":"41+","n":2},{"g":"Negocios y Empresariales","c":"Administracion","ci":"Docente","e":"31-40","n":2},{"g":"Negocios y Empresariales","c":"Administracion","ci":"2","e":"<18","n":2},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"9","e":"18-21","n":7},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"Egresado","e":"22-25","n":2},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"9","e":"18-21","n":5},{"g":"Negocios y Empresariales","c":"Otras","ci":"Docente","e":"41+","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"8","e":"18-21","n":6},{"g":"Ingenieria y Computacion","c":"Otras","ci":"9","e":"22-25","n":1},{"g":"Ingenieria y Computacion","c":"Otras","ci":"7","e":"22-25","n":3},{"g":"Ingenieria y Computacion","c":"Otras","ci":"5","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Administracion","ci":"2","e":"22-25","n":1},{"g":"Ingenieria y Computacion","c":"Otras","ci":"8","e":"18-21","n":3},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"Egresado","e":"31-40","n":1},{"g":"Ingenieria y Computacion","c":"Otras","ci":"7","e":"18-21","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"5","e":"22-25","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"Sin dato","e":"22-25","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"9","e":"31-40","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"10","e":"18-21","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"Docente","e":"31-40","n":1},{"g":"Ingenieria y Computacion","c":"Ingenieria Industrial","ci":"Sin dato","e":"31-40","n":1},{"g":"Ingenieria y Computacion","c":"Otras","ci":"5","e":"18-21","n":2},{"g":"Ingenieria y Computacion","c":"Otras","ci":"6","e":"18-21","n":1},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"Egresado","e":"18-21","n":2},{"g":"Ingenieria y Computacion","c":"Otras ingenierias","ci":"6","e":"22-25","n":1},{"g":"Negocios y Empresariales","c":"Sin dato","ci":"Sin dato","e":"Sin dato","n":117}];
+
+const ORDER = {
+  grupo: ["Negocios y Empresariales","Ingenieria y Computacion","Economia","Psicologia, Comunicaciones y Derecho","Otras","Sin facultad"],
+  ciclo: ["1","2","3","4","5","6","7","8","9","10","Egresado","Docente","Sin dato"],
+  edad:  ["<18","18-21","22-25","26-30","31-40","41+","Sin dato"],
+  carrera: ["Administracion","Negocios Internacionales","Marketing","Contabilidad y Finanzas","Economia","Otras ingenierias","Ingenieria Industrial","Comunicaciones","Psicologia","Derecho","Otras","Sin dato"]
+};
+const COLORS = ["#0b1f3a","#1f6feb","#5b8def","#9fbcf0","#b8c2d3","#e0e5ee"];
+const DARK_COLORS = ["#e8efff","#5b9bff","#3a6fd1","#2a4d86","#22345a","#1a2740"];
+const LABEL = {Administracion:"Administración",Economia:"Economía",Psicologia:"Psicología",Derecho:"Derecho","Otras ingenierias":"Otras ingenierías","Ingenieria Industrial":"Ingeniería Industrial",Comunicaciones:"Comunicaciones","Contabilidad y Finanzas":"Contabilidad y Finanzas","Negocios Internacionales":"Negocios Internacionales"};
+const GLABEL = {"Ingenieria y Computacion":"Ingeniería y Computación","Economia":"Economía","Psicologia, Comunicaciones y Derecho":"Psicología, Comunicaciones y Derecho"};
+const label = (k, dim) => dim==="carrera" ? (LABEL[k]||k) : dim==="grupo" ? (GLABEL[k]||k) : k;
+const palette = () => document.documentElement.getAttribute("data-theme")==="dark" || (!document.documentElement.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches) ? DARK_COLORS : COLORS;
+
+const fields = {grupo:"g", ciclo:"ci", edad:"e", carrera:"c"};
+const state = { grupo:new Set(), ciclo:new Set(), edad:new Set(), carrera:new Set() };
+const TOTAL = RAW.reduce((s,d)=>s+d.n,0);
+const sum = a => a.reduce((s,x)=>s+x[1],0);
+const fmt = n => Number(n).toLocaleString("es-PE");
+const pct = (a,b) => b ? Math.round(a/b*100) : 0;
+
+function matches(d, ignore){
+  for (const k of Object.keys(state)){
+    if (k===ignore) continue;
+    if (state[k].size && !state[k].has(d[fields[k]])) return false;
+  }
+  return true;
+}
+function view(ignore){ return RAW.filter(d=>matches(d, ignore)); }
+function agg(dim, ignore){
+  const m = new Map(ORDER[dim].map(k=>[k,0]));
+  for (const d of view(ignore)) m.set(d[fields[dim]], (m.get(d[fields[dim]])||0)+d.n);
+  return ORDER[dim].map(k=>[k, m.get(k)||0]);
+}
+function toggle(dim, v){
+  if (state[dim].has(v)) state[dim].delete(v); else state[dim].add(v);
+  render();
+}
+
+function chips(dim, containerId, values){
+  const box = document.getElementById(containerId);
+  box.querySelectorAll(".chip").forEach(c=>c.remove());
+  values.forEach(v=>{
+    const b = document.createElement("button");
+    b.className="chip";
+    b.textContent = label(v, dim);
+    b.setAttribute("aria-pressed", state[dim].has(v));
+    b.onclick = ()=>toggle(dim, v);
+    box.appendChild(b);
+  });
+}
+
+function li(list, text){ list.innerHTML = text.map(t=>`<li>${t}</li>`).join(""); }
+
+/* 1. Facultad */
+function drawDonut(){
+  const svg = document.getElementById("donut");
+  const data = agg("grupo", null);
+  const total = sum(data) || 1;
+  const pal = palette();
+  const r=80, cx=100, cy=100, w=26, C=2*Math.PI*r;
+  let off=0, html="";
+  data.forEach(([k,v],i)=>{
+    const len = v/total*C;
+    const on = !state.grupo.size || state.grupo.has(k);
+    html += `<circle class="seg" data-k="${k}" cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${pal[i]}" stroke-width="${w}" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 ${cx} ${cy})" style="opacity:${on?1:.22};transition:opacity .3s;cursor:pointer"/>`;
+    off += len;
+  });
+  const vTot = sum(view("grupo"));
+  html += `<text x="${cx}" y="${cy-2}" text-anchor="middle" style="font-size:26px;font-weight:700;fill:var(--ink)">${fmt(vTot)}</text>`;
+  html += `<text x="${cx}" y="${cy+18}" text-anchor="middle">${pct(vTot,TOTAL)}% del total</text>`;
+  svg.innerHTML = html;
+  svg.querySelectorAll(".seg").forEach(el=>{
+    el.onclick = ()=>toggle("grupo", el.dataset.k);
+    el.onmousemove = e=>showTip(e, `${label(el.dataset.k,"grupo")}: ${fmt(data.find(x=>x[0]===el.dataset.k)[1])}`);
+    el.onmouseleave = hideTip;
+  });
+  const leg = document.getElementById("leg-grupo");
+  leg.innerHTML = data.map(([k,v],i)=>{
+    const on = !state.grupo.size || state.grupo.has(k);
+    return `<div class="lg ${on?"":"off"}" data-k="${k}"><span><span class="dot" style="background:${pal[i]}"></span>${label(k,"grupo")}</span><span class="num">${fmt(v)} (${pct(v,total)}%)</span></div>`;
+  }).join("");
+  leg.querySelectorAll(".lg").forEach(el=>el.onclick=()=>toggle("grupo", el.dataset.k));
+  return data;
+}
+
+/* Barras verticales (ciclo, edad) */
+function drawBars(svgId, dim){
+  const svg = document.getElementById(svgId);
+  const data = agg(dim, null);
+  const W = svg.clientWidth || 420, H = +svg.getAttribute("height");
+  const pad = {t:24,r:8,b:34,l:36};
+  const max = Math.max(1, ...data.map(x=>x[1]));
+  const bw = (W-pad.l-pad.r)/data.length;
+  const pal = palette();
+  let html="";
+  for (let g=0; g<=4; g++){
+    const y = pad.t + (H-pad.t-pad.b)*(1-g/4);
+    html += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${y}" y2="${y}" stroke="var(--line)"/>`;
+    html += `<text x="${pad.l-6}" y="${y+4}" text-anchor="end" style="font-size:11px">${fmt(Math.round(max*g/4))}</text>`;
+  }
+  data.forEach(([k,v],i)=>{
+    const x = pad.l + i*bw + bw*0.16;
+    const width = bw*0.68;
+    const h = (H-pad.t-pad.b)*(v/max);
+    const y = H-pad.b-h;
+    const on = !state[dim].size || state[dim].has(k);
+    html += `<rect class="bar" data-k="${k}" x="${x}" y="${y}" width="${width}" height="${h}" fill="${dim==="ciclo" && ["4","5","6"].includes(k) ? "var(--accent)" : pal[1]}" style="opacity:${on?1:.22};cursor:pointer;transition:opacity .3s,height .5s,y .5s"/>`;
+    html += `<text x="${x+width/2}" y="${H-pad.b+15}" text-anchor="middle">${label(k,dim)}</text>`;
+    html += `<text x="${x+width/2}" y="${y-6}" text-anchor="middle" style="font-weight:700;fill:var(--ink);opacity:${on?1:.4}">${v?fmt(v):""}</text>`;
+  });
+  svg.innerHTML = html;
+  svg.querySelectorAll(".bar").forEach((el,i)=>{
+    el.onclick = ()=>toggle(dim, el.dataset.k);
+    el.onmousemove = e=>showTip(e, `${label(el.dataset.k,dim)}: ${fmt(data[i][1])}`);
+    el.onmouseleave = hideTip;
+  });
+  return data;
+}
+
+/* 3. Carreras */
+function drawCarreras(){
+  const data = agg("carrera", null).filter(x=>x[1]>0 && x[0]!=="Sin dato");
+  const max = Math.max(1, ...data.map(x=>x[1]));
+  const pal = palette();
+  const box = document.getElementById("carreras");
+  box.innerHTML = data.map(([k,v],i)=>{
+    const on = !state.carrera.size || state.carrera.has(k);
+    return `<div class="br ${on?"":"off"}" data-k="${k}">
+      <span class="lab" title="${label(k,"carrera")}">${label(k,"carrera")}</span>
+      <div class="track"><div class="fill" style="width:${(v/max*100).toFixed(1)}%;background:${i<2?"var(--accent)":"var(--c5)"}"></div></div>
+      <span class="num">${fmt(v)}</span></div>`;
+  }).join("");
+  box.querySelectorAll(".br").forEach(el=>el.onclick=()=>toggle("carrera", el.dataset.k));
+  return data;
+}
+
+/* 5. Mapa de calor */
+function drawHeat(){
+  const box = document.getElementById("heat");
+  const cyc = ["1","2","3","4","5","6","7","8","9","10"];
+  const groups = ORDER.grupo.filter(g=>g!=="Sin facultad");
+  const cell = {};
+  for (const d of view(null)) cell[d.g+"|"+d.ci] = (cell[d.g+"|"+d.ci]||0)+d.n;
+  let max = 1; for (const k in cell) max = Math.max(max, cell[k]);
+  let html = `<div style="display:grid;grid-template-columns:minmax(150px,1.6fr) repeat(${cyc.length},minmax(34px,1fr));gap:4px">`;
+  html += `<div></div>` + cyc.map(c=>`<div style="text-align:center;font-size:11px">C${c}</div>`).join("");
+  groups.forEach(g=>{
+    html += `<div class="hl" title="${label(g,"grupo")}">${label(g,"grupo")}</div>`;
+    cyc.forEach(c=>{
+      const v = cell[g+"|"+c]||0;
+      const t = v/max;
+      const bg = `color-mix(in srgb, var(--accent) ${Math.round(t*100)}%, var(--panel))`;
+      html += `<div class="hcell" data-g="${g}" data-c="${c}" data-v="${v}" style="background:${bg};color:${t>.55?"#fff":"var(--ink)"};opacity:${!state.grupo.size||state.grupo.has(g)?1:.25}">${v?fmt(v):""}</div>`;
+    });
+  });
+  html += `</div>`;
+  box.innerHTML = html;
+  box.querySelectorAll(".hcell").forEach(el=>{
+    el.onclick = ()=>{ toggle("grupo", el.dataset.g); };
+    el.onmousemove = e=>showTip(e, `${label(el.dataset.g,"grupo")} · ciclo ${el.dataset.c}: ${fmt(+el.dataset.v)}`);
+    el.onmouseleave = hideTip;
+  });
+}
+
+/* Indicadores y textos de acción (dinámicos según filtros) */
+function drawText(grupo, ciclo, carrera, edad){
+  const v = view(null);
+  const total = v.reduce((s,d)=>s+d.n,0);
+  const active = Object.values(state).some(s=>s.size);
+  document.getElementById("k-total").textContent = fmt(total);
+  document.getElementById("k-total-d").textContent = active ? "con filtros activos" : "sin filtros";
+  document.getElementById("k-share").textContent = pct(total,TOTAL)+"%";
+  document.getElementById("k-share-d").textContent = `de ${fmt(TOTAL)} registros`;
+
+  const topCar = carrera.filter(x=>x[0]!=="Otras").sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById("k-top").textContent = topCar && topCar[1] ? label(topCar[0],"carrera") : "Sin dato";
+  document.getElementById("k-top-d").textContent = topCar && topCar[1] ? `${fmt(topCar[1])} registros` : "";
+
+  const edTot = edad.filter(x=>x[0]!=="Sin dato").reduce((s,x)=>s+x[1],0);
+  const young = (edad.find(x=>x[0]==="18-21")||[0,0])[1] + (edad.find(x=>x[0]==="22-25")||[0,0])[1];
+  document.getElementById("k-young").textContent = pct(young,edTot)+"%";
+  document.getElementById("k-young-d").textContent = `${fmt(young)} de ${fmt(edTot)} con edad registrada`;
+
+  // Facultad
+  const gTot = sum(grupo);
+  const gTop = [...grupo].sort((a,b)=>b[1]-a[1])[0];
+  const gLabel = label(gTop[0],"grupo");
+  document.getElementById("h-grupo").textContent = gTot ? `${gLabel} reúne el ${pct(gTop[1],gTot)}% de los registros en la vista` : "Sin registros en la vista";
+  li(document.getElementById("so-grupo"), [
+    `${fmt(gTop[1])} de ${fmt(gTot)} registros pertenecen a ${gLabel.toLowerCase()}.`,
+    `La facultad de Ingeniería y Computación suma ${fmt(grupo[1][1])} registros (${pct(grupo[1][1],gTot)}%).`,
+    `Los mensajes del taller conviene construirlos sobre ese perfil principal.`
+  ]);
+
+  // Ciclo
+  const cicloNum = ciclo.filter(x=>/^\d+$/.test(x[0]));
+  const cTot = cicloNum.reduce((s,x)=>s+x[1],0);
+  const c46 = cicloNum.filter(x=>["4","5","6"].includes(x[0])).reduce((s,x)=>s+x[1],0);
+  document.getElementById("h-ciclo").textContent = cTot ? `Los ciclos 4 a 6 reúnen el ${pct(c46,cTot)}% de los registros con ciclo declarado` : "Sin ciclos declarados en la vista";
+  li(document.getElementById("so-ciclo"), [
+    `${fmt(c46)} de ${fmt(cTot)} registros con ciclo están entre el 4 y el 6.`,
+    `${fmt(ciclo.find(x=>x[0]==="Sin dato")[1])} registros no declaran ciclo; conviene completar ese dato en el formulario.`,
+    `Egresados y docentes suman ${fmt(ciclo.find(x=>x[0]==="Egresado")[1]+ciclo.find(x=>x[0]==="Docente")[1])} registros.`
+  ]);
+
+  // Carrera
+  const carTot = carrera.reduce((s,x)=>s+x[1],0);
+  const top2 = carrera.filter(x=>x[0]!=="Otras").sort((a,b)=>b[1]-a[1]).slice(0,2);
+  document.getElementById("h-carrera").textContent = top2.length && top2[0][1] ? `${label(top2[0][0],"carrera")} y ${label(top2[1][0],"carrera").toLowerCase()} lideran las carreras declaradas` : "Sin carreras en la vista";
+  li(document.getElementById("so-carrera"), [
+    `${label(top2[0][0],"carrera")} representa ${pct(top2[0][1],carTot)}% de los registros en la vista.`,
+    `Otras carreras no estandarizadas quedan en "Otras" (${fmt(carrera.find(x=>x[0]==="Otras")[1])} registros): conviene revisar el texto libre.`
+  ]);
+
+  // Edad
+  document.getElementById("h-edad").textContent = edTot ? `${pct(young,edTot)}% de los asistentes con edad declarada tiene entre 18 y 25 años` : "Sin edades en la vista";
+  const old = edad.filter(x=>["31-40","41+"].includes(x[0])).reduce((s,x)=>s+x[1],0);
+  li(document.getElementById("so-edad"), [
+    `Los menores de 18 son ${fmt(edad.find(x=>x[0]==="<18")[1])} registros; el perfil es mayoritariamente universitario.`,
+    `Los mayores de 30 suman ${fmt(edad.filter(x=>["31-40","41+"].includes(x[0])).reduce((s,x)=>s+x[1],0))} registros, un segmento de profesionales o docentes con necesidades distintas.`,
+    `${fmt(edad.find(x=>x[0]==="Sin dato")[1])} registros no tienen edad válida.`
+  ]);
+
+  // Resumen
+  const sumList = [
+    `<span class="hk">${label(gTop[0],"grupo")}</span> concentra ${pct(gTop[1],gTot)}% de los registros en la vista; es el público principal.`,
+    `<span class="hk">Ciclos 4 a 6</span> reúnen ${pct(c46,cTot)}% de los registros con ciclo declarado: ahí está la mayor parte de la demanda.`,
+    `<span class="hk">${pct(young,edTot)}%</span> tiene entre 18 y 25 años, lo que define un público joven y universitario.`
+  ];
+  document.getElementById("summary").innerHTML = sumList.map((t,i)=>`<li><span class="n">${i+1}</span><span>${t}</span></li>`).join("");
+
+  document.getElementById("title").textContent = `Perfil de asistentes: ${gLabel.toLowerCase()} concentra ${pct(gTop[1],gTot)}% del registro en la vista`;
+}
+
+function showTip(e, text){
+  const t = document.getElementById("tip");
+  t.textContent = text; t.style.opacity = 1;
+  t.style.left = e.clientX+"px"; t.style.top = e.clientY+"px";
+}
+function hideTip(){ document.getElementById("tip").style.opacity = 0; }
+
+function render(){
+  chips("grupo","f-grupo", ORDER.grupo.filter(g=>RAW.some(d=>d.g===g)));
+  chips("ciclo","f-ciclo", ORDER.ciclo.filter(c=>RAW.some(d=>d.ci===c)));
+  chips("edad","f-edad", ORDER.edad.filter(c=>RAW.some(d=>d.e===c)));
+  const grupo = drawDonut();
+  const ciclo = drawBars("ciclo","ciclo");
+  const carrera = agg("carrera", null);
+  drawCarreras();
+  const edad = drawBars("edad","edad");
+  drawHeat();
+  drawText(grupo, ciclo, carrera, edad);
+}
+
+document.getElementById("reset").onclick = ()=>{ Object.values(state).forEach(s=>s.clear()); render(); };
+
+const themeBtn = document.getElementById("theme");
+let theme = null;
+try { theme = localStorage.getItem("uli-theme"); } catch(e) {}
+if (theme) document.documentElement.setAttribute("data-theme", theme);
+themeBtn.onclick = ()=>{
+  const cur = document.documentElement.getAttribute("data-theme");
+  const dark = cur ? cur==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  const next = dark ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try { localStorage.setItem("uli-theme", next); } catch(e) {}
+  render();
+};
+
+let rt;
+window.addEventListener("resize", ()=>{ clearTimeout(rt); rt = setTimeout(render, 150); });
+render();
+</script>
+</body>
+</html>
