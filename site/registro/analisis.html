@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registro uLIMA: análisis integral de asistentes</title>
+<meta name="description" content="Análisis integral del registro de asistentes uLIMA: embudo de inscritos a sesiones, perfil demográfico, procedencia y calidad de datos.">
+<style>
+:root{--bg:#ffffff;--panel:#f3f5f8;--ink:#0b1f3a;--body:#2b3445;--muted:#6b7589;--line:#d9dee8;--accent:#1f6feb;--soft:#dfe7f5;--track:#e6eaf1}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b1322;--panel:#121d31;--ink:#f1f5fb;--body:#c9d3e3;--muted:#8fa0ba;--line:#22314d;--accent:#5b9bff;--soft:#16294a;--track:#1a2740;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1322;--panel:#121d31;--ink:#f1f5fb;--body:#c9d3e3;--muted:#8fa0ba;--line:#22314d;--accent:#5b9bff;--soft:#16294a;--track:#1a2740;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--body);font:15px/1.55 "Helvetica Neue",Arial,system-ui,sans-serif;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+main{max-width:980px;margin:0 auto;padding-block:28px 56px}
+.top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:10px}
+.tbtn{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 10px;font:inherit;font-size:12px;color:var(--ink);cursor:pointer}
+h1{font-size:30px;line-height:1.2;color:var(--ink);margin:18px 0 10px;letter-spacing:-.01em;text-wrap:balance}
+.lead{font-size:16px;max-width:760px;margin:0 0 24px}
+h2{font-size:21px;line-height:1.3;color:var(--ink);margin:0 0 6px;text-wrap:balance}
+.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:700;margin:36px 0 4px}
+.unit{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+section{border-top:1px solid var(--line);padding-top:4px}
+.summary{background:var(--panel);border-left:4px solid var(--accent);padding:18px 20px;border-radius:4px;margin-bottom:8px}
+.summary h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:0 0 10px}
+.summary ol{margin:0;padding-left:20px;display:grid;gap:10px}
+.two{display:grid;gap:22px;grid-template-columns:1fr}
+@media (min-width:820px){.two{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}}
+.box{background:var(--panel);border-radius:4px;padding:16px 18px;align-self:start}
+.box h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px}
+.box ul{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14px}
+.row{display:grid;grid-template-columns:minmax(0,230px) 1fr 84px;gap:10px;align-items:center;margin:7px 0}
+.lab{font-size:13.5px;color:var(--body)}
+.track{height:14px;background:var(--track);border-radius:2px;overflow:hidden}
+.fill{height:100%;background:var(--soft);border-radius:2px}
+.fill.a{background:var(--accent)}
+.fill.b{background:var(--ink)}
+.fill.c{background:var(--muted)}
+.num{text-align:right;font-variant-numeric:tabular-nums;font-size:13.5px;color:var(--ink);font-weight:600}
+.num small{color:var(--muted);font-weight:400}
+.sub{margin-top:18px}
+.steps{display:grid;gap:12px;margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.steps li::before{counter-increment:s;content:counter(s);width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.note{font-size:12.5px;color:var(--muted);margin-top:28px;border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px}
+@media (max-width:560px){.row{grid-template-columns:1fr 64px}.row .track{grid-column:1/-1;order:3}.num{text-align:left}}
+</style>
+</head>
+<body>
+<main>
+
+<div class="top">
+  <span>Registro uLIMA · Análisis integral de asistentes · Datos al 22 de octubre de 2026 · Confidencial, uso interno</span>
+  <button class="tbtn" id="theme" type="button">Cambiar tema</button>
+</div>
+
+<h1>El público es joven y de negocios, pero solo 349 de los 643 inscritos quedaron asignados a una sesión</h1>
+<p class="lead">Análisis de todas las hojas del archivo de registro. Las cifras cuentan personas únicas (por DNI o, si falta, por correo), no filas, para que un mismo inscrito no se repita.</p>
+
+<section class="summary" aria-labelledby="sumh">
+  <h2 id="sumh">Resumen</h2>
+  <ol>
+    <li>Identificamos 1.640 personas con formulario completo y 4.375 identidades distintas en todo el archivo. Hay cuatro formularios diferentes y una lista sin encabezado, así que el archivo necesita orden antes de usarse para decidir.</li>
+    <li>De 643 inscritos, 349 (54%) aparecen en una lista de sesión. Las sesiones de tarde (290) y de todo el día (183) concentran la asistencia.</li>
+    <li>El 79% de las personas con edad declarada tiene entre 18 y 25 años. El 50% de quienes declaran facultad estudia en Negocios y Empresariales, y con Economía el grupo llega al 60%.</li>
+    <li>Solo 6% usa correo institucional de uLIMA. Entre quienes declaran centro de estudios, la UNMSM es la más frecuente (25%).</li>
+    <li>Recomendación: unificar el formulario, depurar por DNI y registrar asistencia real el día del evento antes del siguiente taller.</li>
+  </ol>
+</section>
+
+<section>
+  <div class="kicker">1. Del inscrito a la sesión</div>
+  <h2>Poco más de la mitad de los inscritos aparece en una sesión, y la de la tarde es la más llena</h2>
+  <p class="unit">Número de personas únicas por lista. Porcentaje sobre los 643 inscritos de la hoja TODOS.</p>
+  <div class="two">
+    <div>
+<div class="row"><span class="lab">Inscritos (hoja TODOS)</span><div class="track"><div class="fill a" style="width:100.0%"></div></div><span class="num">643<small> (100%)</small></span></div>
+<div class="row"><span class="lab">En alguna sesión de los 3 días</span><div class="track"><div class="fill b" style="width:54.3%"></div></div><span class="num">349<small> (54%)</small></span></div>
+<div class="row"><span class="lab">Sesión mañana</span><div class="track"><div class="fill c" style="width:37.8%"></div></div><span class="num">243<small> (38%)</small></span></div>
+<div class="row"><span class="lab">Sesión tarde</span><div class="track"><div class="fill c" style="width:45.1%"></div></div><span class="num">290<small> (45%)</small></span></div>
+<div class="row"><span class="lab">Todo el día</span><div class="track"><div class="fill c" style="width:28.5%"></div></div><span class="num">183<small> (28%)</small></span></div>
+    </div>
+    <aside class="box">
+      <h3>Qué significa</h3>
+      <ul>
+        <li>294 inscritos (46%) no figuran en ninguna lista de sesión. Conviene confirmar si cambiaron de opinión o si su registro quedó incompleto.</li>
+        <li>Los 183 de "todo el día" también aparecen en las listas de mañana y de tarde, por eso las listas no se pueden sumar.</li>
+        <li>Miércoles (24), jueves (8) y viernes (13) tienen listas de un solo día, con pocas personas.</li>
+        <li>El archivo no registra asistencia real, solo listas. Este análisis mide inscripción y asignación, no presencia.</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section>
+  <div class="kicker">2. Quiénes son</div>
+  <h2>El 79% tiene entre 18 y 25 años, y la facultad más frecuente es Negocios</h2>
+  <p class="unit">Personas únicas con dato válido. Edad: 1.481 personas; facultad: 1.268; ciclo: 1.640.</p>
+  <div class="two">
+    <div>
+      <h3 style="font-size:14px;color:var(--ink);margin:6px 0 2px">Edad</h3>
+<div class="row"><span class="lab">Menores de 18</span><div class="track"><div class="fill " style="width:1.7%"></div></div><span class="num">25<small> (2%)</small></span></div>
+<div class="row"><span class="lab">18 a 21 años</span><div class="track"><div class="fill a" style="width:55.6%"></div></div><span class="num">824<small> (56%)</small></span></div>
+<div class="row"><span class="lab">22 a 25 años</span><div class="track"><div class="fill a" style="width:23.2%"></div></div><span class="num">343<small> (23%)</small></span></div>
+<div class="row"><span class="lab">26 a 29 años</span><div class="track"><div class="fill " style="width:6.8%"></div></div><span class="num">101<small> (7%)</small></span></div>
+<div class="row"><span class="lab">30 años o más</span><div class="track"><div class="fill " style="width:12.7%"></div></div><span class="num">188<small> (13%)</small></span></div>
+      <h3 style="font-size:14px;color:var(--ink);margin:22px 0 2px">Facultad declarada</h3>
+<div class="row"><span class="lab">Negocios y Empresariales</span><div class="track"><div class="fill a" style="width:49.5%"></div></div><span class="num">628<small> (50%)</small></span></div>
+<div class="row"><span class="lab">Ingeniería y Computación</span><div class="track"><div class="fill " style="width:13.2%"></div></div><span class="num">168<small> (13%)</small></span></div>
+<div class="row"><span class="lab">Economía</span><div class="track"><div class="fill " style="width:10.6%"></div></div><span class="num">135<small> (11%)</small></span></div>
+<div class="row"><span class="lab">Psicología, Comunicaciones y Derecho</span><div class="track"><div class="fill " style="width:7.9%"></div></div><span class="num">100<small> (8%)</small></span></div>
+<div class="row"><span class="lab">Otras</span><div class="track"><div class="fill " style="width:5.3%"></div></div><span class="num">67<small> (5%)</small></span></div>
+<div class="row"><span class="lab">Sin facultad válida</span><div class="track"><div class="fill " style="width:13.4%"></div></div><span class="num">170<small> (13%)</small></span></div>
+    </div>
+    <aside class="box">
+      <h3>Qué significa</h3>
+      <ul>
+        <li>La mediana de edad es 21 años. Hay 188 personas de 30 años o más (13%), un perfil distinto al de los estudiantes jóvenes.</li>
+        <li>Negocios y Empresariales suma 628 personas (50%). Con Economía, el grupo llega a 763 (60%).</li>
+        <li>Ingeniería y Computación (13%) es el segundo grupo más grande.</li>
+        <li>El 36% no declara ciclo o lo escribe en otro formato. Por eso el ciclo no se puede usar todavía para segmentar con confianza.</li>
+      </ul>
+    </aside>
+  </div>
+  <div class="sub two">
+    <div>
+      <h3 style="font-size:14px;color:var(--ink);margin:6px 0 2px">Ciclo declarado</h3>
+<div class="row"><span class="lab">Ciclos 4 a 6</span><div class="track"><div class="fill a" style="width:29.4%"></div></div><span class="num">482<small> (29%)</small></span></div>
+<div class="row"><span class="lab">Ciclos 1 a 3</span><div class="track"><div class="fill " style="width:10.2%"></div></div><span class="num">168<small> (10%)</small></span></div>
+<div class="row"><span class="lab">Ciclos 7 a 10</span><div class="track"><div class="fill " style="width:20.1%"></div></div><span class="num">329<small> (20%)</small></span></div>
+<div class="row"><span class="lab">Egresados y docentes</span><div class="track"><div class="fill " style="width:3.9%"></div></div><span class="num">64<small> (4%)</small></span></div>
+<div class="row"><span class="lab">Sin dato u otro</span><div class="track"><div class="fill " style="width:36.4%"></div></div><span class="num">597<small> (36%)</small></span></div>
+    </div>
+    <aside class="box">
+      <h3>Qué significa</h3>
+      <ul>
+        <li>Entre quienes declaran ciclo numérico, la mitad está entre el 4 y el 6 (482 de 979).</li>
+        <li>Egresados y docentes son una minoría (64 personas), pero conviene identificarlos aparte.</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section>
+  <div class="kicker">3. De dónde vienen</div>
+  <h2>Solo 6% usa correo de uLIMA; la mayoría llega desde fuera de la universidad</h2>
+  <p class="unit">Personas únicas (1.640) por dominio del correo. Centro de estudios: 372 personas del formulario que lo pregunta.</p>
+  <div class="two">
+    <div>
+<div class="row"><span class="lab">Correo personal (Gmail, Hotmail, etc.)</span><div class="track"><div class="fill a" style="width:67.1%"></div></div><span class="num">1,100<small> (67%)</small></span></div>
+<div class="row"><span class="lab">Otras universidades o institutos</span><div class="track"><div class="fill " style="width:18.5%"></div></div><span class="num">304<small> (19%)</small></span></div>
+<div class="row"><span class="lab">Correo uLima</span><div class="track"><div class="fill " style="width:6.3%"></div></div><span class="num">104<small> (6%)</small></span></div>
+<div class="row"><span class="lab">UNE</span><div class="track"><div class="fill " style="width:1.6%"></div></div><span class="num">26<small> (2%)</small></span></div>
+<div class="row"><span class="lab">Otro dominio</span><div class="track"><div class="fill " style="width:3.3%"></div></div><span class="num">54<small> (3%)</small></span></div>
+<div class="row"><span class="lab">Sin correo</span><div class="track"><div class="fill " style="width:3.2%"></div></div><span class="num">52<small> (3%)</small></span></div>
+      <h3 style="font-size:14px;color:var(--ink);margin:22px 0 2px">Centro de estudios (solo formulario con esa pregunta)</h3>
+<div class="row"><span class="lab">UNMSM</span><div class="track"><div class="fill a" style="width:25.0%"></div></div><span class="num">93<small> (25%)</small></span></div>
+<div class="row"><span class="lab">Universidad del Pacífico</span><div class="track"><div class="fill " style="width:14.5%"></div></div><span class="num">54<small> (15%)</small></span></div>
+<div class="row"><span class="lab">UPC</span><div class="track"><div class="fill " style="width:5.9%"></div></div><span class="num">22<small> (6%)</small></span></div>
+<div class="row"><span class="lab">UTP</span><div class="track"><div class="fill " style="width:3.2%"></div></div><span class="num">12<small> (3%)</small></span></div>
+<div class="row"><span class="lab">Otros</span><div class="track"><div class="fill " style="width:51.3%"></div></div><span class="num">191<small> (51%)</small></span></div>
+    </div>
+    <aside class="box">
+      <h3>Qué significa</h3>
+      <ul>
+        <li>El taller llega a un público externo a uLIMA. El mensaje y la logística deben pensarse para estudiantes de otras universidades.</li>
+        <li>Casi siete de cada diez usan correo personal, así que el correo institucional no sirve como canal principal de comunicación.</li>
+        <li>La UNMSM (25% de quienes declaran centro) es la principal institución de procedencia en ese formulario.</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section>
+  <div class="kicker">4. Calidad de los datos</div>
+  <h2>El archivo no está listo para decidir sin antes depurarlo</h2>
+  <p class="unit">Resumen de hallazgos técnicos sobre las hojas del libro.</p>
+  <div class="two">
+    <div>
+      <ul class="steps" style="gap:14px">
+        <li>Cuatro formularios distintos, con nombres de columna diferentes y facultades escritas en texto libre (por ejemplo, "Ing. Industrial", "Ingeniería", "Facultad de Ingeniería").</li>
+        <li>La hoja ASISTENTES tiene 13.825 filas sin encabezado. Contienen unas 4.000 identidades distintas, y algunas aparecen hasta 18 veces. No la usamos para perfilar.</li>
+        <li>En TOTAL REGISTRADOS, el bloque principal tiene 1.094 filas y 1.024 personas. Hay 70 repetidas.</li>
+        <li>Varias filas tienen datos desplazados: en un formulario, el centro de estudios contiene carreras; en otro, el distrito contiene una facultad.</li>
+        <li>El archivo contiene DNI, teléfonos y correos completos. Para compartir análisis conviene separar esos datos.</li>
+      </ul>
+    </div>
+    <aside class="box">
+      <h3>Corrección a un análisis anterior</h3>
+      <ul>
+        <li>El panel que publicamos antes contaba filas de la hoja TOTAL REGISTRADOS, no personas, y mezclaba dos formatos. Sus cifras están infladas por las repeticiones y deben reemplazarse por las de este informe.</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section>
+  <div class="kicker">5. Qué hacer</div>
+  <h2>Cuatro acciones antes del próximo taller</h2>
+  <ol class="steps sub">
+    <li>Unificar el formulario en un solo esquema, con listas desplegables para facultad, carrera, ciclo y sede.</li>
+    <li>Depurar duplicados por DNI y validar correos y teléfonos antes de reportar cualquier cifra.</li>
+    <li>Registrar asistencia real el día del evento con control de ingreso, para medir presencia y no solo inscripción.</li>
+    <li>Separar los datos personales del archivo de análisis y publicar solo agregados, como en este informe.</li>
+  </ol>
+</section>
+
+<div class="note">
+  <div>Fuente: archivo Registro uLIMA-ASISTENTES, todas las hojas. Personas únicas por DNI o, si falta, por correo.</div>
+  <div>Listas de logística excluidas del análisis de público: CAENE (111 filas), INVITADOS (95 filas, 81 con organización indicada), PONENTES (60) y PROVEEDOR (5).</div>
+  <div>Limitaciones: el archivo no tiene fecha del evento ni asistencia confirmada. Facultad y carrera vienen de texto libre y se agruparon manualmente. Algunas personas pueden figurar con DNI o correo distintos, por lo que el total de personas únicas puede estar algo sobreestimado.</div>
+</div>
+
+</main>
+<script>
+(function(){
+  var b=document.getElementById('theme');
+  var t=null; try{t=localStorage.getItem('uli-theme')}catch(e){}
+  if(t) document.documentElement.setAttribute('data-theme',t);
+  b.onclick=function(){
+    var cur=document.documentElement.getAttribute('data-theme');
+    var dark=cur?cur==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+    var next=dark?'light':'dark';
+    document.documentElement.setAttribute('data-theme',next);
+    try{localStorage.setItem('uli-theme',next)}catch(e){}
+  };
+})();
+</script>
+</body>
+</html>
