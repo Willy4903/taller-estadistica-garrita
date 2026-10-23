@@ -146,7 +146,7 @@
   }
  ],
  "rank_note": "Las dos tablas usan escalas distintas y no se pueden mezclar: cada una compara solo dentro de sí misma.",
- "hoy": [
+ "hoy": [{"affects":"Profesionales y dueños de pequeños negocios con plan Pro o Max en EE. UU.; el resto debe esperar.","cats":["Agentes","Claude","Empresa"],"date":"2026-10-21","id":"claude-duet","level":4,"source":"The Verge","title":"Anthropic lanza Claude Duet, un agente proactivo","url":"https://www.theverge.com/ai-artificial-intelligence/1015843/anthropic-claude-duet-ai-agent","what":"Anthropic presentó Claude Duet en research preview: un agente que no espera instrucciones, sino que envía un resumen cada mañana de tus apps conectadas, las revisa cada pocas horas y avisa cuando algo requiere atención. Funciona en su propia máquina virtual con navegador y pide tu aprobación antes de enviar mensajes, pagar, firmar o borrar. Está en iOS, Android y web, solo con lista de espera para Pro y Max en EE. UU.","why":"Es la respuesta de Anthropic a Muse (Meta) y Dots (OpenAI) y mueve a Claude de asistente reactivo a agente que trabaja en segundo plano. Aún es una vista previa: Anthropic admite que puede juzgar mal la urgencia o perder un correo entre revisiones."},
   {
    "id": "gemini-4-argon",
    "title": "Google lanza Gemini 4 Argon",
