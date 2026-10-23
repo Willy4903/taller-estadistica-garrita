@@ -61,8 +61,8 @@
   const LEVEL = { 1: "Nivel 1 · Fuente oficial", 2: "Nivel 2 · Paper", 3: "Nivel 3 · Benchmark independiente", 4: "Nivel 4 · Prensa especializada", 5: "Nivel 5 · Señal inicial" };
 
   function paint(D) {
-    const { items, rest } = pick(D);
-    document.getElementById("hoy-list").innerHTML = items.length ? items.map((x, i) => `
+    let { items, rest } = pick(D), fallback = false; if (!items.length && st.period === "24H") { const prev = st.period; st.period = "7D"; const r = pick(D); st.period = prev; if (r.items.length) { items = r.items; rest = r.rest; fallback = true; } }
+    document.getElementById("hoy-list").innerHTML = (fallback ? `<div class="callout">${ico("info")}<p>No hubo acontecimientos en las últimas 24 h con este filtro. Te mostramos lo más reciente de los últimos 7 días.</p></div>` : "") + (items.length ? items.map((x, i) => `
       <article class="hoy-card">
         <div class="hoy-n">${String(i + 1).padStart(2, "0")}</div>
         <div class="hoy-body">
@@ -75,7 +75,7 @@
           </dl>
           <p class="hoy-src">Fuente: <a href="${esc(x.url)}" target="_blank" rel="noopener" data-track="clic_fuente_hoy">${esc(x.source)}</a></p>
         </div>
-      </article>`).join("") : `<div class="callout">${ico("info")}<p>No hay acontecimientos relevantes que cumplan este filtro en el periodo elegido. Amplía el periodo a 7D o 30D, o quita la categoría.</p></div>`;
+      </article>`).join("") : `<div class="callout">${ico("info")}<p>No hay acontecimientos relevantes que cumplan este filtro en el periodo elegido. Amplía el periodo a 7D o 30D, o quita la categoría.</p></div>`);
     const more = document.getElementById("hoy-more");
     more.hidden = !rest.length;
     more.querySelector("ul").innerHTML = rest.map((n) => `<li><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title_es || n.title)}</a><span class="muted">${esc(n.source)} · ${esc(fmtDate(n.published.slice(0, 10)))}</span></li>`).join("");
