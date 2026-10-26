@@ -2,8 +2,11 @@ name: Actualización diaria y despliegue
 
 on:
   schedule:
-    # 11:00 UTC = 6:00 am en Lima (UTC-5, sin horario de verano)
-    - cron: "0 11 * * *"
+    # Meta: datos publicados a las 8:00 am de Lima (UTC-5, sin horario de verano).
+    # GitHub retrasa las ejecuciones programadas, por eso hay dos horarios tempranos
+    # a minutos "raros": 11:47 UTC = 6:47 am y 12:37 UTC = 7:37 am en Lima.
+    - cron: "47 11 * * *"
+    - cron: "37 12 * * *"
   workflow_dispatch:
   push:
     branches: [main]

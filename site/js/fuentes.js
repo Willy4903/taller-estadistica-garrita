@@ -30,7 +30,7 @@
       <ol class="lvl">${S.levels.map((l) => `<li><b>${l.n}</b><div><strong>${esc(l.name)}</strong><span>${esc(l.desc)}</span></div></li>`).join("")}</ol>
       <h3 class="sub-h">Cómo se actualiza</h3>
       <ol class="flow"><li>Recuperar</li><li>Normalizar</li><li>Validar</li><li>Comparar</li><li>Detectar cambios</li><li>Publicar</li></ol>
-      <p class="muted">Una automatización de GitHub Actions corre cada día (11:00 UTC), guarda una copia en el histórico del repositorio y no sobrescribe el dato anterior. Cada cifra conserva valor, unidad, tipo de métrica, fuente, URL, fecha de publicación, fecha de obtención, proveedor, confianza y nota de metodología (<a href="data/current/facts.json">ver datos</a>).</p>
+      <p class="muted">Una automatización de GitHub Actions corre cada día y deja los datos publicados hacia las 8:00 a. m. de Lima, guarda una copia en el histórico del repositorio y no sobrescribe el dato anterior. Cada cifra conserva valor, unidad, tipo de métrica, fuente, URL, fecha de publicación, fecha de obtención, proveedor, confianza y nota de metodología (<a href="data/current/facts.json">ver datos</a>).</p>
       <h3 class="sub-h">Estado de cada fuente</h3>
       <div class="table-wrap"><table><thead><tr><th>Fuente</th><th>Nivel</th><th>Uso en IA Radar</th><th>Estado</th></tr></thead><tbody>
         ${S.items.map((it) => { const s = statusOf(it, D); return `<tr><td><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.name)}</a></td><td>${it.level}</td><td>${esc(it.use)}</td><td><span class="tag ${TAG[s.k]}">${esc(s.t)}</span><small>${esc(s.d)}</small></td></tr>`; }).join("")}</tbody></table></div>

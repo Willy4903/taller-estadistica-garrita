@@ -3,7 +3,7 @@ Taller de Estadística Aplicada para la Recolección e Interpretación de Datos 
 
 ## IA Radar
 
-Observatorio de inteligencia artificial en español (`site/`): qué pasó hoy, qué cambió, radar de modelos, uso real, aprendizaje (Academia, Prompt Lab, glosario, quiz), uso responsable, normativa (Perú, UE, estándares) y diagnóstico de nivel. Una automatización de GitHub Actions actualiza los datos cada día (11:00 UTC) y vuelve a publicar el sitio.
+Observatorio de inteligencia artificial en español (`site/`): qué pasó hoy, qué cambió, radar de modelos, uso real, aprendizaje (Academia, Prompt Lab, glosario, quiz), uso responsable, normativa (Perú, UE, estándares) y diagnóstico de nivel. Una automatización de GitHub Actions actualiza los datos cada día (meta: 8:00 a. m. de Lima; se programa a las 6:47 y 7:37 a. m. porque GitHub retrasa las ejecuciones) y vuelve a publicar el sitio.
 
 ### Estructura
 
