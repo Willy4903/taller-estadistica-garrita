@@ -131,3 +131,4 @@ html,body{overflow-x:clip}
 .steps6 span{overflow-wrap:anywhere}
 .steps6{grid-template-columns:repeat(5,minmax(0,1fr))}.steps6 li{padding:6px 1px}.steps6 span{hyphens:auto}
 .steps6{grid-template-columns:repeat(auto-fit,minmax(68px,1fr))}.steps6 li{font-size:.62rem}.ba2{align-items:start}
+.kp-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}.kp-list li{display:flex;flex-direction:column;gap:1px;min-width:0}.kp-list b{font:700 .84rem/1.25 "Inter",sans-serif;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.kp-list span{font-size:.7rem;color:var(--muted)}:root[data-theme="light"] .kp-list b{color:var(--ink)}

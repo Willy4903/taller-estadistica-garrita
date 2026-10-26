@@ -13,19 +13,22 @@
     const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1)).join("");
     return `<svg viewBox="0 0 ${w} ${h}" class="spark" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="spg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ec60ff" stop-opacity=".5"/><stop offset="1" stop-color="#25d9f5" stop-opacity="0"/></linearGradient></defs><path d="${d}L${w},${h}L0,${h}Z" fill="url(#spg)"/><path d="${d}" fill="none" stroke="url(#spg2)" stroke-width="2.2" stroke-linejoin="round"/><linearGradient id="spg2" x1="0" x2="1"><stop offset="0" stop-color="#25d9f5"/><stop offset="1" stop-color="#ec60ff"/></linearGradient><circle cx="${pts[pts.length - 1][0]}" cy="${pts[pts.length - 1][1]}" r="3.5" fill="#fff"/></svg>`;
   }
+  const usd = (v) => (v == null ? "n/d" : v === 0 ? "Gratis" : "US$ " + (v < 1 ? v.toFixed(2) : v < 10 ? v.toFixed(2) : v.toFixed(0)).replace(".", ","));
+  const ago = (d) => { const n = I.daysAgo(d); return n <= 0 ? "hoy" : n === 1 ? "ayer" : "hace " + n + " días"; };
+  const quarters = (pc) => { const k = Math.round(pc / 25); return ["muy pocos", "1 de cada 4", "la mitad", "3 de cada 4", "casi todos"][k]; };
   function kpis(D) {
-    const major = D.base.filter(I.isMajor), now = Date.now();
-    const weeks = Array.from({ length: 8 }, (_, i) => major.filter((m) => { const a = (now - new Date(m.created + "T12:00:00")) / 864e5; return a >= i * 7 && a < (i + 1) * 7; }).length).reverse();
-    const n30 = major.filter((m) => I.daysAgo(m.created) <= 30).length, mx = Math.max(1, ...weeks);
+    const major = D.base.filter(I.isMajor);
+    const recent = major.filter((m) => I.daysAgo(m.created) <= 30).sort((a, b) => b.created.localeCompare(a.created));
     const cur = major.filter((m) => m.price_in > 0 && m.price_out > 0 && I.daysAgo(m.created) <= 150), big = cur.filter((m) => m.context >= 1e6).length, pc = cur.length ? Math.round((big / cur.length) * 100) : 0;
-    const H = D.catalog || [], tot = H.map((h) => h.total), pr = H.map((h) => h.median_price_in).filter((v) => v != null);
+    const prices = D.all.map((m) => m.price_in).filter((v) => v > 0).sort((x, y) => x - y);
+    const q = (f) => prices.length ? prices[Math.min(prices.length - 1, Math.floor(prices.length * f))] : null, mid = q(0.5), lo = q(0.25), hi = q(0.75);
     const R = 26, Cc = 2 * Math.PI * R;
     const card = (t, v, sub, viz) => `<article class="kp"><h3>${t}</h3><div class="kp-v">${v}</div><p>${sub}</p><div class="kp-viz">${viz}</div></article>`;
     K.innerHTML = [
-      card("Lanzamientos por semana", `${n30}<small>en 30 días</small>`, "Modelos nuevos de laboratorios principales, últimas 8 semanas.", `<div class="wk">${weeks.map((v, i) => `<i style="--h:${Math.max(6, (v / mx) * 100)}%" title="${v} lanzamientos"${i === 7 ? ' class="cur"' : ""}></i>`).join("")}</div>`),
-      card("Contexto de 1 millón o más", `${pc} %<small>de los vigentes</small>`, `${big} de ${cur.length} modelos de laboratorios principales lanzados en 150 días.`, `<svg viewBox="0 0 64 64" class="donut" aria-hidden="true"><defs><linearGradient id="dg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#25d9f5"/><stop offset="1" stop-color="#ec60ff"/></linearGradient></defs><circle cx="32" cy="32" r="${R}" fill="none" stroke="rgba(141,179,201,.18)" stroke-width="9"/><circle cx="32" cy="32" r="${R}" fill="none" stroke="url(#dg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${(Cc * pc / 100).toFixed(1)} ${Cc.toFixed(1)}" transform="rotate(-90 32 32)"/></svg>`),
-      card("Modelos en el catálogo", `${nf.format(D.all.length)}<small>hoy</small>`, tot.length >= 3 ? `Evolución diaria desde ${fmtDate(H[0].date)}.` : "El historial diario se está acumulando.", tot.length >= 3 ? spark(tot) : ""),
-      card("Precio mediano de entrada", `${fmtPrice(pr.length ? pr[pr.length - 1] : null)}<small>por millón</small>`, pr.length >= 3 ? `Mediana de todo el catálogo desde ${fmtDate(H[0].date)}.` : "La serie se está acumulando.", pr.length >= 3 ? spark(pr) : ""),
+      card("Novedades", `${recent.length}<small>modelos nuevos este mes</small>`, "Lanzados en los últimos 30 días por los grandes laboratorios (OpenAI, Google, Anthropic y otros). Los más recientes:", `<ul class="kp-list">${recent.slice(0, 3).map((m) => `<li><b>${esc(nm(m))}</b><span>${esc(I.provName(m.provider))} · ${ago(m.created)}</span></li>`).join("")}</ul>`),
+      card("Memoria de la IA", `${quarters(pc)}<small>de los modelos recientes</small>`, `pueden leer unos 10 libros a la vez (1 millón de tokens). Se cuentan ${cur.length} modelos de los últimos 5 meses; ${big} lo logran.`, `<svg viewBox="0 0 64 64" class="donut" aria-hidden="true"><defs><linearGradient id="dg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#25d9f5"/><stop offset="1" stop-color="#ec60ff"/></linearGradient></defs><circle cx="32" cy="32" r="${R}" fill="none" stroke="rgba(141,179,201,.18)" stroke-width="9"/><circle cx="32" cy="32" r="${R}" fill="none" stroke="url(#dg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${(Cc * pc / 100).toFixed(1)} ${Cc.toFixed(1)}" transform="rotate(-90 32 32)"/></svg>`),
+      card("Para elegir", `${nf.format(D.all.length)}<small>modelos de IA disponibles</small>`, `Del catálogo público de OpenRouter, que reúne modelos de OpenAI, Google, Anthropic, Meta y más.`, ""),
+      card("Cuánto cuesta", `${usd(mid)}<small>por leer unos 10 libros</small>`, "Precio típico (la mediana) entre los modelos de pago del catálogo. Lo habitual va " + (lo != null && hi != null ? `de ${usd(lo)} a ${usd(hi)}` : "según el modelo") + "; hay modelos gratis y otros mucho más caros.", ""),
     ].join("");
   }
 
