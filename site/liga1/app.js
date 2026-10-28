@@ -431,6 +431,14 @@
     });
     $("#btnRandAll").addEventListener("click", function () { randomize(D.fixtures); fillFechaSel(); });
     $("#btnClear").addEventListener("click", function () { preds = {}; savePreds(); renderFixtures(); renderAll(true); });
+    $$(".cols-btn").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var on = b.getAttribute("aria-pressed") !== "true";
+        b.setAttribute("aria-pressed", String(on));
+        b.textContent = on ? "Ver menos columnas" : "Ver todas las columnas";
+        b.nextElementSibling.classList.toggle("show-all", on);
+      });
+    });
     $("#btnSim").addEventListener("click", function () { renderPro(); proStale = false; });
 
     var themeBtn = $("#themeBtn");
