@@ -1,0 +1,44 @@
+name: Revisión del sitio publicado de la Liga 1
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Revisar archivos publicados
+        run: |
+          B=https://willy4903.github.io/taller-estadistica-garrita/liga1
+          mkdir -p dl
+          for f in index.html styles.css app.js data.js content.js data/live.json img/monumental.svg escudos/UNI.png; do
+            code=$(curl -s -o "dl/$(basename $f)" -w "%{http_code} %{size_download} bytes" "$B/$f?x=$(date +%s)")
+            echo "$f -> $code"
+          done
+          echo "--- index.html (primeras líneas) ---"; head -c 600 dl/index.html; echo
+          echo "--- referencias a scripts ---"; grep -o '<script[^>]*src="[^"]*"' dl/index.html
+          echo "--- sintaxis de app.js ---"; node --check dl/app.js && echo "app.js OK"
+          node --check dl/content.js && echo "content.js OK"; node --check dl/data.js && echo "data.js OK"
+          echo "--- live.json ---"; python3 -c "import json;d=json.load(open('dl/live.json'));print('completo',d.get('complete'),'actualizado',d.get('updated_at'),'partidos',len(d.get('fixtures',[])))"
+      - name: Cargar la página en un navegador
+        run: |
+          npm i --no-save playwright@1.49.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
+          cat > t.js <<'JS'
+          const { chromium } = require('playwright');
+          (async () => {
+            const b = await chromium.launch();
+            for (const [name, opts] of [['escritorio', { viewport: { width: 1280, height: 800 } }], ['iPhone', { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1' }]]) {
+              const c = await b.newContext(opts); const p = await c.newPage(); const errs = [];
+              p.on('pageerror', e => errs.push('JS: ' + e.message)); p.on('requestfailed', r => errs.push('RED: ' + r.url() + ' ' + (r.failure() || {}).errorText)); p.on('response', r => { if (r.status() >= 400) errs.push('HTTP ' + r.status() + ' ' + r.url()); });
+              await p.goto('https://willy4903.github.io/taller-estadistica-garrita/liga1/', { waitUntil: 'networkidle' }); await p.waitForTimeout(1500);
+              const info = await p.evaluate(() => ({ filas: document.querySelectorAll('#tbl-acum tbody tr').length, primera: (document.querySelector('#tbl-acum tbody tr') || {}).innerText, ticker: !document.getElementById('ticker').hidden, texto: document.body.innerText.slice(0, 160).replace(/\s+/g, ' ') }));
+              console.log('===', name, JSON.stringify(info)); console.log(errs.length ? errs.join('\n') : 'sin errores');
+            }
+            await b.close();
+          })();
+          JS
+          node t.js
