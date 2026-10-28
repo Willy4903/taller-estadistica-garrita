@@ -1,13 +1,32 @@
 (function () {
   "use strict";
 
+  function boot(live) {
   var D = window.LIGA1;
+  var LIVE_OK = !!(live && live.complete && live.fixtures && live.fixtures.length >= 300);
+  if (LIVE_OK) D = Object.assign({}, D, { fixtures: live.fixtures, demo: false, live: live });
+  var ADJ = (LIVE_OK && live.adjust) || {};
+  var UNI = (LIVE_OK && live.uni) || null;
   var TEAMS = D.teams;
   var BY = {};
   TEAMS.forEach(function (t) { BY[t.id] = t; });
   var FOCUS = D.focus;
+  if (LIVE_OK) {
+    var st = {}, sum = 0, cnt = 0;
+    D.fixtures.forEach(function (f) {
+      if (f.hg == null) return;
+      [[f.h, f.hg, f.ag], [f.a, f.ag, f.hg]].forEach(function (x) {
+        var r = st[x[0]] || (st[x[0]] = { p: 0, n: 0 });
+        r.n++; r.p += x[1] > x[2] ? 3 : x[1] === x[2] ? 1 : 0;
+      });
+    });
+    TEAMS.forEach(function (t) { if (st[t.id]) { sum += st[t.id].p / st[t.id].n; cnt++; } });
+    TEAMS.forEach(function (t) { t.power = st[t.id] ? 74 + 20 * (st[t.id].p / st[t.id].n - sum / cnt) : 74; });
+  }
+  function adj(tor, id) { return (ADJ[tor] && ADJ[tor][id]) || 0; }
+  function applyAdj(rows, tors) { rows.forEach(function (r) { tors.forEach(function (t) { r.pts += adj(t, r.id); }); }); return rows; }
   var NF = Math.max.apply(null, D.fixtures.map(function (f) { return f.f; }));
-  var STORE = "liga1-preds-" + D.season;
+  var STORE = "liga1-preds-" + D.season + (LIVE_OK ? "-real" : "");
   var THEME = "liga1-theme";
   var LABEL = { A: "Apertura", C: "Clausura" };
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -55,7 +74,7 @@
   function compute(usePreds) {
     var fa = D.fixtures.filter(function (f) { return f.t === "A"; });
     var fc = D.fixtures.filter(function (f) { return f.t === "C"; });
-    var A = sorted(tally(fa, usePreds)), C = sorted(tally(fc, usePreds)), T = sorted(tally(D.fixtures, usePreds));
+    var A = sorted(applyAdj(tally(fa, usePreds), ["A"])), C = sorted(applyAdj(tally(fc, usePreds), ["C"])), T = sorted(applyAdj(tally(D.fixtures, usePreds), ["A", "C"]));
     var pa = {}, pc = {};
     A.forEach(function (r) { pa[r.id] = r.pts; });
     C.forEach(function (r) { pc[r.id] = r.pts; });
@@ -82,6 +101,7 @@
         for (var n = 1; n <= NF; n++) {
           var v = null;
           if (!broken) {
+            if (n === 1) run += adj(tor, t.id);
             var f = (idx[tor + n] || []).filter(function (x) { return x.h === t.id || x.a === t.id; })[0];
             var r = f && eff(f);
             if (r) {
@@ -198,6 +218,22 @@
     el.innerHTML = head + "<tbody>" + body + "</tbody>";
   }
 
+  var DAYS = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"], MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  function fmtDay(iso, hhmm) {
+    if (!iso) return "";
+    var p = iso.split("-"), d = new Date(+p[0], +p[1] - 1, +p[2]);
+    return DAYS[d.getDay()] + " " + d.getDate() + " " + MONTHS[d.getMonth()] + (hhmm ? " " + hhmm : "");
+  }
+  function fmtWhen(startsAt) {
+    try {
+      var parts = new Intl.DateTimeFormat("es-PE", { timeZone: "America/Lima", weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date(startsAt));
+      var g = {}; parts.forEach(function (x) { g[x.type] = x.value; });
+      return (g.weekday + " " + g.day + " " + g.month + " " + g.hour + ":" + g.minute).replace(/\./g, "");
+    } catch (e) { return ""; }
+  }
+  function fmtStamp(iso) {
+    try { return new Date(iso).toLocaleString("es-PE", { timeZone: "America/Lima", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }); } catch (e) { return iso; }
+  }
   function nextFixture(id) {
     var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg == null; });
     list.sort(function (x, y) { return (x.t === y.t ? 0 : x.t === "A" ? -1 : 1) || x.f - y.f; });
@@ -205,7 +241,12 @@
   }
 
   function renderHero() {
-    var me = BY[FOCUS], nx = nextFixture(FOCUS);
+    var me = BY[FOCUS], nx = nextFixture(FOCUS), nu = UNI && UNI.next;
+    if (nu && nu.homeId && nu.awayId && (nu.homeId === FOCUS || nu.awayId === FOCUS)) {
+      var home = nu.homeId === FOCUS, rival = BY[home ? nu.awayId : nu.homeId];
+      $("#nextMatch").innerHTML = "<div>" + badge(me) + "</div><div><small>Próximo partido · " + (nu.stage || "").replace(" — ", " · ") + " · " + fmtWhen(nu.startsAt) + "</small><b>" +
+        me.short + " vs " + rival.short + (home ? " (local)" : " (visita)") + "</b><small>" + (nu.venue || "") + (nu.city ? ", " + nu.city : "") + "</small></div>";
+    } else
     $("#nextMatch").innerHTML = nx
       ? '<div>' + badge(me) + '</div><div><small>Próximo partido · ' + LABEL[nx.t] + " fecha " + nx.f + "</small><b>" +
         (nx.h === FOCUS ? me.short + " vs " + BY[nx.a].short + " (local)" : BY[nx.h].short + " vs " + me.short + " (visita)") + "</b></div>"
@@ -261,7 +302,7 @@
       return '<article class="fx' + (f.h === FOCUS || f.a === FOCUS ? " me" : "") + '" data-i="' + i + '"><div class="fx-row">' +
         '<div class="fx-t">' + badge(H) + '<span class="n">' + H.short + "</span></div>" + mid +
         '<div class="fx-t away"><span class="n">' + A.short + "</span>" + badge(A) + "</div></div>" +
-        '<div class="fx-foot"><span>' + LABEL[f.t] + " · fecha " + f.f + "</span>" + tagFor(f) + "</div></article>";
+        '<div class="fx-foot"><span>' + LABEL[f.t] + " · fecha " + f.f + (f.date ? " · " + fmtDay(f.date, f.time) : "") + "</span>" + tagFor(f) + "</div></article>";
     }).join("");
     $$("#fixtures input").forEach(function (inp) { inp.addEventListener("input", onScore); });
   }
@@ -356,7 +397,7 @@
   function simulate() {
     var pending = D.fixtures.filter(function (f) { return !eff(f); });
     var base = {}, ids = TEAMS.map(function (t) { return t.id; });
-    ids.forEach(function (id) { base[id] = { a: [0, 0, 0], c: [0, 0, 0] }; }); /* pts, gf, gc */
+    ids.forEach(function (id) { base[id] = { a: [adj("A", id), 0, 0], c: [adj("C", id), 0, 0] }; }); /* pts, gf, gc */
     D.fixtures.forEach(function (f) {
       var r = eff(f); if (!r) return;
       var k = f.t === "A" ? "a" : "c", H = base[f.h][k], A = base[f.a][k];
@@ -409,6 +450,43 @@
     $("#tbl-pro").innerHTML = head + "<tbody>" + body + "</tbody>";
   }
 
+  /* ---------- La U hoy (noticias y calendario de universitario.pe) ---------- */
+  function esc(t) { return String(t == null ? "" : t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function fmtNewsDate(iso) {
+    var p = (iso || "").split("-");
+    return p.length === 3 ? +p[2] + " " + MONTHS[+p[1] - 1] + " " + p[0] : "";
+  }
+  function resultChip(m) {
+    var home = m.homeId === FOCUS, mine = home ? m.homeScore : m.awayScore, his = home ? m.awayScore : m.homeScore;
+    var k = mine > his ? "W" : mine === his ? "D" : "L";
+    var rival = BY[home ? m.awayId : m.homeId];
+    return '<li><i class="' + k + '">' + ({ W: "G", D: "E", L: "P" })[k] + '</i><span class="rs-stage">' + esc((m.stage || "").replace(" — ", " · ")) + "</span>" +
+      '<span class="rs-vs">' + (home ? "U" : esc(rival ? rival.short : m.home)) + " <b>" + m.homeScore + " - " + m.awayScore + "</b> " + (home ? esc(rival ? rival.short : m.away) : "U") + "</span></li>";
+  }
+  function renderUni() {
+    if (!UNI) return;
+    var h = "", n = UNI.next, me = BY[FOCUS];
+    if (n && n.homeId && n.awayId) {
+      var H = BY[n.homeId], A = BY[n.awayId];
+      h += '<article class="next-card"><p class="nc-eyebrow">Próximo partido · ' + esc((n.stage || "").replace(" — ", " · ")) + "</p>" +
+        '<div class="nc-row"><div class="nc-team">' + (H ? badge(H) : "") + "<span>" + esc(H ? H.short : n.home) + '</span></div><div class="nc-vs">VS</div><div class="nc-team">' + (A ? badge(A) : "") + "<span>" + esc(A ? A.short : n.away) + "</span></div></div>" +
+        '<p class="nc-when">' + esc(fmtWhen(n.startsAt)) + " (hora de Lima)</p><p class=\"nc-venue\">" + esc(n.venue || "") + (n.city ? ", " + esc(n.city) : "") + "</p></article>";
+    }
+    if (UNI.last && UNI.last.length) {
+      h += '<article class="last-card"><p class="nc-eyebrow">Últimos resultados</p><ul class="rs">' + UNI.last.map(resultChip).join("") + "</ul></article>";
+    }
+    var news = (UNI.news || []).map(function (x, i) {
+      return '<a class="news' + (i === 0 ? " big" : "") + '" href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' +
+        (x.image ? '<span class="news-img"><img src="' + esc(x.image) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>' : "") +
+        '<span class="news-body"><span class="news-meta"><b>' + esc(x.category || "Club") + "</b> · " + esc(fmtNewsDate(x.date)) + "</span>" +
+        '<span class="news-title">' + esc(x.title) + "</span>" + (x.summary ? '<span class="news-sum">' + esc(x.summary) + "</span>" : "") +
+        '<span class="news-go">Leer en universitario.pe</span></span></a>';
+    }).join("");
+    $("#uniBox").innerHTML = '<div class="uni-top">' + h + '</div><h3 class="mt">Noticias del club</h3><div class="news-grid">' + news + "</div>" +
+      '<p class="note">Contenido de <a href="https://universitario.pe" target="_blank" rel="noopener noreferrer">universitario.pe</a>, sitio oficial del club. Se actualiza todos los días hacia las 8:00 a. m. (hora de Lima).</p>';
+    $("#t-uni").hidden = false;
+  }
+
   /* ---------- orquestación ---------- */
   var view = "acum", proStale = true;
   function renderAll(fromCalc) {
@@ -434,6 +512,17 @@
 
   function init() {
     if (D.demo) $("#demoBanner").hidden = false;
+    else {
+      var notes = [];
+      ["A", "C"].forEach(function (tor) {
+        var items = Object.keys(ADJ[tor] || {}).map(function (id) { return BY[id].short + " " + (ADJ[tor][id] > 0 ? "+" : "\u2212") + Math.abs(ADJ[tor][id]); });
+        if (items.length) notes.push(LABEL[tor] + ": " + items.join(", "));
+      });
+      $("#liveBanner").innerHTML = "<strong>Datos reales.</strong> Actualizado el " + fmtStamp(live.updated_at) + " (hora de Lima) y renovado todos los días hacia las 8:00 a. m. " +
+        "Tablas: Liga1.pe, FutbolPeruano y Depor. Noticias y calendario de la U: universitario.pe." + (notes.length ? " Puntos descontados por sanción (" + notes.join("; ") + ")." : "");
+      $("#liveBanner").hidden = false;
+    }
+    renderUni();
     cur = defaultFecha();
     recompute();
     renderLegend();
@@ -442,11 +531,12 @@
     $$(".seg button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.t === cur.t)); });
     renderAll();
 
-    $$(".tabs button").forEach(function (b, i, all) {
+    $$(".tabs button").forEach(function (b) {
       b.addEventListener("click", function () { show(b.dataset.view); });
       b.addEventListener("keydown", function (e) {
         var k = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
         if (!k) return;
+        var all = $$(".tabs button:not([hidden])"), i = all.indexOf(b);
         var n = all[(i + k + all.length) % all.length]; n.focus(); show(n.dataset.view);
       });
     });
@@ -486,8 +576,19 @@
     });
 
     var h = location.hash.replace("#", "");
-    if (["acum", "A", "C", "calc", "evo", "pro"].indexOf(h) >= 0) show(h);
+    if (["acum", "A", "C", "calc", "evo", "pro", "uni"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
   }
 
   init();
+  }
+
+  function start() {
+    if (window.LIVE) return boot(window.LIVE);
+    if (!window.fetch) return boot(null);
+    fetch("data/live.json?v=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; })
+      .then(function (j) { boot(j); });
+  }
+  start();
 })();

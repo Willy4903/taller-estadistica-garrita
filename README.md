@@ -46,4 +46,14 @@ Chart.js 4 está incluido en `site/vendor/` (licencia MIT), por lo que el sitio 
 
 ## Calculadora Liga 1 2026
 
-Página independiente en `site/liga1/` (tema Universitario): tablas de Apertura, Clausura y acumulado con columna de puntos acumulados, calculadora de resultados, evolución de puntos por fecha y pronósticos por simulación. Los datos están en `site/liga1/data.js` y por ahora son de demostración; reemplaza `fixtures` con los resultados oficiales (`hg`/`ag` en cada partido jugado, `null` en los pendientes) y pon `demo: false`.
+Página independiente en `site/liga1/` (tema Universitario): tablas de Apertura, Clausura y acumulado con puntos de cada torneo, calculadora de resultados, evolución de puntos por fecha, pronósticos por simulación y una pestaña "La U hoy" con el próximo partido y las noticias del club.
+
+Los datos reales se actualizan solos dentro del flujo diario (`daily-update.yml`, meta 8:00 a. m. de Lima) con `scripts/fetch_liga1.py`, que escribe `site/liga1/data/live.json`:
+
+- Partidos y marcadores del Apertura y del Clausura: futbolperuano.com.
+- Tablas oficiales para controlar los cálculos y detectar sanciones: liga1.pe, con futbolperuano.com y depor.com como controles cruzados.
+- Noticias, calendario y próximo partido de la U: universitario.pe.
+
+Si una fuente falla se conserva el último dato válido y el motivo queda en `sources` y `checks` dentro de `live.json`. Sin `live.json` la página muestra datos de demostración (`site/liga1/data.js`). Para correrlo a mano: `pip install beautifulsoup4 lxml && python scripts/fetch_liga1.py`.
+
+Escudos: `site/liga1/escudos/` (un `.png` por club). La mascota Garrita se muestra en el pie si existe `site/liga1/img/garrita.png`.

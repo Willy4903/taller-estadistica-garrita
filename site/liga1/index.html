@@ -47,6 +47,7 @@
 </section>
 
 <div class="wrap">
+  <div id="liveBanner" class="banner live" role="note" hidden></div>
   <div id="demoBanner" class="banner" role="note" hidden>
     <strong>Datos de demostración.</strong> Los resultados de esta página no son oficiales. Reemplázalos en <code>liga1/data.js</code> para publicar la tabla real.
   </div>
@@ -62,6 +63,7 @@
     <button role="tab" id="t-calc" aria-selected="false" data-view="calc">Calculadora</button>
     <button role="tab" id="t-evo" aria-selected="false" data-view="evo">Evolución de puntos</button>
     <button role="tab" id="t-pro" aria-selected="false" data-view="pro">Pronósticos</button>
+    <button role="tab" id="t-uni" aria-selected="false" data-view="uni" hidden>La U hoy</button>
   </nav>
 </div></div>
 
@@ -71,7 +73,7 @@
     <div class="view-head">
       <div>
         <h2>Tabla acumulada</h2>
-        <p class="sub">Suma de puntos del Apertura y del Clausura. La columna <b>Acum.</b> es el total de puntos y la barra lo compara con el líder.</p>
+        <p class="sub">Suma de puntos del Apertura y del Clausura. La columna <b>Acum.</b> es el total de puntos de la temporada.</p>
       </div>
       <div class="legend" id="zoneLegend"></div>
     </div>
@@ -143,6 +145,11 @@
     <p class="muted" id="simInfo"></p>
     <div class="table-card"><div class="scroll"><table id="tbl-pro" class="std"></table></div></div>
     <p class="note">Es un modelo estadístico simple (goles de Poisson con ventaja de local). Sirve como referencia, no como predicción oficial.</p>
+  </section>
+
+  <section id="v-uni" class="view" hidden aria-labelledby="t-uni">
+    <div class="view-head"><div><h2>La U hoy</h2><p class="sub">Próximo partido, últimos resultados y noticias del club.</p></div></div>
+    <div id="uniBox"></div>
   </section>
 
 </main>
