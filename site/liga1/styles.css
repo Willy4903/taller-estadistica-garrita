@@ -229,6 +229,7 @@ table.matrix td.na{color:var(--muted);opacity:.5}
 .bar.b i{background:linear-gradient(90deg,#1E7FB0,var(--z-sud))}
 
 .foot{position:relative;margin-top:34px;border-top:3px solid var(--accent);background:var(--bg-2);padding:150px 0 30px;color:var(--muted);font-size:13px;overflow:hidden}
+.foot-priv{font-size:12.5px;opacity:.8}
 .foot-art{position:absolute;inset:0;background:linear-gradient(180deg,var(--bg-2),transparent 55%),url("img/monumental.svg") center bottom/cover no-repeat;opacity:.55;pointer-events:none}
 .foot-in{position:relative;display:grid;gap:6px;max-width:1200px}
 .foot-in p{margin:0;max-width:64ch}

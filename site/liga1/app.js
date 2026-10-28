@@ -973,6 +973,7 @@
     var h = location.hash.replace("#", "");
     if (["acum", "A", "C", "cmp", "calc", "game", "evo", "pro", "uni", "hist", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
     updateNav(view);
+    if (window.LIGA1_STATS_INIT) window.LIGA1_STATS_INIT(L1);
     if (window.LIGA1_GAME_INIT) window.LIGA1_GAME_INIT(L1);
   }
 

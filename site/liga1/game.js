@@ -356,7 +356,7 @@
       var nx = $("#gqNext", box);
       if (nx) nx.addEventListener("click", function () {
         if (quizState.i < 4) { quizState.i++; quizState.pick = null; renderGame(); return; }
-        G.trivia = { d: today(), done: true, correct: quizState.ok }; save();
+        G.trivia = { d: today(), done: true, correct: quizState.ok }; save(); L1.emit("stat", "trivia-completa");
         var d = dayState();
         gainXP(quizState.ok * 4, "por la trivia", true);
         if (!d.claimed3) { d.claimed3 = true; save(); gainXP(20, "misión: trivia"); }
@@ -382,7 +382,7 @@
       if (!p.length) { toast("Primero pronostica algunos partidos en la Calculadora.", "info"); return; }
       var url = location.origin + location.pathname + "?polla=" + b64e({ v: 1, n: G.name || "Un amigo", t: Date.now(), p: p });
       var text = "Te reto a la Polla Crema de la Liga 1. Mira mis " + p.length + " pronósticos y compite conmigo.";
-      var done = function () { if (!G.shared) { G.shared = 1; save(); award("share"); } };
+      var done = function () { L1.emit("stat", "compartir-reto"); if (!G.shared) { G.shared = 1; save(); award("share"); } };
       if (navigator.share) { navigator.share({ title: "Polla Crema", text: text, url: url }).then(done, function () { /* cancelado */ }); return; }
       var copy = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(text + " " + url) : Promise.reject();
       copy.then(function () { toast("Enlace copiado. Pégalo en WhatsApp.", "info"); done(); }, function () { $("#shareFallback").value = text + " " + url; $("#shareBox").hidden = false; $("#shareFallback").select(); done(); });
@@ -427,10 +427,11 @@
         var box = $("#challenge");
         box.innerHTML = '<div class="cel-card"><div class="cel-ic">' + icon("users") + '</div><p class="cel-k">Reto de la Polla Crema</p><h3>' + esc(r.name) + " te retó</h3><p>Tiene " + n + " pronósticos. ¿Aceptas el reto y ves quién suma más?</p><div class=\"g-actions\"><button type=\"button\" class=\"btn primary\" id=\"chYes\">Aceptar reto</button><button type=\"button\" class=\"btn\" id=\"chNo\">Ahora no</button></div></div>";
         box.hidden = false;
+        L1.emit("stat", "reto-recibido");
         var clean = function () { box.hidden = true; history.replaceState(null, "", location.pathname + location.hash); };
         $("#chNo").addEventListener("click", clean);
         $("#chYes").addEventListener("click", function () {
-          G.rivals[String(r.at) + "-" + r.name] = r; save(); clean(); award("rival"); gameTab = "amigos"; L1.show("game"); confetti(100); toast("Reto aceptado. Mucha suerte.", "xp");
+          G.rivals[String(r.at) + "-" + r.name] = r; save(); clean(); L1.emit("stat", "reto-aceptado"); award("rival"); gameTab = "amigos"; L1.show("game"); confetti(100); toast("Reto aceptado. Mucha suerte.", "xp");
         });
       } catch (e) { /* enlace dañado */ }
     }
