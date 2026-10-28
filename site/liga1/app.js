@@ -174,6 +174,12 @@
     if (i >= n - z.descenso) return " z-desc";
     return "";
   }
+  function legendHtml() {
+    var z = D.zones;
+    return '<span title="Clasifican a la Copa Libertadores"><i class="lz-lib"></i>Libertadores (puestos 1-' + z.libertadores + ')</span>' +
+      '<span title="Clasifican a la Copa Sudamericana"><i class="lz-sud"></i>Sudamericana (puestos ' + (z.libertadores + 1) + "-" + (z.libertadores + z.sudamericana) + ')</span>' +
+      '<span title="Descienden a la Liga 2"><i class="lz-desc"></i>Descenso (últimos ' + z.descenso + ")</span>";
+  }
   function moveHtml(id, key) {
     var d = BASE.pos[key][id] - S.pos[key][id];
     if (!d) return "";
@@ -206,7 +212,7 @@
         "<td>" + r.pj + "</td><td>" + r.pg + "</td><td>" + r.pe + "</td><td>" + r.pp + "</td><td>" + r.gf + "</td><td>" + r.gc + '</td><td class="dg' + dgc + '">' + (r.dg > 0 ? "+" : "") + r.dg + "</td>";
       if (key === "T") tds += "<td>" + S.pa[r.id] + "</td><td>" + S.pc[r.id] + "</td><td>" + formHtml(r.id) + "</td>" + acumCell(r.id);
       else tds += '<td class="pts">' + r.pts + "</td><td>" + formHtml(r.id) + "</td>" + acumCell(r.id);
-      return '<tr class="' + (r.id === FOCUS ? "me" : "") + '">' + tds + "</tr>";
+      return '<tr class="' + (r.id === FOCUS ? "me" : "") + z.replace(" z-", " rz-") + '">' + tds + "</tr>";
     }).join("");
     el.innerHTML = head + "<tbody>" + body + "</tbody>";
   }
@@ -215,7 +221,7 @@
     var el = $("#tbl-mini");
     var head = "<thead><tr>" + th("#") + th("Club", "club") + th("PJ") + th("DG") + th("Pts Ap.") + th("Pts Cl.") + th("Acum.", "acumh") + "</tr></thead>";
     var body = S.T.map(function (r, i) {
-      return '<tr class="' + (r.id === FOCUS ? "me" : "") + '"><td class="pos' + zoneClass(i, S.T.length) + '"><span class="n">' + (i + 1) + "</span>" + moveHtml(r.id, "T") + '</td><td class="club">' + teamCell(BY[r.id]) + "</td><td>" + r.pj + "</td><td>" + (r.dg > 0 ? "+" : "") + r.dg + "</td><td>" + S.pa[r.id] + "</td><td>" + S.pc[r.id] + "</td>" + acumCell(r.id) + "</tr>";
+      return '<tr class="' + (r.id === FOCUS ? "me" : "") + zoneClass(i, S.T.length).replace(" z-", " rz-") + '"><td class="pos' + zoneClass(i, S.T.length) + '"><span class="n">' + (i + 1) + "</span>" + moveHtml(r.id, "T") + '</td><td class="club">' + teamCell(BY[r.id]) + "</td><td>" + r.pj + "</td><td>" + (r.dg > 0 ? "+" : "") + r.dg + "</td><td>" + S.pa[r.id] + "</td><td>" + S.pc[r.id] + "</td>" + acumCell(r.id) + "</tr>";
     }).join("");
     el.innerHTML = head + "<tbody>" + body + "</tbody>";
   }
@@ -266,11 +272,7 @@
   }
 
   function renderLegend() {
-    var z = D.zones;
-    $("#zoneLegend").innerHTML =
-      '<span><i class="lz-lib"></i>Libertadores (' + z.libertadores + ')</span>' +
-      '<span><i class="lz-sud"></i>Sudamericana (' + z.sudamericana + ')</span>' +
-      '<span><i class="lz-desc"></i>Descenso (últimos ' + z.descenso + ")</span>";
+    $$(".zone-legend").forEach(function (el) { el.innerHTML = legendHtml(); });
   }
 
   /* ---------- calculadora ---------- */
@@ -705,6 +707,56 @@
     $("#srcBox").innerHTML = h;
   }
 
+
+  /* ---------- Apertura vs Clausura ---------- */
+  var cmpSort = "acum";
+  function perfOf(id) {
+    var a = S.A.filter(function (r) { return r.id === id; })[0], c = S.C.filter(function (r) { return r.id === id; })[0];
+    function one(r, key) { var pct = r.pj ? r.pts / (r.pj * 3) * 100 : 0; return { pts: r.pts, pj: r.pj, pos: S.pos[key][id], pct: pct }; }
+    var A = one(a, "A"), C = one(c, "C");
+    return { id: id, a: A, c: C, d: C.pct - A.pct, tpos: S.pos.T[id] };
+  }
+  function trendOf(d) { return d >= 3 ? ["up", "Mejoró"] : d <= -3 ? ["down", "Empeoró"] : ["eq", "Similar"]; }
+  function renderCmp() {
+    var box = $("#cmpBox");
+    if (!box) return;
+    var rows = TEAMS.map(function (t) { return perfOf(t.id); });
+    rows.sort(function (x, y) {
+      if (cmpSort === "up") return y.d - x.d;
+      if (cmpSort === "down") return x.d - y.d;
+      return x.tpos - y.tpos;
+    });
+    var all = TEAMS.map(function (t) { return perfOf(t.id); }).sort(function (x, y) { return y.d - x.d; });
+    var best = all[0], worst = all[all.length - 1], me = perfOf(FOCUS);
+    function fmt(d) { return (d > 0 ? "+" : d < 0 ? "\u2212" : "") + Math.abs(d).toFixed(1).replace(".0", "") + " pp"; }
+    var pjA = S.A[0].pj, pjC = S.C[0].pj;
+    var sum = '<div class="cmp-sum">' +
+      '<div class="fx"><small>Más mejoró</small><b>' + teamCell(BY[best.id]) + "</b><span class=\"cmp-v up\">" + fmt(best.d) + "</span></div>" +
+      '<div class="fx"><small>Más cayó</small><b>' + teamCell(BY[worst.id]) + "</b><span class=\"cmp-v down\">" + fmt(worst.d) + "</span></div>" +
+      '<div class="fx"><small>La U</small><b>' + teamCell(BY[FOCUS]) + "</b><span class=\"cmp-v " + trendOf(me.d)[0] + '">' + fmt(me.d) + "</span></div></div>";
+    var sorts = [["acum", "Por acumulado"], ["up", "Mejoraron más"], ["down", "Cayeron más"]];
+    var ctrl = '<div class="seg cmp-sort" role="group" aria-label="Ordenar">' + sorts.map(function (s) {
+      return '<button type="button" data-s="' + s[0] + '" aria-pressed="' + (cmpSort === s[0]) + '">' + s[1] + "</button>";
+    }).join("") + "</div>";
+    var list = rows.map(function (r) {
+      var tr = trendOf(r.d), z = zoneClass(r.tpos - 1, TEAMS.length).replace(" z-", " rz-");
+      function side(k, lab, o) {
+        return '<div class="cmp-t ' + k + '"><small>' + lab + '</small><div class="cmp-bar" role="img" aria-label="' + lab + " " + Math.round(o.pct) + ' por ciento de los puntos posibles"><i style="width:' + Math.max(2, o.pct) + '%"></i></div>' +
+          "<span><b>" + o.pts + "</b> pts \u00b7 " + o.pos + "\u00ba \u00b7 " + Math.round(o.pct) + "%</span></div>";
+      }
+      return '<li class="cmp-row' + (r.id === FOCUS ? " me" : "") + z + '"><div class="cmp-id"><span class="n">' + r.tpos + "</span>" + teamCell(BY[r.id]) + "</div>" +
+        side("a", "Apertura", r.a) + side("c", "Clausura", r.c) +
+        '<div class="cmp-var ' + tr[0] + '"><b>' + (tr[0] === "up" ? "\u25b2 " : tr[0] === "down" ? "\u25bc " : "= ") + fmt(r.d) + "</b><small>" + tr[1] + "</small></div></li>";
+    }).join("");
+    box.innerHTML = sum + '<div class="cmp-tools">' + ctrl +
+      '<div class="legend cmp-key"><span><i class="lk-a"></i>Apertura</span><span><i class="lk-c"></i>Clausura</span></div></div>' +
+      '<ul class="cmp-list">' + list + "</ul>" +
+      '<p class="note">Rendimiento = puntos ganados sobre los puntos posibles (3 por partido jugado). Se usa porcentaje porque el Apertura tuvo ' + pjA + " fechas y el Clausura lleva " + pjC +
+      '. Variación en puntos porcentuales (pp): mejora si pasa de +3 pp, empeora si baja de \u22123 pp. La posición del extremo izquierdo es la del acumulado.</p>';
+    $$("#cmpBox .cmp-sort button").forEach(function (b) { b.addEventListener("click", function () { cmpSort = b.dataset.s; renderCmp(); }); });
+    $$(".zone-legend").forEach(function (el) { el.innerHTML = legendHtml(); });
+  }
+
   /* ---------- orquestación ---------- */
   var view = "acum", proStale = true;
   function renderAll(fromCalc) {
@@ -717,6 +769,7 @@
     renderCalcSum();
     proStale = true;
     if (view === "evo") { renderMatrix(); renderChart(); }
+    if (view === "cmp") renderCmp();
     if (view === "pro") { renderPro(); proStale = false; }
     if (fromCalc) return;
   }
@@ -725,6 +778,7 @@
     $$(".tabs button").forEach(function (b) { b.setAttribute("aria-selected", String(b.dataset.view === v)); });
     $$(".view").forEach(function (s) { s.hidden = s.id !== "v-" + v; });
     if (v === "evo") { initChips(); renderMatrix(); renderChart(); }
+    if (v === "cmp") renderCmp();
     if (v === "pro" && proStale) { renderPro(); proStale = false; }
     if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
     document.body.setAttribute("data-view", v);
@@ -743,7 +797,7 @@
   };
 
   /* ---------- navegación para celular ---------- */
-  var NAVGROUP = { acum: "tabla", A: "tabla", C: "tabla", calc: "calc", game: "game", uni: "uni", evo: "more", pro: "more", hist: "more", glos: "more", src: "more" };
+  var NAVGROUP = { acum: "tabla", A: "tabla", C: "tabla", cmp: "tabla", calc: "calc", game: "game", uni: "uni", evo: "more", pro: "more", hist: "more", glos: "more", src: "more" };
   var lastTabla = "acum";
   function svg(d, fill) { return '<svg viewBox="0 0 24 24" aria-hidden="true" class="ni"' + (fill ? ' fill="currentColor"' : ' fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"') + '><path d="' + d + '"/></svg>'; }
   function updateNav(v) {
@@ -775,8 +829,8 @@
     $("#moreClose").addEventListener("click", closeSheet);
     $("#moreSheet").addEventListener("click", function (e) { if (e.target === this) closeSheet(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheet(); });
-    ["acum", "A", "C"].forEach(function (id) {
-      $("#v-" + id).insertAdjacentHTML("afterbegin", '<div class="seg-tabla" role="group" aria-label="Elegir tabla"><button type="button" data-view="acum">Acumulado</button><button type="button" data-view="A">Apertura</button><button type="button" data-view="C">Clausura</button></div>');
+    ["acum", "A", "C", "cmp"].forEach(function (id) {
+      $("#v-" + id).insertAdjacentHTML("afterbegin", '<div class="seg-tabla" role="group" aria-label="Elegir tabla"><button type="button" data-view="acum">Acumulado</button><button type="button" data-view="A">Apertura</button><button type="button" data-view="C">Clausura</button><button type="button" data-view="cmp">Comparar</button></div>');
     });
     $$(".seg-tabla button").forEach(function (b) { b.addEventListener("click", function () { show(b.dataset.view); }); });
   }
@@ -841,6 +895,7 @@
         b.nextElementSibling.classList.toggle("show-all", on);
       });
     });
+    $$(".go-cmp").forEach(function (b) { b.addEventListener("click", function () { show("cmp"); window.scrollTo(0, 0); }); });
     $("#btnSim").addEventListener("click", function () { renderPro(); proStale = false; });
 
     var themeBtn = $("#themeBtn");
