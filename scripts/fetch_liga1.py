@@ -248,25 +248,33 @@ def compare(rows, computed, adjust=None):
 
 
 def compute_adjust(official, fixtures, old=None):
-    """Ajustes por club para que cada tabla coincida con la oficial.
-    A y C: tabla oficial menos suma de partidos. T (solo acumulado): lo que falta tras sumar A y C ajustados.
+    """Ajustes por club (sanciones) para que la página coincida con el Acumulado oficial.
+
+    C: tabla oficial del Clausura menos la suma de partidos.
+    Resto: d = Acumulado oficial - (suma de partidos A + suma de partidos C + ajuste C).
+      Si la tabla oficial de Apertura explica ese descuento (UTC), el ajuste va al Apertura (A).
+      Si no, es un descuento que solo figura en el Acumulado (T). Ejemplo: Sport Boys, Cajamarca y ADT.
+    La tabla de Apertura de Liga1.pe no se usa para los puntos: puede quedar desactualizada y contradecir a su propio
+    Acumulado (Alianza Lima 38 frente a 40, que es lo que suman los marcadores).
     Un ajuste solo se recalcula si la tabla oficial y los partidos tienen los mismos partidos jugados;
     si no, se conserva el anterior (las fuentes se actualizan a distinta hora)."""
     old = old or {}
     compA, compC = tally(fixtures, "A"), tally(fixtures, "C")
     adj = {k: dict(old.get(k, {})) for k in ("A", "C", "T")}
-    for r in official["A"]:
-        if r["pj"] == compA[r["id"]]["pj"]:
-            adj["A"][r["id"]] = r["pts"] - compA[r["id"]]["pts"]
-    for r in official["C"]:
-        if r["pj"] == compC[r["id"]]["pj"]:
-            adj["C"][r["id"]] = r["pts"] - compC[r["id"]]["pts"]
+    offA = {r["id"]: r for r in official["A"]}
+    offC = {r["id"]: r for r in official["C"]}
+    for i, r in offC.items():
+        if r["pj"] == compC[i]["pj"]:
+            adj["C"][i] = r["pts"] - compC[i]["pts"]
     for r in official["T"]:
         i = r["id"]
-        if r["pj"] == compA[i]["pj"] + compC[i]["pj"]:
-            base = compA[i]["pts"] + adj["A"].get(i, 0) + compC[i]["pts"] + adj["C"].get(i, 0)
-            adj["T"][i] = r["pts"] - base
-    return {k: {i: v for i, v in d.items() if v} for k, d in adj.items()}
+        if r["pj"] != compA[i]["pj"] + compC[i]["pj"] or offC[i]["pj"] != compC[i]["pj"]:
+            continue
+        d = r["pts"] - compA[i]["pts"] - compC[i]["pts"] - adj["C"].get(i, 0)
+        in_a = offA[i]["pts"] - compA[i]["pts"] if offA[i]["pj"] == compA[i]["pj"] else 0
+        adj["A"][i] = in_a if in_a == d else 0
+        adj["T"][i] = d - adj["A"][i]
+    return {k: {i: v for i, v in dd.items() if v} for k, dd in adj.items()}
 
 
 # ---------- Universitario ----------
@@ -424,9 +432,14 @@ def main():
         adjust = compute_adjust(official, fixtures, prev.get("adjust"))
         out["adjust"] = adjust
         compA, compC = tally(fixtures, "A"), tally(fixtures, "C")
-        for torneo in ("A", "C"):
-            ok, diffs = compare(official[torneo], tally(fixtures, torneo), adjust.get(torneo))
-            checks.append({"tabla": f"Liga1.pe {torneo} vs partidos", "coinciden": ok, "de": len(IDS), "diferencias": diffs})
+        shown_A = {i: compA[i]["pts"] + adjust["A"].get(i, 0) for i in IDS}
+        stale = {r["id"]: [r["pts"], shown_A[r["id"]]] for r in official["A"] if r["pts"] != shown_A[r["id"]] and r["id"] not in adjust["T"]}
+        out["notes"] = {"apertura_liga1pe": stale}
+        if stale:
+            checks.append({"tabla": "Apertura de Liga1.pe frente al Acumulado oficial (la página usa el Acumulado)", "coinciden": len(IDS) - len(stale), "de": len(IDS),
+                           "diferencias": [f"{k}: Liga1.pe {v[0]} frente a {v[1]}" for k, v in stale.items()]})
+        ok, diffs = compare(official["C"], compC, adjust.get("C"))
+        checks.append({"tabla": "Liga1.pe C vs partidos", "coinciden": ok, "de": len(IDS), "diferencias": diffs})
         both = {i: {"pj": compA[i]["pj"] + compC[i]["pj"], "pts": compA[i]["pts"] + compC[i]["pts"]} for i in IDS}
         tot_adj = {i: adjust["A"].get(i, 0) + adjust["C"].get(i, 0) + adjust["T"].get(i, 0) for i in IDS}
         ok, diffs = compare(official["T"], both, tot_adj)

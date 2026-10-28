@@ -440,3 +440,5 @@ th[data-tip]:focus-visible{outline-offset:-3px}
 .mt.first{margin-top:6px}
 @media (max-width:900px){.fact-grid{grid-template-columns:repeat(2,1fr)}.cur-grid,.glos-list{grid-template-columns:1fr}.src-list li{grid-template-columns:1fr}}
 @media (max-width:560px){.fact-grid{grid-template-columns:1fr}.tl li{grid-template-columns:1fr;gap:2px}.tl{padding-left:16px}.fact-big{font-size:44px}}
+
+.dsc{font:700 12px var(--body);color:var(--bad);background:rgba(255,77,94,.14);border-radius:6px;padding:1px 5px;cursor:help;white-space:nowrap}

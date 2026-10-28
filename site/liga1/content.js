@@ -39,7 +39,7 @@ window.LIGA1_CONTENT = {
     { g: "El torneo", t: "Torneo Apertura y Torneo Clausura", d: "Los dos torneos cortos de la temporada. Cada uno se juega todos contra todos, una vez." },
     { g: "El torneo", t: "Tabla acumulada", d: "Suma de los puntos del Apertura y del Clausura. Sirve para ordenar a los clubes en toda la temporada." },
     { g: "El torneo", t: "Playoffs y definición", d: "Fase final que puede definir al campeón. Según el reglamento 2026 el campeón puede salir sin playoffs, y con ellos habría semifinales o una final. Las fechas informadas varían entre medios, por eso conviene confirmarlas en liga1.pe." },
-    { g: "El torneo", t: "Descuento de puntos", d: "Sanción que resta puntos a un club. Esta página la calcula comparando la suma de los partidos con las tablas oficiales, y la indica en el aviso de datos." },
+    { g: "El torneo", t: "Descuento de puntos", d: "Sanción que resta puntos a un club. La página la calcula comparando la suma de los partidos con las tablas oficiales, la informa en el aviso de datos y, si solo figura en el acumulado, la marca junto al total (por ejemplo −4)." },
     { g: "El torneo", t: "Partido reprogramado", d: "Partido que se juega en otra fecha del calendario. Cuenta en la fecha original, aunque se juegue después." },
     { g: "El torneo", t: "Local y visita", d: "El local juega en su estadio y aparece primero. La visita aparece después." },
     { g: "El torneo", t: "Desempate", d: "Cuando dos clubes empatan en puntos, esta página usa diferencia de goles y luego goles a favor. El reglamento oficial puede aplicar otros criterios." },
@@ -63,6 +63,7 @@ window.LIGA1_CONTENT = {
       { name: "Universitario.pe", url: "https://universitario.pe/", use: "Noticias, calendario del primer equipo y próximo partido de la U, con sus resultados." }
     ],
     verification: [
+      { name: "Wikipedia, Torneo Apertura 2026 (Perú)", url: "https://es.wikipedia.org/wiki/Torneo_Apertura_2026_(Per%C3%BA)", use: "Se consultó para verificar la tabla final del Apertura (Alianza Lima 40, Los Chankas 34, Cienciano 33, Universitario 29). No se lee automáticamente." },
       { name: "Infobae Perú, tabla de la Liga 1", url: "https://www.infobae.com/peru/deportes/", use: "Se consultó para verificar la posición de los clubes. No se lee automáticamente." },
       { name: "La República, tabla del Clausura y Acumulado", url: "https://larepublica.pe/deportes/", use: "Se consultó para verificar la tabla. No se lee automáticamente." },
       { name: "Libero, tabla acumulada", url: "https://libero.pe/futbol-peruano/liga-1/", use: "Se consultó para verificar la tabla. No se lee automáticamente." },
