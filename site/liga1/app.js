@@ -108,7 +108,8 @@
 
   /* ---------- helpers de vista ---------- */
   function badge(t) {
-    return '<span class="badge" style="background:' + t.c1 + ";color:" + t.c2 + '">' + t.id + "</span>";
+    return '<span class="badge" style="background:' + t.c1 + ";color:" + t.c2 + '">' + t.id +
+      '<img src="escudos/' + t.id + '.svg" alt="" loading="lazy" onerror="if(!this.dataset.t){this.dataset.t=1;this.src=this.src.replace(\'.svg\',\'.png\')}else{this.remove()}"></span>';
   }
   function teamCell(t) {
     return '<span class="team">' + badge(t) + "<span>" + t.short + (t.short !== t.name ? "<small>" + t.name + "</small>" : "") + "</span></span>";
@@ -146,7 +147,7 @@
       var t = BY[r.id];
       var z = key === "T" ? zoneClass(i, rows.length) : "";
       var dgc = r.dg > 0 ? " pos-n" : r.dg < 0 ? " neg-n" : "";
-      var tds = '<td class="pos' + z + '">' + (i + 1) + moveHtml(r.id, key) + '</td><td class="club">' + teamCell(t) + "</td>" +
+      var tds = '<td class="pos' + z + '"><span class="n">' + (i + 1) + "</span>" + moveHtml(r.id, key) + '</td><td class="club">' + teamCell(t) + "</td>" +
         "<td>" + r.pj + "</td><td>" + r.pg + "</td><td>" + r.pe + "</td><td>" + r.pp + "</td><td>" + r.gf + "</td><td>" + r.gc + '</td><td class="dg' + dgc + '">' + (r.dg > 0 ? "+" : "") + r.dg + "</td>";
       if (key === "T") tds += "<td>" + S.pa[r.id] + "</td><td>" + S.pc[r.id] + "</td><td>" + formHtml(r.id) + "</td>" + acumCell(r.id);
       else tds += '<td class="pts">' + r.pts + "</td><td>" + formHtml(r.id) + "</td>" + acumCell(r.id);
@@ -159,7 +160,7 @@
     var el = $("#tbl-mini");
     var head = "<thead><tr><th>#</th><th class='club'>Club</th><th>PJ</th><th>DG</th><th>Pts Ap.</th><th>Pts Cl.</th><th class='acumh'>Acum.</th></tr></thead>";
     var body = S.T.map(function (r, i) {
-      return '<tr class="' + (r.id === FOCUS ? "me" : "") + '"><td class="pos' + zoneClass(i, S.T.length) + '">' + (i + 1) + moveHtml(r.id, "T") + '</td><td class="club">' + teamCell(BY[r.id]) + "</td><td>" + r.pj + "</td><td>" + (r.dg > 0 ? "+" : "") + r.dg + "</td><td>" + S.pa[r.id] + "</td><td>" + S.pc[r.id] + "</td>" + acumCell(r.id) + "</tr>";
+      return '<tr class="' + (r.id === FOCUS ? "me" : "") + '"><td class="pos' + zoneClass(i, S.T.length) + '"><span class="n">' + (i + 1) + "</span>" + moveHtml(r.id, "T") + '</td><td class="club">' + teamCell(BY[r.id]) + "</td><td>" + r.pj + "</td><td>" + (r.dg > 0 ? "+" : "") + r.dg + "</td><td>" + S.pa[r.id] + "</td><td>" + S.pc[r.id] + "</td>" + acumCell(r.id) + "</tr>";
     }).join("");
     el.innerHTML = head + "<tbody>" + body + "</tbody>";
   }
@@ -190,9 +191,9 @@
   function renderLegend() {
     var z = D.zones;
     $("#zoneLegend").innerHTML =
-      '<span><i style="background:#1F7A3D"></i>Libertadores (' + z.libertadores + ')</span>' +
-      '<span><i style="background:#2B6CB0"></i>Sudamericana (' + z.sudamericana + ')</span>' +
-      '<span><i style="background:#B3261E"></i>Descenso (últimos ' + z.descenso + ")</span>";
+      '<span><i class="lz-lib"></i>Libertadores (' + z.libertadores + ')</span>' +
+      '<span><i class="lz-sud"></i>Sudamericana (' + z.sudamericana + ')</span>' +
+      '<span><i class="lz-desc"></i>Descenso (últimos ' + z.descenso + ")</span>";
   }
 
   /* ---------- calculadora ---------- */
@@ -369,7 +370,7 @@
     rows.sort(function (x, y) { return y.a.pts - x.a.pts; });
     var head = "<thead><tr><th>#</th><th class='club'>Club</th><th>Acum. hoy</th><th class='acumh'>Acum. proyectado</th><th>Líder Apertura</th><th>Líder Clausura</th><th>Libertadores</th><th>Sudamericana</th><th>Descenso</th></tr></thead>";
     var body = rows.map(function (x, i) {
-      return '<tr class="' + (x.r.id === FOCUS ? "me" : "") + '"><td class="pos">' + (i + 1) + '</td><td class="club">' + teamCell(BY[x.r.id]) + "</td><td class='pts'>" + x.r.pts + "</td><td class='acum'><div class='acum-in'><b>" + (x.a.pts / SIMS).toFixed(1) + "</b></div></td>" +
+      return '<tr class="' + (x.r.id === FOCUS ? "me" : "") + '"><td class="pos"><span class="n">' + (i + 1) + '</span></td><td class="club">' + teamCell(BY[x.r.id]) + "</td><td class='pts'>" + x.r.pts + "</td><td class='acum'><div class='acum-in'><b>" + (x.a.pts / SIMS).toFixed(1) + "</b></div></td>" +
         probCell(x.a.la, "b") + probCell(x.a.lc, "b") + probCell(x.a.lib, "g") + probCell(x.a.sud, "b") + probCell(x.a.des, "r") + "</tr>";
     }).join("");
     $("#tbl-pro").innerHTML = head + "<tbody>" + body + "</tbody>";
@@ -436,8 +437,8 @@
     var saved = lsGet(THEME);
     if (saved) document.documentElement.setAttribute("data-theme", saved);
     themeBtn.addEventListener("click", function () {
-      var dark = document.documentElement.getAttribute("data-theme") === "dark" ||
-        (!document.documentElement.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+      var attr = document.documentElement.getAttribute("data-theme");
+      var dark = attr ? attr === "dark" : !matchMedia("(prefers-color-scheme: light)").matches;
       var next = dark ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", next); lsSet(THEME, next);
       if (view === "evo") renderChart();

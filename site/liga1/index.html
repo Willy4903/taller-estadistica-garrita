@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Calculadora Liga 1 2026 · Tema Universitario</title>
 <meta name="description" content="Tabla de posiciones, acumulado de puntos, calculadora de resultados y pronósticos de la Liga 1 2026 con el foco en Universitario de Deportes.">
-<meta name="theme-color" content="#8B0A1A">
+<meta name="theme-color" content="#0D0608">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,8 +19,8 @@
     <div class="brand">
       <span class="crest" aria-hidden="true">U</span>
       <div>
-        <strong>Calculadora Liga 1 2026</strong>
-        <small>Apertura · Clausura · Acumulado</small>
+        <strong>Liga 1 · Calculadora</strong>
+        <small>Universitario de Deportes</small>
       </div>
     </div>
     <div class="top-actions">
@@ -29,11 +32,13 @@
 </header>
 
 <section class="hero">
+  <div class="stars" aria-hidden="true"></div>
+  <div class="ring" aria-hidden="true"></div>
   <div class="wrap hero-in">
     <div class="hero-text">
       <p class="eyebrow">Fútbol peruano · Temporada 2026</p>
-      <h1>La U, fecha a fecha.</h1>
-      <p class="lead">Mueve los resultados que faltan y mira cómo cambian los puntos del Apertura, del Clausura y del acumulado.</p>
+      <h1><span>Liga 1</span> <em>2026</em></h1>
+      <p class="lead">Apertura, Clausura y acumulado. Mueve los resultados que faltan y mira cómo cambia el camino de la U.</p>
       <div class="next" id="nextMatch" aria-live="polite"></div>
     </div>
     <div class="kpis" id="kpis" aria-live="polite"></div>
@@ -45,6 +50,10 @@
     <strong>Datos de demostración.</strong> Los resultados de esta página no son oficiales. Reemplázalos en <code>liga1/data.js</code> para publicar la tabla real.
   </div>
 
+
+</div>
+
+<div class="tabs-bar"><div class="wrap">
   <nav class="tabs" role="tablist" aria-label="Secciones">
     <button role="tab" id="t-acum" aria-selected="true" data-view="acum">Acumulado</button>
     <button role="tab" id="t-A" aria-selected="false" data-view="A">Apertura</button>
@@ -53,7 +62,7 @@
     <button role="tab" id="t-evo" aria-selected="false" data-view="evo">Evolución de puntos</button>
     <button role="tab" id="t-pro" aria-selected="false" data-view="pro">Pronósticos</button>
   </nav>
-</div>
+</div></div>
 
 <main id="main" class="wrap">
 
