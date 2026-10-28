@@ -268,7 +268,8 @@
       '<div class="kpi main"><small>Puesto en el acumulado</small><div class="v">' + S.pos.T[FOCUS] + '<i>º de ' + TEAMS.length + '</i></div><div class="d">' + (gap ? gap + " pts del líder (" + BY[lead.id].short + ")" : "Líder del acumulado") + "</div></div>" +
       '<div class="kpi"><small>Puntos acumulados</small><div class="v">' + pt.pts + '<i> pts</i></div><div class="d">' + pt.pj + " partidos · DG " + (pt.dg > 0 ? "+" : "") + pt.dg + "</div></div>" +
       '<div class="kpi"><small>Apertura</small><div class="v">' + apos + '<i>º</i></div><div class="d">' + S.pa[FOCUS] + " puntos</div></div>" +
-      '<div class="kpi"><small>Clausura</small><div class="v">' + cpos + '<i>º</i></div><div class="d">' + S.pc[FOCUS] + " puntos</div></div>";
+      '<div class="kpi"><small>Clausura</small><div class="v">' + cpos + '<i>º</i></div><div class="d">' + S.pc[FOCUS] + " puntos</div></div>" +
+      '<button type="button" class="kpi kpi-cmp" data-go="cmp"><span>Comparar Apertura vs Clausura</span><b aria-hidden="true">\u203a</b></button>';
   }
 
   function renderLegend() {
@@ -895,6 +896,10 @@
         b.nextElementSibling.classList.toggle("show-all", on);
       });
     });
+    document.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest("[data-go=cmp]");
+      if (b && b.classList.contains("kpi-cmp")) { show("cmp"); window.scrollTo(0, 0); }
+    });
     $$(".go-cmp").forEach(function (b) { b.addEventListener("click", function () { show("cmp"); window.scrollTo(0, 0); }); });
     $("#btnSim").addEventListener("click", function () { renderPro(); proStale = false; });
 
@@ -910,7 +915,7 @@
     });
 
     var h = location.hash.replace("#", "");
-    if (["acum", "A", "C", "calc", "game", "evo", "pro", "uni", "hist", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
+    if (["acum", "A", "C", "cmp", "calc", "game", "evo", "pro", "uni", "hist", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
     updateNav(view);
     if (window.LIGA1_GAME_INIT) window.LIGA1_GAME_INIT(L1);
   }
