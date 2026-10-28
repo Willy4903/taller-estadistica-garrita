@@ -344,3 +344,14 @@ table.matrix td.na{color:var(--muted);opacity:.5}
 @media (max-height:480px) and (orientation:landscape){
   .hero{padding:18px 0 60px}.hero h1{font-size:64px}
 }
+
+/* Descripción de las siglas */
+th[data-tip]{position:relative;cursor:help;text-decoration:underline dotted rgba(247,238,220,.35);text-underline-offset:4px}
+th[data-tip]:hover::after,th[data-tip]:focus-visible::after{content:attr(data-tip);position:absolute;top:calc(100% - 2px);left:50%;transform:translateX(-50%);z-index:40;width:max-content;max-width:230px;white-space:normal;text-align:left;
+  padding:8px 11px;border-radius:10px;background:#F7EEDC;color:#1B0F11;font:500 12.5px/1.35 var(--body);letter-spacing:0;text-transform:none;box-shadow:0 8px 24px rgba(0,0,0,.45);pointer-events:none}
+:root[data-theme="light"] th[data-tip]:hover::after,:root[data-theme="light"] th[data-tip]:focus-visible::after{background:#1B0F11;color:#F7EEDC}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) th[data-tip]:hover::after,:root:not([data-theme="dark"]) th[data-tip]:focus-visible::after{background:#1B0F11;color:#F7EEDC}}
+th[data-tip]:first-child:hover::after,th[data-tip]:first-child:focus-visible::after,th.club[data-tip]:hover::after,th.club[data-tip]:focus-visible::after{left:0;transform:none}
+th[data-tip]:nth-last-child(-n+3):hover::after,th[data-tip]:nth-last-child(-n+3):focus-visible::after{left:auto;right:0;transform:none}
+th[data-tip]:focus-visible{outline-offset:-3px}
+.form i[title]{cursor:help}

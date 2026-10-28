@@ -106,6 +106,38 @@
     });
   }
 
+  /* ---------- glosario de siglas (se muestra al pasar el mouse o al tocar) ---------- */
+  var TIPS = {
+    "#": "Posición en la tabla",
+    "Club": "Nombre del club",
+    "PJ": "Partidos jugados",
+    "PG": "Partidos ganados (3 puntos cada uno)",
+    "PE": "Partidos empatados (1 punto cada uno)",
+    "PP": "Partidos perdidos (0 puntos)",
+    "GF": "Goles a favor: los que anotó el equipo",
+    "GC": "Goles en contra: los que recibió el equipo",
+    "DG": "Diferencia de goles (GF menos GC). Es el primer desempate tras los puntos",
+    "Pts": "Puntos del torneo: 3 por victoria y 1 por empate",
+    "Pts Ap.": "Puntos obtenidos en el Torneo Apertura",
+    "Pts Cl.": "Puntos obtenidos en el Torneo Clausura",
+    "Forma": "Últimos 5 partidos, del más antiguo al más reciente. G: ganó, E: empató, P: perdió",
+    "Acum.": "Puntos acumulados de la temporada: Apertura más Clausura. La barra se compara con el líder",
+    "Acum. hoy": "Puntos acumulados actuales, con los pronósticos que ingresaste",
+    "Acum. proyectado": "Promedio de puntos acumulados al final de la temporada en las simulaciones",
+    "Líder Apertura": "Probabilidad de terminar primero en el Apertura",
+    "Líder Clausura": "Probabilidad de terminar primero en el Clausura",
+    "Libertadores": "Probabilidad de quedar en las posiciones de Copa Libertadores del acumulado",
+    "Sudamericana": "Probabilidad de quedar en las posiciones de Copa Sudamericana del acumulado",
+    "Descenso": "Probabilidad de quedar en las posiciones de descenso del acumulado"
+  };
+  function th(label, cls, tip) {
+    return "<th" + (cls ? " class='" + cls + "'" : "") + " tabindex='0' data-tip=\"" + (tip || TIPS[label] || "").replace(/"/g, "&quot;") + "\">" + label + "</th>";
+  }
+  function thFecha(n) {
+    var t = n <= NF ? "Apertura, fecha " + n : "Clausura, fecha " + (n - NF);
+    return th(n <= NF ? "A" + n : "C" + (n - NF), "", t + ": puntos acumulados hasta esa fecha");
+  }
+
   /* ---------- helpers de vista ---------- */
   function badge(t) {
     return '<span class="badge" style="background:' + t.c1 + ";color:" + t.c2 + '">' + t.id +
@@ -130,7 +162,7 @@
   function formHtml(id) {
     var f = formOf(id), h = "";
     for (var i = 0; i < 5 - f.length; i++) h += '<i class="N">·</i>';
-    return '<span class="form" aria-label="Últimos resultados">' + h + f.map(function (x) { return "<i class='" + x + "'>" + ({ W: "G", D: "E", L: "P" })[x] + "</i>"; }).join("") + "</span>";
+    return '<span class="form" aria-label="Últimos resultados">' + h + f.map(function (x) { return "<i class='" + x + "' title='" + ({ W: "Ganó", D: "Empató", L: "Perdió" })[x] + "'>" + ({ W: "G", D: "E", L: "P" })[x] + "</i>"; }).join("") + "</span>";
   }
   function acumCell(id) {
     var row = S.T.filter(function (r) { return r.id === id; })[0];
@@ -140,9 +172,9 @@
 
   function renderStd(el, key, opts) {
     var rows = key === "T" ? S.T : S[key];
-    var head = "<thead><tr><th>#</th><th class='club'>Club</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>DG</th>";
-    if (key === "T") head += "<th>Pts Ap.</th><th>Pts Cl.</th><th>Forma</th><th class='acumh'>Acum.</th>";
-    else head += "<th>Pts</th><th>Forma</th><th class='acumh'>Acum.</th>";
+    var head = "<thead><tr>" + th("#") + th("Club", "club") + th("PJ") + th("PG") + th("PE") + th("PP") + th("GF") + th("GC") + th("DG");
+    if (key === "T") head += th("Pts Ap.") + th("Pts Cl.") + th("Forma") + th("Acum.", "acumh");
+    else head += th("Pts") + th("Forma") + th("Acum.", "acumh");
     head += "</tr></thead>";
     var body = rows.map(function (r, i) {
       var t = BY[r.id];
@@ -159,7 +191,7 @@
 
   function renderMini() {
     var el = $("#tbl-mini");
-    var head = "<thead><tr><th>#</th><th class='club'>Club</th><th>PJ</th><th>DG</th><th>Pts Ap.</th><th>Pts Cl.</th><th class='acumh'>Acum.</th></tr></thead>";
+    var head = "<thead><tr>" + th("#") + th("Club", "club") + th("PJ") + th("DG") + th("Pts Ap.") + th("Pts Cl.") + th("Acum.", "acumh") + "</tr></thead>";
     var body = S.T.map(function (r, i) {
       return '<tr class="' + (r.id === FOCUS ? "me" : "") + '"><td class="pos' + zoneClass(i, S.T.length) + '"><span class="n">' + (i + 1) + "</span>" + moveHtml(r.id, "T") + '</td><td class="club">' + teamCell(BY[r.id]) + "</td><td>" + r.pj + "</td><td>" + (r.dg > 0 ? "+" : "") + r.dg + "</td><td>" + S.pa[r.id] + "</td><td>" + S.pc[r.id] + "</td>" + acumCell(r.id) + "</tr>";
     }).join("");
@@ -282,8 +314,8 @@
   }
   function renderMatrix() {
     var cum = cumulative();
-    var head = "<thead><tr><th class='club'>Club</th>";
-    for (var n = 1; n <= 2 * NF; n++) head += "<th>" + (n <= NF ? "A" + n : "C" + (n - NF)) + "</th>";
+    var head = "<thead><tr>" + th("Club", "club");
+    for (var n = 1; n <= 2 * NF; n++) head += thFecha(n);
     head += "</tr></thead>";
     var body = S.T.map(function (r) {
       var tds = cum[r.id].map(function (v, i) {
@@ -369,7 +401,7 @@
     $("#simInfo").textContent = res.pending + " partidos por simular · " + SIMS.toLocaleString("es-PE") + " escenarios.";
     var rows = S.T.map(function (r) { return { r: r, a: res.acc[r.id] }; });
     rows.sort(function (x, y) { return y.a.pts - x.a.pts; });
-    var head = "<thead><tr><th>#</th><th class='club'>Club</th><th>Acum. hoy</th><th class='acumh'>Acum. proyectado</th><th>Líder Apertura</th><th>Líder Clausura</th><th>Libertadores</th><th>Sudamericana</th><th>Descenso</th></tr></thead>";
+    var head = "<thead><tr>" + th("#") + th("Club", "club") + th("Acum. hoy") + th("Acum. proyectado", "acumh") + th("Líder Apertura") + th("Líder Clausura") + th("Libertadores") + th("Sudamericana") + th("Descenso") + "</tr></thead>";
     var body = rows.map(function (x, i) {
       return '<tr class="' + (x.r.id === FOCUS ? "me" : "") + '"><td class="pos"><span class="n">' + (i + 1) + '</span></td><td class="club">' + teamCell(BY[x.r.id]) + "</td><td class='pts'>" + x.r.pts + "</td><td class='acum'><div class='acum-in'><b>" + (x.a.pts / SIMS).toFixed(1) + "</b></div></td>" +
         probCell(x.a.la, "b") + probCell(x.a.lc, "b") + probCell(x.a.lib, "g") + probCell(x.a.sud, "b") + probCell(x.a.des, "r") + "</tr>";
