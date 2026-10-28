@@ -490,18 +490,39 @@
   }
 
   /* ---------- resumen de la calculadora ---------- */
+  var undoPreds = null, undoTimer = null;
+  function clearPreds() {
+    var had = Object.keys(preds).length;
+    if (!had) return;
+    undoPreds = JSON.parse(JSON.stringify(preds));
+    preds = {}; savePreds();
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(function () { undoPreds = null; renderCalcSum(); }, 8000);
+    renderFixtures(); fillFechaSel(); renderAll(true);
+  }
+  function restorePreds() {
+    if (!undoPreds) return;
+    preds = undoPreds; undoPreds = null; clearTimeout(undoTimer);
+    savePreds(); renderFixtures(); fillFechaSel(); renderAll(true);
+  }
   function renderCalcSum() {
     var box = $("#calcSum");
     if (!box) return;
     var n = Object.keys(preds).filter(function (k) { return D.fixtures.some(function (f) { return fkey(f) === k && f.hg == null; }); }).length;
-    var me = BY[FOCUS], pt = S.T.filter(function (r) { return r.id === FOCUS; })[0], b0 = BASE.T.filter(function (r) { return r.id === FOCUS; })[0];
+    var pt = S.T.filter(function (r) { return r.id === FOCUS; })[0], b0 = BASE.T.filter(function (r) { return r.id === FOCUS; })[0];
     var lead = S.T[0], d = pt.pts - b0.pts;
+    if (!n && undoPreds) {
+      box.innerHTML = '<div class="cs-text"><b>Pronósticos borrados.</b> Las tablas volvieron a los datos reales.</div><div class="cs-btns"><button type="button" class="btn primary" id="csUndo">Deshacer</button></div>';
+      $("#csUndo").addEventListener("click", restorePreds);
+      return;
+    }
     if (!n) {
-      box.innerHTML = '<div class="cs-text"><b>Escribe un marcador</b> y mira aquí cómo cambia la tabla.</div><button type="button" class="btn" id="csGo">Ver tabla</button>';
+      box.innerHTML = '<div class="cs-text"><b>Escribe un marcador</b> y mira aquí cómo cambia la tabla.</div><div class="cs-btns"><button type="button" class="btn" id="csGo">Ver tabla</button></div>';
     } else {
       box.innerHTML = '<div class="cs-text"><span class="cs-k">Con tus ' + n + (n === 1 ? " pronóstico" : " pronósticos") + "</span> la U queda <b>" + S.pos.T[FOCUS] + "º</b> con <b>" + pt.pts + " pts</b>" +
         (d ? ' <span class="cs-d ' + (d > 0 ? "up" : "down") + '">' + (d > 0 ? "+" : "\u2212") + Math.abs(d) + "</span>" : "") + ' <span class="cs-l">Líder: ' + esc(BY[lead.id].short) + " " + lead.pts + "</span></div>" +
-        '<button type="button" class="btn primary" id="csGo">Ver tabla</button>';
+        '<div class="cs-btns"><button type="button" class="btn ghost" id="csClear">Limpiar</button><button type="button" class="btn primary" id="csGo">Ver tabla</button></div>';
+      $("#csClear").addEventListener("click", clearPreds);
     }
     $("#csGo").addEventListener("click", function () { var t = $("#miniBoard"); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); });
   }
@@ -692,7 +713,7 @@
       fillFechaSel();
     });
     $("#btnRandAll").addEventListener("click", function () { randomize(D.fixtures); fillFechaSel(); });
-    $("#btnClear").addEventListener("click", function () { preds = {}; savePreds(); renderFixtures(); renderAll(true); });
+    $("#btnClear").addEventListener("click", clearPreds);
     $$(".cols-btn").forEach(function (b) {
       b.addEventListener("click", function () {
         var on = b.getAttribute("aria-pressed") !== "true";

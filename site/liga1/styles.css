@@ -486,3 +486,7 @@ body.has-ticker{padding-bottom:calc(58px + env(safe-area-inset-bottom,0px))}
 .calc-help{margin:0 0 14px;color:var(--muted);font-size:13.5px}
 @media (max-width:640px){.calc-sum{top:calc(94px + env(safe-area-inset-top,0px));padding:8px 12px}#tbl-mini .delta{display:inline}}
 #miniBoard{scroll-margin-top:210px}
+
+.cs-btns{display:flex;gap:8px;flex:none}
+.cs-btns .btn.ghost{color:var(--bad);border-color:rgba(255,77,94,.45)}
+@media (max-width:640px){.cs-btns{width:100%}.cs-btns .btn{flex:1}}
