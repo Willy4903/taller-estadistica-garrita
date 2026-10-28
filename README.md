@@ -43,3 +43,7 @@ python -m http.server -d site 8000
 Analítica: sin cookies. Los eventos se cuentan en el navegador; para agregarlos define `CONFIG.endpoint` en `site/js/core.js`.
 
 Chart.js 4 está incluido en `site/vendor/` (licencia MIT), por lo que el sitio no depende de CDNs.
+
+## Calculadora Liga 1 2026
+
+Página independiente en `site/liga1/` (tema Universitario): tablas de Apertura, Clausura y acumulado con columna de puntos acumulados, calculadora de resultados, evolución de puntos por fecha y pronósticos por simulación. Los datos están en `site/liga1/data.js` y por ahora son de demostración; reemplaza `fixtures` con los resultados oficiales (`hg`/`ag` en cada partido jugado, `null` en los pendientes) y pon `demo: false`.
