@@ -15,4 +15,24 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install beautifulsoup4 lxml
-      - run: python scripts/liga1_probe.py
+      - name: Actualizar datos de la Liga 1
+        run: python scripts/fetch_liga1.py
+      - name: Resumen
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          d = json.load(open("site/liga1/data/live.json", encoding="utf-8"))
+          print("complete:", d.get("complete"), "| actualizado:", d.get("updated_at"))
+          fx = d.get("fixtures", [])
+          print("partidos:", len(fx), "jugados:", sum(1 for x in fx if x["hg"] is not None))
+          pend = [x for x in fx if x["hg"] is None and x["t"] == "C"]
+          print("pendientes Clausura:", len(pend), pend[:3])
+          print("ajustes:", d.get("adjust"))
+          u = d.get("uni", {})
+          print("próximo U:", u.get("next"))
+          print("últimos U:", [(m["stage"], m["home"], m["homeScore"], m["awayScore"], m["away"]) for m in u.get("last", [])])
+          for n in u.get("news", [])[:5]:
+              print("noticia:", n.get("date"), n.get("category"), "|", n.get("title"), "|", (n.get("summary") or "")[:80], "|", n.get("image"))
+          print(json.dumps(d.get("checks"), ensure_ascii=False)[:1500])
+          PY
