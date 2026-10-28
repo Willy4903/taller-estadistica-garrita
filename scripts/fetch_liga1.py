@@ -15,7 +15,7 @@ import sys
 import time
 import unicodedata
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -395,28 +395,46 @@ def main():
     except Exception as e:  # noqa: BLE001
         log("Depor tablas", url, False, str(e)[:200])
 
-    # 4) Ajustes por sanciones: diferencia entre la tabla oficial y la suma de partidos
-    adjust = {}
+    # 4) Ajustes por sanciones: diferencia entre la tabla oficial y la suma de partidos.
+    #    Se calculan contra el Clausura y el Acumulado, que son coherentes entre sí; la tabla de Apertura de Liga1.pe
+    #    puede diferir de su propio Acumulado, por eso el ajuste del Apertura se deduce como (Acumulado - Clausura).
+    adjust = {"A": {}, "C": {}}
     if official and fixtures:
-        for torneo in ("A", "C"):
-            comp = tally(fixtures, torneo)
-            for r in official[torneo]:
-                diff = r["pts"] - comp[r["id"]]["pts"]
-                # solo se acepta como sanción si el club jugó los mismos partidos que dice la tabla oficial
-                if diff != 0 and r["pj"] == comp[r["id"]]["pj"]:
-                    adjust.setdefault(torneo, {})[r["id"]] = diff
+        compA, compC = tally(fixtures, "A"), tally(fixtures, "C")
+        old = prev.get("adjust") or {}
+        adjC = dict(old.get("C", {}))
+        adjA = dict(old.get("A", {}))
+        for r in official["C"]:
+            c = compC[r["id"]]
+            if r["pj"] == c["pj"]:
+                adjC[r["id"]] = r["pts"] - c["pts"]
+        for r in official["T"]:
+            a_, c_ = compA[r["id"]], compC[r["id"]]
+            if r["pj"] == a_["pj"] + c_["pj"] and r["id"] in adjC:
+                adjA[r["id"]] = (r["pts"] - a_["pts"] - c_["pts"]) - adjC[r["id"]]
+        adjust = {"A": {k: v for k, v in adjA.items() if v}, "C": {k: v for k, v in adjC.items() if v}}
         out["adjust"] = adjust
         for torneo in ("A", "C"):
             ok, diffs = compare(official[torneo], tally(fixtures, torneo), adjust.get(torneo))
             checks.append({"tabla": f"Liga1.pe {torneo} vs partidos", "coinciden": ok, "de": len(IDS), "diferencias": diffs})
-        if adjust:
+        both = {i: {"pj": compA[i]["pj"] + compC[i]["pj"], "pts": compA[i]["pts"] + compC[i]["pts"]} for i in IDS}
+        tot_adj = {i: adjust["A"].get(i, 0) + adjust["C"].get(i, 0) for i in IDS}
+        ok, diffs = compare(official["T"], both, tot_adj)
+        checks.append({"tabla": "Liga1.pe Acumulado vs partidos", "coinciden": ok, "de": len(IDS), "diferencias": diffs})
+        if adjust["A"] or adjust["C"]:
             print("Ajustes por sanción:", adjust)
     if fixtures:
         for src, tabs in others.items():
             for torneo, rows in tabs.items():
                 if torneo in ("A", "C"):
                     ok, diffs = compare(rows, tally(fixtures, torneo), adjust.get(torneo))
-                    checks.append({"tabla": f"{src} {torneo} vs partidos", "coinciden": ok, "de": len(IDS), "diferencias": diffs})
+                elif torneo == "T":
+                    cA, cC = tally(fixtures, "A"), tally(fixtures, "C")
+                    both = {i: {"pj": cA[i]["pj"] + cC[i]["pj"], "pts": cA[i]["pts"] + cC[i]["pts"]} for i in IDS}
+                    ok, diffs = compare(rows, both, {i: adjust["A"].get(i, 0) + adjust["C"].get(i, 0) for i in IDS})
+                else:
+                    continue
+                checks.append({"tabla": f"{src} {torneo} vs partidos", "coinciden": ok, "de": len(IDS), "diferencias": diffs})
     for c in checks:
         print(f'  control {c["tabla"]}: {c["coinciden"]}/{c["de"]}', *c["diferencias"][:6], sep="\n      ")
 
@@ -435,7 +453,7 @@ def main():
             rows = cal if len(cal) > len(rows) else rows
         except Exception as e:  # noqa: BLE001
             print("  calendario aparte no disponible:", e)
-        block = uni_block(rows, datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S"))
+        block = uni_block(rows, datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S"))
         if block["matches"]:
             uni.update(block)
             nxt = block["next"]
