@@ -710,31 +710,79 @@
 
 
   /* ---------- Apertura vs Clausura ---------- */
-  var cmpSort = "acum";
-  function perfOf(id) {
-    var a = S.A.filter(function (r) { return r.id === id; })[0], c = S.C.filter(function (r) { return r.id === id; })[0];
-    function one(r, key) { var pct = r.pj ? r.pts / (r.pj * 3) * 100 : 0; return { pts: r.pts, pj: r.pj, pos: S.pos[key][id], pct: pct }; }
-    var A = one(a, "A"), C = one(c, "C");
+  var cmpSort = "acum", cmpMode = "eq", cmpN = 0;
+  /* ultima fecha del Clausura con algun resultado (oficial o pronosticado) */
+  function lastPlayedC() {
+    var n = 0;
+    D.fixtures.forEach(function (f) { if (f.t === "C" && f.f > n && eff(f)) n = f.f; });
+    return n || NF;
+  }
+  /* fila de un equipo con sus primeros k partidos de un torneo */
+  function teamWindow(tor, id, k) {
+    var r = blank(id);
+    D.fixtures.forEach(function (f) {
+      if (f.t !== tor || f.f > k || (f.h !== id && f.a !== id)) return;
+      var e = eff(f);
+      if (!e) return;
+      var mine = f.h === id ? e.h : e.a, his = f.h === id ? e.a : e.h;
+      r.pj++; r.gf += mine; r.gc += his;
+      if (mine > his) { r.pg++; r.pts += 3; } else if (mine === his) { r.pe++; r.pts++; } else r.pp++;
+    });
+    r.dg = r.gf - r.gc;
+    return applyAdj([r], [tor])[0];
+  }
+  /* n = 0: cada equipo con tantos partidos del Apertura como lleva en el Clausura; n > 0: primeras n fechas de ambos */
+  function windowSrc(n) {
+    var A, C;
+    if (n) {
+      A = TEAMS.map(function (t) { return teamWindow("A", t.id, n); });
+      C = TEAMS.map(function (t) { return teamWindow("C", t.id, n); });
+    } else {
+      C = TEAMS.map(function (t) { return teamWindow("C", t.id, NF); });
+      var kc = {};
+      C.forEach(function (r) { kc[r.id] = r.pj; });
+      A = TEAMS.map(function (t) { return teamWindow("A", t.id, kc[t.id]); });
+    }
+    A = sorted(A); C = sorted(C);
+    var pa = {}, pc = {};
+    A.forEach(function (r, i) { pa[r.id] = i + 1; });
+    C.forEach(function (r, i) { pc[r.id] = i + 1; });
+    return { A: A, C: C, posA: pa, posC: pc };
+  }
+  function perfOf(id, src) {
+    var a = src.A.filter(function (r) { return r.id === id; })[0], c = src.C.filter(function (r) { return r.id === id; })[0];
+    function one(r, pos) { var pct = r.pj ? r.pts / (r.pj * 3) * 100 : 0; return { pts: r.pts, pj: r.pj, pos: pos[id], pct: pct }; }
+    var A = one(a, src.posA), C = one(c, src.posC);
     return { id: id, a: A, c: C, d: C.pct - A.pct, tpos: S.pos.T[id] };
   }
   function trendOf(d) { return d >= 3 ? ["up", "Mejoró"] : d <= -3 ? ["down", "Empeoró"] : ["eq", "Similar"]; }
   function renderCmp() {
     var box = $("#cmpBox");
     if (!box) return;
-    var rows = TEAMS.map(function (t) { return perfOf(t.id); });
+    var maxN = lastPlayedC();
+    if (cmpN > maxN) cmpN = 0;
+    var eq = cmpMode === "eq";
+    var src = eq ? windowSrc(cmpN) : { A: S.A, C: S.C, posA: S.pos.A, posC: S.pos.C };
+    var rows = TEAMS.map(function (t) { return perfOf(t.id, src); });
+    var all = rows.slice().sort(function (x, y) { return y.d - x.d; });
     rows.sort(function (x, y) {
       if (cmpSort === "up") return y.d - x.d;
       if (cmpSort === "down") return x.d - y.d;
       return x.tpos - y.tpos;
     });
-    var all = TEAMS.map(function (t) { return perfOf(t.id); }).sort(function (x, y) { return y.d - x.d; });
-    var best = all[0], worst = all[all.length - 1], me = perfOf(FOCUS);
+    var best = all[0], worst = all[all.length - 1], me = perfOf(FOCUS, src);
     function fmt(d) { return (d > 0 ? "+" : d < 0 ? "\u2212" : "") + Math.abs(d).toFixed(1).replace(".0", "") + " pp"; }
-    var pjA = S.A[0].pj, pjC = S.C[0].pj;
     var sum = '<div class="cmp-sum">' +
       '<div class="fx"><small>Más mejoró</small><b>' + teamCell(BY[best.id]) + "</b><span class=\"cmp-v up\">" + fmt(best.d) + "</span></div>" +
       '<div class="fx"><small>Más cayó</small><b>' + teamCell(BY[worst.id]) + "</b><span class=\"cmp-v down\">" + fmt(worst.d) + "</span></div>" +
       '<div class="fx"><small>La U</small><b>' + teamCell(BY[FOCUS]) + "</b><span class=\"cmp-v " + trendOf(me.d)[0] + '">' + fmt(me.d) + "</span></div></div>";
+    var modes = [["eq", "Mismas fechas"], ["full", "Torneo completo"]];
+    var scope = '<div class="seg cmp-mode" role="group" aria-label="Alcance de la comparación">' + modes.map(function (m) {
+      return '<button type="button" data-m="' + m[0] + '" aria-pressed="' + (cmpMode === m[0]) + '">' + m[1] + "</button>";
+    }).join("") + "</div>";
+    var opts = '<option value="0"' + (cmpN === 0 ? " selected" : "") + ">Mismos partidos jugados (automático)</option>";
+    for (var n = maxN; n >= 1; n--) opts += '<option value="' + n + '"' + (n === cmpN ? " selected" : "") + ">Primeras " + n + " fechas</option>";
+    var sel = eq ? '<label class="sel cmp-n"><span class="sr-only">Hasta qué fecha comparar</span><select id="cmpN">' + opts + "</select></label>" : "";
     var sorts = [["acum", "Por acumulado"], ["up", "Mejoraron más"], ["down", "Cayeron más"]];
     var ctrl = '<div class="seg cmp-sort" role="group" aria-label="Ordenar">' + sorts.map(function (s) {
       return '<button type="button" data-s="' + s[0] + '" aria-pressed="' + (cmpSort === s[0]) + '">' + s[1] + "</button>";
@@ -743,18 +791,26 @@
       var tr = trendOf(r.d), z = zoneClass(r.tpos - 1, TEAMS.length).replace(" z-", " rz-");
       function side(k, lab, o) {
         return '<div class="cmp-t ' + k + '"><small>' + lab + '</small><div class="cmp-bar" role="img" aria-label="' + lab + " " + Math.round(o.pct) + ' por ciento de los puntos posibles"><i style="width:' + Math.max(2, o.pct) + '%"></i></div>' +
-          "<span><b>" + o.pts + "</b> pts \u00b7 " + o.pos + "\u00ba \u00b7 " + Math.round(o.pct) + "%</span></div>";
+          "<span><b>" + o.pts + "</b> pts \u00b7 " + o.pos + "\u00ba \u00b7 " + Math.round(o.pct) + "% \u00b7 " + o.pj + " PJ</span></div>";
       }
       return '<li class="cmp-row' + (r.id === FOCUS ? " me" : "") + z + '"><div class="cmp-id"><span class="n">' + r.tpos + "</span>" + teamCell(BY[r.id]) + "</div>" +
         side("a", "Apertura", r.a) + side("c", "Clausura", r.c) +
         '<div class="cmp-var ' + tr[0] + '"><b>' + (tr[0] === "up" ? "\u25b2 " : tr[0] === "down" ? "\u25bc " : "= ") + fmt(r.d) + "</b><small>" + tr[1] + "</small></div></li>";
     }).join("");
-    box.innerHTML = sum + '<div class="cmp-tools">' + ctrl +
-      '<div class="legend cmp-key"><span><i class="lk-a"></i>Apertura</span><span><i class="lk-c"></i>Clausura</span></div></div>' +
+    var pjC = Math.max.apply(null, src.C.map(function (r) { return r.pj; })), pjA = Math.max.apply(null, src.A.map(function (r) { return r.pj; }));
+    var why = eq
+      ? (cmpN
+        ? "Comparación en igualdad de partidos: se usan solo las primeras " + cmpN + " fechas de cada torneo."
+        : "Comparación en igualdad de partidos: de cada equipo se toman en el Apertura tantos partidos como lleva jugados en el Clausura (en orden de fecha).")
+      : "Torneo completo: el Apertura tuvo " + pjA + " partidos por equipo y el Clausura lleva " + pjC + ", por eso se compara el porcentaje de rendimiento.";
+    box.innerHTML = sum + '<div class="cmp-tools">' + scope + sel + "</div>" +
+      '<div class="cmp-tools">' + ctrl + '<div class="legend cmp-key"><span><i class="lk-a"></i>Apertura</span><span><i class="lk-c"></i>Clausura</span></div></div>' +
       '<ul class="cmp-list">' + list + "</ul>" +
-      '<p class="note">Rendimiento = puntos ganados sobre los puntos posibles (3 por partido jugado). Se usa porcentaje porque el Apertura tuvo ' + pjA + " fechas y el Clausura lleva " + pjC +
-      '. Variación en puntos porcentuales (pp): mejora si pasa de +3 pp, empeora si baja de \u22123 pp. La posición del extremo izquierdo es la del acumulado.</p>';
+      '<p class="note">' + why + " Rendimiento = puntos ganados sobre los puntos posibles (3 por partido jugado). Variación en puntos porcentuales (pp): mejora si pasa de +3 pp, empeora si baja de \u22123 pp. La posición del extremo izquierdo es la del acumulado. Los descuentos por sanción se incluyen desde la fecha 1.</p>";
     $$("#cmpBox .cmp-sort button").forEach(function (b) { b.addEventListener("click", function () { cmpSort = b.dataset.s; renderCmp(); }); });
+    $$("#cmpBox .cmp-mode button").forEach(function (b) { b.addEventListener("click", function () { cmpMode = b.dataset.m; renderCmp(); }); });
+    var cn = $("#cmpN");
+    if (cn) cn.addEventListener("change", function () { cmpN = +cn.value; renderCmp(); });
     $$(".zone-legend").forEach(function (el) { el.innerHTML = legendHtml(); });
   }
 
