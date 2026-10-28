@@ -294,29 +294,46 @@
     if (f.hg != null) return '<span class="tag played">Jugado</span>';
     return preds[fkey(f)] ? '<span class="tag pred">Pronóstico</span>' : '<span class="tag open">Pendiente</span>';
   }
+  function stp(i, s, name, val) {
+    return '<div class="stp"><button type="button" class="stp-b" data-i="' + i + '" data-s="' + s + '" data-d="1" aria-label="Sumar un gol a ' + esc(name) + '">+</button>' +
+      '<input inputmode="numeric" type="number" min="0" max="20" aria-label="Goles ' + esc(name) + '" data-i="' + i + '" data-s="' + s + '" value="' + val + '">' +
+      '<button type="button" class="stp-b" data-i="' + i + '" data-s="' + s + '" data-d="-1" aria-label="Restar un gol a ' + esc(name) + '">\u2212</button></div>';
+  }
   function renderFixtures() {
     var list = D.fixtures.filter(function (x) { return x.t === cur.t && x.f === cur.f; });
     $("#fixtures").innerHTML = list.map(function (f, i) {
       var H = BY[f.h], A = BY[f.a], p = preds[fkey(f)];
       var mid = f.hg != null
         ? '<div class="score"><span class="fin">' + f.hg + '</span><span class="dash">-</span><span class="fin">' + f.ag + "</span></div>"
-        : '<div class="score"><input inputmode="numeric" type="number" min="0" max="20" aria-label="Goles ' + H.name + '" data-i="' + i + '" data-s="h" value="' + (p ? p[0] : "") + '"><span class="dash">-</span><input inputmode="numeric" type="number" min="0" max="20" aria-label="Goles ' + A.name + '" data-i="' + i + '" data-s="a" value="' + (p ? p[1] : "") + '"></div>';
+        : '<div class="score">' + stp(i, "h", H.name, p ? p[0] : "") + '<span class="dash">-</span>' + stp(i, "a", A.name, p ? p[1] : "") + "</div>";
       return '<article class="fx' + (f.h === FOCUS || f.a === FOCUS ? " me" : "") + '" data-i="' + i + '"><div class="fx-row">' +
         '<div class="fx-t">' + badge(H) + '<span class="n">' + H.short + "</span></div>" + mid +
         '<div class="fx-t away"><span class="n">' + A.short + "</span>" + badge(A) + "</div></div>" +
         '<div class="fx-foot"><span>' + LABEL[f.t] + " · fecha " + f.f + (f.date ? " · " + fmtDay(f.date, f.time) : "") + "</span>" + tagFor(f) + "</div></article>";
     }).join("");
     $$("#fixtures input").forEach(function (inp) { inp.addEventListener("input", onScore); });
+    $$("#fixtures .stp-b").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var card = b.closest(".fx"), hi = $('input[data-s="h"]', card), ai = $('input[data-s="a"]', card);
+        var mine = b.dataset.s === "h" ? hi : ai, other = b.dataset.s === "h" ? ai : hi, d = +b.dataset.d;
+        var v = Math.max(0, Math.min(20, (mine.value === "" ? 0 : +mine.value) + d));
+        mine.value = v; if (other.value === "") other.value = 0;
+        try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) { /* sin vibración */ }
+        mine.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    });
   }
   function onScore(e) {
     var inp = e.target, card = inp.closest(".fx"), i = +card.dataset.i;
     var f = D.fixtures.filter(function (x) { return x.t === cur.t && x.f === cur.f; })[i];
     var h = $('input[data-s="h"]', card).value, a = $('input[data-s="a"]', card).value;
-    if (h !== "" && a !== "" && +h >= 0 && +a >= 0) preds[fkey(f)] = [Math.floor(+h), Math.floor(+a)];
-    else delete preds[fkey(f)];
+    var pkey = fkey(f), had = !!preds[pkey];
+    if (h !== "" && a !== "" && +h >= 0 && +a >= 0) preds[pkey] = [Math.floor(+h), Math.floor(+a)];
+    else delete preds[pkey];
     savePreds();
     $(".fx-foot .tag", card).outerHTML = tagFor(f);
     renderAll(true);
+    L1.emit("pred", { f: f, key: pkey, val: preds[pkey] || null, isNew: !had && !!preds[pkey] });
   }
   function pois(l) { var L = Math.exp(-l), k = 0, p = 1; do { k++; p *= Math.random(); } while (p > L); return k - 1; }
   function lambdas(f) {
@@ -324,12 +341,16 @@
     return [1.3 * Math.exp(d) * 1.08, 1.0 * Math.exp(-d)];
   }
   function randomize(list) {
+    var made = [];
     list.forEach(function (f) {
       if (f.hg != null) return;
-      var l = lambdas(f);
-      preds[fkey(f)] = [pois(l[0]), pois(l[1])];
+      var l = lambdas(f), k = fkey(f);
+      made.push({ f: f, key: k, had: !!preds[k] });
+      preds[k] = [pois(l[0]), pois(l[1])];
     });
     savePreds(); renderFixtures(); renderAll(true);
+    made.forEach(function (m) { L1.emit("pred", { f: m.f, key: m.key, val: preds[m.key], isNew: !m.had }); });
+    L1.emit("random", {});
   }
 
   /* ---------- evolución ---------- */
@@ -495,15 +516,18 @@
     var had = Object.keys(preds).length;
     if (!had) return;
     undoPreds = JSON.parse(JSON.stringify(preds));
+    var clearedKeys = Object.keys(preds);
     preds = {}; savePreds();
     clearTimeout(undoTimer);
     undoTimer = setTimeout(function () { undoPreds = null; renderCalcSum(); }, 8000);
     renderFixtures(); fillFechaSel(); renderAll(true);
+    L1.emit("clear", { keys: clearedKeys });
   }
   function restorePreds() {
     if (!undoPreds) return;
     preds = undoPreds; undoPreds = null; clearTimeout(undoTimer);
     savePreds(); renderFixtures(); fillFechaSel(); renderAll(true);
+    Object.keys(preds).forEach(function (k) { var f = D.fixtures.filter(function (x) { return fkey(x) === k; })[0]; if (f) L1.emit("pred", { f: f, key: k, val: preds[k], isNew: false }); });
   }
   function renderCalcSum() {
     var box = $("#calcSum");
@@ -661,6 +685,58 @@
     if (v === "evo") { initChips(); renderMatrix(); renderChart(); }
     if (v === "pro" && proStale) { renderPro(); proStale = false; }
     if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
+    document.body.setAttribute("data-view", v);
+    if (NAVGROUP[v] === "tabla") lastTabla = v;
+    updateNav(v);
+    L1.emit("view", v);
+  }
+
+  var listeners = {};
+  var L1 = window.__L1 = {
+    D: D, BY: BY, TEAMS: TEAMS, FOCUS: FOCUS, LIVE_OK: LIVE_OK, esc: esc, fkey: fkey, badge: badge, fmtDay: fmtDay, fmtWhen: fmtWhen,
+    getPreds: function () { return preds; }, getS: function () { return S; }, view: function () { return view; }, show: function (v) { show(v); },
+    crest: function (id) { return (window.CRESTS && window.CRESTS[id]) || "escudos/" + id + ".png"; },
+    on: function (e, fn) { (listeners[e] = listeners[e] || []).push(fn); },
+    emit: function (e, d) { (listeners[e] || []).forEach(function (fn) { try { fn(d); } catch (err) { /* el juego no debe romper la página */ } }); }
+  };
+
+  /* ---------- navegación para celular ---------- */
+  var NAVGROUP = { acum: "tabla", A: "tabla", C: "tabla", calc: "calc", game: "game", uni: "uni", evo: "more", pro: "more", hist: "more", glos: "more", src: "more" };
+  var lastTabla = "acum";
+  function svg(d, fill) { return '<svg viewBox="0 0 24 24" aria-hidden="true" class="ni"' + (fill ? ' fill="currentColor"' : ' fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"') + '><path d="' + d + '"/></svg>'; }
+  function updateNav(v) {
+    var g = NAVGROUP[v];
+    $$("#bnav button").forEach(function (b) { b.setAttribute("aria-current", String(b.dataset.go === g)); });
+    $$(".seg-tabla button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.view === v)); });
+  }
+  function closeSheet() { $("#moreSheet").hidden = true; }
+  function renderNav() {
+    var items = [
+      ["tabla", "Tabla", svg("M3 4h18v16H3zM3 9h18M3 14h18M9 4v16")],
+      ["calc", "Calcular", svg("M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zM8 8h8M8 13h2M14 13h2M8 17h2M14 17h2")],
+      ["game", "Juego", svg("M8 4h8v5a4 4 0 01-8 0zM5 5h3M16 5h3M12 13v4M8 20h8M9 17h6")]
+    ];
+    if (UNI) items.push(["uni", "La U", '<svg viewBox="0 0 24 24" aria-hidden="true" class="ni"><use href="#paw"/></svg>']);
+    items.push(["more", "Más", svg("M4 7h16M4 12h16M4 17h16")]);
+    $("#bnav").innerHTML = items.map(function (it) { return '<button type="button" data-go="' + it[0] + '">' + it[2] + "<span>" + it[1] + "</span></button>"; }).join("");
+    $$("#bnav button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var g = b.dataset.go;
+        if (g === "more") { $("#moreSheet").hidden = false; return; }
+        show(g === "tabla" ? lastTabla : g); window.scrollTo(0, 0);
+      });
+    });
+    var more = [["evo", "Evolución de puntos"], ["pro", "Pronósticos"], ["hist", "Historia del club"], ["glos", "Glosario"], ["src", "Fuentes"]];
+    $("#moreList").innerHTML = more.map(function (m) { return '<button type="button" data-v="' + m[0] + '">' + m[1] + "</button>"; }).join("") + '<button type="button" id="moreTheme">Cambiar tema claro u oscuro</button>';
+    $$("#moreList button[data-v]").forEach(function (b) { b.addEventListener("click", function () { closeSheet(); show(b.dataset.v); window.scrollTo(0, 0); }); });
+    $("#moreTheme").addEventListener("click", function () { $("#themeBtn").click(); });
+    $("#moreClose").addEventListener("click", closeSheet);
+    $("#moreSheet").addEventListener("click", function (e) { if (e.target === this) closeSheet(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheet(); });
+    ["acum", "A", "C"].forEach(function (id) {
+      $("#v-" + id).insertAdjacentHTML("afterbegin", '<div class="seg-tabla" role="group" aria-label="Elegir tabla"><button type="button" data-view="acum">Acumulado</button><button type="button" data-view="A">Apertura</button><button type="button" data-view="C">Clausura</button></div>');
+    });
+    $$(".seg-tabla button").forEach(function (b) { b.addEventListener("click", function () { show(b.dataset.view); }); });
   }
 
   function init() {
@@ -680,6 +756,7 @@
 
     }
     renderUni();
+    renderNav();
     renderTicker();
     renderHist(); renderGlos(); renderSources();
     $("#gloSearch").addEventListener("input", renderGlos);
@@ -736,7 +813,9 @@
     });
 
     var h = location.hash.replace("#", "");
-    if (["acum", "A", "C", "calc", "evo", "pro", "uni", "hist", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
+    if (["acum", "A", "C", "calc", "game", "evo", "pro", "uni", "hist", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
+    updateNav(view);
+    if (window.LIGA1_GAME_INIT) window.LIGA1_GAME_INIT(L1);
   }
 
   init();
