@@ -489,6 +489,23 @@
     $("#t-uni").hidden = false;
   }
 
+  /* ---------- resumen de la calculadora ---------- */
+  function renderCalcSum() {
+    var box = $("#calcSum");
+    if (!box) return;
+    var n = Object.keys(preds).filter(function (k) { return D.fixtures.some(function (f) { return fkey(f) === k && f.hg == null; }); }).length;
+    var me = BY[FOCUS], pt = S.T.filter(function (r) { return r.id === FOCUS; })[0], b0 = BASE.T.filter(function (r) { return r.id === FOCUS; })[0];
+    var lead = S.T[0], d = pt.pts - b0.pts;
+    if (!n) {
+      box.innerHTML = '<div class="cs-text"><b>Escribe un marcador</b> y mira aquí cómo cambia la tabla.</div><button type="button" class="btn" id="csGo">Ver tabla</button>';
+    } else {
+      box.innerHTML = '<div class="cs-text"><span class="cs-k">Con tus ' + n + (n === 1 ? " pronóstico" : " pronósticos") + "</span> la U queda <b>" + S.pos.T[FOCUS] + "º</b> con <b>" + pt.pts + " pts</b>" +
+        (d ? ' <span class="cs-d ' + (d > 0 ? "up" : "down") + '">' + (d > 0 ? "+" : "\u2212") + Math.abs(d) + "</span>" : "") + ' <span class="cs-l">Líder: ' + esc(BY[lead.id].short) + " " + lead.pts + "</span></div>" +
+        '<button type="button" class="btn primary" id="csGo">Ver tabla</button>';
+    }
+    $("#csGo").addEventListener("click", function () { var t = $("#miniBoard"); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); });
+  }
+
   /* ---------- cinta inferior: próximos partidos ---------- */
   function renderTicker() {
     var pend = D.fixtures.filter(function (f) { return f.hg == null; });
@@ -504,8 +521,29 @@
     $("#tkLiveLabel").textContent = LIVE_OK ? "Datos reales" : "Demostración";
     $("#ticker").hidden = false;
     document.body.classList.add("has-ticker");
-    var w = $(".tk-run").scrollWidth || 1200;
-    $("#tkTrack").style.setProperty("--tk-dur", Math.max(40, Math.round(w / 45)) + "s");
+    var track = $("#tkTrack"), tkX = 0, tkLast = 0, tkHold = false, tkHover = false, tkW = 0;
+    function measure() { var r = $(".tk-run"); tkW = r ? r.getBoundingClientRect().width : 0; }
+    function frame(t) {
+      var dt = tkLast ? Math.min(0.1, (t - tkLast) / 1000) : 0;
+      tkLast = t;
+      if (!tkW) measure();
+      if (tkW && !tkHold && !tkHover && !$("#ticker").classList.contains("paused") && !document.hidden) {
+        tkX -= 48 * dt;
+        if (tkX <= -tkW) tkX += tkW;
+        track.style.transform = "translate3d(" + tkX.toFixed(2) + "px,0,0)";
+      }
+      requestAnimationFrame(frame);
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    window.addEventListener("load", measure);
+    if (matchMedia("(hover: hover)").matches) {
+      $("#ticker").addEventListener("mouseenter", function () { tkHover = true; });
+      $("#ticker").addEventListener("mouseleave", function () { tkHover = false; });
+    }
+    $("#tkTrack").addEventListener("pointerdown", function () { tkHold = true; });
+    ["pointerup", "pointercancel", "pointerleave"].forEach(function (ev) { $("#tkTrack").addEventListener(ev, function () { tkHold = false; }); });
+    requestAnimationFrame(frame);
     var info = $("#liveInfo"), btn = $("#tkLive");
     if (!LIVE_OK) $("#liveInfoText").innerHTML = "<strong>Datos de demostración.</strong> Los resultados de esta página no son oficiales.";
     function setInfo(open) { info.hidden = !open; btn.setAttribute("aria-expanded", String(open)); }
@@ -589,6 +627,7 @@
     renderStd($("#tbl-C"), "C");
     renderMini();
     renderHero();
+    renderCalcSum();
     proStale = true;
     if (view === "evo") { renderMatrix(); renderChart(); }
     if (view === "pro") { renderPro(); proStale = false; }
