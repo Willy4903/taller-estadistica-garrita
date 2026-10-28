@@ -247,6 +247,28 @@ def compare(rows, computed, adjust=None):
     return ok, diffs
 
 
+def compute_adjust(official, fixtures, old=None):
+    """Ajustes por club para que cada tabla coincida con la oficial.
+    A y C: tabla oficial menos suma de partidos. T (solo acumulado): lo que falta tras sumar A y C ajustados.
+    Un ajuste solo se recalcula si la tabla oficial y los partidos tienen los mismos partidos jugados;
+    si no, se conserva el anterior (las fuentes se actualizan a distinta hora)."""
+    old = old or {}
+    compA, compC = tally(fixtures, "A"), tally(fixtures, "C")
+    adj = {k: dict(old.get(k, {})) for k in ("A", "C", "T")}
+    for r in official["A"]:
+        if r["pj"] == compA[r["id"]]["pj"]:
+            adj["A"][r["id"]] = r["pts"] - compA[r["id"]]["pts"]
+    for r in official["C"]:
+        if r["pj"] == compC[r["id"]]["pj"]:
+            adj["C"][r["id"]] = r["pts"] - compC[r["id"]]["pts"]
+    for r in official["T"]:
+        i = r["id"]
+        if r["pj"] == compA[i]["pj"] + compC[i]["pj"]:
+            base = compA[i]["pts"] + adj["A"].get(i, 0) + compC[i]["pts"] + adj["C"].get(i, 0)
+            adj["T"][i] = r["pts"] - base
+    return {k: {i: v for i, v in d.items() if v} for k, d in adj.items()}
+
+
 # ---------- Universitario ----------
 CARD_RE = re.compile(r"([A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+?)\s*·\s*(\d{2}/\d{2}/\d{4})\s*(.*)")
 
@@ -395,33 +417,21 @@ def main():
     except Exception as e:  # noqa: BLE001
         log("Depor tablas", url, False, str(e)[:200])
 
-    # 4) Ajustes por sanciones: diferencia entre la tabla oficial y la suma de partidos.
-    #    Se calculan contra el Clausura y el Acumulado, que son coherentes entre sí; la tabla de Apertura de Liga1.pe
-    #    puede diferir de su propio Acumulado, por eso el ajuste del Apertura se deduce como (Acumulado - Clausura).
-    adjust = {"A": {}, "C": {}}
+    # 4) Ajustes: diferencia entre cada tabla oficial y la suma de los partidos (sanciones y correcciones de la liga).
+    #    La página muestra las tablas tal como las publica Liga1.pe: Apertura, Clausura y Acumulado.
+    adjust = {"A": {}, "C": {}, "T": {}}
     if official and fixtures:
-        compA, compC = tally(fixtures, "A"), tally(fixtures, "C")
-        old = prev.get("adjust") or {}
-        adjC = dict(old.get("C", {}))
-        adjA = dict(old.get("A", {}))
-        for r in official["C"]:
-            c = compC[r["id"]]
-            if r["pj"] == c["pj"]:
-                adjC[r["id"]] = r["pts"] - c["pts"]
-        for r in official["T"]:
-            a_, c_ = compA[r["id"]], compC[r["id"]]
-            if r["pj"] == a_["pj"] + c_["pj"] and r["id"] in adjC:
-                adjA[r["id"]] = (r["pts"] - a_["pts"] - c_["pts"]) - adjC[r["id"]]
-        adjust = {"A": {k: v for k, v in adjA.items() if v}, "C": {k: v for k, v in adjC.items() if v}}
+        adjust = compute_adjust(official, fixtures, prev.get("adjust"))
         out["adjust"] = adjust
+        compA, compC = tally(fixtures, "A"), tally(fixtures, "C")
         for torneo in ("A", "C"):
             ok, diffs = compare(official[torneo], tally(fixtures, torneo), adjust.get(torneo))
             checks.append({"tabla": f"Liga1.pe {torneo} vs partidos", "coinciden": ok, "de": len(IDS), "diferencias": diffs})
         both = {i: {"pj": compA[i]["pj"] + compC[i]["pj"], "pts": compA[i]["pts"] + compC[i]["pts"]} for i in IDS}
-        tot_adj = {i: adjust["A"].get(i, 0) + adjust["C"].get(i, 0) for i in IDS}
+        tot_adj = {i: adjust["A"].get(i, 0) + adjust["C"].get(i, 0) + adjust["T"].get(i, 0) for i in IDS}
         ok, diffs = compare(official["T"], both, tot_adj)
         checks.append({"tabla": "Liga1.pe Acumulado vs partidos", "coinciden": ok, "de": len(IDS), "diferencias": diffs})
-        if adjust["A"] or adjust["C"]:
+        if any(adjust.values()):
             print("Ajustes por sanción:", adjust)
     if fixtures:
         for src, tabs in others.items():
@@ -431,7 +441,7 @@ def main():
                 elif torneo == "T":
                     cA, cC = tally(fixtures, "A"), tally(fixtures, "C")
                     both = {i: {"pj": cA[i]["pj"] + cC[i]["pj"], "pts": cA[i]["pts"] + cC[i]["pts"]} for i in IDS}
-                    ok, diffs = compare(rows, both, {i: adjust["A"].get(i, 0) + adjust["C"].get(i, 0) for i in IDS})
+                    ok, diffs = compare(rows, both, {i: adjust["A"].get(i, 0) + adjust["C"].get(i, 0) + adjust["T"].get(i, 0) for i in IDS})
                 else:
                     continue
                 checks.append({"tabla": f"{src} {torneo} vs partidos", "coinciden": ok, "de": len(IDS), "diferencias": diffs})

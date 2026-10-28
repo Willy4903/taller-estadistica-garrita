@@ -74,7 +74,7 @@
   function compute(usePreds) {
     var fa = D.fixtures.filter(function (f) { return f.t === "A"; });
     var fc = D.fixtures.filter(function (f) { return f.t === "C"; });
-    var A = sorted(applyAdj(tally(fa, usePreds), ["A"])), C = sorted(applyAdj(tally(fc, usePreds), ["C"])), T = sorted(applyAdj(tally(D.fixtures, usePreds), ["A", "C"]));
+    var A = sorted(applyAdj(tally(fa, usePreds), ["A"])), C = sorted(applyAdj(tally(fc, usePreds), ["C"])), T = sorted(applyAdj(tally(D.fixtures, usePreds), ["A", "C", "T"]));
     var pa = {}, pc = {};
     A.forEach(function (r) { pa[r.id] = r.pts; });
     C.forEach(function (r) { pc[r.id] = r.pts; });
@@ -101,7 +101,7 @@
         for (var n = 1; n <= NF; n++) {
           var v = null;
           if (!broken) {
-            if (n === 1) run += adj(tor, t.id);
+            if (n === 1) run += adj(tor, t.id) + (tor === "A" ? adj("T", t.id) : 0);
             var f = (idx[tor + n] || []).filter(function (x) { return x.h === t.id || x.a === t.id; })[0];
             var r = f && eff(f);
             if (r) {
@@ -420,7 +420,7 @@
         H[p + "g"] += gh; H[p + "c"] += ga; A[p + "g"] += ga; A[p + "c"] += gh;
         if (gh > ga) H[p + "p"] += 3; else if (gh < ga) A[p + "p"] += 3; else { H[p + "p"]++; A[p + "p"]++; }
       }
-      var arr = ids.map(function (id) { var c = cur2[id]; c.tp = c.ap + c.cp; c.tg = c.ag + c.cg; c.tc = c.ac + c.cc; return c; });
+      var arr = ids.map(function (id) { var c = cur2[id]; c.tp = c.ap + c.cp + adj("T", c.id); c.tg = c.ag + c.cg; c.tc = c.ac + c.cc; return c; });
       acc[rank(arr, "a")[0].id].la++;
       acc[rank(arr, "c")[0].id].lc++;
       rank(arr, "t").forEach(function (c, pos) {
@@ -487,6 +487,66 @@
     $("#t-uni").hidden = false;
   }
 
+  /* ---------- Historia, glosario y fuentes ---------- */
+  var CT = window.LIGA1_CONTENT || { facts: [], timeline: [], curious: [], glossary: [], sources: {} };
+  function srcLink(x) { return '<a class="src-link" href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">Fuente: ' + esc(x.src) + "</a>"; }
+  function renderHist() {
+    $("#histBox").innerHTML =
+      '<div class="fact-grid">' + CT.facts.map(function (f) {
+        return '<article class="fact"><div class="fact-big">' + esc(f.big) + '</div><div class="fact-label">' + esc(f.label) + "</div><p>" + esc(f.text) + "</p>" + srcLink(f) + "</article>";
+      }).join("") + "</div>" +
+      '<h3 class="mt">Línea de tiempo</h3><ol class="tl">' + CT.timeline.map(function (t) {
+        return '<li><span class="tl-year">' + esc(t.year) + '</span><div class="tl-body"><h4>' + esc(t.title) + "</h4><p>" + esc(t.text) + "</p>" + srcLink(t) + "</div></li>";
+      }).join("") + "</ol>" +
+      '<h3 class="mt">Para el hincha</h3><div class="cur-grid">' + CT.curious.map(function (c) {
+        return '<article class="cur"><h4>' + esc(c.title) + "</h4><p>" + esc(c.text) + "</p>" + srcLink(c) + "</article>";
+      }).join("") + "</div>" +
+      '<p class="note">Los datos históricos se tomaron de las fuentes indicadas. Los conteos de títulos cambian según el medio y el año, por eso se cita de dónde sale cada cifra.</p>';
+  }
+  var gloGroup = "Todos";
+  function renderGlos() {
+    var groups = ["Todos"].concat(CT.glossary.reduce(function (acc, x) { if (acc.indexOf(x.g) < 0) acc.push(x.g); return acc; }, []));
+    $("#gloChips").innerHTML = groups.map(function (g) { return '<button type="button" class="chip" data-g="' + esc(g) + '" aria-pressed="' + (g === gloGroup) + '">' + esc(g) + "</button>"; }).join("");
+    $$("#gloChips .chip").forEach(function (b) { b.addEventListener("click", function () { gloGroup = b.dataset.g; renderGlos(); }); });
+    var q = fold($("#gloSearch").value || "");
+    var list = CT.glossary.filter(function (x) { return (gloGroup === "Todos" || x.g === gloGroup) && (!q || fold(x.t + " " + x.d).indexOf(q) >= 0); });
+    var last = "";
+    $("#gloList").innerHTML = list.map(function (x) {
+      var head = x.g !== last && gloGroup === "Todos" ? '<h3 class="gl-group">' + esc(x.g) + "</h3>" : "";
+      last = x.g;
+      return head + '<div class="gl-item"><dt>' + esc(x.t) + "</dt><dd>" + esc(x.d) + "</dd></div>";
+    }).join("");
+    $("#gloEmpty").hidden = list.length > 0;
+  }
+  function fold(t) { return String(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+  function srcList(items) {
+    return '<ul class="src-list">' + items.map(function (s) {
+      return '<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.name) + "</a><span>" + esc(s.use) + "</span></li>";
+    }).join("") + "</ul>";
+  }
+  function renderSources() {
+    var S2 = CT.sources || {};
+    var h = '<h3 class="mt first">Datos que la página lee cada día</h3>' + srcList(S2.daily || []);
+    if (LIVE_OK && live.sources) {
+      h += '<div class="table-card src-status"><div class="scroll"><table class="std compact"><thead><tr><th class="club">Lectura de hoy</th><th>Estado</th><th class="club">Detalle</th></tr></thead><tbody>' +
+        live.sources.map(function (s) {
+          return '<tr><td class="club">' + esc(s.name) + '</td><td><span class="tag ' + (s.ok ? "played" : "open") + '">' + (s.ok ? "Correcto" : "Falló") + '</span></td><td class="club">' + esc(s.detail) + "</td></tr>";
+        }).join("") + "</tbody></table></div></div>" +
+        '<p class="note">Última actualización: ' + esc(fmtStamp(live.updated_at)) + " (hora de Lima). Si una fuente falla, la página conserva el último dato válido.</p>";
+    } else {
+      h += '<p class="note">Esta vista usa datos de demostración. Con los datos reales aquí aparece el estado de cada lectura.</p>';
+    }
+    h += '<h3 class="mt">Cómo se actualiza</h3><ol class="how"><li>Cada día, hacia las 8:00 a. m. (hora de Lima), un proceso automático de GitHub Actions lee las fuentes de arriba.</li>' +
+      "<li>Los puntos se calculan sumando los marcadores de los 306 partidos y se comparan con las tablas oficiales de Liga1.pe, con FutbolPeruano y con Depor.</li>" +
+      "<li>Cuando la tabla oficial difiere de la suma de partidos (por ejemplo por un descuento de puntos), la página respeta la oficial y lo informa en el aviso de datos.</li>" +
+      "<li>Si una fuente no responde, se mantiene el último dato válido y la falla queda registrada en la tabla de estado.</li></ol>" +
+      '<h3 class="mt">Fuentes de verificación</h3>' + srcList(S2.verification || []) +
+      '<h3 class="mt">Fuentes del contenido histórico</h3>' + srcList(S2.content || []) +
+      '<h3 class="mt">Recursos</h3>' + srcList(S2.resources || []) +
+      '<p class="note">Esta página es un proyecto del Taller de Estadística Aplicada. No tiene afiliación con la liga ni con los clubes. Escudos, nombres y marcas pertenecen a sus propietarios.</p>';
+    $("#srcBox").innerHTML = h;
+  }
+
   /* ---------- orquestación ---------- */
   var view = "acum", proStale = true;
   function renderAll(fromCalc) {
@@ -513,16 +573,18 @@
   function init() {
     if (D.demo) $("#demoBanner").hidden = false;
     else {
-      var notes = [];
-      ["A", "C"].forEach(function (tor) {
+      var notes = [], NAMES = { A: "Apertura", C: "Clausura", T: "solo en el Acumulado" };
+      ["A", "C", "T"].forEach(function (tor) {
         var items = Object.keys(ADJ[tor] || {}).map(function (id) { return BY[id].short + " " + (ADJ[tor][id] > 0 ? "+" : "\u2212") + Math.abs(ADJ[tor][id]); });
-        if (items.length) notes.push(LABEL[tor] + ": " + items.join(", "));
+        if (items.length) notes.push(NAMES[tor] + ": " + items.join(", "));
       });
       $("#liveBanner").innerHTML = "<strong>Datos reales.</strong> Actualizado el " + fmtStamp(live.updated_at) + " (hora de Lima) y renovado todos los días hacia las 8:00 a. m. " +
-        "Tablas: Liga1.pe, FutbolPeruano y Depor. Noticias y calendario de la U: universitario.pe." + (notes.length ? " Puntos descontados por sanción (" + notes.join("; ") + ")." : "");
+        "Tablas: Liga1.pe, FutbolPeruano y Depor. Noticias y calendario de la U: universitario.pe." + (notes.length ? " Diferencias entre la suma de partidos y las tablas oficiales de Liga1.pe, que la página respeta (" + notes.join("; ") + ")." : "");
       $("#liveBanner").hidden = false;
     }
     renderUni();
+    renderHist(); renderGlos(); renderSources();
+    $("#gloSearch").addEventListener("input", renderGlos);
     cur = defaultFecha();
     recompute();
     renderLegend();
@@ -576,7 +638,7 @@
     });
 
     var h = location.hash.replace("#", "");
-    if (["acum", "A", "C", "calc", "evo", "pro", "uni"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
+    if (["acum", "A", "C", "calc", "evo", "pro", "uni", "hist", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
   }
 
   init();

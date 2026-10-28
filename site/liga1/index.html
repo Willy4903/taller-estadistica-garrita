@@ -64,6 +64,9 @@
     <button role="tab" id="t-evo" aria-selected="false" data-view="evo">Evolución de puntos</button>
     <button role="tab" id="t-pro" aria-selected="false" data-view="pro">Pronósticos</button>
     <button role="tab" id="t-uni" aria-selected="false" data-view="uni" hidden>La U hoy</button>
+    <button role="tab" id="t-hist" aria-selected="false" data-view="hist">Historia</button>
+    <button role="tab" id="t-glos" aria-selected="false" data-view="glos">Glosario</button>
+    <button role="tab" id="t-src" aria-selected="false" data-view="src">Fuentes</button>
   </nav>
 </div></div>
 
@@ -152,6 +155,28 @@
     <div id="uniBox"></div>
   </section>
 
+  <section id="v-hist" class="view" hidden aria-labelledby="t-hist">
+    <div class="view-head"><div><h2>Historia y datos del hincha crema</h2><p class="sub">Un repaso por el club, su estadio y sus fechas clave. Cada dato lleva su fuente.</p></div></div>
+    <div id="histBox"></div>
+  </section>
+
+  <section id="v-glos" class="view" hidden aria-labelledby="t-glos">
+    <div class="view-head"><div><h2>Glosario</h2><p class="sub">Qué significa cada sigla de la tabla, cada término del torneo y cada palabra del hincha crema.</p></div></div>
+    <div class="glos-tools">
+      <label class="sel glos-search">Buscar
+        <input id="gloSearch" type="search" placeholder="Por ejemplo: DG, clásico, acumulada" autocomplete="off">
+      </label>
+      <div class="chips" id="gloChips" aria-label="Filtrar por grupo"></div>
+    </div>
+    <dl id="gloList" class="glos-list"></dl>
+    <p class="note" id="gloEmpty" hidden>No hay términos que coincidan con la búsqueda.</p>
+  </section>
+
+  <section id="v-src" class="view" hidden aria-labelledby="t-src">
+    <div class="view-head"><div><h2>Fuentes</h2><p class="sub">De dónde sale cada dato de esta página y cómo se mantiene al día.</p></div></div>
+    <div id="srcBox"></div>
+  </section>
+
 </main>
 
 <footer class="foot">
@@ -166,6 +191,7 @@
 
 <script src="../vendor/chart.umd.js"></script>
 <script src="data.js?v=2"></script>
-<script src="app.js?v=2"></script>
+<script src="content.js?v=3"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
