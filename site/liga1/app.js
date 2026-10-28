@@ -141,7 +141,7 @@
     "Pts Ap.": "Puntos obtenidos en el Torneo Apertura",
     "Pts Cl.": "Puntos obtenidos en el Torneo Clausura",
     "Forma": "Últimos 5 partidos, del más antiguo al más reciente. G: ganó, E: empató, P: perdió",
-    "Acum.": "Puntos acumulados de la temporada: Apertura más Clausura. La barra se compara con el líder",
+    "Acum.": "Puntos acumulados de la temporada: Apertura más Clausura. Si hay un descuento por sanción solo en el acumulado, aparece junto al total",
     "Acum. hoy": "Puntos acumulados actuales, con los pronósticos que ingresaste",
     "Acum. proyectado": "Promedio de puntos acumulados al final de la temporada en las simulaciones",
     "Líder Apertura": "Probabilidad de terminar primero en el Apertura",
@@ -187,7 +187,9 @@
   function acumCell(id) {
     var row = S.T.filter(function (r) { return r.id === id; })[0];
     var w = S.maxT ? Math.round(row.pts / S.maxT * 100) : 0;
-    return '<td class="acum"><div class="acum-in"><b>' + row.pts + '</b><span class="bar" role="presentation"><i style="width:' + w + '%"></i></span></div></td>';
+    var d = adj("T", id);
+    var dsc = d ? '<span class="dsc" title="Descuento de puntos por sanción que figura solo en el acumulado oficial">' + (d > 0 ? "+" : "\u2212") + Math.abs(d) + "</span>" : "";
+    return '<td class="acum"><div class="acum-in"><b>' + row.pts + "</b>" + dsc + '<span class="bar" role="presentation"><i style="width:' + w + '%"></i></span></div></td>';
   }
 
   function renderStd(el, key, opts) {
@@ -538,7 +540,7 @@
     }
     h += '<h3 class="mt">Cómo se actualiza</h3><ol class="how"><li>Cada día, hacia las 8:00 a. m. (hora de Lima), un proceso automático de GitHub Actions lee las fuentes de arriba.</li>' +
       "<li>Los puntos se calculan sumando los marcadores de los 306 partidos y se comparan con las tablas oficiales de Liga1.pe, con FutbolPeruano y con Depor.</li>" +
-      "<li>Cuando la tabla oficial difiere de la suma de partidos (por ejemplo por un descuento de puntos), la página respeta la oficial y lo informa en el aviso de datos.</li>" +
+      "<li>El Acumulado oficial manda: Apertura más Clausura más los descuentos por sanción siempre da el Acumulado. Si una tabla de torneo está desactualizada, se usa la suma de los marcadores y se informa en el aviso de datos.</li>" +
       "<li>Si una fuente no responde, se mantiene el último dato válido y la falla queda registrada en la tabla de estado.</li></ol>" +
       '<h3 class="mt">Fuentes de verificación</h3>' + srcList(S2.verification || []) +
       '<h3 class="mt">Fuentes del contenido histórico</h3>' + srcList(S2.content || []) +
@@ -573,13 +575,17 @@
   function init() {
     if (D.demo) $("#demoBanner").hidden = false;
     else {
-      var notes = [], NAMES = { A: "Apertura", C: "Clausura", T: "solo en el Acumulado" };
+      var notes = [], NAMES = { A: "en el Apertura", C: "en el Clausura", T: "solo en el Acumulado" };
       ["A", "C", "T"].forEach(function (tor) {
         var items = Object.keys(ADJ[tor] || {}).map(function (id) { return BY[id].short + " " + (ADJ[tor][id] > 0 ? "+" : "\u2212") + Math.abs(ADJ[tor][id]); });
         if (items.length) notes.push(NAMES[tor] + ": " + items.join(", "));
       });
+      var stale = (live.notes && live.notes.apertura_liga1pe) || {}, sk = Object.keys(stale);
       $("#liveBanner").innerHTML = "<strong>Datos reales.</strong> Actualizado el " + fmtStamp(live.updated_at) + " (hora de Lima) y renovado todos los días hacia las 8:00 a. m. " +
-        "Tablas: Liga1.pe, FutbolPeruano y Depor. Noticias y calendario de la U: universitario.pe." + (notes.length ? " Diferencias entre la suma de partidos y las tablas oficiales de Liga1.pe, que la página respeta (" + notes.join("; ") + ")." : "");
+        "Tablas: Liga1.pe, FutbolPeruano y Depor. Noticias y calendario de la U: universitario.pe." +
+        (notes.length ? " Descuentos de puntos por sanción (" + notes.join("; ") + ")." : "") +
+        (sk.length ? " La tabla de Apertura de Liga1.pe aún muestra " + sk.map(function (k) { return BY[k].short + " " + stale[k][0]; }).join(" y ") + "; la página usa " +
+          sk.map(function (k) { return stale[k][1]; }).join(" y ") + ", que es lo que suman los marcadores y lo que cuadra con el Acumulado oficial." : "");
       $("#liveBanner").hidden = false;
     }
     renderUni();
