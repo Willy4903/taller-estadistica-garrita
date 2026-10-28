@@ -112,7 +112,8 @@
       '<img src="escudos/' + t.id + '.png?v=2" alt="" onload="this.parentNode.classList.add(\'has\')" onerror="if(!this.dataset.t){this.dataset.t=1;this.src=this.src.replace(\'.png\',\'.svg\')}else{this.remove()}"></span>';
   }
   function teamCell(t) {
-    return '<span class="team">' + badge(t) + "<span>" + t.short + (t.short !== t.name ? "<small>" + t.name + "</small>" : "") + "</span></span>";
+    var paw = t.id === FOCUS ? '<svg class="paw" viewBox="0 0 24 24" aria-label="Garra crema"><use href="#paw"/></svg>' : "";
+    return '<span class="team">' + badge(t) + "<span>" + t.short + paw + (t.short !== t.name ? "<small>" + t.name + "</small>" : "") + "</span></span>";
   }
   function zoneClass(i, n) {
     var z = D.zones;

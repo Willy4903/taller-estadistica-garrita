@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 520" preserveAspectRatio="xMidYMax slice">
+  <defs>
+    <linearGradient id="cone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFF3D1" stop-opacity=".55"/><stop offset="1" stop-color="#FFF3D1" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="bowl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2A0E15"/><stop offset="1" stop-color="#120609"/>
+    </linearGradient>
+    <linearGradient id="pitch" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#16402A"/><stop offset="1" stop-color="#0B2417"/>
+    </linearGradient>
+    <radialGradient id="halo"><stop offset="0" stop-color="#FFF3D1" stop-opacity=".9"/><stop offset="1" stop-color="#FFF3D1" stop-opacity="0"/></radialGradient>
+    <pattern id="crowd" width="14" height="10" patternUnits="userSpaceOnUse">
+      <rect width="14" height="10" fill="none"/>
+      <circle cx="3" cy="3" r="1.7" fill="#F4EBD6" opacity=".75"/><circle cx="10" cy="7" r="1.7" fill="#C21229" opacity=".85"/>
+      <circle cx="10" cy="2" r="1.2" fill="#F4EBD6" opacity=".5"/><circle cx="4" cy="8" r="1.2" fill="#8B0A1A" opacity=".9"/>
+    </pattern>
+  </defs>
+  <!-- conos de luz -->
+  <g fill="url(#cone)">
+    <polygon points="170,60 40,420 420,420"/><polygon points="520,60 380,420 760,420"/>
+    <polygon points="1080,60 840,420 1220,420"/><polygon points="1430,60 1180,420 1560,420"/>
+  </g>
+  <!-- cancha -->
+  <path d="M250 520 L420 400 H1180 L1350 520 Z" fill="url(#pitch)"/>
+  <g stroke="#F4EBD6" stroke-opacity=".35" stroke-width="2" fill="none">
+    <path d="M420 400 H1180 L1350 520 H250 Z"/><path d="M800 400 V520"/><ellipse cx="800" cy="460" rx="70" ry="22"/>
+  </g>
+  <!-- graderías: tres anillos -->
+  <path d="M0 330 Q800 230 1600 330 V520 H0 Z" fill="url(#bowl)"/>
+  <path d="M0 330 Q800 230 1600 330 V400 Q800 320 0 400 Z" fill="url(#crowd)"/>
+  <path d="M0 405 Q800 325 1600 405 V440 Q800 370 0 440 Z" fill="url(#crowd)" opacity=".8"/>
+  <path d="M0 445 Q800 375 1600 445 V478 Q800 418 0 478 Z" fill="url(#crowd)" opacity=".65"/>
+  <!-- borde del techo -->
+  <path d="M0 322 Q800 222 1600 322" fill="none" stroke="#F4EBD6" stroke-opacity=".5" stroke-width="3"/>
+  <path d="M0 336 Q800 236 1600 336" fill="none" stroke="#8B0A1A" stroke-width="6"/>
+  <!-- torres de luz -->
+  <g fill="#0B0508">
+    <rect x="164" y="90" width="12" height="260"/><rect x="514" y="76" width="12" height="260"/>
+    <rect x="1074" y="76" width="12" height="260"/><rect x="1424" y="90" width="12" height="260"/>
+  </g>
+  <g fill="#1B0E12" stroke="#F4EBD6" stroke-opacity=".5">
+    <rect x="130" y="52" width="80" height="44" rx="4"/><rect x="480" y="38" width="80" height="44" rx="4"/>
+    <rect x="1040" y="38" width="80" height="44" rx="4"/><rect x="1390" y="52" width="80" height="44" rx="4"/>
+  </g>
+  <g fill="#FFF3D1">
+    <g id="lights"><circle cx="146" cy="66" r="4"/><circle cx="164" cy="66" r="4"/><circle cx="182" cy="66" r="4"/><circle cx="198" cy="66" r="4"/>
+    <circle cx="146" cy="82" r="4"/><circle cx="164" cy="82" r="4"/><circle cx="182" cy="82" r="4"/><circle cx="198" cy="82" r="4"/></g>
+    <use href="#lights" x="350" y="-14"/><use href="#lights" x="910" y="-14"/><use href="#lights" x="1260"/>
+  </g>
+  <g fill="url(#halo)">
+    <circle cx="170" cy="74" r="70"/><circle cx="520" cy="60" r="70"/><circle cx="1080" cy="60" r="70"/><circle cx="1430" cy="74" r="70"/>
+  </g>
+</svg>
