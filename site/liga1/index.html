@@ -47,7 +47,6 @@
 </section>
 
 <div class="wrap">
-  <div id="liveBanner" class="banner live" role="note" hidden></div>
   <div id="demoBanner" class="banner" role="note" hidden>
     <strong>Datos de demostración.</strong> Los resultados de esta página no son oficiales. Reemplázalos en <code>liga1/data.js</code> para publicar la tabla real.
   </div>
@@ -178,6 +177,18 @@
   </section>
 
 </main>
+
+<div id="liveInfo" class="live-info" role="note" hidden>
+  <p id="liveInfoText"></p>
+  <button type="button" class="btn" id="liveInfoSrc">Ver fuentes</button>
+  <button type="button" class="btn ghost" id="liveInfoClose">Cerrar</button>
+</div>
+
+<div id="ticker" class="ticker" role="region" aria-label="Próximos partidos" hidden>
+  <button type="button" class="tk-live" id="tkLive" aria-expanded="false" aria-controls="liveInfo"><i class="tk-dot" aria-hidden="true"></i><span id="tkLiveLabel">Datos reales</span></button>
+  <div class="tk-win"><div class="tk-track" id="tkTrack"></div></div>
+  <button type="button" class="tk-pause" id="tkPause" aria-pressed="false" aria-label="Pausar la cinta de partidos" title="Pausar">II</button>
+</div>
 
 <footer class="foot">
   <div class="foot-art" aria-hidden="true"></div>

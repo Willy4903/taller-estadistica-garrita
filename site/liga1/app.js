@@ -489,6 +489,37 @@
     $("#t-uni").hidden = false;
   }
 
+  /* ---------- cinta inferior: próximos partidos ---------- */
+  function renderTicker() {
+    var pend = D.fixtures.filter(function (f) { return f.hg == null; });
+    pend.sort(function (x, y) { return ((x.date || "9999") + (x.time || "99")).localeCompare((y.date || "9999") + (y.time || "99")) || x.f - y.f; });
+    pend = pend.slice(0, 18);
+    if (!pend.length) return;
+    var run = pend.map(function (f) {
+      var H = BY[f.h], A = BY[f.a], me = f.h === FOCUS || f.a === FOCUS;
+      return '<span class="tk' + (me ? " me" : "") + '">' + badge(H) + "<b>" + esc(H.short) + "</b><i>vs</i>" + badge(A) + "<b>" + esc(A.short) + "</b><em>" +
+        esc(f.date ? fmtDay(f.date, f.time) : LABEL[f.t] + " fecha " + f.f) + "</em></span>";
+    }).join("");
+    $("#tkTrack").innerHTML = '<div class="tk-run">' + run + '</div><div class="tk-run" aria-hidden="true">' + run + "</div>";
+    $("#tkLiveLabel").textContent = LIVE_OK ? "Datos reales" : "Demostración";
+    $("#ticker").hidden = false;
+    document.body.classList.add("has-ticker");
+    var w = $(".tk-run").scrollWidth || 1200;
+    $("#tkTrack").style.setProperty("--tk-dur", Math.max(40, Math.round(w / 45)) + "s");
+    var info = $("#liveInfo"), btn = $("#tkLive");
+    if (!LIVE_OK) $("#liveInfoText").innerHTML = "<strong>Datos de demostración.</strong> Los resultados de esta página no son oficiales.";
+    function setInfo(open) { info.hidden = !open; btn.setAttribute("aria-expanded", String(open)); }
+    btn.addEventListener("click", function () { setInfo(info.hidden); });
+    $("#liveInfoClose").addEventListener("click", function () { setInfo(false); });
+    $("#liveInfoSrc").addEventListener("click", function () { setInfo(false); show("src"); window.scrollTo(0, 0); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") setInfo(false); });
+    $("#tkPause").addEventListener("click", function () {
+      var on = !$("#ticker").classList.contains("paused");
+      $("#ticker").classList.toggle("paused", on);
+      this.setAttribute("aria-pressed", String(on)); this.textContent = on ? "\u25B6" : "II"; this.title = on ? "Reanudar" : "Pausar";
+    });
+  }
+
   /* ---------- Historia, glosario y fuentes ---------- */
   var CT = window.LIGA1_CONTENT || { facts: [], timeline: [], curious: [], glossary: [], sources: {} };
   function srcLink(x) { return '<a class="src-link" href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">Fuente: ' + esc(x.src) + "</a>"; }
@@ -581,14 +612,15 @@
         if (items.length) notes.push(NAMES[tor] + ": " + items.join(", "));
       });
       var stale = (live.notes && live.notes.apertura_liga1pe) || {}, sk = Object.keys(stale);
-      $("#liveBanner").innerHTML = "<strong>Datos reales.</strong> Actualizado el " + fmtStamp(live.updated_at) + " (hora de Lima) y renovado todos los días hacia las 8:00 a. m. " +
+      $("#liveInfoText").innerHTML = "<strong>Datos reales.</strong> Actualizado el " + fmtStamp(live.updated_at) + " (hora de Lima) y renovado todos los días hacia las 8:00 a. m. " +
         "Tablas: Liga1.pe, FutbolPeruano y Depor. Noticias y calendario de la U: universitario.pe." +
         (notes.length ? " Descuentos de puntos por sanción (" + notes.join("; ") + ")." : "") +
         (sk.length ? " La tabla de Apertura de Liga1.pe aún muestra " + sk.map(function (k) { return BY[k].short + " " + stale[k][0]; }).join(" y ") + "; la página usa " +
           sk.map(function (k) { return stale[k][1]; }).join(" y ") + ", que es lo que suman los marcadores y lo que cuadra con el Acumulado oficial." : "");
-      $("#liveBanner").hidden = false;
+
     }
     renderUni();
+    renderTicker();
     renderHist(); renderGlos(); renderSources();
     $("#gloSearch").addEventListener("input", renderGlos);
     cur = defaultFecha();
