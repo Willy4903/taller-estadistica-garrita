@@ -109,7 +109,7 @@
   /* ---------- helpers de vista ---------- */
   function badge(t) {
     return '<span class="badge" style="background:' + t.c1 + ";color:" + t.c2 + '">' + t.id +
-      '<img src="escudos/' + t.id + '.svg" alt="" loading="lazy" onerror="if(!this.dataset.t){this.dataset.t=1;this.src=this.src.replace(\'.svg\',\'.png\')}else{this.remove()}"></span>';
+      '<img src="escudos/' + t.id + '.svg" alt="" loading="lazy" onload="this.parentNode.classList.add(\'has\')" onerror="if(!this.dataset.t){this.dataset.t=1;this.src=this.src.replace(\'.svg\',\'.png\')}else{this.remove()}"></span>';
   }
   function teamCell(t) {
     return '<span class="team">' + badge(t) + "<span>" + t.short + (t.short !== t.name ? "<small>" + t.name + "</small>" : "") + "</span></span>";

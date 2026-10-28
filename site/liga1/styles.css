@@ -151,7 +151,8 @@ td.dg.pos-n{color:var(--ok)}td.dg.neg-n{color:var(--bad)}
 .team{display:inline-flex;align-items:center;gap:12px;font-weight:700;font-size:15px}
 .team small{display:block;font-weight:500;color:var(--muted);font-size:11.5px;line-height:1.15}
 .badge{position:relative;width:34px;height:34px;border-radius:50%;display:inline-grid;place-items:center;font-size:10px;font-weight:800;letter-spacing:.02em;border:2px solid rgba(255,255,255,.35);flex:none}
-.badge img{position:absolute;inset:-3px;width:calc(100% + 6px);height:calc(100% + 6px);object-fit:contain;border-radius:50%;background:#fff;padding:2px}
+.badge img{position:absolute;inset:-4px;width:calc(100% + 8px);height:calc(100% + 8px);object-fit:contain;filter:drop-shadow(0 1px 3px rgba(0,0,0,.45))}
+.badge.has{background:transparent!important;border-color:transparent;color:transparent;overflow:visible}
 td.acum{background:linear-gradient(90deg,rgba(232,201,106,.07),transparent);min-width:190px}
 .acum-in{display:flex;align-items:center;gap:10px}
 .acum-in b{font:800 24px var(--disp);min-width:40px;text-align:right;color:var(--gold);letter-spacing:.02em}
