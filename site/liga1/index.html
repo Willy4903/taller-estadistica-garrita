@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="paw" viewBox="0 0 24 24"><path fill="currentColor" d="M12 12c-3 0-6 3.5-6 6 0 2 1.5 3 3 3 1.2 0 2-.6 3-.6s1.8.6 3 .6c1.5 0 3-1 3-3 0-2.5-3-6-6-6z"/><ellipse fill="currentColor" cx="5.5" cy="9.5" rx="1.9" ry="2.5"/><ellipse fill="currentColor" cx="9.8" cy="5.8" rx="1.9" ry="2.6"/><ellipse fill="currentColor" cx="14.2" cy="5.8" rx="1.9" ry="2.6"/><ellipse fill="currentColor" cx="18.5" cy="9.5" rx="1.9" ry="2.5"/></symbol></svg>
 <a class="skip" href="#main">Saltar al contenido</a>
 
 <header class="top">
@@ -20,7 +21,7 @@
       <span class="crest" aria-hidden="true">U</span>
       <div>
         <strong>Liga 1 · Calculadora</strong>
-        <small>Universitario de Deportes</small>
+        <small>Universitario de Deportes · 1924</small>
       </div>
     </div>
     <div class="top-actions">
@@ -36,7 +37,7 @@
   <div class="ring" aria-hidden="true"></div>
   <div class="wrap hero-in">
     <div class="hero-text">
-      <p class="eyebrow">Fútbol peruano · Temporada 2026</p>
+      <p class="eyebrow">Estadio Monumental · Temporada 2026</p>
       <h1><span>Liga 1</span> <em>2026</em></h1>
       <p class="lead">Apertura, Clausura y acumulado. Mueve los resultados que faltan y mira cómo cambia el camino de la U.</p>
       <div class="next" id="nextMatch" aria-live="polite"></div>
@@ -147,8 +148,12 @@
 </main>
 
 <footer class="foot">
-  <div class="wrap">
-    <p>Proyecto del Taller de Estadística Aplicada. Sin escudos oficiales ni afiliación con clubes o la liga. Reglas de desempate usadas: puntos, diferencia de goles, goles a favor.</p>
+  <div class="foot-art" aria-hidden="true"></div>
+  <img class="mascot mascot-foot" src="img/garrita.png?v=1" alt="Garrita, la mascota de la U" onerror="this.remove()">
+  <div class="wrap foot-in">
+    <p class="foot-title"><svg class="paw" viewBox="0 0 24 24" aria-hidden="true"><use href="#paw"/></svg> Garra crema</p>
+    <p>Estadio Monumental, Ate (Lima). Universitario de Deportes, fundado el 7 de agosto de 1924.</p>
+    <p>Proyecto del Taller de Estadística Aplicada, sin afiliación con clubes ni con la liga. Desempate: puntos, diferencia de goles, goles a favor.</p>
   </div>
 </footer>
 
