@@ -1,4 +1,5 @@
-"""Sondeo de fuentes de la Liga 1 (tercera ronda): calendario de partidos y próximo partido de la U."""
+"""Sondeo de fuentes de la Liga 1 (cuarta ronda): estructura de partidos en futbolperuano y datos del calendario de la U."""
+import json
 import re
 import urllib.request
 from bs4 import BeautifulSoup
@@ -9,60 +10,51 @@ UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, 
 
 def get(url):
     req = urllib.request.Request(url, headers=UA)
-    try:
-        with urllib.request.urlopen(req, timeout=40) as r:
-            return r.status, r.geturl(), r.read().decode("utf-8", "ignore")
-    except Exception as e:  # noqa: BLE001
-        return None, url, f"ERROR {e}"
+    with urllib.request.urlopen(req, timeout=40) as r:
+        return r.read().decode("utf-8", "ignore")
 
 
-def head(t):
-    print("\n" + "=" * 100 + "\n" + t)
+def squeeze(html, n):
+    return re.sub(r"\n\s*\n+", "\n", re.sub(r"(data:image/gif;base64,[A-Za-z0-9+/=]+)", "GIF", html))[:n]
 
 
-def around(soup, pattern, up=3, limit=1400, count=1):
-    n = 0
-    for s in soup.find_all(string=re.compile(pattern)):
-        node = s.parent
-        for _ in range(up):
-            if node.parent is not None and node.parent.name not in ("body", "html"):
-                node = node.parent
-        print("--- bloque alrededor de", repr(s.strip()[:60]))
-        print(re.sub(r"\n\s*\n+", "\n", node.prettify())[:limit])
-        n += 1
-        if n >= count:
+for url in ["https://www.futbolperuano.com/liga-1/clausura/", "https://www.futbolperuano.com/liga-1/resultados"]:
+    print("=" * 100, "\n", url)
+    soup = BeautifulSoup(get(url), "lxml")
+    lt = soup.select(".local-team")
+    print("local-team:", len(lt), "| visit-team:", len(soup.select(".visit-team")))
+    first = lt[0]
+    node = first
+    for _ in range(8):
+        node = node.parent
+        if node is None:
             break
+        if node.select(".visit-team"):
+            break
+    print("--- contenedor del primer partido (clase:", node.get("class"), ")")
+    print(squeeze(node.prettify(), 3200))
+    # encabezados de fecha
+    heads = [t for t in soup.find_all(string=re.compile(r"^\s*Fecha\s+\d+\s*$"))]
+    print("encabezados 'Fecha N':", len(heads), [h.strip() for h in heads[:5]], "...", [h.strip() for h in heads[-3:]])
+    if heads:
+        p = heads[0].parent
+        print("padre del encabezado:", p.name, p.get("class"), "| abuelo:", p.parent.name, p.parent.get("class"))
+        print(squeeze(p.parent.prettify(), 700))
 
-
-for u in ["https://liga1.pe/fixture/", "https://www.futbolperuano.com/liga-1/resultados", "https://www.futbolperuano.com/liga-1/clausura/",
-          "https://universitario.pe/calendario", "https://universitario.pe/fixture", "https://universitario.pe/futbol-masculino/calendario"]:
-    head("PÁGINA " + u)
-    st, final, body = get(u)
-    print("estado", st, "final", final, "bytes", len(body))
-    if st != 200:
-        continue
-    soup = BeautifulSoup(body, "lxml")
-    print("título:", soup.title.get_text(strip=True) if soup.title else None, "| tablas:", len(soup.find_all("table")))
-    txt = soup.get_text(" ", strip=True)
-    print("muestra:", txt[:300])
-    for m in list(re.finditer(r"(?i)fecha\s*15", txt))[:2]:
-        print("   ...", txt[max(0, m.start() - 120): m.start() + 260])
-    for a in soup.find_all("a", href=True):
-        if re.search(r"fixture|calendario|resultados|fecha-1[4-7]", a["href"], re.I):
-            print("   >", a.get_text(" ", strip=True)[:50], a["href"][:110])
-    around(soup, r"(?i)fecha\s*15|Alianza Atl", up=3, limit=1500)
-
-head("UNIVERSITARIO.PE próximo partido")
-st, final, body = get("https://universitario.pe/")
-soup = BeautifulSoup(body, "lxml")
-around(soup, r"Próximo Partido", up=4, limit=3500)
-for a in soup.find_all("a", href=True):
-    if re.search(r"calendario|partido|fixture|tabla", a["href"] + a.get_text(), re.I):
-        print("   >", a.get_text(" ", strip=True)[:60], a["href"][:110])
-print("scripts next data:", bool(soup.find("script", id="__NEXT_DATA__")))
-for sc in soup.find_all("script"):
-    t = sc.string or ""
-    if "Fecha 15" in t or "Clausura" in t:
-        i = t.find("Clausura")
-        print("   script:", t[max(0, i - 300): i + 700].replace("\n", " "))
-        break
+print("=" * 100, "\n universitario.pe calendario (JSON incrustado)")
+html = get("https://universitario.pe/calendario")
+txt = html.replace('\\"', '"').replace("\\\\", "\\")
+objs = re.findall(r'\{"id":"\d+","competition":.*?"team":"[^"]+"\}', txt)
+print("objetos partido:", len(objs))
+rows = []
+for o in objs:
+    try:
+        rows.append(json.loads(o))
+    except ValueError:
+        pass
+print("válidos:", len(rows))
+fm = [r for r in rows if r.get("team") == "Fútbol masculino"]
+print("fútbol masculino:", len(fm), "| competiciones:", sorted({r["competition"] for r in fm}))
+for r in sorted(fm, key=lambda x: x["startsAt"])[-8:]:
+    print("  ", r["startsAt"], r["competition"], "|", r["stage"], "|", r["home"], r.get("homeScore"), "-", r.get("awayScore"), r["away"], "| fin:", r["finished"], "|", r["venue"])
+print("claves:", sorted(rows[0].keys()))
