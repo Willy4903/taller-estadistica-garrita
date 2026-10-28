@@ -1,4 +1,4 @@
-"""Sondeo de fuentes de la Liga 1 (segunda ronda): vuelca tablas completas y estructura de noticias."""
+"""Sondeo de fuentes de la Liga 1 (tercera ronda): calendario de partidos y próximo partido de la U."""
 import re
 import urllib.request
 from bs4 import BeautifulSoup
@@ -16,80 +16,53 @@ def get(url):
         return None, url, f"ERROR {e}"
 
 
-def head(title):
-    print("\n" + "=" * 100 + "\n" + title)
+def head(t):
+    print("\n" + "=" * 100 + "\n" + t)
 
 
-def dump_tables(url, maxrows=22):
-    head("TABLAS " + url)
-    st, final, body = get(url)
+def around(soup, pattern, up=3, limit=1400, count=1):
+    n = 0
+    for s in soup.find_all(string=re.compile(pattern)):
+        node = s.parent
+        for _ in range(up):
+            if node.parent is not None and node.parent.name not in ("body", "html"):
+                node = node.parent
+        print("--- bloque alrededor de", repr(s.strip()[:60]))
+        print(re.sub(r"\n\s*\n+", "\n", node.prettify())[:limit])
+        n += 1
+        if n >= count:
+            break
+
+
+for u in ["https://liga1.pe/fixture/", "https://www.futbolperuano.com/liga-1/resultados", "https://www.futbolperuano.com/liga-1/clausura/",
+          "https://universitario.pe/calendario", "https://universitario.pe/fixture", "https://universitario.pe/futbol-masculino/calendario"]:
+    head("PÁGINA " + u)
+    st, final, body = get(u)
     print("estado", st, "final", final, "bytes", len(body))
     if st != 200:
-        print(body[:200]); return None
+        continue
     soup = BeautifulSoup(body, "lxml")
-    print("título:", soup.title.get_text(strip=True) if soup.title else None)
-    for i, t in enumerate(soup.find_all("table")):
-        rows = t.find_all("tr")
-        print(f"[tabla {i}] filas={len(rows)} clases={t.get('class')} caption={(t.find('caption').get_text(strip=True) if t.find('caption') else '')}")
-        prev = t.find_previous(["h1", "h2", "h3", "h4"])
-        print("   encabezado previo:", prev.get_text(' ', strip=True)[:100] if prev else None)
-        for tr in rows[:maxrows]:
-            print("   |", " | ".join(c.get_text(" ", strip=True) for c in tr.find_all(["th", "td"]))[:170])
-    return soup
-
-
-def links(soup, pat, limit=30):
-    seen = 0
+    print("título:", soup.title.get_text(strip=True) if soup.title else None, "| tablas:", len(soup.find_all("table")))
+    txt = soup.get_text(" ", strip=True)
+    print("muestra:", txt[:300])
+    for m in list(re.finditer(r"(?i)fecha\s*15", txt))[:2]:
+        print("   ...", txt[max(0, m.start() - 120): m.start() + 260])
     for a in soup.find_all("a", href=True):
-        if seen < limit and re.search(pat, a["href"] + " " + a.get_text(" ", strip=True), re.I):
-            print("   >", a.get_text(" ", strip=True)[:70], a["href"][:130]); seen += 1
+        if re.search(r"fixture|calendario|resultados|fecha-1[4-7]", a["href"], re.I):
+            print("   >", a.get_text(" ", strip=True)[:50], a["href"][:110])
+    around(soup, r"(?i)fecha\s*15|Alianza Atl", up=3, limit=1500)
 
-
-# 1. páginas oficiales / especializadas de tabla
-s = dump_tables("https://liga1.pe/tabla-de-posiciones/", 24)
-if s:
-    links(s, r"tabla|fixture|resultado|calendario|apertura|clausura|acumulad")
-s = dump_tables("https://www.futbolperuano.com/liga-1/clausura/tabla-de-posiciones", 24)
-if s:
-    links(s, r"tabla|fixture|resultado|calendario|apertura|clausura|acumulad")
-for u in ["https://www.futbolperuano.com/liga-1/apertura/tabla-de-posiciones",
-          "https://www.futbolperuano.com/liga-1/acumulado/tabla-de-posiciones",
-          "https://www.futbolperuano.com/liga-1/tabla-acumulada",
-          "https://www.futbolperuano.com/liga-1/fixture",
-          "https://www.futbolperuano.com/liga-1/clausura/fixture",
-          "https://www.futbolperuano.com/liga-1/resultados",
-          "https://liga1.pe/fixture/", "https://liga1.pe/resultados/", "https://liga1.pe/calendario/"]:
-    st, final, body = get(u)
-    n = len(BeautifulSoup(body, "lxml").find_all("table")) if st == 200 else "-"
-    print("sonda", u, "->", st, final if final != u else "", "tablas:", n)
-
-# 2. artículo de Depor: tablas completas (clausura, acumulado, fixture del día)
-dump_tables("https://depor.com/futbol-peruano/descentralizado/tabla-de-posiciones-liga-1-peru-2026-en-vivo-acumulado-y-resultados-de-la-fecha-14-del-torneo-clausura-sport-huancayo-universitario-sporting-cristal-alianza-lima-noticia/", 24)
-
-# 3. Universitario: portada, listado de noticias y una nota
-head("UNIVERSITARIO.PE portada")
+head("UNIVERSITARIO.PE próximo partido")
 st, final, body = get("https://universitario.pe/")
 soup = BeautifulSoup(body, "lxml")
-for m in soup.find_all("meta", property=re.compile("og:")):
-    print("   meta", m.get("property"), (m.get("content") or "")[:100])
-cards = [a for a in soup.find_all("a", href=re.compile(r"^/noticias/"))]
-print("tarjetas /noticias/:", len(cards))
-for a in cards[:4]:
-    print("   ---", a["href"]); print(a.prettify()[:900])
-txt = soup.get_text(" ", strip=True)
-for m in list(re.finditer(r"(?i)pr[oó]ximo|fixture|calendario|\bvs\b", txt))[:6]:
-    print("   ...", txt[max(0, m.start() - 60): m.start() + 140])
-for u in ["https://universitario.pe/noticias", "https://universitario.pe/noticias?categoria=F%C3%BAtbol%20masculino"]:
-    st, final, body = get(u)
-    s2 = BeautifulSoup(body, "lxml")
-    print("lista", u, st, "tarjetas:", len(s2.find_all("a", href=re.compile(r"^/noticias/"))))
-head("UNIVERSITARIO.PE nota")
-st, final, body = get("https://universitario.pe/noticias/plan-de-actividades-del-primer-equipo-de-universitario-de-deportes-34")
-s3 = BeautifulSoup(body, "lxml")
-print("estado", st, "título:", s3.title.get_text(strip=True) if s3.title else None)
-for m in s3.find_all("meta"):
-    if m.get("property", "").startswith("og:") or m.get("name") in ("description", "twitter:image"):
-        print("   meta", m.get("property") or m.get("name"), (m.get("content") or "")[:120])
-for p in s3.find_all("p")[:6]:
-    print("   p:", p.get_text(" ", strip=True)[:140])
-print("   ld+json:", [x.get_text()[:300] for x in s3.find_all("script", type="application/ld+json")][:2])
+around(soup, r"Próximo Partido", up=4, limit=3500)
+for a in soup.find_all("a", href=True):
+    if re.search(r"calendario|partido|fixture|tabla", a["href"] + a.get_text(), re.I):
+        print("   >", a.get_text(" ", strip=True)[:60], a["href"][:110])
+print("scripts next data:", bool(soup.find("script", id="__NEXT_DATA__")))
+for sc in soup.find_all("script"):
+    t = sc.string or ""
+    if "Fecha 15" in t or "Clausura" in t:
+        i = t.find("Clausura")
+        print("   script:", t[max(0, i - 300): i + 700].replace("\n", " "))
+        break
