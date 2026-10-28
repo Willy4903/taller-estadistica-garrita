@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="paw" viewBox="0 0 24 24"><path fill="currentColor" d="M12 12c-3 0-6 3.5-6 6 0 2 1.5 3 3 3 1.2 0 2-.6 3-.6s1.8.6 3 .6c1.5 0 3-1 3-3 0-2.5-3-6-6-6z"/><ellipse fill="currentColor" cx="5.5" cy="9.5" rx="1.9" ry="2.5"/><ellipse fill="currentColor" cx="9.8" cy="5.8" rx="1.9" ry="2.6"/><ellipse fill="currentColor" cx="14.2" cy="5.8" rx="1.9" ry="2.6"/><ellipse fill="currentColor" cx="18.5" cy="9.5" rx="1.9" ry="2.5"/></symbol></svg>
@@ -60,6 +60,7 @@
     <button role="tab" id="t-acum" aria-selected="true" data-view="acum">Acumulado</button>
     <button role="tab" id="t-A" aria-selected="false" data-view="A">Apertura</button>
     <button role="tab" id="t-C" aria-selected="false" data-view="C">Clausura</button>
+    <button role="tab" id="t-cmp" aria-selected="false" data-view="cmp">Apertura vs Clausura</button>
     <button role="tab" id="t-calc" aria-selected="false" data-view="calc">Calculadora</button>
     <button role="tab" id="t-game" aria-selected="false" data-view="game">Juego</button>
     <button role="tab" id="t-evo" aria-selected="false" data-view="evo">Evolución de puntos</button>
@@ -80,10 +81,12 @@
         <h2>Tabla acumulada</h2>
         <p class="sub">Suma de puntos del Apertura y del Clausura. La columna <b>Acum.</b> es el total de puntos de la temporada.</p>
       </div>
-      <div class="legend" id="zoneLegend"></div>
+      <div class="legend zone-legend" id="zoneLegend"></div>
     </div>
+    <button type="button" class="btn go-cmp">Comparar Apertura vs Clausura</button>
     <button type="button" class="btn cols-btn" aria-pressed="false">Ver todas las columnas</button>
     <div class="table-card"><div class="scroll"><table id="tbl-acum" class="std"></table></div></div>
+    <p class="note zone-note">Zonas referenciales sobre la tabla acumulada; los cupos oficiales los define el reglamento de la liga.</p>
   </section>
 
   <section id="v-A" class="view" hidden aria-labelledby="t-A">
@@ -96,6 +99,17 @@
     <div class="view-head"><div><h2>Torneo Clausura</h2><p class="sub">La columna <b>Acum.</b> muestra el total de puntos de la temporada (Apertura + Clausura).</p></div></div>
     <button type="button" class="btn cols-btn" aria-pressed="false">Ver todas las columnas</button>
     <div class="table-card"><div class="scroll"><table id="tbl-C" class="std"></table></div></div>
+  </section>
+
+  <section id="v-cmp" class="view" hidden aria-labelledby="t-cmp">
+    <div class="view-head">
+      <div>
+        <h2>Apertura vs Clausura</h2>
+        <p class="sub">Compara el rendimiento de cada equipo en los dos torneos y mira quién mejoró o cayó.</p>
+      </div>
+      <div class="legend zone-legend"></div>
+    </div>
+    <div id="cmpBox"></div>
   </section>
 
   <section id="v-calc" class="view" hidden aria-labelledby="t-calc">
@@ -233,6 +247,6 @@
 <script src="data.js?v=2"></script>
 <script src="content.js?v=3"></script>
 <script src="game.js?v=1"></script>
-<script src="app.js?v=5"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>
