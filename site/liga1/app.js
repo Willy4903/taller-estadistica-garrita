@@ -247,7 +247,8 @@
     if (nu && nu.homeId && nu.awayId && (nu.homeId === FOCUS || nu.awayId === FOCUS)) {
       var home = nu.homeId === FOCUS, rival = BY[home ? nu.awayId : nu.homeId];
       $("#nextMatch").innerHTML = "<div>" + badge(me) + "</div><div><small>Próximo partido · " + (nu.stage || "").replace(" — ", " · ") + " · " + fmtWhen(nu.startsAt) + "</small><b>" +
-        me.short + " vs " + rival.short + (home ? " (local)" : " (visita)") + "</b><small>" + (nu.venue || "") + (nu.city ? ", " + nu.city : "") + "</small></div>";
+        me.short + " vs " + rival.short + (home ? " (local)" : " (visita)") + "</b><small>" + (nu.venue || "") + (nu.city ? ", " + nu.city : "") + '</small><small class="nx-cdt" data-cd-txt="' + esc(nu.startsAt) + '"></small></div>';
+      tickCd();
     } else
     $("#nextMatch").innerHTML = nx
       ? '<div>' + badge(me) + '</div><div><small>Próximo partido · ' + LABEL[nx.t] + " fecha " + nx.f + "</small><b>" +
@@ -486,14 +487,54 @@
     return '<li><i class="' + k + '">' + ({ W: "G", D: "E", L: "P" })[k] + '</i><span class="rs-stage">' + esc((m.stage || "").replace(" — ", " · ")) + "</span>" +
       '<span class="rs-vs">' + (home ? "U" : esc(rival ? rival.short : m.home)) + " <b>" + m.homeScore + " - " + m.awayScore + "</b> " + (home ? esc(rival ? rival.short : m.away) : "U") + "</span></li>";
   }
+  var LIGA_MARK = '<svg viewBox="0 0 40 40" width="34" height="34"><circle cx="20" cy="20" r="18" fill="#D91E36"/><path d="M6 24c8-9 20-12 28-6-8-1-17 2-28 6Z" fill="#fff"/><path d="M8 29c8-5 17-7 25-4-8-1-15 0-25 4Z" fill="#fff" opacity=".8"/></svg>';
+  function limaParts(iso) {
+    var d = new Date(new Date(iso).getTime() - 5 * 3600000);
+    return { d: d, wd: ["DOM", "LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB"][d.getUTCDay()], day: d.getUTCDate(), mo: d.getUTCMonth() + 1,
+      hh: ("0" + d.getUTCHours()).slice(-2), mm: ("0" + d.getUTCMinutes()).slice(-2) };
+  }
+  function fmtWhenShort(iso) { var p = limaParts(iso); return p.wd + " " + ("0" + p.day).slice(-2) + "/" + ("0" + p.mo).slice(-2); }
+  function fmtHour(iso) { var p = limaParts(iso); return p.hh + ":" + p.mm; }
+  function cdParts(iso) {
+    var ms = Math.max(0, new Date(iso).getTime() - Date.now()), s = Math.floor(ms / 1000);
+    return { ms: ms, v: [Math.floor(s / 86400), Math.floor(s % 86400 / 3600), Math.floor(s % 3600 / 60), s % 60] };
+  }
+  function pad2(n) { return ("0" + n).slice(-2); }
+  function cdHtml(iso) {
+    var labels = ["Días", "Hrs", "Min", "Seg"], c = cdParts(iso);
+    return '<div class="cd" data-cd="' + esc(iso) + '" role="timer" aria-label="Cuenta regresiva al partido">' + labels.map(function (l, i) {
+      return (i ? '<em>:</em>' : "") + "<div><b>" + pad2(c.v[i]) + "</b><i>" + l + "</i></div>";
+    }).join("") + "</div>";
+  }
+  function tickCd() {
+    var els = document.querySelectorAll("[data-cd]");
+    for (var i = 0; i < els.length; i++) {
+      var c = cdParts(els[i].getAttribute("data-cd")), bs = els[i].querySelectorAll("b");
+      for (var k = 0; k < bs.length && k < 4; k++) { var v = pad2(c.v[k]); if (bs[k].textContent !== v) bs[k].textContent = v; }
+    }
+    var tx = document.querySelectorAll("[data-cd-txt]");
+    for (var j = 0; j < tx.length; j++) {
+      var q = cdParts(tx[j].getAttribute("data-cd-txt"));
+      tx[j].textContent = q.ms <= 0 ? "Hoy se juega" : "Faltan " + (q.v[0] ? q.v[0] + " d " : "") + q.v[1] + " h " + pad2(q.v[2]) + " min";
+    }
+  }
+  setInterval(tickCd, 1000);
   function renderUni() {
     if (!UNI) return;
     var h = "", n = UNI.next, me = BY[FOCUS];
     if (n && n.homeId && n.awayId) {
       var H = BY[n.homeId], A = BY[n.awayId];
-      h += '<article class="next-card"><p class="nc-eyebrow">Próximo partido · ' + esc((n.stage || "").replace(" — ", " · ")) + "</p>" +
-        '<div class="nc-row"><div class="nc-team">' + (H ? badge(H) : "") + "<span>" + esc(H ? H.short : n.home) + '</span></div><div class="nc-vs">VS</div><div class="nc-team">' + (A ? badge(A) : "") + "<span>" + esc(A ? A.short : n.away) + "</span></div></div>" +
-        '<p class="nc-when">' + esc(fmtWhen(n.startsAt)) + " (hora de Lima)</p><p class=\"nc-venue\">" + esc(n.venue || "") + (n.city ? ", " + esc(n.city) : "") + "</p></article>";
+      var st = (n.stage || "").split(" — ");
+      h += '<article class="next-card" aria-label="Próximo partido de la U">' +
+        '<p class="nx-title">Próximo partido</p>' + cdHtml(n.startsAt) +
+        '<div class="nx-glass"><span class="nx-liga" aria-hidden="true">' + LIGA_MARK + '</span>' +
+        '<p class="nx-comp">' + esc(n.competition || "Liga 1") + "</p>" +
+        '<p class="nx-stage">' + esc(st[0] || "") + (st[1] ? " \u2014 " + esc(st[1]) : "") + "</p>" +
+        '<div class="nx-row"><div class="nx-team">' + (H ? badge(H) : "") + '<span class="sr-only">' + esc(H ? H.short : n.home) + '</span></div><div class="nx-vs">VS</div>' +
+        '<div class="nx-team">' + (A ? badge(A) : "") + '<span class="sr-only">' + esc(A ? A.short : n.away) + "</span></div></div>" +
+        '<p class="nx-venue"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg> ' +
+        esc(n.venue || "") + (n.city ? " - " + esc(n.city) : "") + "</p>" +
+        '<p class="nx-when"><b>' + esc(fmtWhenShort(n.startsAt)) + "</b> <span>" + esc(fmtHour(n.startsAt)) + " hora de Lima</span></p></div></article>";
     }
     if (UNI.last && UNI.last.length) {
       h += '<article class="last-card"><p class="nc-eyebrow">Últimos resultados</p><ul class="rs">' + UNI.last.map(resultChip).join("") + "</ul></article>";
@@ -508,6 +549,7 @@
     $("#uniBox").innerHTML = '<div class="uni-top">' + h + '</div><h3 class="mt">Noticias del club</h3><div class="news-grid">' + news + "</div>" +
       '<p class="note">Contenido de <a href="https://universitario.pe" target="_blank" rel="noopener noreferrer">universitario.pe</a>, sitio oficial del club. Se actualiza todos los días hacia las 8:00 a. m. (hora de Lima).</p>';
     $("#t-uni").hidden = false;
+    tickCd();
   }
 
   /* ---------- resumen de la calculadora ---------- */
