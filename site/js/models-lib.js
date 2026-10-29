@@ -64,10 +64,14 @@
   // Excluye variantes (:batch, alias "~", enrutadores) para no contar dos veces el mismo modelo.
   function baseModels(list) {
     const ids = new Set(list.map((m) => m.id));
+    const sig = (m) => [m.provider, m.created, m.price_in, m.price_out, m.context, m.reasoning, (m.inputs || []).join()].join("|");
+    const names = new Set(list.map((m) => sig(m) + "|" + m.name));
+    // "X Pro" y "X (fecha)" con las mismas cifras que "X" son el mismo modelo con otro modo o nombre de versión.
+    const twin = (m) => names.has(sig(m) + "|" + m.name.replace(/ Pro$/, "")) && m.name.endsWith(" Pro") || names.has(sig(m) + "|" + m.name.replace(/ \([^)]*\)$/, "")) && / \([^)]*\)$/.test(m.name);
     return list.filter((m) => {
       if (m.id.startsWith("~") || m.provider === "openrouter" || m.id.endsWith(":batch")) return false;
       const root = m.id.split(":")[0];
-      return !(m.id.includes(":") && ids.has(root));
+      return !(m.id.includes(":") && ids.has(root)) && !twin(m);
     });
   }
   const between = (list, a, b) => list.filter((m) => { const d = daysAgo(m.created); return d >= a && d < b; });
