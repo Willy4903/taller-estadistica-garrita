@@ -60,6 +60,8 @@ def detect_changes(prev_models, models, today, first_run):
     before = {m["id"]: m for m in prev_models}
     out = []
     for m in models:
+        if m["id"].startswith("~") or m["id"].endswith(":batch") or m["provider"] == "openrouter":
+            continue  # alias, variantes batch y enrutadores repiten a otro modelo
         o = before.get(m["id"])
         base = {"date": today, "model": m["name"], "id": m["id"], "provider": m["provider"], "source_name": "OpenRouter", "source_url": "https://openrouter.ai/" + m["id"]}
         if not o:

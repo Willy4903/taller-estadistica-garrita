@@ -53,7 +53,13 @@
       const d = (a, b) => (a > 0 && b > 0 ? Math.round(((a - b) / b) * 100) : null);
       out.push({ cur, prev, dIn: d(cur.price_in, prev.price_in), dOut: d(cur.price_out, prev.price_out), same: cur.context === prev.context });
     });
-    return out.sort((a, b) => b.cur.created.localeCompare(a.cur.created) || a.cur.name.localeCompare(b.cur.name));
+    // Variantes del mismo modelo (p. ej. "Terra" y "Terra Pro") con cifras idénticas: se muestra solo la de nombre más corto.
+    const seen = new Map();
+    out.sort((a, b) => a.cur.name.length - b.cur.name.length).forEach((p) => {
+      const k = [norm(p.cur.provider), p.cur.created, p.prev.created, p.cur.price_in, p.cur.price_out, p.prev.price_in, p.prev.price_out, p.cur.context, p.prev.context, p.cur.reasoning, p.cur.multimodal].join("|");
+      if (!seen.has(k)) seen.set(k, p);
+    });
+    return [...seen.values()].sort((a, b) => b.cur.created.localeCompare(a.cur.created) || a.cur.name.localeCompare(b.cur.name));
   }
   // Excluye variantes (:batch, alias "~", enrutadores) para no contar dos veces el mismo modelo.
   function baseModels(list) {
