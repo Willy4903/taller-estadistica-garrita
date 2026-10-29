@@ -117,13 +117,20 @@
     return out;
   }
 
-  function formOf(id) {
+  /* ultimos 5 partidos oficiales, del mas antiguo al mas reciente, con rival y marcador */
+  function formDetail(id) {
     var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg != null; });
     list.sort(function (x, y) { return (x.t === y.t ? 0 : x.t === "A" ? -1 : 1) || x.f - y.f; });
     return list.slice(-5).map(function (f) {
-      var mine = f.h === id ? f.hg : f.ag, his = f.h === id ? f.ag : f.hg;
-      return mine > his ? "W" : mine === his ? "D" : "L";
+      var home = f.h === id, mine = home ? f.hg : f.ag, his = home ? f.ag : f.hg;
+      return { k: mine > his ? "W" : mine === his ? "D" : "L", rival: home ? f.a : f.h, mine: mine, his: his, home: home, t: f.t, f: f.f, date: f.date };
     });
+  }
+  /* partidos por jugar de un equipo (sin resultado oficial ni hora ya pasada); tor = "A", "C" o "T" (todos) */
+  function pendingOf(id, tor) {
+    var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg == null && !isOver(f) && (tor === "T" || f.t === tor); });
+    list.sort(function (x, y) { return (x.t === y.t ? 0 : x.t === "A" ? -1 : 1) || x.f - y.f; });
+    return list;
   }
 
   /* ---------- glosario de siglas (se muestra al pasar el mouse o al tocar) ---------- */
@@ -140,7 +147,8 @@
     "Pts": "Puntos del torneo: 3 por victoria y 1 por empate",
     "Pts Ap.": "Puntos obtenidos en el Torneo Apertura",
     "Pts Cl.": "Puntos obtenidos en el Torneo Clausura",
-    "Forma": "Últimos 5 partidos, del más antiguo al más reciente. G: ganó, E: empató, P: perdió",
+    "Forma": "Últimos 5 partidos, del más antiguo al más reciente. Primera letra: G ganó, E empató, P perdió. Segunda letra: L jugó de local, V de visita. Pasa el mouse o toca cada uno para ver el rival y el marcador",
+    "Pend.": "Partidos que le faltan por jugar. L: local, V: visita. Pasa el mouse o toca cada icono para ver el rival y la fecha",
     "Acum.": "Puntos acumulados de la temporada: Apertura más Clausura. Si hay un descuento por sanción solo en el acumulado, aparece junto al total",
     "Acum. hoy": "Puntos acumulados actuales, con los pronósticos que ingresaste",
     "Acum. proyectado": "Promedio de puntos acumulados al final de la temporada en las simulaciones",
@@ -185,36 +193,92 @@
     if (!d) return "";
     return '<span class="delta ' + (d > 0 ? "up" : "down") + '" title="Cambio frente a la tabla oficial">' + (d > 0 ? "▲" : "▼") + Math.abs(d) + "</span>";
   }
+  var RES = { W: ["Ganó", "G"], D: ["Empató", "E"], L: ["Perdió", "P"] };
+  function crestSrc(id) { return (window.CRESTS && window.CRESTS[id]) || "escudos/" + id + ".png"; }
+  function ttAttrs(rivalId, head, sub) {
+    return ' tabindex="0" class="tt-el" data-tt-id="' + esc(rivalId) + '" data-tt-h="' + esc(head) + '" data-tt-s="' + esc(sub) + '" aria-label="' + esc(head + ". " + sub) + '"';
+  }
   function formHtml(id) {
-    var f = formOf(id), h = "";
-    for (var i = 0; i < 5 - f.length; i++) h += '<i class="N">·</i>';
-    return '<span class="form" aria-label="Últimos resultados">' + h + f.map(function (x) { return "<i class='" + x + "' title='" + ({ W: "Ganó", D: "Empató", L: "Perdió" })[x] + "'>" + ({ W: "G", D: "E", L: "P" })[x] + "</i>"; }).join("") + "</span>";
+    var f = formDetail(id), h = "";
+    for (var i = 0; i < 5 - f.length; i++) h += '<i class="N" aria-hidden="true">\u00b7</i>';
+    return '<span class="form" aria-label="Últimos resultados">' + h + f.map(function (x) {
+      var r = BY[x.rival], name = r ? r.short : x.rival, sc = x.mine + "-" + x.his, diff = Math.abs(x.mine - x.his);
+      var head = x.k === "W" ? "Ganó " + sc + " a " + name : x.k === "D" ? "Empató " + sc + " con " + name : "Perdió " + sc + " contra " + name;
+      var sub = (x.k === "D" ? "Sin diferencia de goles" : "Por " + diff + (diff === 1 ? " gol" : " goles")) + " \u00b7 " + (x.home ? "Local" : "Visita") + " \u00b7 " + LABEL[x.t] + ", fecha " + x.f + (x.date ? " \u00b7 " + fmtDay(x.date) : "");
+      return "<i" + ttAttrs(x.rival, head, sub).replace('class="tt-el"', 'class="tt-el ' + x.k + '"') + ">" + RES[x.k][1] + (x.home ? "L" : "V") + "</i>";
+    }).join("") + "</span>";
+  }
+  function pendHtml(id, tor, cap) {
+    var list = pendingOf(id, tor);
+    if (!list.length) return '<span class="pend-none" title="Sin partidos pendientes">\u2014</span>';
+    var shown = list.slice(0, cap), more = list.length - shown.length;
+    return shown.map(function (f) {
+      var home = f.h === id, rid = home ? f.a : f.h, r = BY[rid], name = r ? r.short : rid;
+      var pr = preds[fkey(f)];
+      var head = (home ? "Local contra " : "Visita contra ") + name;
+      var sub = LABEL[f.t] + ", fecha " + f.f + (f.date ? " \u00b7 " + fmtDay(f.date, f.time) : "") + (pr ? " \u00b7 Tu pronóstico: " + pr[0] + "-" + pr[1] : "");
+      return "<span" + ttAttrs(rid, head, sub).replace('class="tt-el"', 'class="tt-el pc ' + (home ? "L" : "V") + (pr ? " pred" : "") + '"') + '><img src="' + esc(crestSrc(rid)) + '" alt="" onerror="this.remove()">' + (home ? "L" : "V") + "</span>";
+    }).join("") + (more > 0 ? '<span class="pc more" title="' + more + ' partidos más por jugar">+' + more + "</span>" : "");
   }
   function acumCell(id) {
     var row = S.T.filter(function (r) { return r.id === id; })[0];
-    var w = S.maxT ? Math.round(row.pts / S.maxT * 100) : 0;
     var d = adj("T", id);
     var dsc = d ? '<span class="dsc" title="Descuento de puntos por sanción que figura solo en el acumulado oficial">' + (d > 0 ? "+" : "\u2212") + Math.abs(d) + "</span>" : "";
-    return '<td class="acum"><div class="acum-in"><b>' + row.pts + "</b>" + dsc + '<span class="bar" role="presentation"><i style="width:' + w + '%"></i></span></div></td>';
+    return '<td class="acum"><div class="acum-in"><b>' + row.pts + "</b>" + dsc + "</div></td>";
   }
 
   function renderStd(el, key, opts) {
     var rows = key === "T" ? S.T : S[key];
     var head = "<thead><tr>" + th("#") + th("Club", "club") + th("PJ") + th("PG") + th("PE") + th("PP") + th("GF") + th("GC") + th("DG");
-    if (key === "T") head += th("Pts Ap.") + th("Pts Cl.") + th("Forma") + th("Acum.", "acumh");
-    else head += th("Pts") + th("Forma") + th("Acum.", "acumh");
+    var anyPend = rows.some(function (r) { return pendingOf(r.id, key).length; });
+    if (key === "T") head += th("Pts Ap.") + th("Pts Cl.") + th("Forma") + th("Pend.", "pendh") + th("Acum.", "acumh");
+    else head += th("Pts") + th("Forma") + th("Pend.", "pendh") + th("Acum.", "acumh");
     head += "</tr></thead>";
     var body = rows.map(function (r, i) {
       var t = BY[r.id];
       var z = key === "T" ? zoneClass(i, rows.length) : "";
       var dgc = r.dg > 0 ? " pos-n" : r.dg < 0 ? " neg-n" : "";
-      var tds = '<td class="pos' + z + '"><span class="n">' + (i + 1) + "</span>" + moveHtml(r.id, key) + '</td><td class="club">' + teamCell(t) + "</td>" +
+      var tds = '<td class="pos' + z + '"><span class="n">' + (i + 1) + "</span>" + moveHtml(r.id, key) + '</td><td class="club">' + teamCell(t) + '<span class="pend-m">' + pendHtml(r.id, key, 4) + "</span></td>" +
         "<td>" + r.pj + "</td><td>" + r.pg + "</td><td>" + r.pe + "</td><td>" + r.pp + "</td><td>" + r.gf + "</td><td>" + r.gc + '</td><td class="dg' + dgc + '">' + (r.dg > 0 ? "+" : "") + r.dg + "</td>";
-      if (key === "T") tds += "<td>" + S.pa[r.id] + "</td><td>" + S.pc[r.id] + "</td><td>" + formHtml(r.id) + "</td>" + acumCell(r.id);
-      else tds += '<td class="pts">' + r.pts + "</td><td>" + formHtml(r.id) + "</td>" + acumCell(r.id);
+      var pend = '<td class="pend">' + pendHtml(r.id, key, 6) + "</td>";
+      if (key === "T") tds += "<td>" + S.pa[r.id] + "</td><td>" + S.pc[r.id] + "</td><td>" + formHtml(r.id) + "</td>" + pend + acumCell(r.id);
+      else tds += '<td class="pts">' + r.pts + "</td><td>" + formHtml(r.id) + "</td>" + pend + acumCell(r.id);
       return '<tr class="' + (r.id === FOCUS ? "me" : "") + z.replace(" z-", " rz-") + '">' + tds + "</tr>";
     }).join("");
+    el.classList.toggle("nopend", !anyPend);
     el.innerHTML = head + "<tbody>" + body + "</tbody>";
+  }
+
+  /* ---------- globo con rival y marcador (iconos de forma y de partidos pendientes) ---------- */
+  var ttBox = null, ttCur = null;
+  function ttShow(el) {
+    if (!ttBox) { ttBox = document.createElement("div"); ttBox.className = "tt"; ttBox.setAttribute("role", "tooltip"); ttBox.hidden = true; document.body.appendChild(ttBox); }
+    var d = el.dataset;
+    ttBox.innerHTML = (d.ttId ? '<img class="tt-c" src="' + esc(crestSrc(d.ttId)) + '" alt="" onerror="this.remove()">' : "") + '<span class="tt-b"><b>' + esc(d.ttH) + "</b><i>" + esc(d.ttS) + "</i></span>";
+    ttBox.hidden = false; ttCur = el;
+    var r = el.getBoundingClientRect(), w = ttBox.offsetWidth, h = ttBox.offsetHeight;
+    var left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width / 2 - w / 2));
+    var top = r.top - h - 10; if (top < 8) top = r.bottom + 10;
+    ttBox.style.left = left + "px"; ttBox.style.top = top + "px";
+  }
+  function ttHide() { if (ttBox) ttBox.hidden = true; ttCur = null; }
+  function initTooltips() {
+    var hover = matchMedia("(hover: hover)").matches;
+    function target(e) { return e.target && e.target.closest ? e.target.closest(".tt-el") : null; }
+    if (hover) {
+      document.addEventListener("mouseover", function (e) { var el = target(e); if (el) ttShow(el); });
+      document.addEventListener("mouseout", function (e) { if (target(e)) ttHide(); });
+    }
+    document.addEventListener("focusin", function (e) { var el = target(e); if (el && hover) ttShow(el); });
+    document.addEventListener("focusout", function (e) { if (target(e)) ttHide(); });
+    document.addEventListener("click", function (e) {
+      var el = target(e);
+      if (!hover && el) { if (ttCur === el) ttHide(); else ttShow(el); } else if (!el) ttHide();
+    });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") ttHide(); });
+    function follow() { if (!ttCur) return; if (hover && document.body.contains(ttCur)) ttShow(ttCur); else ttHide(); }
+    window.addEventListener("scroll", follow, { passive: true });
+    window.addEventListener("resize", follow);
   }
 
   function renderMini() {
@@ -986,6 +1050,7 @@
       if (view === "evo") renderChart();
     });
 
+    initTooltips();
     var h = location.hash.replace("#", "");
     if (["acum", "A", "C", "cmp", "calc", "game", "evo", "pro", "uni", "hist", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
     updateNav(view);
