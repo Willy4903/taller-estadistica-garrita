@@ -117,10 +117,18 @@
     return out;
   }
 
+  /* orden cronologico: por fecha y hora reales cuando existen (los partidos reprogramados no siguen el numero de fecha); si no, por torneo y fecha */
+  function byWhen(x, y) {
+    var kx = x.date ? x.date + " " + (x.time || "00:00") : "", ky = y.date ? y.date + " " + (y.time || "00:00") : "";
+    if (kx && ky && kx !== ky) return kx < ky ? -1 : 1;
+    if (kx && !ky) return -1;
+    if (!kx && ky) return 1;
+    return (x.t === y.t ? 0 : x.t === "A" ? -1 : 1) || x.f - y.f;
+  }
   /* ultimos 5 partidos oficiales, del mas antiguo al mas reciente, con rival y marcador */
   function formDetail(id) {
     var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg != null; });
-    list.sort(function (x, y) { return (x.t === y.t ? 0 : x.t === "A" ? -1 : 1) || x.f - y.f; });
+    list.sort(byWhen);
     return list.slice(-5).map(function (f) {
       var home = f.h === id, mine = home ? f.hg : f.ag, his = home ? f.ag : f.hg;
       return { k: mine > his ? "W" : mine === his ? "D" : "L", rival: home ? f.a : f.h, mine: mine, his: his, home: home, t: f.t, f: f.f, date: f.date };
@@ -129,7 +137,7 @@
   /* partidos por jugar de un equipo (sin resultado oficial ni hora ya pasada); tor = "A", "C" o "T" (todos) */
   function pendingOf(id, tor) {
     var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg == null && !isOver(f) && (tor === "T" || f.t === tor); });
-    list.sort(function (x, y) { return (x.t === y.t ? 0 : x.t === "A" ? -1 : 1) || x.f - y.f; });
+    list.sort(byWhen);
     return list;
   }
 
@@ -308,7 +316,7 @@
   }
   function nextFixture(id) {
     var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg == null; });
-    list.sort(function (x, y) { return (x.t === y.t ? 0 : x.t === "A" ? -1 : 1) || x.f - y.f; });
+    list.sort(byWhen);
     return list[0];
   }
 
