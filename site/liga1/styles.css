@@ -908,3 +908,12 @@ table.nopend .pendh,table.nopend td.pend{display:none}
   .st-scope{width:100%}.st-scope button{flex:1;padding:9px 6px;font-size:12px}
   .sq-tabs{width:100%}.sq-tabs button{flex:1}
 }
+
+/* Pestañas: todas visibles, en varias filas si hace falta (ya no se esconden a la derecha) */
+@media (min-width:641px){
+  .tabs-bar{position:static}
+  .tabs{flex-wrap:wrap;overflow:visible;gap:0 2px}
+  .tabs button{padding:12px 13px;font-size:16px;letter-spacing:.08em}
+  .tabs button[aria-selected="true"]::after{left:8px;right:8px}
+  .calc-sum{top:calc(66px + env(safe-area-inset-top,0px))}
+}
