@@ -147,7 +147,7 @@
     "Pts": "Puntos del torneo: 3 por victoria y 1 por empate",
     "Pts Ap.": "Puntos obtenidos en el Torneo Apertura",
     "Pts Cl.": "Puntos obtenidos en el Torneo Clausura",
-    "Forma": "Últimos 5 partidos, del más antiguo al más reciente. Primera letra: G ganó, E empató, P perdió. Segunda letra: L jugó de local, V de visita. Pasa el mouse o toca cada uno para ver el rival y el marcador",
+    "Forma": "Últimos 5 partidos, del más antiguo al más reciente. Color: verde ganó, gris empató, rojo perdió. Letra: L jugó de local, V de visita. Pasa el mouse o toca cada uno para ver el rival y el marcador",
     "Pend.": "Partidos que le faltan por jugar. L: local, V: visita. Pasa el mouse o toca cada icono para ver el rival y la fecha",
     "Acum.": "Puntos acumulados de la temporada: Apertura más Clausura. Si hay un descuento por sanción solo en el acumulado, aparece junto al total",
     "Acum. hoy": "Puntos acumulados actuales, con los pronósticos que ingresaste",
@@ -205,7 +205,7 @@
       var r = BY[x.rival], name = r ? r.short : x.rival, sc = x.mine + "-" + x.his, diff = Math.abs(x.mine - x.his);
       var head = x.k === "W" ? "Ganó " + sc + " a " + name : x.k === "D" ? "Empató " + sc + " con " + name : "Perdió " + sc + " contra " + name;
       var sub = (x.k === "D" ? "Sin diferencia de goles" : "Por " + diff + (diff === 1 ? " gol" : " goles")) + " \u00b7 " + (x.home ? "Local" : "Visita") + " \u00b7 " + LABEL[x.t] + ", fecha " + x.f + (x.date ? " \u00b7 " + fmtDay(x.date) : "");
-      return "<i" + ttAttrs(x.rival, head, sub).replace('class="tt-el"', 'class="tt-el ' + x.k + '"') + ">" + RES[x.k][1] + (x.home ? "L" : "V") + "</i>";
+      return "<i" + ttAttrs(x.rival, head, sub).replace('class="tt-el"', 'class="tt-el ' + x.k + '"') + ">" + (x.home ? "L" : "V") + "</i>";
     }).join("") + "</span>";
   }
   function pendHtml(id, tor, cap) {
