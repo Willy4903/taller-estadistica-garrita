@@ -1,0 +1,7 @@
+{
+  "updated_at": "2026-10-29T10:00-05:00",
+  "source": "Escribe aquí la fuente de las tarjetas",
+  "items": [
+    { "team": "UNI", "player": "Nombre del jugador", "yellow": 3, "red": 0 }
+  ]
+}

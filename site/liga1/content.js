@@ -65,6 +65,7 @@ window.LIGA1_CONTENT = {
       { name: "Liga1.pe, tabla de posiciones", url: "https://liga1.pe/tabla-de-posiciones/", use: "Tablas oficiales de Clausura, Apertura y Acumulado. Se usan para controlar los cálculos y detectar descuentos de puntos." },
       { name: "FutbolPeruano.com, resultados del Apertura", url: "https://www.futbolperuano.com/liga-1/resultados", use: "Los 153 partidos del Apertura con marcador." },
       { name: "FutbolPeruano.com, goleadores del Apertura y del Clausura", url: "https://www.futbolperuano.com/liga-1/goleadores", use: "Tablas de goleadores de cada torneo. El acumulado de goleadores se calcula sumando ambas y uniendo a los jugadores que cambiaron de club." },
+      { name: "Análisis de equipos", url: "https://www.futbolperuano.com/liga-1/resultados", use: "Se calcula en la página con los resultados oficiales de los 306 partidos (goles, vallas invictas, local y visita, rachas); no usa otra fuente." },
       { name: "FutbolPeruano.com, Torneo Clausura", url: "https://www.futbolperuano.com/liga-1/clausura/", use: "Los 153 partidos del Clausura, jugados y por jugar, con fecha y hora. Su tabla de posiciones sirve de control." },
       { name: "Depor, tabla de posiciones del día", url: "https://depor.com/futbol-peruano/descentralizado/", use: "Tablas del Clausura y del Acumulado de la nota diaria, como segundo control. Se encuentra por el RSS de fútbol peruano." },
       { name: "Universitario.pe", url: "https://universitario.pe/", use: "Noticias, calendario del primer equipo y próximo partido de la U, con sus resultados." }
