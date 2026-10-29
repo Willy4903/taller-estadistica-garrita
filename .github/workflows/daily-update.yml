@@ -59,6 +59,10 @@ jobs:
           pip install beautifulsoup4 lxml
           python scripts/fetch_liga1.py
 
+      - name: Actualizar goleadores de la Liga 1
+        continue-on-error: true
+        run: python scripts/fetch_liga1_players.py
+
       - name: Guardar datos en el repositorio
         run: |
           git config user.name "ia-radar-bot"
