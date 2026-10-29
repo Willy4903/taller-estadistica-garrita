@@ -597,21 +597,29 @@
   }
 
   /* ---------- cinta inferior: próximos partidos ---------- */
-  function renderTicker() {
-    var pend = D.fixtures.filter(function (f) { return f.hg == null; });
+  /* partido con fecha y hora ya iniciado hace mas de 110 min (terminado): no va en la cinta */
+  function isOver(f) {
+    if (!f.date) return false;
+    var t = new Date(f.date + "T" + (f.time && /^\d{1,2}:\d{2}/.test(f.time) ? ("0" + f.time).slice(-5) : "23:59") + ":00-05:00").getTime();
+    return !isNaN(t) && Date.now() > t + 110 * 60000;
+  }
+  function tickerRun() {
+    var pend = D.fixtures.filter(function (f) { return f.hg == null && !isOver(f); });
     pend.sort(function (x, y) { return ((x.date || "9999") + (x.time || "99")).localeCompare((y.date || "9999") + (y.time || "99")) || x.f - y.f; });
-    pend = pend.slice(0, 18);
-    if (!pend.length) return;
-    var run = pend.map(function (f) {
+    return pend.slice(0, 18).map(function (f) {
       var H = BY[f.h], A = BY[f.a], me = f.h === FOCUS || f.a === FOCUS;
       return '<span class="tk' + (me ? " me" : "") + '">' + badge(H) + "<b>" + esc(H.short) + "</b><i>vs</i>" + badge(A) + "<b>" + esc(A.short) + "</b><em>" +
         esc(f.date ? fmtDay(f.date, f.time) : LABEL[f.t] + " fecha " + f.f) + "</em></span>";
     }).join("");
+  }
+  function renderTicker() {
+    var run = tickerRun();
+    if (!run) return;
     $("#tkTrack").innerHTML = '<div class="tk-run">' + run + '</div><div class="tk-run" aria-hidden="true">' + run + "</div>";
     $("#tkLiveLabel").textContent = LIVE_OK ? "Datos reales" : "Demostración";
     $("#ticker").hidden = false;
     document.body.classList.add("has-ticker");
-    var track = $("#tkTrack"), tkX = 0, tkLast = 0, tkHold = false, tkHover = false, tkW = 0;
+    var lastRun = run, track = $("#tkTrack"), tkX = 0, tkLast = 0, tkHold = false, tkHover = false, tkW = 0;
     function measure() { var r = $(".tk-run"); tkW = r ? r.getBoundingClientRect().width : 0; }
     function frame(t) {
       var dt = tkLast ? Math.min(0.1, (t - tkLast) / 1000) : 0;
@@ -625,6 +633,14 @@
       requestAnimationFrame(frame);
     }
     measure();
+    setInterval(function () {
+      var r = tickerRun();
+      if (!r) { $("#ticker").hidden = true; document.body.classList.remove("has-ticker"); return; }
+      if (r === lastRun) return;
+      lastRun = r;
+      $("#tkTrack").innerHTML = '<div class="tk-run">' + r + '</div><div class="tk-run" aria-hidden="true">' + r + "</div>";
+      tkX = 0; measure();
+    }, 60000);
     window.addEventListener("resize", measure);
     window.addEventListener("load", measure);
     if (matchMedia("(hover: hover)").matches) {
