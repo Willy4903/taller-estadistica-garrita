@@ -117,7 +117,14 @@ def merge_news(found, status, previous_items, now_utc):
     for i in merged.values():
         i.setdefault("topic", classify(i["title"] + " " + i.get("summary", "")))
     limit = (now_utc - timedelta(days=NEWS_KEEP_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    kept = sorted((i for i in merged.values() if i["published"] >= limit), key=lambda i: i["published"], reverse=True)[:NEWS_MAX_ITEMS]
+    ordered = sorted((i for i in merged.values() if i["published"] >= limit), key=lambda i: i["published"], reverse=True)
+    seen, kept = set(), []
+    for i in ordered:  # misma noticia con otro enlace: se conserva una sola
+        k = (i["source"], " ".join(i["title"].lower().split()))
+        if k not in seen:
+            seen.add(k)
+            kept.append(i)
+    kept = kept[:NEWS_MAX_ITEMS]
     status["_traducidas"] = {"ok": True, "count": translate_items(kept)}
     for i in kept:
         for k in ("title_es", "summary_es"):

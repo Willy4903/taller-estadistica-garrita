@@ -50,10 +50,14 @@
   document.addEventListener("iar:data", () => {
     const D = I.D;
     if (!D.base) { root.innerHTML = '<div class="callout warn">' + ico("triangle-alert") + "<p>No se pudo cargar el catálogo de modelos.</p></div>"; return; }
-    const ch = (D.changes && D.changes.items) || [];
-    const w = ch.filter((c) => I.daysAgo(c.date) <= 30);
-    const n = (k) => w.filter((c) => c.kind === k).length;
-    const down = w.filter((c) => c.kind.startsWith("precio") && c.after < c.before).length, up = w.filter((c) => c.kind.startsWith("precio") && c.after > c.before).length;
+    // Solo modelos base (sin alias "~", ":batch" ni variantes) y un único saldo neto por modelo y tipo de precio, para no contar vaivenes diarios.
+    const baseIds = new Set(D.base.map((m) => m.id));
+    const w = ((D.changes && D.changes.items) || []).filter((c) => I.daysAgo(c.date) <= 30 && baseIds.has(c.id)).sort((a, b) => a.date.localeCompare(b.date));
+    const net = {};
+    w.filter((c) => c.kind.startsWith("precio")).forEach((c) => { const k = c.id + "|" + c.kind; (net[k] = net[k] || { before: c.before, after: c.after }).after = c.after; });
+    const nets = Object.values(net).filter((x) => x.before !== x.after);
+    const down = nets.filter((x) => x.after < x.before).length, up = nets.filter((x) => x.after > x.before).length;
+    const n = (k) => new Set(w.filter((c) => c.kind === k).map((c) => c.id)).size;
     const tabs = [["modelos", "Modelos"], ["capacidades", "Capacidades"], ["contexto", "Contexto"], ["precios", "Precios"], ["benchmarks", "Benchmarks"], ["anuncios", "APIs, planes, agentes y productos"]];
     root.innerHTML = `
       <div class="sec-head"><p class="kicker"><b>02</b> Qué cambió</p><h2 id="t-cambios">Antes → ahora</h2>
