@@ -864,3 +864,47 @@ table.nopend .pendh,table.nopend td.pend{display:none}
   .pl-scope{width:100%}.pl-scope button{flex:1;padding:9px 6px;font-size:12px}
   .pl-teamsel{width:100%}.pl-teamsel select{width:100%}
 }
+
+/* Análisis de equipos */
+.st-scope button,.sq-tabs button{font:700 13px var(--disp);letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border:0;background:transparent;color:var(--muted);cursor:pointer;min-height:40px}
+.st-scope button[aria-pressed="true"],.sq-tabs button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.st-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 16px}
+.st-sum .fx{display:grid;gap:4px;align-content:start}
+.st-sum small{font:700 12px var(--disp);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.st-sum b{font:800 34px/1 var(--disp);letter-spacing:.02em}
+.st-sum span{color:var(--muted);font-size:12.5px}
+.st-tri{display:flex;height:8px;border-radius:99px;overflow:hidden;margin-top:4px;background:var(--line)}
+.st-tri u{display:block;height:100%}.st-tri u:nth-child(1){background:var(--accent)}.st-tri u:nth-child(2){background:#8A7B55}.st-tri u:nth-child(3){background:var(--z-sud)}
+.st-chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.st-chip{font:700 13px var(--disp);letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer;min-height:40px}
+.st-chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.st-ficha{margin-top:12px;padding:16px;border-radius:22px;border:1px solid var(--glass-line,var(--line));background:var(--glass,var(--card));box-shadow:var(--glass-sh,none)}
+.st-head{display:grid;grid-template-columns:auto 1fr;column-gap:12px;row-gap:2px;align-items:center;margin-bottom:14px}
+.st-head .badge{grid-row:1 / span 2;width:52px;height:52px}
+.st-head b{font:800 22px var(--disp);letter-spacing:.03em}
+.st-head span{color:var(--muted);font-size:13.5px}
+.st-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.st-tile{display:grid;gap:2px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+.st-tile small{font:700 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.st-tile b{font:800 26px/1.05 var(--disp);color:var(--gold)}
+.st-tile span{font-size:12.5px;color:var(--muted)}
+.st-facts{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:6px;font-size:14px}
+.st-facts b{color:var(--ink)}
+/* Plantel */
+.sq-row{grid-template-columns:104px 1fr minmax(160px,1.2fr)}
+.sq-st{justify-self:start;font:800 12px var(--disp);letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:99px;border:1px solid var(--line)}
+.sq-st.lesionado{color:var(--bad);border-color:var(--bad)}.sq-st.duda{color:var(--gold);border-color:var(--gold)}.sq-st.sancionado{color:var(--z-sud);border-color:var(--z-sud)}
+.sq-info{display:grid;gap:2px}.sq-info b{font-weight:600}.sq-info small{color:var(--muted);font-size:12.5px}
+.sq-row:has(.pl-r){grid-template-columns:34px 1fr auto}
+.sq-cards{display:flex;gap:8px}
+.sq-cards i{display:grid;place-items:center;min-width:34px;height:40px;border-radius:6px;font:800 18px var(--disp);font-style:normal}
+.sq-cards .yc{background:#F2C230;color:#1B0F11}.sq-cards .rc{background:#D1344A;color:#fff}
+#moreList button[hidden]{display:none}
+@media (max-width:860px){
+  .st-sum{grid-template-columns:repeat(2,1fr);gap:8px}.st-sum b{font-size:28px}
+  .st-tiles{grid-template-columns:repeat(2,1fr)}
+  .sq-row{grid-template-columns:1fr;gap:6px}
+  .sq-row:has(.pl-r){grid-template-columns:28px 1fr auto}
+  .st-scope{width:100%}.st-scope button{flex:1;padding:9px 6px;font-size:12px}
+  .sq-tabs{width:100%}.sq-tabs button{flex:1}
+}

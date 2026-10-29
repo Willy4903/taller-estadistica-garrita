@@ -1,0 +1,15 @@
+{
+  "updated_at": "2026-10-29T10:00-05:00",
+  "source": "Parte médico del club / nota de prensa (escribe aquí la fuente)",
+  "items": [
+    {
+      "team": "UNI",
+      "player": "Nombre del jugador",
+      "injury": "Tipo de lesión",
+      "status": "lesionado",
+      "since": "2026-10-20",
+      "return": "2026-11-10",
+      "note": "Detalle opcional"
+    }
+  ]
+}
