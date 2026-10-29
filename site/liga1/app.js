@@ -902,6 +902,64 @@
     $$(".zone-legend").forEach(function (el) { el.innerHTML = legendHtml(); });
   }
 
+
+  /* ---------- Goleadores ---------- */
+  var PLAYERS = window.PLAYERS || null, plScope = "T", plTeam = "", plAll = false;
+  function loadPlayers() {
+    if (PLAYERS) return plReady();
+    if (!window.fetch) return;
+    fetch("data/players.json?v=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; })
+      .then(function (j) { if (j && j.scorers) { PLAYERS = j; plReady(); } });
+  }
+  function plReady() {
+    $("#t-players").hidden = false;
+    if (view === "players") { renderPlayers(); centerTab(); }
+  }
+  function plRow(it, max, scope) {
+    var t = BY[it.t], me = it.t === FOCUS, w = max ? Math.round(it.g / max * 100) : 0;
+    var split = scope === "T" ? '<span class="pl-split">Ap. ' + it.a + " \u00b7 Cl. " + it.c + "</span>" : "";
+    var from = it.from && BY[it.from] ? '<span class="pl-from">desde ' + esc(BY[it.from].short) + "</span>" : "";
+    return '<li class="pl-row' + (me ? " me" : "") + '"><span class="pl-r">' + it.r + "</span>" +
+      '<span class="pl-who"><b>' + esc(it.n) + "</b><span class=\"pl-team\">" + (t ? badge(t) + "<em>" + esc(t.short) + "</em>" : esc(it.t)) + from + "</span></span>" +
+      '<span class="pl-g"><b>' + it.g + '</b><i class="pl-bar" aria-hidden="true"><u style="width:' + w + '%"></u></i>' + split + "</span></li>";
+  }
+  function renderPlayers() {
+    var box = $("#plBox");
+    if (!box) return;
+    if (!PLAYERS) { box.innerHTML = '<p class="note">Cargando goleadores…</p>'; return; }
+    var all = PLAYERS.scorers[plScope] || [], max = all.length ? all[0].g : 0;
+    var list = plTeam ? all.filter(function (x) { return x.t === plTeam || x.from === plTeam; }) : all;
+    var scopes = [["T", "Acumulado"], ["A", "Apertura"], ["C", "Clausura"]];
+    var teams = TEAMS.slice().sort(function (a, b) { return a.short < b.short ? -1 : 1; });
+    var ctrl = '<div class="pl-tools"><div class="seg pl-scope" role="group" aria-label="Torneo">' + scopes.map(function (s) {
+      return '<button type="button" data-s="' + s[0] + '" aria-pressed="' + (plScope === s[0]) + '">' + s[1] + "</button>";
+    }).join("") + '</div><label class="sel pl-teamsel"><span class="sr-only">Filtrar por equipo</span><select id="plTeam"><option value="">Todos los equipos</option>' +
+      teams.map(function (t) { return '<option value="' + t.id + '"' + (plTeam === t.id ? " selected" : "") + ">" + esc(t.short) + "</option>"; }).join("") + "</select></label></div>";
+    var head = "";
+    if (!plTeam) {
+      var top = all.slice(0, 3);
+      head = '<div class="pl-podium">' + top.map(function (it) {
+        var t = BY[it.t];
+        return '<div class="pl-pod' + (it.t === FOCUS ? " me" : "") + '"><span class="pl-pr">' + it.r + "\u00ba</span>" + (t ? badge(t) : "") + "<b>" + esc(it.n) + "</b><small>" + (t ? esc(t.short) : "") + '</small><span class="pl-pg">' + it.g + "<i>goles</i></span></div>";
+      }).join("") + "</div>";
+    }
+    var mine = all.filter(function (x) { return x.t === FOCUS; })[0];
+    var uCard = !plTeam && mine ? '<div class="pl-u"><small>Mejor goleador de la U</small><b>' + esc(mine.n) + "</b><span>" + mine.g + (mine.g === 1 ? " gol" : " goles") + " \u00b7 puesto " + mine.r + "\u00ba del torneo</span></div>" : "";
+    var limit = plTeam || plAll ? list.length : 25, rows = list.slice(0, limit).map(function (it) { return plRow(it, max, plScope); }).join("");
+    var more = !plTeam && list.length > 25 ? '<button type="button" class="btn pl-more">' + (plAll ? "Ver menos" : "Ver todos (" + list.length + ")") + "</button>" : "";
+    var tgoals = plTeam ? '<p class="pl-sum">' + esc(BY[plTeam].short) + ": " + list.reduce(function (s, x) { return s + x.g; }, 0) + " goles de " + list.length + " jugadores en la tabla de " + ({ T: "acumulado", A: "Apertura", C: "Clausura" })[plScope] + ".</p>" : "";
+    box.innerHTML = ctrl + head + uCard + tgoals + (rows ? '<ol class="pl-list">' + rows + "</ol>" : '<p class="note">Sin goleadores en esta tabla.</p>') + more +
+      '<p class="note">Fuente: tablas de goleadores del Apertura y del Clausura de <a href="https://www.futbolperuano.com/liga-1/goleadores" target="_blank" rel="noopener noreferrer">futbolperuano.com</a>, actualizadas ' + esc(fmtStamp(PLAYERS.updated_at)) +
+      ". El acumulado suma ambos torneos. Los nombres son los que publica la fuente (a veces abreviados o repetidos para un mismo jugador), así que pueden diferir de otras estadísticas.</p>";
+    $$("#plBox .pl-scope button").forEach(function (b) { b.addEventListener("click", function () { plScope = b.dataset.s; plAll = false; renderPlayers(); }); });
+    var sel = $("#plTeam");
+    if (sel) sel.addEventListener("change", function () { plTeam = sel.value; renderPlayers(); });
+    var mb = $("#plBox .pl-more");
+    if (mb) mb.addEventListener("click", function () { plAll = !plAll; renderPlayers(); });
+  }
+
   /* ---------- orquestación ---------- */
   var view = "acum", proStale = true;
   function renderAll(fromCalc) {
@@ -918,12 +976,18 @@
     if (view === "pro") { renderPro(); proStale = false; }
     if (fromCalc) return;
   }
+  function centerTab() {
+    var b = $('.tabs button[aria-selected="true"]'), bar = b && b.parentNode;
+    if (b && !b.hidden && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = Math.max(0, b.offsetLeft - (bar.clientWidth - b.offsetWidth) / 2);
+  }
   function show(v) {
     view = v;
     $$(".tabs button").forEach(function (b) { b.setAttribute("aria-selected", String(b.dataset.view === v)); });
+    centerTab();
     $$(".view").forEach(function (s) { s.hidden = s.id !== "v-" + v; });
     if (v === "evo") { initChips(); renderMatrix(); renderChart(); }
     if (v === "cmp") renderCmp();
+    if (v === "players") renderPlayers();
     if (v === "pro" && proStale) { renderPro(); proStale = false; }
     if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
     document.body.setAttribute("data-view", v);
@@ -942,7 +1006,7 @@
   };
 
   /* ---------- navegación para celular ---------- */
-  var NAVGROUP = { acum: "tabla", A: "tabla", C: "tabla", cmp: "tabla", calc: "calc", game: "game", uni: "uni", evo: "more", pro: "more", hist: "more", glos: "more", src: "more" };
+  var NAVGROUP = { acum: "tabla", A: "tabla", C: "tabla", cmp: "tabla", players: "more", calc: "calc", game: "game", uni: "uni", evo: "more", pro: "more", hist: "more", glos: "more", src: "more" };
   var lastTabla = "acum";
   function svg(d, fill) { return '<svg viewBox="0 0 24 24" aria-hidden="true" class="ni"' + (fill ? ' fill="currentColor"' : ' fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"') + '><path d="' + d + '"/></svg>'; }
   function updateNav(v) {
@@ -967,7 +1031,7 @@
         show(g === "tabla" ? lastTabla : g); window.scrollTo(0, 0);
       });
     });
-    var more = [["evo", "Evolución de puntos"], ["pro", "Pronósticos"], ["hist", "Historia del club"], ["glos", "Glosario"], ["src", "Fuentes"]];
+    var more = [["players", "Goleadores"], ["evo", "Evolución de puntos"], ["pro", "Pronósticos"], ["hist", "Historia del club"], ["glos", "Glosario"], ["src", "Fuentes"]];
     $("#moreList").innerHTML = more.map(function (m) { return '<button type="button" data-v="' + m[0] + '">' + m[1] + "</button>"; }).join("") + '<button type="button" id="moreTheme">Cambiar tema claro u oscuro</button>';
     $$("#moreList button[data-v]").forEach(function (b) { b.addEventListener("click", function () { closeSheet(); show(b.dataset.v); window.scrollTo(0, 0); }); });
     $("#moreTheme").addEventListener("click", function () { $("#themeBtn").click(); });
@@ -1059,8 +1123,9 @@
     });
 
     initTooltips();
+    loadPlayers();
     var h = location.hash.replace("#", "");
-    if (["acum", "A", "C", "cmp", "calc", "game", "evo", "pro", "uni", "hist", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
+    if (["acum", "A", "C", "cmp", "players", "calc", "game", "evo", "pro", "uni", "hist", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
     updateNav(view);
     if (window.LIGA1_STATS_INIT) window.LIGA1_STATS_INIT(L1);
     if (window.LIGA1_GAME_INIT) window.LIGA1_GAME_INIT(L1);

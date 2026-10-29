@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="styles.css?v=11">
+<link rel="stylesheet" href="styles.css?v=12">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="paw" viewBox="0 0 24 24"><path fill="currentColor" d="M12 12c-3 0-6 3.5-6 6 0 2 1.5 3 3 3 1.2 0 2-.6 3-.6s1.8.6 3 .6c1.5 0 3-1 3-3 0-2.5-3-6-6-6z"/><ellipse fill="currentColor" cx="5.5" cy="9.5" rx="1.9" ry="2.5"/><ellipse fill="currentColor" cx="9.8" cy="5.8" rx="1.9" ry="2.6"/><ellipse fill="currentColor" cx="14.2" cy="5.8" rx="1.9" ry="2.6"/><ellipse fill="currentColor" cx="18.5" cy="9.5" rx="1.9" ry="2.5"/></symbol></svg>
@@ -66,6 +66,7 @@
     <button role="tab" id="t-evo" aria-selected="false" data-view="evo">Evolución de puntos</button>
     <button role="tab" id="t-pro" aria-selected="false" data-view="pro">Pronósticos</button>
     <button role="tab" id="t-uni" aria-selected="false" data-view="uni" hidden>La U hoy</button>
+    <button role="tab" id="t-players" aria-selected="false" data-view="players" hidden>Goleadores</button>
     <button role="tab" id="t-hist" aria-selected="false" data-view="hist">Historia</button>
     <button role="tab" id="t-glos" aria-selected="false" data-view="glos">Glosario</button>
     <button role="tab" id="t-src" aria-selected="false" data-view="src">Fuentes</button>
@@ -181,6 +182,16 @@
     <div id="gameBox"></div>
   </section>
 
+  <section id="v-players" class="view" hidden aria-labelledby="t-players">
+    <div class="view-head">
+      <div>
+        <h2>Goleadores</h2>
+        <p class="sub">Los máximos anotadores de la Liga 1 2026 en el acumulado, el Apertura y el Clausura, por equipo.</p>
+      </div>
+    </div>
+    <div id="plBox"></div>
+  </section>
+
   <section id="v-hist" class="view" hidden aria-labelledby="t-hist">
     <div class="view-head"><div><h2>Historia y datos del hincha crema</h2><p class="sub">Un repaso por el club, su estadio y sus fechas clave. Cada dato lleva su fuente.</p></div></div>
     <div id="histBox"></div>
@@ -252,6 +263,6 @@
 <script src="content.js?v=3"></script>
 <script src="game.js?v=2"></script>
 <script src="stats.js?v=1"></script>
-<script src="app.js?v=14"></script>
+<script src="app.js?v=15"></script>
 </body>
 </html>
