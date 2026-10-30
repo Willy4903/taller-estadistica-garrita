@@ -247,6 +247,30 @@ def compare(rows, computed, adjust=None):
     return ok, diffs
 
 
+def infer_missing(fixtures, official_c, today):
+    """Completa partidos ya jugados que la fuente de calendario aún no marca con marcador.
+
+    Liga1.pe actualiza su tabla antes que los calendarios. Si dos clubes tienen un partido más en la tabla oficial del
+    Clausura que en la suma de marcadores, y los goles a favor y en contra de ambos cuadran con un partido pendiente
+    entre ellos de fecha ya pasada, ese es el marcador."""
+    comp = tally(fixtures, "C")
+    gap = {}
+    for r in official_c:
+        c = comp[r["id"]]
+        if r["pj"] == c["pj"] + 1:
+            gap[r["id"]] = (r["gf"] - c["gf"], r["gc"] - c["gc"])
+    done = []
+    for f in fixtures:
+        if f["t"] != "C" or f["hg"] is not None or not f.get("date") or f["date"] > today:
+            continue
+        h, a = gap.get(f["h"]), gap.get(f["a"])
+        if h and a and h[0] == a[1] and h[1] == a[0]:
+            f["hg"], f["ag"], f["inf"] = h[0], a[0], 1
+            done.append(f'{f["h"]} {f["hg"]}-{f["ag"]} {f["a"]}')
+            gap.pop(f["h"]); gap.pop(f["a"])
+    return done
+
+
 def compute_adjust(official, fixtures, old=None):
     """Ajustes por club (sanciones) para que la página coincida con el Acumulado oficial.
 
@@ -405,6 +429,11 @@ def main():
         log("Liga1.pe tablas", url, False, str(e)[:200])
         official = out.get("official")
 
+    if official and fixtures:
+        filled = infer_missing(fixtures, official["C"], now.strftime("%Y-%m-%d"))
+        if filled:
+            log("Marcadores completados con la tabla de Liga1.pe", "https://liga1.pe/tabla-de-posiciones/", True, "; ".join(filled))
+
     # 3) Controles cruzados
     others = {}
     url = "https://www.futbolperuano.com/liga-1/clausura/tabla-de-posiciones"
@@ -424,6 +453,12 @@ def main():
         log("Depor tablas", d["url"], True, ", ".join(k for k in d if k != "url"))
     except Exception as e:  # noqa: BLE001
         log("Depor tablas", url, False, str(e)[:200])
+
+    fp = others.get("FutbolPeruano", {}).get("C")
+    if fixtures and fp and all(r.get("gf") is not None and r.get("gc") is not None for r in fp):
+        filled = infer_missing(fixtures, fp, now.strftime("%Y-%m-%d"))
+        if filled:
+            log("Marcadores completados con la tabla de FutbolPeruano", "https://www.futbolperuano.com/liga-1/clausura/tabla-de-posiciones", True, "; ".join(filled))
 
     # 4) Ajustes: diferencia entre cada tabla oficial y la suma de los partidos (sanciones y correcciones de la liga).
     #    La página muestra las tablas tal como las publica Liga1.pe: Apertura, Clausura y Acumulado.

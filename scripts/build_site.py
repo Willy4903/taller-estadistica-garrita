@@ -35,7 +35,7 @@ def shell(path, title, desc, body, root="", scripts=(), need="", ld=None, page="
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{url}">
 <meta property="og:locale" content="es_PE">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313151c'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M16 16 L24 10' stroke='%238da0ff' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <script>document.documentElement.classList.remove("js-off");</script>
 {ld_html}<link rel="stylesheet" href="{root}css/radar.css?v=__V__">
 <link rel="stylesheet" href="{root}css/sections.css?v=__V__">
