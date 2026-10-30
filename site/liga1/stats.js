@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  var GC_CODE = "";
+  var GC_CODE = "luwiuni";
   var VISITOR = "liga1-visitor", OPTOUT = "liga1-nostats";
   var MILESTONES = [30, 60, 180, 300, 600];
 
