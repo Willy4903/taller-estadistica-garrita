@@ -1486,7 +1486,7 @@
     fetch("data/live.json?v=" + Date.now(), { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (next) {
-        if (!next || !next.complete || next.fixtures.length < 300) return;
+        if (!next || !next.complete || !next.fixtures || next.fixtures.length < 300) return;
         if (publishedStamp === null) { publishedStamp = next.updated_at; return; }
         if (publishedStamp !== next.updated_at) pendingReload = true;
         if (pendingReload && (!window.__L1 || window.__L1.canAutoRefresh())) {
