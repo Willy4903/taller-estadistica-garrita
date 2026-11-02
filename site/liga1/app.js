@@ -933,7 +933,7 @@
     } else {
       h += '<p class="note">Esta vista usa datos de demostración. Con los datos reales aquí aparece el estado de cada lectura.</p>';
     }
-    h += '<h3 class="mt">Cómo se actualiza</h3><ol class="how"><li>Cada día, hacia las 8:00 a. m. (hora de Lima), un proceso automático de GitHub Actions lee las fuentes de arriba.</li>' +
+    h += '<h3 class="mt">Cómo se actualiza</h3><ol class="how"><li>La actualización general se ejecuta diariamente. Durante los partidos programados, una revisión adicional consulta marcadores cada 10 minutos aproximadamente (sujeta a demoras de GitHub Actions y de las fuentes).</li>' +
       "<li>Los puntos se calculan sumando los marcadores de los 306 partidos y se comparan con las tablas oficiales de Liga1.pe, con FutbolPeruano y con Depor.</li>" +
       "<li>El Acumulado oficial manda: Apertura más Clausura más los descuentos por sanción siempre da el Acumulado. Si una tabla de torneo está desactualizada, se usa la suma de los marcadores y se informa en el aviso de datos.</li>" +
       "<li>Si una fuente no responde, se mantiene el último dato válido y la falla queda registrada en la tabla de estado.</li></ol>" +
