@@ -933,7 +933,7 @@
     } else {
       h += '<p class="note">Esta vista usa datos de demostración. Con los datos reales aquí aparece el estado de cada lectura.</p>';
     }
-    h += '<h3 class="mt">Cómo se actualiza</h3><ol class="how"><li>Cada día, hacia las 8:00 a. m. (hora de Lima), un proceso automático de GitHub Actions lee las fuentes de arriba.</li>' +
+    h += '<h3 class="mt">Cómo se actualiza</h3><ol class="how"><li>La actualización general se ejecuta diariamente. Durante los partidos programados, una revisión adicional consulta marcadores cada 10 minutos aproximadamente (sujeta a demoras de GitHub Actions y de las fuentes).</li>' +
       "<li>Los puntos se calculan sumando los marcadores de los 306 partidos y se comparan con las tablas oficiales de Liga1.pe, con FutbolPeruano y con Depor.</li>" +
       "<li>El Acumulado oficial manda: Apertura más Clausura más los descuentos por sanción siempre da el Acumulado. Si una tabla de torneo está desactualizada, se usa la suma de los marcadores y se informa en el aviso de datos.</li>" +
       "<li>Si una fuente no responde, se mantiene el último dato válido y la falla queda registrada en la tabla de estado.</li></ol>" +
@@ -1339,6 +1339,7 @@
 
   var listeners = {};
   var L1 = window.__L1 = {
+    canAutoRefresh: function () { return !predsOn && !document.querySelector("#fixtures input:focus") && !document.querySelector("#gloSearch:focus"); },
     D: D, BY: BY, TEAMS: TEAMS, FOCUS: FOCUS, LIVE_OK: LIVE_OK, esc: esc, fkey: fkey, badge: badge, fmtDay: fmtDay, fmtWhen: fmtWhen,
     getPreds: function () { return preds; }, getS: function () { return S; }, view: function () { return view; }, show: function (v) { show(v); },
     crest: function (id) { return (window.CRESTS && window.CRESTS[id]) || "escudos/" + id + ".png"; },
@@ -1394,7 +1395,7 @@
         if (items.length) notes.push(NAMES[tor] + ": " + items.join(", "));
       });
       var stale = (live.notes && live.notes.apertura_liga1pe) || {}, sk = Object.keys(stale);
-      $("#liveInfoText").innerHTML = "<strong>Datos reales.</strong> Actualizado el " + fmtStamp(live.updated_at) + " (hora de Lima) y renovado todos los días hacia las 8:00 a. m. " +
+      $("#liveInfoText").innerHTML = "<strong>Datos reales.</strong> Actualizado el " + fmtStamp(live.updated_at) + " (hora de Lima). Durante los partidos se comprueban nuevos resultados periódicamente. " +
         "Tablas: Liga1.pe, FutbolPeruano y Depor. Noticias y calendario de la U: universitario.pe." +
         (notes.length ? " Descuentos de puntos por sanción (" + notes.join("; ") + ")." : "") +
         (sk.length ? " La tabla de Apertura de Liga1.pe aún muestra " + sk.map(function (k) { return BY[k].short + " " + stale[k][0]; }).join(" y ") + "; la página usa " +
@@ -1477,13 +1478,43 @@
   init();
   }
 
-  function start() {
-    if (window.LIVE) return boot(window.LIVE);
-    if (!window.fetch) return boot(null);
+  // Comprueba datos publicados sin recargar durante ediciones o predicciones activas.
+  var publishedStamp = null, checking = false, pendingReload = false;
+  function pollPublishedData() {
+    if (document.hidden || checking || !window.fetch) return;
+    checking = true;
     fetch("data/live.json?v=" + Date.now(), { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .catch(function () { return null; })
-      .then(function (j) { boot(j); });
+      .then(function (next) {
+        if (!next || !next.complete || !next.fixtures || next.fixtures.length < 300) return;
+        if (publishedStamp === null) { publishedStamp = next.updated_at; return; }
+        if (publishedStamp !== next.updated_at) pendingReload = true;
+        if (pendingReload && (!window.__L1 || window.__L1.canAutoRefresh())) {
+          window.location.reload();
+        }
+      })
+      .catch(function () { /* usar datos ya cargados */ })
+      .then(function () { checking = false; });
+  }
+  function start() {
+    if (window.LIVE) {
+      publishedStamp = window.LIVE.updated_at || null;
+      boot(window.LIVE);
+    } else if (!window.fetch) {
+      boot(null);
+    } else {
+      fetch("data/live.json?v=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; })
+        .then(function (j) {
+          publishedStamp = j && j.updated_at || null;
+          boot(j);
+        });
+    }
+    setInterval(pollPublishedData, 120000);
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) pollPublishedData();
+    });
   }
   start();
 })();
