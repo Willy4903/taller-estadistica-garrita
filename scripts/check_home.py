@@ -87,14 +87,14 @@ def main():
         if not file.is_file() or not 15000 < file.stat().st_size < 6_000_000:
             raise AssertionError(f"Falta fotografía JPEG válida: {name}")
         with file.open("rb") as img:
-            if img.read(3) != b"\\xff\\xd8\\xff":
+            if img.read(3) != b"\xff\xd8\xff":
                 raise AssertionError(f"La fotografía no es JPEG: {name}")
             img.seek(-2, 2)
-            if img.read(2) != b"\\xff\\xd9":
+            if img.read(2) != b"\xff\xd9":
                 raise AssertionError(f"JPEG incompleto: {name}")
         if f'url("../visual/photos/{name}")' not in css:
             raise AssertionError(f"No se usa la fotografía real: {name}")
-    if re.search(r'url\\("../visual/ai-(?:hero|news|models|learn)\\.svg"\\)', css):
+    if re.search(r'url\("../visual/ai-(?:hero|news|models|learn)\.svg"\)', css):
         raise AssertionError("El diseño sigue usando ilustraciones SVG")
     if 'visual-hero-credit' not in html or 'visual-photo-credits' not in html:
         raise AssertionError("Faltan atribuciones fotográficas y procedencia")
