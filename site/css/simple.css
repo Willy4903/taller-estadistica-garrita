@@ -40,3 +40,8 @@
  .simple-topic-filter .chips{max-height:220px;overflow-y:auto}
 }
 @media(prefers-reduced-motion:reduce){.stage .simple-start>a{transition:none}.stage .simple-start>a:hover{transform:none}}
+
+.simple-sb-route>summary{cursor:pointer;color:var(--ink);font:700 .82rem/1.5 "Inter",sans-serif;padding:7px 1px;list-style-position:inside}
+.simple-sb-route>.bar{margin:7px 0}
+.simple-sb-route>ol{margin-top:10px}
+.simple-sb-route[open]>summary{margin-bottom:6px}
