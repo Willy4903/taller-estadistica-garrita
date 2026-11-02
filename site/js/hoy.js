@@ -58,7 +58,7 @@
     const rest = pool.map((x) => x.n).filter((n) => !auto.some((a) => a.url === n.link)).slice(0, 12);
     return { items: pinned.concat(auto).slice(0, 5), rest };
   }
-  const LEVEL = { 1: "Nivel 1 · Fuente oficial", 2: "Nivel 2 · Paper", 3: "Nivel 3 · Benchmark independiente", 4: "Nivel 4 · Prensa especializada", 5: "Nivel 5 · Señal inicial" };
+  const LEVEL = { 1: "Fuente oficial", 2: "Publicación de investigación", 3: "Comparación independiente", 4: "Prensa especializada", 5: "Información preliminar" };
 
   function paint(D) {
     let { items, rest } = pick(D), fallback = false; if (!items.length && st.period === "24H") { const prev = st.period; st.period = "7D"; const r = pick(D); st.period = prev; if (r.items.length) { items = r.items; rest = r.rest; fallback = true; } }
@@ -87,12 +87,12 @@
   document.addEventListener("iar:data", () => {
     const D = I.D;
     root.innerHTML = `
-      <div class="sec-head"><p class="kicker"><b>01</b> Qué está pasando</p><h2 id="t-hoy">Hoy en IA</h2>
-        <p class="lead">Lo que de verdad importa, sin llenar la pantalla de noticias menores. Cada punto dice qué pasó, por qué importa y a quién afecta.</p>
+      <div class="sec-head"><p class="kicker"><b>01</b> Lo importante</p><h2 id="t-hoy">Novedades de inteligencia artificial</h2>
+        <p class="lead">Lee primero qué ocurrió, luego por qué es importante. Cada noticia conserva su fecha y un enlace a la fuente original.</p>
         ${D.news && D.news.updated_at ? `<p class="muted mono">Datos al ${esc(fmtDate(D.news.updated_at.slice(0, 10)))}</p>` : ""}</div>
       <div class="hoy-bar">
-        <div class="seg" role="group" aria-label="Periodo">${Object.keys(PERIODS).map((p) => `<button type="button" data-p="${p}" aria-pressed="${p === st.period}">${p}</button>`).join("")}</div>
-        <div class="chips" role="group" aria-label="Categorías">${["Todas", ...Object.keys(CATS)].map((c) => `<button type="button" class="chip-btn" data-c="${esc(c)}" aria-pressed="${c === st.cat}">${esc(c)}</button>`).join("")}</div>
+        <div class="simple-period"><span class="simple-period-label">Noticias de:</span><div class="seg" role="group" aria-label="Periodo">${Object.keys(PERIODS).map((p) => `<button type="button" data-p="${p}" aria-pressed="${p === st.period}">${({ "24H": "24 horas", "7D": "7 días", "30D": "30 días" })[p]}</button>`).join("")}</div></div>
+        <details class="simple-topic-filter"><summary>Filtrar por tema (opcional)</summary><div class="chips" role="group" aria-label="Categorías">${["Todas", ...Object.keys(CATS)].map((c) => `<button type="button" class="chip-btn" data-c="${esc(c)}" aria-pressed="${c === st.cat}">${esc(c)}</button>`).join("")}</div></details>
       </div>
       <div id="hoy-list" aria-live="polite"></div>
       <details id="hoy-more" class="hoy-more"><summary>Otras noticias del periodo</summary><ul></ul></details>

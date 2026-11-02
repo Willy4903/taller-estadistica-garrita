@@ -2,19 +2,11 @@ name: Actualización diaria y despliegue
 
 on:
   schedule:
-    # Meta: datos publicados a las 11:00 pm y a las 8:00 am de Lima (UTC-5, sin horario de verano).
-    # GitHub retrasa mucho las ejecuciones programadas (a veces horas), por eso hay varios
-    # horarios escalonados antes de cada hora meta; si una corre, las demás solo refrescan.
-    # Noche: 03:07, 03:47 y 04:27 UTC = 10:07, 10:47 y 11:27 pm en Lima.
-    - cron: "7 3 * * *"
-    - cron: "47 3 * * *"
-    - cron: "27 4 * * *"
-    # Mañana: 09:17, 10:07, 10:47, 11:47 y 12:37 UTC = 4:17, 5:07, 5:47, 6:47 y 7:37 am en Lima.
-    - cron: "17 9 * * *"
-    - cron: "7 10 * * *"
-    - cron: "47 10 * * *"
-    - cron: "47 11 * * *"
-    - cron: "37 12 * * *"
+    # Dos consultas programadas: 08:05 y 20:05, hora de Lima (UTC-5).
+    # 13:05 UTC = 08:05 Lima; 01:05 UTC = 20:05 Lima del día previo.
+    # GitHub Actions puede retrasar las ejecuciones programadas.
+    - cron: "5 13 * * *"
+    - cron: "5 1 * * *"
   workflow_dispatch:
   push:
     branches: [main]
@@ -41,6 +33,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Validar portada y automatización de IA Radar
+        run: |
+          python scripts/check_home.py
+          node --check site/js/core.js
+          node --check site/js/hoy.js
+          node --check site/js/hero.js
 
       - uses: actions/cache@v4
         with:

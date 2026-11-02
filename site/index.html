@@ -31,9 +31,10 @@
 <link rel="stylesheet" href="css/learn.css?v=__V__">
 <link rel="stylesheet" href="css/futuro.css?v=__V__">
 <link rel="stylesheet" href="css/stage.css?v=__V__">
+<link rel="stylesheet" href="css/simple.css?v=__V__">
 </head>
 <body data-page="home" data-root="" data-v="__V__" id="top">
-<a class="skip" href="#ruta">Saltar al contenido</a>
+<a class="skip" href="#hoy">Saltar al contenido</a>
 <div id="site-header"></div>
 
 <main>
@@ -43,24 +44,24 @@
       <div class="st-col st-c">
         <div class="st-head">
           <p class="st-badge">Observatorio de inteligencia artificial en español</p>
-          <h1 id="h1"><span class="st-title">IA Radar</span><span class="st-tag">Lo importante de la inteligencia artificial, explicado con datos.</span></h1>
-          <div class="st-cta"><a class="btn big" href="#hoy" data-track="clic_hero_explorar">Explorar datos</a><a class="btn big ghost" href="#ruta" data-track="clic_hero_ruta">Ver mi ruta</a></div>
+          <h1 id="h1"><span class="st-title">IA Radar</span><span class="st-tag">Entiende qué pasa con la IA y cómo aprovecharla en tu vida o trabajo.</span></h1>
+          <div class="st-cta"><a class="btn big" href="#hoy" data-track="clic_hero_explorar">Ver novedades</a><a class="btn big ghost" href="#ruta" data-track="clic_hero_ruta">Aprender desde cero</a></div>
           <div class="statusbar" id="hero-meta"><i class="live"></i><span id="updated">Cargando datos…</span></div>
         </div>
         <div class="insight" id="insight" aria-live="polite" aria-label="Insight del día"></div>
       </div>
     </div>
-    <div class="kpis" id="st-kpi" aria-label="Indicadores del catálogo"></div>
-    <div class="start" aria-label="Empieza aquí">
-          <a href="#hoy"><span class="ic ic-news" aria-hidden="true"><svg viewBox="0 0 96 96"><rect x="12" y="14" width="62" height="68" rx="7" class="f"/><rect x="20" y="24" width="30" height="5" rx="2" class="s"/><rect x="20" y="34" width="22" height="3" rx="1.5" class="d"/><rect x="20" y="41" width="22" height="3" rx="1.5" class="d"/><rect x="20" y="52" width="10" height="20" rx="2" class="b b1"/><rect x="34" y="46" width="10" height="26" rx="2" class="b b2"/><rect x="48" y="38" width="10" height="34" rx="2" class="b b3"/><path d="M60 64 L68 52 L76 56 L88 34" class="ln"/><circle cx="88" cy="34" r="4" class="dot"/><circle cx="88" cy="34" r="4" class="pulse"/><path d="M74 18 h12 M74 24 h8" class="d2"/></svg></span><span class="tx"><b>Ponerme al día</b><span>Qué pasó hoy y por qué importa</span></span></a>
-          <a href="#modelos"><span class="ic ic-net" aria-hidden="true"><svg viewBox="0 0 96 96"><g class="lines"><path d="M48 48 L48 14"/><path d="M48 48 L82 38"/><path d="M48 48 L70 80"/><path d="M48 48 L26 80"/><path d="M48 48 L14 38"/><path d="M48 14 L82 38 L70 80 L26 80 L14 38 Z" class="rim"/></g><circle cx="48" cy="48" r="7" class="hub"/><circle cx="48" cy="48" r="7" class="pulse"/></svg><i class="mini m-openai" style="left:36px;top:2px"></i><i class="mini m-google" style="left:68px;top:26px"></i><i class="mini m-anthropic" style="left:56px;top:68px"></i><i class="mini m-meta" style="left:14px;top:68px"></i><i class="mini m-microsoft" style="left:2px;top:26px"></i></span><span class="tx"><b>Elegir una herramienta</b><span>Compara por problema, precio y contexto</span></span></a>
-          <a href="#aprende"><span class="ic ic-brain" aria-hidden="true"><svg viewBox="0 0 96 96"><path d="M8 88 C24 88 22 74 38 74 S52 84 68 76 S84 60 90 56" class="path-ln"/><circle cx="8" cy="88" r="3.5" class="dot"/><circle cx="38" cy="74" r="3.5" class="dot"/><circle cx="68" cy="76" r="3.5" class="dot"/><circle cx="90" cy="56" r="4" class="pulse"/></svg><span class="bm"></span></span><span class="tx"><b>Aprender desde cero</b><span>Microlecciones de 2 a 4 minutos</span></span></a>
-          <a href="#responsable"><span class="ic ic-shield" aria-hidden="true"><svg viewBox="0 0 96 96"><path d="M48 8 L80 20 V46 C80 66 66 80 48 88 C30 80 16 66 16 46 V20 Z" class="f"/><path d="M48 18 L70 26 V46 C70 60 60 71 48 78 C36 71 26 60 26 46 V26 Z" class="in"/><rect x="39" y="43" width="18" height="15" rx="3" class="lk"/><path d="M43 43 v-5 a5 5 0 0 1 10 0 v5" class="lk2"/><path d="M2 30 H16 M2 48 H14 M2 66 H16 M94 30 H80 M94 48 H82 M94 66 H80" class="flow"/></svg></span><span class="tx"><b>Usarla con seguridad</b><span>Principios, riesgos y normativa</span></span></a>
-    </div>
+    <details class="simple-extra"><summary>Ver cifras del catálogo de modelos de IA</summary><div class="kpis" id="st-kpi" aria-label="Indicadores del catálogo"></div></details>
+    <div class="simple-entry"><p class="simple-entry-kicker">EMPIEZA AQUÍ</p><h2>¿Qué necesitas hacer hoy?</h2><p>Elige una opción. No necesitas conocimientos técnicos para comenzar.</p></div>
+    <nav class="start simple-start" aria-label="Empieza aquí">
+      <a href="#hoy" data-track="inicio_noticias"><span class="simple-step">01 · ENTERARME</span><span class="tx"><b>¿Qué hay de nuevo en IA?</b><span>Noticias recientes, explicadas sin tecnicismos, con fuente y fecha.</span></span><span class="simple-go">Leer novedades →</span></a>
+      <a href="#modelos" data-track="inicio_modelos"><span class="simple-step">02 · ELEGIR</span><span class="tx"><b>¿Qué herramienta me conviene?</b><span>Compara modelos según lo que necesitas hacer y cuánto cuestan.</span></span><span class="simple-go">Comparar herramientas →</span></a>
+      <a href="#ruta" data-track="inicio_aprender"><span class="simple-step">03 · APRENDER</span><span class="tx"><b>¿Por dónde empiezo?</b><span>Una ruta guiada con pasos concretos y ejercicios breves.</span></span><span class="simple-go">Ver mi ruta →</span></a>
+    </nav>
   </section>
 
-  <section id="ruta" class="sec first" aria-labelledby="t-ruta"><div class="wrap"><div id="ruta-root"></div></div></section>
-  <section id="hoy" class="sec" aria-labelledby="t-hoy"><div class="wrap"><div id="hoy-root"></div></div></section>
+  <section id="hoy" class="sec first" aria-labelledby="t-hoy"><div class="wrap"><div id="hoy-root"></div></div></section>
+  <section id="ruta" class="sec" aria-labelledby="t-ruta"><div class="wrap"><div id="ruta-root"></div></div></section>
   <section id="cambios" class="sec" aria-labelledby="t-cambios"><div class="wrap"><div id="cambios-root"></div></div></section>
   <section id="modelos" class="sec alt" aria-labelledby="t-modelos"><div class="wrap"><div id="modelos-root"></div></div></section>
   <section id="uso" class="sec" aria-labelledby="t-uso"><div class="wrap"><div id="uso-root"></div></div></section>

@@ -38,8 +38,8 @@
     const w = document.getElementById("sb-route"); if (!w) return;
     const n = rows.filter((r) => r.state === "done").length;
     w.hidden = false;
-    w.innerHTML = `<p class="sb-rt">Tu ruta · ${n} de ${rows.length}</p><div class="bar"><i style="width:${(n / rows.length) * 100}%"></i></div>
-      <ol>${rows.map((r) => `<li class="${r.state}"><a href="${r.href}"><i></i>${esc(r.t)}</a></li>`).join("")}</ol>`;
+    w.innerHTML = `<details class="simple-sb-route"><summary>Mi progreso: ${n} de ${rows.length} pasos</summary><div class="bar"><i style="width:${(n / rows.length) * 100}%"></i></div>
+      <ol>${rows.map((r) => `<li class="${r.state}"><a href="${r.href}"><i></i>${esc(r.t)}</a></li>`).join("")}</ol></details>`;
   }
   function paint(A) {
     const rows = compute(A), n = rows.filter((r) => r.state === "done").length;

@@ -3,7 +3,7 @@ Taller de Estadística Aplicada para la Recolección e Interpretación de Datos 
 
 ## IA Radar
 
-Observatorio de inteligencia artificial en español (`site/`): qué pasó hoy, qué cambió, radar de modelos, uso real, aprendizaje (Academia, Prompt Lab, glosario, quiz), uso responsable, normativa (Perú, UE, estándares) y diagnóstico de nivel. Una automatización de GitHub Actions actualiza los datos cada día (meta: 8:00 a. m. de Lima; se programa a las 6:47 y 7:37 a. m. porque GitHub retrasa las ejecuciones) y vuelve a publicar el sitio.
+Observatorio de inteligencia artificial en español (`site/`): qué pasó hoy, qué cambió, radar de modelos, uso real, aprendizaje (Academia, Prompt Lab, glosario, quiz), uso responsable, normativa (Perú, UE, estándares) y diagnóstico de nivel. Una automatización de GitHub Actions consulta las fuentes y publica el sitio dos veces al día, a las 08:05 y 20:05 de Lima (horas programadas, sujetas a retrasos de GitHub Actions). La fecha de cada fuente se conserva.
 
 ### Estructura
 
@@ -30,7 +30,7 @@ OpenRouter (catálogo y actividad), Hugging Face, blogs de laboratorios y prensa
 
 1. Fusionar a `main` (los workflows programados solo corren en la rama por defecto).
 2. En Settings > Pages, elegir Source: GitHub Actions.
-3. Ejecutar manualmente "Actualización diaria y despliegue" la primera vez. Después corre solo.
+3. Ejecutar manualmente "Actualización diaria y despliegue" la primera vez. Luego está programado dos veces al día.
 
 ### Desarrollo local
 
@@ -48,7 +48,7 @@ Chart.js 4 está incluido en `site/vendor/` (licencia MIT), por lo que el sitio 
 
 Página independiente en `site/liga1/` (tema Universitario): tablas de Apertura, Clausura y acumulado con puntos de cada torneo, calculadora de resultados, evolución de puntos por fecha, pronósticos por simulación y una pestaña "La U hoy" con el próximo partido y las noticias del club.
 
-Los datos reales se actualizan solos dentro del flujo diario (`daily-update.yml`, meta 8:00 a. m. de Lima) con `scripts/fetch_liga1.py`, que escribe `site/liga1/data/live.json`:
+Los datos reales se actualizan dentro de `daily-update.yml` (08:05 y 20:05, hora de Lima, sujetos a retrasos) con `scripts/fetch_liga1.py`, que escribe `site/liga1/data/live.json`. El flujo independiente `liga1-live.yml` continúa revisando resultados durante los partidos:
 
 - Partidos y marcadores del Apertura y del Clausura: futbolperuano.com.
 - Tablas oficiales para controlar los cálculos y detectar sanciones: liga1.pe, con futbolperuano.com y depor.com como controles cruzados.

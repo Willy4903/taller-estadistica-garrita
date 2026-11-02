@@ -153,13 +153,31 @@
 
 
   /* ---------- barra lateral (escritorio) y cajón (móvil) ---------- */
+  // Primero se muestran las tareas de mayor utilidad; los contenidos
+  // especializados siguen disponibles en el apartado desplegable.
   const SIDE = [
-    { g: "", items: [["#top", "Inicio", "house", "Volver al comienzo"]] },
-    { g: "Qué está pasando", items: [["#hoy", "Hoy en IA", "newspaper", "Noticias y hechos recientes"], ["#modelos", "Modelos de IA", "cpu", "Comparar capacidades, precio y contexto"], ["#uso", "Uso", "chart-column", "Qué usa la gente, con datos"], ["#peru", "IA en Perú", "map-pin", "Búsquedas, normativa y contexto"]] },
-    { g: "Aprende a usarla", items: [["#ruta", "Tu ruta", "list-checks", "Seis pasos con tu progreso"], ["#aprende", "Aprende desde cero", "graduation-cap", "Microlecciones de 2 a 4 minutos"], ["#promptlab", "Prompt Lab", "flask-conical", "Instrucciones por objetivo"], ["#agentes", "Agentes", "bot", "De chatbot a multiagente"], ["glosario.html", "Glosario", "book-open", "Conceptos clave explicados"]] },
-    { g: "Úsala con criterio", items: [["#responsable", "IA responsable", "shield-check", "Principios, riesgos y normativa"], ["#fuentes", "Fuentes", "database", "De dónde sale cada dato"]] },
-    { g: "Lleva la IA a tu trabajo", items: [["#casos", "Casos de uso", "briefcase", "Por perfil y automatización"], ["#nivel", "Tu nivel", "target", "Diagnóstico de 60 segundos"]] },
-    { g: "", items: [["about.html", "Acerca de IA Radar", "info", "Quién, cómo y con qué criterios"]] },
+    { g: "Empieza aquí", items: [
+      ["#top", "Inicio", "house", "Volver al comienzo"],
+      ["#hoy", "Novedades de IA", "newspaper", "Qué pasó y por qué importa"],
+      ["#modelos", "Elegir una IA", "cpu", "Buscar una herramienta para tu tarea"],
+      ["#ruta", "Aprender paso a paso", "list-checks", "Ruta guiada desde cero"]
+    ] },
+    { g: "Usa la IA en tu trabajo", items: [
+      ["#aprende", "Lecciones breves", "graduation-cap", "Conceptos explicados"],
+      ["#promptlab", "Crear instrucciones", "flask-conical", "Plantillas para pedir resultados"],
+      ["#casos", "Ejemplos prácticos", "briefcase", "Usos por tipo de trabajo"],
+      ["#responsable", "Usarla con seguridad", "shield-check", "Riesgos y buenas prácticas"]
+    ] },
+    { g: "Más datos y recursos", advanced: true, items: [
+      ["#cambios", "Cambios en los modelos", "refresh-cw", "Actualizaciones del catálogo"],
+      ["#uso", "Estadísticas de uso", "chart-column", "Indicadores y tendencias"],
+      ["#peru", "IA en Perú", "map-pin", "Normativa y contexto nacional"],
+      ["#agentes", "Agentes de IA", "bot", "Automatización avanzada"],
+      ["#nivel", "Evaluar mi nivel", "target", "Diagnóstico breve"],
+      ["#fuentes", "Fuentes y metodología", "database", "Origen y fecha de los datos"],
+      ["glosario.html", "Diccionario de IA", "book-open", "Significado de los términos"],
+      ["about.html", "Sobre el observatorio", "info", "Cómo funciona IA Radar"]
+    ] }
   ];
   const MORE = [["glosario.html", "Glosario de IA"], ["modelos.html", "Catálogo de modelos"], ["responsable.html", "IA responsable y normativa"], ["about.html", "Acerca de IA Radar"]];
   const norm = (t) => String(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -217,7 +235,7 @@
     const link = ([h, t, ic, d]) => `<a href="${h === "#top" && !home ? ROOT + "index.html" : href(h)}" data-h="${h}">${ico(ic)}<span class="sb-t"><b>${esc(t)}</b><small>${esc(d)}</small></span></a>`;
     el.innerHTML = `<a class="sb-logo" href="${home ? "#top" : ROOT + "index.html"}" aria-label="IA Radar, inicio"><span class="orb sm"><i></i><i></i><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="32" cy="32" r="10" fill="none" stroke="currentColor" stroke-width="2.4" opacity=".6"/><path d="M32 32 L50 17" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="3.6" fill="var(--accent)"/></svg></span><span class="sb-name"><b>IA Radar</b><small>Observatorio de IA</small></span></a>
       <div class="sb-search" role="search"><label class="sr" for="sb-q">Buscar en IA Radar</label>${ico("search")}<input id="sb-q" type="search" placeholder="Buscar términos, guías, prompts" autocomplete="off" role="combobox" aria-expanded="true" aria-controls="sb-res"><ul id="sb-res" class="sb-res" role="listbox" hidden></ul></div>
-      <nav class="sb-nav" aria-label="Secciones">${SIDE.map((g) => `<div class="sb-g">${g.g ? `<p>${esc(g.g)}</p>` : ""}${g.items.map(link).join("")}</div>`).join("")}</nav>
+      <nav class="sb-nav" aria-label="Secciones">${SIDE.map((g) => g.advanced ? `<details class="sb-more"><summary>${esc(g.g)}</summary><div class="sb-g">${g.items.map(link).join("")}</div></details>` : `<div class="sb-g">${g.g ? `<p>${esc(g.g)}</p>` : ""}${g.items.map(link).join("")}</div>`).join("")}</nav>
       <div class="sb-route" id="sb-route" hidden></div>
       <div class="sb-foot"><p class="sb-orient">Empieza entendiendo la IA, aprende a conversar con ella, dirige sus respuestas, intégrala en tus procesos y úsala con responsabilidad.</p>
         <a class="sb-cta" href="${href("#sigue")}" data-track="clic_especializate_nav">${ico("rocket")}<span>Especialízate</span></a>
