@@ -136,7 +136,7 @@
   }
   /* partidos por jugar de un equipo (sin resultado oficial ni hora ya pasada); tor = "A", "C" o "T" (todos) */
   function pendingOf(id, tor) {
-    var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg == null && !isOver(f) && (tor === "T" || f.t === tor); });
+    var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg == null && !preds[fkey(f)] && (tor === "T" || f.t === tor); });
     list.sort(byWhen);
     return list;
   }
@@ -224,8 +224,8 @@
       var home = f.h === id, rid = home ? f.a : f.h, r = BY[rid], name = r ? r.short : rid;
       var pr = preds[fkey(f)];
       var head = (home ? "Local contra " : "Visita contra ") + name;
-      var sub = LABEL[f.t] + ", fecha " + f.f + (f.date ? " \u00b7 " + fmtDay(f.date, f.time) : "") + (pr ? " \u00b7 Tu pronóstico: " + pr[0] + "-" + pr[1] : "");
-      return "<span" + ttAttrs(rid, head, sub).replace('class="tt-el"', 'class="tt-el pc ' + (home ? "L" : "V") + (pr ? " pred" : "") + '"') + '><img src="' + esc(crestSrc(rid)) + '" alt="" onerror="this.remove()">' + (home ? "L" : "V") + "</span>";
+      var sub = LABEL[f.t] + ", fecha " + f.f + (f.date ? " \u00b7 " + fmtDay(f.date, f.time) : "") + (pr ? " \u00b7 Tu pronóstico: " + pr[0] + "-" + pr[1] : "") + (isOver(f) ? " \u00b7 Ya se jugó: el resultado se carga en la próxima actualización" : "");
+      return "<span" + ttAttrs(rid, head, sub).replace('class="tt-el"', 'class="tt-el pc ' + (home ? "L" : "V") + (pr ? " pred" : "") + (isOver(f) ? " over" : "") + '"') + '><img src="' + esc(crestSrc(rid)) + '" alt="" onerror="this.remove()">' + (home ? "L" : "V") + "</span>";
     }).join("") + (more > 0 ? '<span class="pc more" title="' + more + ' partidos más por jugar">+' + more + "</span>" : "");
   }
   function acumCell(id) {
@@ -1275,8 +1275,17 @@
 
   /* ---------- orquestación ---------- */
   var view = "acum", proStale = true;
+  function renderPredBanner() {
+    var b = $("#predBanner"); if (!b) return;
+    var n = D.fixtures.filter(function (f) { return f.hg == null && preds[fkey(f)]; }).length;
+    b.hidden = !n;
+    if (!n) return;
+    b.innerHTML = '<strong>Estás viendo tus pronósticos.</strong> ' + n + (n === 1 ? " partido pronosticado cuenta" : " partidos pronosticados cuentan") + ' como jugados en las tablas (por eso cambian PJ y puntos). <button type="button" class="btn ghost" id="predOff">Volver a la tabla oficial</button>';
+    $("#predOff").addEventListener("click", clearPreds);
+  }
   function renderAll(fromCalc) {
     recompute();
+    renderPredBanner();
     renderStd($("#tbl-acum"), "T");
     renderStd($("#tbl-A"), "A");
     renderStd($("#tbl-C"), "C");
