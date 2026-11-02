@@ -5,6 +5,10 @@ on:
     # Cada 10 minutos; GitHub Actions puede retrasar las ejecuciones programadas.
     - cron: "3,13,23,33,43,53 * * * *"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/liga1-live.yml
 
 permissions:
   contents: write
