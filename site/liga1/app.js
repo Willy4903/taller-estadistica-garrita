@@ -835,19 +835,50 @@
     return '<article class="flip" tabindex="0" aria-label="' + esc((f.title || f.label) + ". " + (f.hk || "") + ". " + (f.hd || "")) + '"><div class="flip-in"><div class="flip-f ' + cls + '">' + front + '</div><div class="flip-b ' + cls + '" aria-hidden="true">' + back + "</div></div></article>";
   }
   function renderHist() {
-    $("#histBox").innerHTML =
-      '<p class="hint-hover">Pasa el mouse (o toca) cada tarjeta para ver el concepto.</p>' +
-      '<div class="fact-grid">' + CT.facts.map(function (f) {
-        return flipCard(f, "fact", '<div class="fact-big">' + esc(f.big) + '</div><div class="fact-label">' + esc(f.label) + "</div><p>" + esc(f.text) + "</p>" + srcLink(f));
-      }).join("") + "</div>" +
-      '<h3 class="mt">Línea de tiempo</h3><ol class="tl">' + CT.timeline.map(function (t) {
-        return '<li class="tl-hov" tabindex="0"><span class="tl-year">' + esc(t.year) + '</span><div class="tl-body"><h4>' + esc(t.title) + "</h4><p>" + esc(t.text) + "</p>" + srcLink(t) + '</div><div class="tl-pop" aria-hidden="true"><b>' + esc(t.hk || "") + "</b><span>" + esc(t.hd || "") + "</span></div></li>";
-      }).join("") + "</ol>" +
-      '<h3 class="mt">Para el hincha</h3><div class="cur-grid">' + CT.curious.map(function (c) {
-        return flipCard(c, "cur", "<h4>" + esc(c.title) + "</h4><p>" + esc(c.text) + "</p>" + srcLink(c));
-      }).join("") + "</div>" +
-      '<p class="note">Los datos históricos salen primero de la web oficial del club (universitario.pe) y, cuando no hay nota oficial, de otros medios. Algunas notas del propio club dan años distintos para un mismo hecho; en esos casos se avisa. Cada dato cita su fuente.</p>';
-    bindHover($("#histBox"));
+    // Lectura directa: los hechos y la procedencia no deben depender de girar tarjetas.
+    var root = $("#histBox");
+    if (!root) return;
+    var facts = (CT.facts || []).map(function (f) {
+      return '<article class="hist-fact"><div class="hist-fact-number">' + esc(f.big) +
+        '</div><h3>' + esc(f.label) + '</h3><p>' + esc(f.text) + '</p>' + srcLink(f) + '</article>';
+    }).join("");
+    var timeline = (CT.timeline || []).map(function (t) {
+      return '<li class="hist-milestone"><span class="hist-year">' + esc(t.year) +
+        '</span><div><h4>' + esc(t.title) + '</h4><p>' + esc(t.text) +
+        '</p>' + srcLink(t) + '</div></li>';
+    }).join("");
+    var curiosities = (CT.curious || []).map(function (c) {
+      return '<article class="hist-curiosity"><h4>' + esc(c.title) +
+        '</h4><p>' + esc(c.text) + '</p>' + srcLink(c) + '</article>';
+    }).join("");
+    root.innerHTML =
+      '<div class="hist-simple">' +
+      '<div class="hist-intro"><h3>La historia crema, en tres partes</h3>' +
+      '<p>Conoce los datos principales, recorre los años decisivos y consulta la fuente de cada hecho. No necesitas tocar una tarjeta para leer su contenido.</p>' +
+      '<div class="hist-jumps" role="group" aria-label="Ir a una parte de la historia">' +
+      '<button type="button" data-hist-go="hist-datos">Datos clave</button>' +
+      '<button type="button" data-hist-go="hist-linea">Línea de tiempo</button>' +
+      '<button type="button" data-hist-go="hist-curiosidades">Para el hincha</button></div></div>' +
+      '<section id="hist-datos" class="hist-part" aria-label="Datos históricos principales">' +
+      '<h3>Cuatro datos para empezar</h3><div class="hist-facts">' + facts + '</div></section>' +
+      '<section id="hist-linea" class="hist-part" aria-label="Fechas históricas">' +
+      '<h3>Fechas que marcaron a Universitario</h3><ol class="hist-timeline">' + timeline + '</ol></section>' +
+      '<details id="hist-curiosidades" class="hist-other"><summary>Más historias y curiosidades del club</summary>' +
+      '<div class="hist-curiosities">' + curiosities + '</div></details>' +
+      '<p class="hist-method">Metodología: se priorizan publicaciones del club y otras fuentes identificadas. Algunas publicaciones atribuyen años diferentes a ciertos títulos; se indican las discrepancias en lugar de escoger un año sin sustento. Este archivo histórico es editorial: no se actualiza automáticamente al finalizar un partido.</p>' +
+      '<p class="hist-method">Para los resultados de la temporada, consulta <button type="button" class="hist-link-btn" data-hist-view="C">la tabla del Clausura</button>. Para campeonatos y estadísticas internacionales, consulta <button type="button" class="hist-link-btn" data-hist-view="tit">Títulos y Libertadores</button>.</p>' +
+      '</div>';
+    $$("#histBox [data-hist-go]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var target = document.getElementById(button.dataset.histGo);
+        if (!target) return;
+        if (target.tagName === "DETAILS") target.open = true;
+        target.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+      });
+    });
+    $$("#histBox [data-hist-view]").forEach(function (button) {
+      button.addEventListener("click", function () { show(button.dataset.histView); });
+    });
   }
   /* Efecto de tarjetas: foco de luz que sigue al mouse y volteo en toque o teclado. */
   function bindHover(root) {

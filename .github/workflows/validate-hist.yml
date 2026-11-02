@@ -1,0 +1,29 @@
+name: Validar historia y fuentes de Universitario
+on:
+  pull_request:
+    paths:
+      - site/liga1/**
+      - scripts/check_hist.py
+      - .github/workflows/validate-hist.yml
+  push:
+    branches: [main]
+    paths:
+      - site/liga1/**
+      - scripts/check_hist.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Comprobar estructura, fuentes y accesibilidad
+        run: python scripts/check_hist.py
+      - name: Verificar scripts
+        run: |
+          node --check site/liga1/app.js
+          node --check site/liga1/content.js
