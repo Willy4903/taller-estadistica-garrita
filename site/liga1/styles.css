@@ -954,3 +954,28 @@ table.nopend .pendh,table.nopend td.pend{display:none}
 @media (max-width:760px){.tl-pop{position:static;max-width:none;transform:none;align-items:flex-start;text-align:left;grid-column:1/-1;display:none;opacity:1;margin-top:4px}.tl-hov:hover .tl-pop,.tl-hov:focus-visible .tl-pop,.tl-hov.on .tl-pop{display:flex;transform:none}}
 @media (prefers-reduced-motion:reduce){.flip-in,.tl-pop,.tl-hov .tl-year{transition:none}}
 @media (min-width:761px){.tl-hov .tl-body{max-width:calc(100% - 320px)}.tl-pop{width:300px;max-width:300px}}
+
+/* Camino al título del Clausura */
+.kpi-fin{text-align:left;font:inherit;cursor:pointer;background:linear-gradient(160deg,rgba(232,201,106,.22),rgba(255,255,255,.03));border-color:#E8C96A}
+.kpi-fin:hover{box-shadow:0 0 28px rgba(232,201,106,.35)}
+.camino{margin-top:22px}
+.cam-head h2{margin:0 0 4px;font:800 clamp(28px,4vw,40px)/1 var(--disp);text-transform:uppercase;letter-spacing:.02em}
+.cam-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.cam-card,.cam-final{background:linear-gradient(160deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow)}
+.cam-card h3,.cam-final h3{margin:0 0 10px;font:700 20px var(--disp);letter-spacing:.06em;text-transform:uppercase;color:var(--gold)}
+.cam-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.cam-list li{display:flex;flex-direction:column;gap:1px}
+.cam-list b{font-size:14px}
+.cam-list span{font-size:12.5px;color:var(--muted)}
+.cam-sc{display:grid;gap:6px}
+.cam-row{display:grid;grid-template-columns:1fr 90px 42px;gap:8px;align-items:center;font-size:13px}
+.cam-l small{display:block;color:var(--muted);font-size:11px}
+.cam-bar{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.cam-bar i{display:block;height:100%;background:var(--accent);border-radius:6px}
+.cam-row.ok .cam-bar i{background:var(--ok)}
+.cam-row b{text-align:right}
+.cam-final{margin-top:14px;display:grid;grid-template-columns:1.2fr 1fr;gap:18px;align-items:start}
+.cam-final p{margin:0 0 8px;font-size:14px;color:var(--muted)}
+.cam-hl{color:var(--ink)!important}
+.cam-hl b{color:var(--gold);font:800 22px var(--disp)}
+@media (max-width:900px){.cam-grid,.cam-final{grid-template-columns:1fr}}

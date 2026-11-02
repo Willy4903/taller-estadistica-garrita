@@ -332,16 +332,105 @@
       ? '<div>' + badge(me) + '</div><div><small>Próximo partido · ' + LABEL[nx.t] + " fecha " + nx.f + "</small><b>" +
         (nx.h === FOCUS ? me.short + " vs " + BY[nx.a].short + " (local)" : BY[nx.h].short + " vs " + me.short + " (visita)") + "</b></div>"
       : "<div><small>Temporada</small><b>Sin partidos pendientes</b></div>";
-    var pt = S.T.filter(function (r) { return r.id === FOCUS; })[0];
-    var lead = S.T[0];
-    var gap = lead.pts - pt.pts;
-    var apos = S.pos.A[FOCUS], cpos = S.pos.C[FOCUS];
+    var cr = S.C, cpos = S.pos.C[FOCUS], mine = cr.filter(function (r) { return r.id === FOCUS; })[0];
+    var other = cpos === 1 ? cr[1] : cr[0];
+    var mpend = clPending(FOCUS);
+    var rivalMax = 0, rivalId = null;
+    cr.forEach(function (r) { if (r.id === FOCUS) return; var m = r.pts + 3 * clPending(r.id); if (m > rivalMax) { rivalMax = m; rivalId = r.id; } });
+    var need = rivalMax + 1 - mine.pts, canAlone = need <= 3 * mpend;
+    var dMain = cpos === 1 ? (mine.pts - other.pts ? "Ventaja de " + (mine.pts - other.pts) + " pts sobre " + BY[other.id].short : "Igualado en puntos con " + BY[other.id].short)
+      : (other.pts - mine.pts) + " pts del líder (" + BY[other.id].short + ")";
     $("#kpis").innerHTML =
-      '<div class="kpi main"><small>Puesto en el acumulado</small><div class="v">' + S.pos.T[FOCUS] + '<i>º de ' + TEAMS.length + '</i></div><div class="d">' + (gap ? gap + " pts del líder (" + BY[lead.id].short + ")" : "Líder del acumulado") + "</div></div>" +
-      '<div class="kpi"><small>Puntos acumulados</small><div class="v">' + pt.pts + '<i> pts</i></div><div class="d">' + pt.pj + " partidos · DG " + (pt.dg > 0 ? "+" : "") + pt.dg + "</div></div>" +
-      '<div class="kpi"><small>Apertura</small><div class="v">' + apos + '<i>º</i></div><div class="d">' + S.pa[FOCUS] + " puntos</div></div>" +
-      '<div class="kpi"><small>Clausura</small><div class="v">' + cpos + '<i>º</i></div><div class="d">' + S.pc[FOCUS] + " puntos</div></div>" +
-      '<button type="button" class="kpi kpi-cmp" data-go="cmp"><span>Comparar Apertura vs Clausura</span><b aria-hidden="true">\u203a</b></button>';
+      '<div class="kpi main"><small>Puesto en el Clausura</small><div class="v">' + cpos + '<i>º de ' + TEAMS.length + '</i></div><div class="d">' + mine.pts + " pts · " + dMain + "</div></div>" +
+      '<div class="kpi"><small>Probabilidad de campeonar</small><div class="v" id="kProb">…<i>%</i></div><div class="d">Clausura · ' + SIMS.toLocaleString("es-PE") + " escenarios</div></div>" +
+      '<div class="kpi"><small>Campeón matemático</small><div class="v">' + (need <= 0 ? "Ya" : canAlone ? "+" + need + "<i> pts</i>" : "—") + '</div><div class="d">' +
+        (need <= 0 ? "Nadie puede alcanzarnos" : canAlone ? "Llegando a " + (mine.pts + need) + " pts nadie nos alcanza" : "Aún depende de otros resultados") + "</div></div>" +
+      '<button type="button" class="kpi kpi-fin" ><small>Final del campeonato nacional</small><div class="v">29<i> nov</i></div><div class="d">Ida · vuelta el 6 dic (fechas tentativas)</div></button>';
+    $$(".kpi-fin", $("#kpis")).forEach(function (b) { b.addEventListener("click", function () { show("camino"); window.scrollTo(0, 0); }); });
+    scheduleCamino();
+  }
+
+  /* ---------- Camino al título del Clausura ---------- */
+  function clPending(id) {
+    return D.fixtures.filter(function (f) { return f.t === "C" && (f.h === id || f.a === id) && !eff(f); }).length;
+  }
+  function rankBy(arr, key) {
+    return arr.slice().sort(function (x, y) { return y[key + "p"] - x[key + "p"] || (y[key + "g"] - y[key + "c"]) - (x[key + "g"] - x[key + "c"]) || y[key + "g"] - x[key + "g"]; });
+  }
+  function simCamino() {
+    var pending = D.fixtures.filter(function (f) { return !eff(f); }), ids = TEAMS.map(function (t) { return t.id; }), base = {};
+    ids.forEach(function (id) { base[id] = { a: [adj("A", id), 0, 0], c: [adj("C", id), 0, 0] }; });
+    D.fixtures.forEach(function (f) {
+      var r = eff(f); if (!r) return;
+      var k = f.t === "A" ? "a" : "c", H = base[f.h][k], A = base[f.a][k];
+      H[1] += r.h; H[2] += r.a; A[1] += r.a; A[2] += r.h;
+      if (r.h > r.a) H[0] += 3; else if (r.h < r.a) A[0] += 3; else { H[0]++; A[0]++; }
+    });
+    var lam = pending.map(lambdas), out = { champ: 0, direct: 0, byPts: {}, win: {} };
+    ids.forEach(function (id) { out.win[id] = 0; });
+    for (var s = 0; s < SIMS; s++) {
+      var cur2 = {};
+      ids.forEach(function (id) { var b = base[id]; cur2[id] = { id: id, ap: b.a[0], ag: b.a[1], ac: b.a[2], cp: b.c[0], cg: b.c[1], cc: b.c[2] }; });
+      for (var i = 0; i < pending.length; i++) {
+        var f = pending[i], gh = pois(lam[i][0]), ga = pois(lam[i][1]), H = cur2[f.h], A = cur2[f.a], p = f.t === "A" ? "a" : "c";
+        H[p + "g"] += gh; H[p + "c"] += ga; A[p + "g"] += ga; A[p + "c"] += gh;
+        if (gh > ga) H[p + "p"] += 3; else if (gh < ga) A[p + "p"] += 3; else { H[p + "p"]++; A[p + "p"]++; }
+      }
+      var arr = ids.map(function (id) { var c = cur2[id]; c.tp = c.ap + c.cp + adj("T", c.id); c.tg = c.ag + c.cg; c.tc = c.ac + c.cc; return c; });
+      var win = rankBy(arr, "c")[0].id, up = cur2[FOCUS].cp;
+      out.win[win]++;
+      var e = out.byPts[up] || (out.byPts[up] = { n: 0, w: 0 }); e.n++;
+      if (win === FOCUS) {
+        e.w++; out.champ++;
+        var tr = rankBy(arr, "t"); if (tr[0].id === FOCUS || tr[1].id === FOCUS) out.direct++;
+      }
+    }
+    return out;
+  }
+  var campTimer = null;
+  function scheduleCamino() { clearTimeout(campTimer); campTimer = setTimeout(renderCamino, 120); }
+  function simPct(v) { var p = v / SIMS * 100; return p === 0 ? "0%" : p < 1 ? "<1%" : p > 99 ? ">99%" : Math.round(p) + "%"; }
+  function renderCamino() {
+    var box = $("#camino"); if (!box) return;
+    var R = simCamino(), me = BY[FOCUS], mine = S.C.filter(function (r) { return r.id === FOCUS; })[0];
+    var kp = $("#kProb"); if (kp) kp.innerHTML = (R.champ === 0 ? "0" : R.champ / SIMS * 100 < 1 ? "<1" : Math.round(R.champ / SIMS * 100)) + "<i>%</i>";
+    var pend = D.fixtures.filter(function (f) { return f.t === "C" && (f.h === FOCUS || f.a === FOCUS) && !eff(f); }).sort(byWhen);
+    var maxGain = pend.length * 3, apCh = S.A[0] ? BY[S.A[0].id] : null;
+    var rows = Object.keys(R.byPts).map(Number).sort(function (a, b) { return b - a; }).map(function (pts) {
+      var e = R.byPts[pts], pr = e.n ? e.w / e.n * 100 : 0, gain = pts - mine.pts;
+      var lbl = gain === maxGain && maxGain ? "Ganando los " + pend.length : gain === 0 ? "Sin sumar" : "Sumando " + gain + " de " + maxGain;
+      return { pts: pts, lbl: lbl, pr: pr, share: e.n / SIMS * 100 };
+    }).filter(function (r) { return r.share >= 0.5; });
+    var firstOk = rows.slice().reverse().filter(function (r) { return r.pr >= 50; })[0];
+    var rivals = S.C.filter(function (r) { return r.id !== FOCUS; }).map(function (r) { return { r: r, max: r.pts + 3 * clPending(r.id), w: R.win[r.id] }; })
+      .sort(function (x, y) { return y.w - x.w || y.max - x.max; }).slice(0, 4);
+    var h = '<div class="cam-head"><h2>Camino al título del Clausura</h2><p class="sub">Lo que le falta a la U para campeonar y qué pasa después. Se recalcula con los marcadores que escribas en la Calculadora.</p></div>' +
+      '<div class="cam-grid"><article class="cam-card"><h3>Lo que falta</h3>' +
+      (pend.length ? '<ul class="cam-list">' + pend.map(function (f) {
+        var home = f.h === FOCUS, rv = BY[home ? f.a : f.h];
+        return "<li><b>" + me.short + " vs " + rv.short.replace(/^U\. de Deportes/, "U") + (home ? " (local)" : " (visita)") + "</b><span>" + (f.date ? fmtDay(f.date, f.time) : "Por programar") + " · fecha " + f.f + "</span></li>";
+      }).join("") + "</ul><p class=\"note\">Quedan " + maxGain + " puntos en juego: con todo ganado la U llegaría a " + (mine.pts + maxGain) + ".</p>" : '<p class="note">La U ya jugó todos sus partidos del Clausura.</p>') + "</article>" +
+      '<article class="cam-card"><h3>Escenarios para campeonar</h3>' +
+      (rows.length ? '<div class="cam-sc">' + rows.map(function (r) {
+        return '<div class="cam-row' + (r.pr >= 50 ? " ok" : "") + '"><span class="cam-l">' + esc(r.lbl) + '<small>' + r.pts + " pts</small></span><span class=\"cam-bar\"><i style=\"width:" + r.pr + "%\"></i></span><b>" + (r.pr < 1 && r.pr > 0 ? "<1" : Math.round(r.pr)) + "%</b></div>";
+      }).join("") + "</div>" : "") +
+      '<p class="note">' + (firstOk ? "Con " + firstOk.pts + " pts la U ya campeona en la mayoría de los escenarios simulados." : "Ningún resultado de la U alcanza por sí solo para campeonar en la mayoría de los escenarios.") + " Cada barra es la probabilidad de ser campeón si la U termina con esos puntos.</p></article>" +
+      '<article class="cam-card"><h3>Quién puede quitarnos el título</h3><ul class="cam-list">' + rivals.map(function (x) {
+        return "<li><b>" + esc(BY[x.r.id].name) + "</b><span>" + x.r.pts + " pts hoy · máximo " + x.max + " · campeón en " + simPct(x.w) + "</span></li>";
+      }).join("") + '</ul><p class="note">Probabilidades de simulación a partir de la fuerza de cada club; no son una predicción oficial.</p></article></div>' +
+      '<div class="cam-final"><div><h3>¿Y la final del campeonato nacional?</h3>' +
+      '<p>Al terminar el Clausura (hacia el 22 de noviembre) se define el campeón nacional. Juegan los campeones del Apertura (' + (apCh ? esc(apCh.name) : "Apertura") + ") y del Clausura, más los dos mejores del acumulado. Si un campeón de torneo corto está entre los dos primeros del acumulado, pasa directo a la final.</p>" +
+      '<p class="cam-hl">Si la U gana el Clausura y termina entre los dos primeros del acumulado, pasa directo a la final: probabilidad actual <b>' + simPct(R.direct) + "</b>.</p></div>" +
+      '<table class="std compact"><thead><tr><th class="club">Fase</th><th class="club">Fechas tentativas</th></tr></thead><tbody>' +
+      '<tr><td class="club">Final directa, ida</td><td class="club">29 de noviembre</td></tr><tr><td class="club">Final directa, vuelta</td><td class="club">6 de diciembre</td></tr>' +
+      '<tr><td class="club">Semifinales, ida</td><td class="club">28 o 29 de noviembre</td></tr><tr><td class="club">Semifinales, vuelta</td><td class="club">3 o 4 de diciembre</td></tr>' +
+      '<tr><td class="club">Final tras semifinales</td><td class="club">8 y 13 de diciembre</td></tr></tbody></table></div>' +
+      '<p class="note">Las fechas de los play-offs y la final son tentativas y varían según el medio (por ejemplo, la ida de la final directa aparece el 28 o el 29 de noviembre); se confirman al cierre del Clausura. En la final, el primero del acumulado es local en la vuelta. Fuentes: ' +
+      '<a href="https://depor.com/futbol-peruano/descentralizado/liga-1-2026-fechas-confirmadas-definicion-como-se-jugarian-play-offs-semifinales-y-finales-tras-torneo-clausura-noticia/" target="_blank" rel="noopener noreferrer">Depor</a>, ' +
+      '<a href="https://www.eldiez.com.pe/liga-1/liga-1-confirman-las-fechas-de-los-play-offs-y-las-finales-por-el-titulo-nacional-noticia/" target="_blank" rel="noopener noreferrer">El Diez</a>, ' +
+      '<a href="https://rpp.pe/futbol/descentralizado/cuando-se-disputara-el-titulo-de-la-liga-1-2026-revisa-las-fechas-programadas-de-los-play-offs-y-las-finales-noticia-1714677" target="_blank" rel="noopener noreferrer">RPP</a> y ' +
+      '<a href="https://libero.pe/futbol-peruano/liga-1/2026/10/26/liga-1-2026-fechas-de-semifinales-finales-definir-campeon-nacional-2414854" target="_blank" rel="noopener noreferrer">Líbero</a>.</p>';
+    box.innerHTML = h;
   }
 
   function renderLegend() {
@@ -1238,7 +1327,7 @@
   };
 
   /* ---------- navegación para celular ---------- */
-  var NAVGROUP = { acum: "tabla", A: "tabla", C: "tabla", cmp: "tabla", players: "more", stats: "more", squad: "more", calc: "calc", game: "game", uni: "uni", evo: "more", pro: "more", hist: "more", tit: "more", glos: "more", src: "more" };
+  var NAVGROUP = { camino: "more", acum: "tabla", A: "tabla", C: "tabla", cmp: "tabla", players: "more", stats: "more", squad: "more", calc: "calc", game: "game", uni: "uni", evo: "more", pro: "more", hist: "more", tit: "more", glos: "more", src: "more" };
   var lastTabla = "acum";
   function svg(d, fill) { return '<svg viewBox="0 0 24 24" aria-hidden="true" class="ni"' + (fill ? ' fill="currentColor"' : ' fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"') + '><path d="' + d + '"/></svg>'; }
   function updateNav(v) {
@@ -1263,7 +1352,7 @@
         show(g === "tabla" ? lastTabla : g); window.scrollTo(0, 0);
       });
     });
-    var more = [["stats", "Análisis de equipos"], ["players", "Goleadores"], ["squad", "Plantel"], ["evo", "Evolución de puntos"], ["pro", "Pronósticos"], ["hist", "Historia del club"], ["tit", "Títulos y Libertadores"], ["glos", "Glosario"], ["src", "Fuentes"]];
+    var more = [["camino", "Camino al título"], ["stats", "Análisis de equipos"], ["players", "Goleadores"], ["squad", "Plantel"], ["evo", "Evolución de puntos"], ["pro", "Pronósticos"], ["hist", "Historia del club"], ["tit", "Títulos y Libertadores"], ["glos", "Glosario"], ["src", "Fuentes"]];
     $("#moreList").innerHTML = more.map(function (m) { return '<button type="button" data-v="' + m[0] + '"' + (m[0] === "squad" || m[0] === "players" ? " hidden" : "") + ">" + m[1] + "</button>"; }).join("") + '<button type="button" id="moreTheme">Cambiar tema claro u oscuro</button>';
     $$("#moreList button[data-v]").forEach(function (b) { b.addEventListener("click", function () { closeSheet(); show(b.dataset.v); window.scrollTo(0, 0); }); });
     $("#moreTheme").addEventListener("click", function () { $("#themeBtn").click(); });
@@ -1359,7 +1448,7 @@
     loadPlayers();
     loadSquad();
     var h = location.hash.replace("#", "");
-    if (["acum", "A", "C", "cmp", "stats", "squad", "players", "calc", "game", "evo", "pro", "uni", "hist", "tit", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
+    if (["camino", "acum", "A", "C", "cmp", "stats", "squad", "players", "calc", "game", "evo", "pro", "uni", "hist", "tit", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
     updateNav(view);
     if (window.LIGA1_STATS_INIT) window.LIGA1_STATS_INIT(L1);
     if (window.LIGA1_GAME_INIT) window.LIGA1_GAME_INIT(L1);
