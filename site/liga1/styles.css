@@ -979,3 +979,5 @@ table.nopend .pendh,table.nopend td.pend{display:none}
 .cam-hl{color:var(--ink)!important}
 .cam-hl b{color:var(--gold);font:800 22px var(--disp)}
 @media (max-width:900px){.cam-grid,.cam-final{grid-template-columns:1fr}}
+
+.pc.over{opacity:.55;border-style:dotted}
