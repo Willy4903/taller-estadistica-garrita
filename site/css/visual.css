@@ -1,6 +1,6 @@
 /* IA Radar — portada editorial con ilustraciones SVG originales. Datos y secciones intactos. */
-body[data-page="home"]{background:linear-gradient(180deg,#f4f7fc,#f8fafc 800px,#f7f9fc)}
-:root[data-theme="dark"] body[data-page="home"]{background:linear-gradient(180deg,#081629,#0e1b2d 800px,#0b1422)}
+body[data-page="home"]{background:linear-gradient(180deg,#081629,#0e1b2d 800px,#0b1422)}
+:root[data-theme="light"] body[data-page="home"]{background:linear-gradient(180deg,#f4f7fc,#f8fafc 800px,#f7f9fc)}
 .stage.visual-ai{max-width:1420px;padding-top:14px;padding-bottom:36px;overflow:visible}
 .stage.visual-ai .sphere{display:none}
 .stage.visual-ai .stage-grid{max-width:none;min-height:435px;position:relative;overflow:hidden;align-items:stretch;border-radius:22px;background:#061a33 url("../visual/ai-hero.svg") center/cover no-repeat;box-shadow:0 22px 62px -42px #0d315cbb}
