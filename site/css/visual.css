@@ -1,9 +1,9 @@
-/* IA Radar — portada editorial con ilustraciones SVG originales. Datos y secciones intactos. */
+/* IA Radar — portada con fotografías de archivo verificadas, sin ilustraciones sintéticas. */
 body[data-page="home"]{background:linear-gradient(180deg,#081629,#0e1b2d 800px,#0b1422)}
 :root[data-theme="light"] body[data-page="home"]{background:linear-gradient(180deg,#f4f7fc,#f8fafc 800px,#f7f9fc)}
 .stage.visual-ai{max-width:1420px;padding-top:14px;padding-bottom:36px;overflow:visible}
 .stage.visual-ai .sphere{display:none}
-.stage.visual-ai .stage-grid{max-width:none;min-height:435px;position:relative;overflow:hidden;align-items:stretch;border-radius:22px;background:#061a33 url("../visual/ai-hero.svg") center/cover no-repeat;box-shadow:0 22px 62px -42px #0d315cbb}
+.stage.visual-ai .stage-grid{max-width:none;min-height:435px;position:relative;overflow:hidden;align-items:stretch;border-radius:22px;background:#061a33 url("../visual/photos/ia-hero.jpg") center/cover no-repeat;box-shadow:0 22px 62px -42px #0d315cbb}
 .stage.visual-ai .stage-grid:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#071629ee 0%,#061a35df 35%,#09274440 72%,transparent)}
 .stage.visual-ai .st-col{z-index:1;justify-content:center;max-width:790px;padding:48px 45px}
 .stage.visual-ai .st-head{text-align:left;padding:0}
@@ -26,9 +26,9 @@ body[data-page="home"]{background:linear-gradient(180deg,#081629,#0e1b2d 800px,#
 .stage.visual-ai .simple-start>a:nth-child(1){background:linear-gradient(135deg,#efebff,#d5c6f6)}
 .stage.visual-ai .simple-start>a:nth-child(2){background:linear-gradient(135deg,#e5f4ff,#b3dafa)}
 .stage.visual-ai .simple-start>a:nth-child(3){background:linear-gradient(135deg,#e3fff3,#afe8cd)}
-.stage.visual-ai .simple-start>a:nth-child(1):after{background-image:url("../visual/ai-news.svg")}
-.stage.visual-ai .simple-start>a:nth-child(2):after{background-image:url("../visual/ai-models.svg")}
-.stage.visual-ai .simple-start>a:nth-child(3):after{background-image:url("../visual/ai-learn.svg")}
+.stage.visual-ai .simple-start>a:nth-child(1):after{background-image:none}
+.stage.visual-ai .simple-start>a:nth-child(2):after{background-image:none}
+.stage.visual-ai .simple-start>a:nth-child(3):after{background-image:none}
 .stage.visual-ai .simple-start>a:hover{transform:translateY(-3px);box-shadow:0 22px 40px -25px #132b5399}
 .stage.visual-ai .simple-start .simple-step{font-weight:850;font-size:.73rem;letter-spacing:.08em;color:#3547a5}
 .stage.visual-ai .simple-start>a:nth-child(2) .simple-step{color:#0a6196}
@@ -42,3 +42,59 @@ body[data-page="home"]{background:linear-gradient(180deg,#081629,#0e1b2d 800px,#
 @media(max-width:920px){.stage.visual-ai .stage-grid{min-height:380px;background-position:58% center}.stage.visual-ai .st-col{padding:30px}.stage.visual-ai .simple-start{grid-template-columns:repeat(2,minmax(0,1fr))}.stage.visual-ai .simple-start>a:nth-child(3){grid-column:1/-1}}
 @media(max-width:650px){.stage.visual-ai{padding-top:8px}.stage.visual-ai .stage-grid{min-height:420px;background-position:65% center;border-radius:14px}.stage.visual-ai .stage-grid:before{background:linear-gradient(90deg,#041426ef,#061b36d9 55%,#0b294b78)}.stage.visual-ai .st-col{padding:26px 17px;justify-content:flex-start}.stage.visual-ai .st-badge{font-size:.6rem;line-height:1.4}.stage.visual-ai .st-title{font-size:clamp(2.1rem,8.5vw,3.1rem)}.stage.visual-ai .st-tag{font-size:clamp(1.35rem,5.5vw,2.05rem)}.stage.visual-ai .visual-summary{font-size:.9rem}.stage.visual-ai .st-cta{gap:8px}.stage.visual-ai .st-cta .btn{padding:10px 14px;font-size:.82rem}.stage.visual-ai .insight{display:none}.stage.visual-ai .simple-entry{margin:22px 0 10px}.stage.visual-ai .simple-start{grid-template-columns:1fr;gap:11px}.stage.visual-ai .simple-start>a,.stage.visual-ai .simple-start>a:nth-child(3){min-height:230px;grid-column:auto;padding:18px}.stage.visual-ai .simple-start>a:after{width:53%;height:54%}.stage.visual-ai .simple-start .tx b{font-size:1.24rem}.stage.visual-ai .simple-start .tx>span{max-width:24ch;font-size:.83rem}}
 @media(prefers-reduced-motion:reduce){.stage.visual-ai .simple-start>a{transition:none}.stage.visual-ai .simple-start>a:hover{transform:none}}
+
+/* Fotografías documentales alojadas en el mismo sitio, no imágenes generadas.
+   Son fotografías de archivo de tecnología y aprendizaje; no corresponden
+   a sucesos de actualidad ni a laboratorios que se anuncien en IA Radar. */
+.stage.visual-ai .stage-grid{
+  background-image:linear-gradient(90deg,rgba(4,16,37,.96) 0%,rgba(5,20,43,.92) 34%,rgba(5,20,43,.34) 80%,rgba(5,20,43,.08)),url("../visual/photos/ia-hero.jpg");
+  background-size:cover,cover;
+  background-position:center,center 47%;
+}
+.stage.visual-ai .stage-grid:before{
+  background:linear-gradient(0deg,rgba(4,14,32,.45),transparent 55%);
+}
+.stage.visual-ai .st-col{padding-bottom:63px}
+.stage.visual-ai .visual-hero-credit{
+  position:absolute;z-index:2;bottom:15px;right:18px;
+  display:inline-block;padding:6px 12px;max-width:40%;
+  color:#e8f4ff;background:#081a33dd;border:1px solid #ffffff50;
+  border-radius:99px;font-size:.67rem;line-height:1.4;
+  text-decoration:none;backdrop-filter:blur(7px)
+}
+.stage.visual-ai .visual-hero-credit:hover{text-decoration:underline}
+.stage.visual-ai .visual-hero-credit:focus-visible{outline:3px solid #ffffff;outline-offset:3px}
+.stage.visual-ai .simple-start>a:after{content:none;display:none}
+.stage.visual-ai .simple-start>a:nth-child(1){
+ background-image:linear-gradient(180deg,#f0eaff 0%,rgba(240,234,255,.98) 36%,rgba(240,234,255,.70) 57%,rgba(240,234,255,.05) 100%),url("../visual/photos/ia-news.jpg");
+ background-size:cover,cover;background-position:center,center 60%;
+}
+.stage.visual-ai .simple-start>a:nth-child(2){
+ background-image:linear-gradient(180deg,#e8f5ff 0%,rgba(232,245,255,.98) 36%,rgba(232,245,255,.68) 57%,rgba(232,245,255,.04) 100%),url("../visual/photos/ia-models.jpg");
+ background-size:cover,cover;background-position:center,center 54%;
+}
+.stage.visual-ai .simple-start>a:nth-child(3){
+ background-image:linear-gradient(180deg,#e4fff2 0%,rgba(228,255,242,.98) 36%,rgba(228,255,242,.69) 57%,rgba(228,255,242,.04) 100%),url("../visual/photos/ia-learn.jpg");
+ background-size:cover,cover;background-position:center,center 54%;
+}
+.stage.visual-ai .visual-photo-credits{
+ margin:11px 4px 22px;max-width:115ch;
+ font-size:.74rem;line-height:1.65;color:var(--muted)
+}
+.stage.visual-ai .visual-photo-credits a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.stage.visual-ai .visual-photo-credits a:hover{color:var(--accent)}
+@media(max-width:920px){.stage.visual-ai .stage-grid{background-position:center,62% center}}
+@media(max-width:650px){
+ .stage.visual-ai .stage-grid{background-position:center,66% center}
+ .stage.visual-ai .st-col{padding-bottom:54px}
+ .stage.visual-ai .visual-hero-credit{
+  bottom:9px;right:9px;max-width:82%;font-size:.6rem;padding:5px 9px
+ }
+ .stage.visual-ai .simple-start>a{min-height:255px}
+ .stage.visual-ai .simple-start>a:nth-child(1),
+ .stage.visual-ai .simple-start>a:nth-child(2),
+ .stage.visual-ai .simple-start>a:nth-child(3){
+  background-position:center,center 50%;
+ }
+ .stage.visual-ai .visual-photo-credits{font-size:.7rem;margin:11px 0 20px}
+}
