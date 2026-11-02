@@ -739,18 +739,42 @@
   /* ---------- Historia, glosario y fuentes ---------- */
   var CT = window.LIGA1_CONTENT || { facts: [], timeline: [], curious: [], glossary: [], sources: {} };
   function srcLink(x) { return '<a class="src-link" href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">Fuente: ' + esc(x.src) + "</a>"; }
+  function flipCard(f, cls, inner) {
+    var front = inner, back = '<div class="flip-k">' + esc(f.hk || f.title || f.label) + "</div><p>" + esc(f.hd || "") + "</p>";
+    return '<article class="flip" tabindex="0" aria-label="' + esc((f.title || f.label) + ". " + (f.hk || "") + ". " + (f.hd || "")) + '"><div class="flip-in"><div class="flip-f ' + cls + '">' + front + '</div><div class="flip-b ' + cls + '" aria-hidden="true">' + back + "</div></div></article>";
+  }
   function renderHist() {
     $("#histBox").innerHTML =
+      '<p class="hint-hover">Pasa el mouse (o toca) cada tarjeta para ver el concepto.</p>' +
       '<div class="fact-grid">' + CT.facts.map(function (f) {
-        return '<article class="fact"><div class="fact-big">' + esc(f.big) + '</div><div class="fact-label">' + esc(f.label) + "</div><p>" + esc(f.text) + "</p>" + srcLink(f) + "</article>";
+        return flipCard(f, "fact", '<div class="fact-big">' + esc(f.big) + '</div><div class="fact-label">' + esc(f.label) + "</div><p>" + esc(f.text) + "</p>" + srcLink(f));
       }).join("") + "</div>" +
       '<h3 class="mt">Línea de tiempo</h3><ol class="tl">' + CT.timeline.map(function (t) {
-        return '<li><span class="tl-year">' + esc(t.year) + '</span><div class="tl-body"><h4>' + esc(t.title) + "</h4><p>" + esc(t.text) + "</p>" + srcLink(t) + "</div></li>";
+        return '<li class="tl-hov" tabindex="0"><span class="tl-year">' + esc(t.year) + '</span><div class="tl-body"><h4>' + esc(t.title) + "</h4><p>" + esc(t.text) + "</p>" + srcLink(t) + '</div><div class="tl-pop" aria-hidden="true"><b>' + esc(t.hk || "") + "</b><span>" + esc(t.hd || "") + "</span></div></li>";
       }).join("") + "</ol>" +
       '<h3 class="mt">Para el hincha</h3><div class="cur-grid">' + CT.curious.map(function (c) {
-        return '<article class="cur"><h4>' + esc(c.title) + "</h4><p>" + esc(c.text) + "</p>" + srcLink(c) + "</article>";
+        return flipCard(c, "cur", "<h4>" + esc(c.title) + "</h4><p>" + esc(c.text) + "</p>" + srcLink(c));
       }).join("") + "</div>" +
-      '<p class="note">Los datos históricos se tomaron de las fuentes indicadas. Los conteos de títulos cambian según el medio y el año, por eso se cita de dónde sale cada cifra.</p>';
+      '<p class="note">Los datos históricos salen primero de la web oficial del club (universitario.pe) y, cuando no hay nota oficial, de otros medios. Algunas notas del propio club dan años distintos para un mismo hecho; en esos casos se avisa. Cada dato cita su fuente.</p>';
+    bindHover($("#histBox"));
+  }
+  /* Efecto de tarjetas: foco de luz que sigue al mouse y volteo en toque o teclado. */
+  function bindHover(root) {
+    $$(".flip, .tl-hov", root).forEach(function (el) {
+      el.addEventListener("pointermove", function (e) {
+        var r = el.getBoundingClientRect();
+        el.style.setProperty("--mx", (e.clientX - r.left) + "px");
+        el.style.setProperty("--my", (e.clientY - r.top) + "px");
+      });
+      el.addEventListener("click", function (e) {
+        if (e.target.closest("a")) return;
+        if (!matchMedia("(hover: hover)").matches) {
+          var on = !el.classList.contains("on");
+          $$(".flip.on, .tl-hov.on", root).forEach(function (o) { o.classList.remove("on"); });
+          if (on) el.classList.add("on");
+        }
+      });
+    });
   }
   function renderTit() {
     var G = CT.glory; if (!G) return;
@@ -1176,6 +1200,12 @@
     if (view === "pro") { renderPro(); proStale = false; }
     if (fromCalc) return;
   }
+  function syncTabsH() {
+    var bar = document.querySelector(".tabs-bar");
+    document.documentElement.style.setProperty("--tabsH", (bar && bar.offsetParent !== null ? bar.offsetHeight : 0) + "px");
+  }
+  window.addEventListener("resize", syncTabsH);
+  window.addEventListener("load", syncTabsH);
   function centerTab() {
     var b = $('.tabs button[aria-selected="true"]'), bar = b && b.parentNode;
     if (b && !b.hidden && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = Math.max(0, b.offsetLeft - (bar.clientWidth - b.offsetWidth) / 2);
@@ -1264,6 +1294,7 @@
     }
     renderUni();
     renderNav();
+    syncTabsH();
     renderTicker();
     renderHist(); renderTit(); renderGlos(); renderSources();
     $("#gloSearch").addEventListener("input", renderGlos);
