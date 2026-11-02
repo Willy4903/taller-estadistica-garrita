@@ -752,6 +752,39 @@
       }).join("") + "</div>" +
       '<p class="note">Los datos históricos se tomaron de las fuentes indicadas. Los conteos de títulos cambian según el medio y el año, por eso se cita de dónde sale cada cifra.</p>';
   }
+  function renderTit() {
+    var G = CT.glory; if (!G) return;
+    var L = G.libertadores, tot = L.pg + L.pe + L.pp;
+    function pct(n) { return (100 * n / tot).toFixed(1).replace(".", ",") + " %"; }
+    function seg(n, cls, lab) { return '<span class="wdl-' + cls + '" style="flex:' + n + '" title="' + lab + ": " + n + '">' + n + "</span>"; }
+    $("#titBox").innerHTML =
+      '<div class="fact-grid">' + G.facts.map(function (f) {
+        return '<article class="fact"><div class="fact-big">' + esc(f.big) + '</div><div class="fact-label">' + esc(f.label) + "</div><p>" + esc(f.text) + "</p>" + srcLink(f) + "</article>";
+      }).join("") + "</div>" +
+      '<h3 class="mt">Hitos de los campeonatos nacionales</h3><ol class="tl">' + G.titles.map(function (t) {
+        return '<li><span class="tl-year">' + esc(t.year) + '</span><div class="tl-body"><h4>Título ' + esc(t.n) + "</h4><p>" + esc(t.text) + "</p>" + srcLink(t) + "</div></li>";
+      }).join("") + "</ol>" +
+      '<p class="note">' + esc(G.titlesNote) + ' <a href="' + esc(G.titlesSrc.url) + '" target="_blank" rel="noopener noreferrer">' + esc(G.titlesSrc.src) + "</a>.</p>" +
+      '<h3 class="mt">1972: la final de la Copa Libertadores</h3><ol class="tl">' + G.run72.map(function (t) {
+        return '<li><span class="tl-year tl-stage">' + esc(t.stage) + '</span><div class="tl-body"><p>' + esc(t.text) + "</p>" + srcLink(t) + "</div></li>";
+      }).join("") + "</ol>" +
+      '<div class="cur-grid">' + G.run72Facts.map(function (c) {
+        return '<article class="cur"><h4>' + esc(c.title) + "</h4><p>" + esc(c.text) + "</p>" + srcLink(c) + "</article>";
+      }).join("") + "</div>" +
+      '<h3 class="mt">Números en la Copa Libertadores</h3>' +
+      '<div class="table-card"><div class="scroll"><table class="std compact"><thead><tr><th class="club">Torneo</th><th>Part.</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>DG</th></tr></thead><tbody><tr class="me"><td class="club">Copa Libertadores</td><td>' +
+      L.part + "</td><td>" + L.pj + "</td><td>" + L.pg + "</td><td>" + L.pe + "</td><td>" + L.pp + "</td><td>" + L.gf + "</td><td>" + L.gc + "</td><td>" + (L.gf - L.gc) + "</td></tr></tbody></table></div></div>" +
+      '<div class="wdl" role="img" aria-label="Victorias, empates y derrotas en Libertadores">' + seg(L.pg, "w", "Victorias") + seg(L.pe, "d", "Empates") + seg(L.pp, "l", "Derrotas") + "</div>" +
+      '<p class="note">Victorias ' + pct(L.pg) + ", empates " + pct(L.pe) + ", derrotas " + pct(L.pp) + ". Promedio de " + (L.gf / L.pj).toFixed(2).replace(".", ",") + " goles a favor y " + (L.gc / L.pj).toFixed(2).replace(".", ",") + " en contra por partido. " + esc(L.alt) +
+      ' <a href="' + esc(L.url) + '" target="_blank" rel="noopener noreferrer">' + esc(L.src) + '</a> · <a href="' + esc(L.altUrl) + '" target="_blank" rel="noopener noreferrer">' + esc(L.altSrc) + "</a>.</p>" +
+      '<h3 class="mt">Goleadas históricas</h3><div class="fact-grid fact-3">' + G.marks.map(function (f) {
+        return '<article class="fact"><div class="fact-big">' + esc(f.big) + '</div><div class="fact-label">' + esc(f.label) + "</div><p>" + esc(f.text) + "</p>" + srcLink(f) + "</article>";
+      }).join("") + "</div>" +
+      '<h3 class="mt">Las últimas campañas</h3><ol class="tl">' + G.recent.map(function (t) {
+        return '<li><span class="tl-year">' + esc(t.year) + '</span><div class="tl-body"><h4>' + esc(t.title) + "</h4><p>" + esc(t.text) + "</p>" + srcLink(t) + "</div></li>";
+      }).join("") + "</ol>" +
+      '<p class="note">' + esc(G.note) + "</p>";
+  }
   var gloGroup = "Todos";
   function renderGlos() {
     var groups = ["Todos"].concat(CT.glossary.reduce(function (acc, x) { if (acc.indexOf(x.g) < 0) acc.push(x.g); return acc; }, []));
@@ -1175,7 +1208,7 @@
   };
 
   /* ---------- navegación para celular ---------- */
-  var NAVGROUP = { acum: "tabla", A: "tabla", C: "tabla", cmp: "tabla", players: "more", stats: "more", squad: "more", calc: "calc", game: "game", uni: "uni", evo: "more", pro: "more", hist: "more", glos: "more", src: "more" };
+  var NAVGROUP = { acum: "tabla", A: "tabla", C: "tabla", cmp: "tabla", players: "more", stats: "more", squad: "more", calc: "calc", game: "game", uni: "uni", evo: "more", pro: "more", hist: "more", tit: "more", glos: "more", src: "more" };
   var lastTabla = "acum";
   function svg(d, fill) { return '<svg viewBox="0 0 24 24" aria-hidden="true" class="ni"' + (fill ? ' fill="currentColor"' : ' fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"') + '><path d="' + d + '"/></svg>'; }
   function updateNav(v) {
@@ -1200,7 +1233,7 @@
         show(g === "tabla" ? lastTabla : g); window.scrollTo(0, 0);
       });
     });
-    var more = [["stats", "Análisis de equipos"], ["players", "Goleadores"], ["squad", "Plantel"], ["evo", "Evolución de puntos"], ["pro", "Pronósticos"], ["hist", "Historia del club"], ["glos", "Glosario"], ["src", "Fuentes"]];
+    var more = [["stats", "Análisis de equipos"], ["players", "Goleadores"], ["squad", "Plantel"], ["evo", "Evolución de puntos"], ["pro", "Pronósticos"], ["hist", "Historia del club"], ["tit", "Títulos y Libertadores"], ["glos", "Glosario"], ["src", "Fuentes"]];
     $("#moreList").innerHTML = more.map(function (m) { return '<button type="button" data-v="' + m[0] + '"' + (m[0] === "squad" || m[0] === "players" ? " hidden" : "") + ">" + m[1] + "</button>"; }).join("") + '<button type="button" id="moreTheme">Cambiar tema claro u oscuro</button>';
     $$("#moreList button[data-v]").forEach(function (b) { b.addEventListener("click", function () { closeSheet(); show(b.dataset.v); window.scrollTo(0, 0); }); });
     $("#moreTheme").addEventListener("click", function () { $("#themeBtn").click(); });
@@ -1232,7 +1265,7 @@
     renderUni();
     renderNav();
     renderTicker();
-    renderHist(); renderGlos(); renderSources();
+    renderHist(); renderTit(); renderGlos(); renderSources();
     $("#gloSearch").addEventListener("input", renderGlos);
     cur = defaultFecha();
     recompute();
@@ -1295,7 +1328,7 @@
     loadPlayers();
     loadSquad();
     var h = location.hash.replace("#", "");
-    if (["acum", "A", "C", "cmp", "stats", "squad", "players", "calc", "game", "evo", "pro", "uni", "hist", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
+    if (["acum", "A", "C", "cmp", "stats", "squad", "players", "calc", "game", "evo", "pro", "uni", "hist", "tit", "glos", "src"].indexOf(h) >= 0 && (h !== "uni" || UNI)) show(h);
     updateNav(view);
     if (window.LIGA1_STATS_INIT) window.LIGA1_STATS_INIT(L1);
     if (window.LIGA1_GAME_INIT) window.LIGA1_GAME_INIT(L1);

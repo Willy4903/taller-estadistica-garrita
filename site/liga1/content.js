@@ -97,3 +97,50 @@ window.LIGA1_CONTENT = {
     ]
   }
 };
+
+window.LIGA1_CONTENT.glory = {
+  facts: [
+    { big: "29", label: "Campeonatos nacionales", text: "La web oficial del club y Wikipedia cuentan 29 títulos de Liga masculina, los últimos tres de forma consecutiva: 2023, 2024 y 2025.", src: "Universitario (web oficial)", url: "https://universitario.pe/historia" },
+    { big: "1972", label: "Subcampeón de América", text: "Primera final de Libertadores de un club peruano: 0-0 en Lima y 1-2 en Avellaneda ante Independiente.", src: "Universitario (web oficial)", url: "https://universitario.pe/noticias/historia/dos-titulos-inolvidables-y-el-subcampeonato-de-la-copa-libertadores-1970-a-1979" },
+    { big: "248", label: "Partidos de Libertadores", text: "Según el anexo de partidos internacionales de Wikipedia: 76 victorias, 77 empates y 95 derrotas, con 279 goles a favor y 335 en contra.", src: "Wikipedia", url: "https://es.wikipedia.org/wiki/Anexo:Partidos_internacionales_del_Club_Universitario_de_Deportes" },
+    { big: "10", label: "Títulos femeninos", text: "Wikipedia registra 10 campeonatos nacionales para el equipo de fútbol femenino del club.", src: "Wikipedia", url: "https://es.wikipedia.org/wiki/Anexo:Palmar%C3%A9s_del_Club_Universitario_de_Deportes" }
+  ],
+  titles: [
+    { n: "4.º", year: "1941", text: "Cuarto campeonato nacional según la numeración de Andina.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
+    { n: "5.º", year: "1945", text: "Quinto título, según la misma galería.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
+    { n: "6.º", year: "1946", text: "Sexto título, según la misma galería.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
+    { n: "14.º", year: "1971", text: "Título número 14 en la numeración de Andina; un año después llegaría la final de la Libertadores.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
+    { n: "17.º", year: "1985", text: "Título número 17 según Andina.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
+    { n: "21.º", year: "1993", text: "Título número 21 según Andina.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
+    { n: "23.º", year: "1999", text: "Título número 23 según Andina.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
+    { n: "24.º", year: "2000", text: "La web oficial lo señala como la estrella 24.", src: "Universitario (web oficial)", url: "https://universitario.pe/historia" },
+    { n: "27.º", year: "2023", text: "Campeón con un 0-2 sobre Alianza Lima en la final; era el título 27 según el conteo de entonces.", src: "Libero", url: "https://libero.pe/futbol-peruano/universitario/2023/07/23/universitario-cuantos-titulos-nacionales-tiene" },
+    { n: "29.º", year: "2025", text: "Con la Liga 1 de 2025 completa el tricampeonato (2023, 2024 y 2025) y llega a 29 títulos.", src: "Universitario (web oficial)", url: "https://universitario.pe/historia" }
+  ],
+  titlesNote: "No se publica aquí la lista año por año porque las fuentes no coinciden: por ejemplo, la web oficial ubica el segundo título en 1930 o 1935 y Wikipedia lo ubica en 1934. Los hitos de arriba son los que se pudieron confirmar con su numeración. La lista completa está en el palmarés de Wikipedia.",
+  titlesSrc: { src: "Wikipedia: palmarés del club", url: "https://es.wikipedia.org/wiki/Anexo:Palmar%C3%A9s_del_Club_Universitario_de_Deportes" },
+  run72: [
+    { stage: "Primera fase", text: "Compartió grupo con Alianza Lima, Universidad de Chile y Unión San Felipe.", src: "El Comercio", url: "https://elcomercio.pe/deporte-total/futbol-peruano/universitario-y-la-final-de-la-copa-libertadores-72-las-postales-que-nunca-viste-de-la-historica-campana-en-la-libertadores-independiente-hector-chumpitaz-juan-carlos-oblitas-cachito-ramirez-noticia/" },
+    { stage: "Semifinal", text: "Triangular con Peñarol y Nacional. Los tres terminaron con 4 puntos y Universitario avanzó por diferencia de goles.", src: "Wikipedia", url: "https://en.wikipedia.org/wiki/1972_Copa_Libertadores" },
+    { stage: "Final, ida", text: "17 de mayo de 1972, Estadio Nacional de Lima: Universitario 0-0 Independiente.", src: "Wikipedia", url: "https://en.wikipedia.org/wiki/1972_Copa_Libertadores_finals" },
+    { stage: "Final, vuelta", text: "24 de mayo de 1972, en Avellaneda: Independiente 2-1 Universitario. Fue la tercera Libertadores del club argentino.", src: "Wikipedia", url: "https://en.wikipedia.org/wiki/1972_Copa_Libertadores_finals" }
+  ],
+  run72Facts: [
+    { title: "La primera final peruana", text: "La historia oficial del club recuerda que en 1972 llegó a la final por primera vez en la historia del fútbol peruano.", src: "Universitario (web oficial)", url: "https://universitario.pe/noticias/historia/dos-titulos-inolvidables-y-el-subcampeonato-de-la-copa-libertadores-1970-a-1979" },
+    { title: "El goleador y el capitán", text: "Oswaldo Ramírez fue uno de los máximos goleadores del torneo, con 6 goles, y Héctor Chumpitaz fue el capitán del equipo.", src: "El Comercio", url: "https://elcomercio.pe/deporte-total/futbol-peruano/universitario-y-la-final-de-la-copa-libertadores-72-las-postales-que-nunca-viste-de-la-historica-campana-en-la-libertadores-independiente-hector-chumpitaz-juan-carlos-oblitas-cachito-ramirez-noticia/" },
+    { title: "Un año de dos caras", text: "Ese año fue también subcampeón del Descentralizado, detrás de Sporting Cristal. Juan Carlos Oblitas fue elegido jugador joven del año.", src: "Wikipedia", url: "https://en.wikipedia.org/wiki/1972_Club_Universitario_de_Deportes_season" },
+    { title: "Medio siglo después", text: "En 2022 el club y la prensa conmemoraron los 50 años de aquella final, la fecha más recordada de su historia internacional.", src: "Andina", url: "https://andina.pe/agencia/noticia-universitario-celebra-hoy-50-anos-del-subcampeonato-de-copa-libertadores-894244.aspx" }
+  ],
+  libertadores: { part: 36, pj: 248, pg: 76, pe: 77, pp: 95, gf: 279, gc: 335, src: "Wikipedia: partidos internacionales", url: "https://es.wikipedia.org/wiki/Anexo:Partidos_internacionales_del_Club_Universitario_de_Deportes",
+    alt: "ESPN publicó antes una cuenta distinta (72 victorias, 69 empates y 85 derrotas, 226 partidos), probablemente desactualizada; por eso las cifras pueden variar según el medio.", altSrc: "ESPN", altUrl: "https://espndeportes.espn.com/futbol/copa-libertadores/nota/_/id/9967045/universitario-historia-resumen-historico-conmebol-libertadores-numeros" },
+  marks: [
+    { big: "6-0", label: "Always Ready, 1968", text: "Mayor goleada a favor que recoge Wikipedia en la Libertadores.", src: "Wikipedia", url: "https://es.wikipedia.org/wiki/Anexo:Partidos_internacionales_del_Club_Universitario_de_Deportes" },
+    { big: "5-1", label: "Wilstermann, 1968", text: "Otra goleada de ese mismo año en la Libertadores.", src: "Wikipedia", url: "https://es.wikipedia.org/wiki/Anexo:Partidos_internacionales_del_Club_Universitario_de_Deportes" },
+    { big: "6-3", label: "Alianza Lima, 1979", text: "Ganó el clásico por 6-3 en Matute en su primer partido de esa edición.", src: "Universitario (web oficial)", url: "https://universitario.pe/noticias/historia/dos-titulos-inolvidables-y-el-subcampeonato-de-la-copa-libertadores-1970-a-1979" }
+  ],
+  recent: [
+    { year: "2025", title: "Vuelve a octavos tras 15 años", text: "Se clasificó a octavos de final de la Libertadores con un 1-1 ante River Plate en la última fecha del grupo. Fue eliminado por Palmeiras.", src: "Wikipedia", url: "https://es.wikipedia.org/wiki/Anexo:Partidos_internacionales_del_Club_Universitario_de_Deportes" },
+    { year: "2026", title: "Fuera en la fase de grupos", text: "Cerró el Grupo B de la Libertadores 2026 en el cuarto lugar, con 1 victoria, 3 empates y 2 derrotas (5 goles a favor y 6 en contra), tras un 0-0 con Deportes Tolima en el Monumental. No pasó a los playoffs de la Sudamericana.", src: "El Comercio", url: "https://elcomercio.pe/deporte-total/futbol-peruano/grupo-de-universitario-en-la-copa-libertadores-en-vivo-partidos-y-resultados-para-clasificar-a-octavos-noticia/" }
+  ],
+  note: "Las cifras internacionales cambian según el medio y el corte de actualización. Cada dato indica su fuente. Para marcadores y estadísticas oficiales, consulta CONMEBOL."
+};
