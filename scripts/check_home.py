@@ -80,10 +80,27 @@ def main():
         raise AssertionError("No existe la hoja de estilos de lectura sencilla")
     if "visual-ai" not in html or "css/visual.css?v=__V__" not in html:
         raise AssertionError("Falta la portada gráfica")
-    for name in ("ai-hero.svg", "ai-news.svg", "ai-models.svg", "ai-learn.svg"):
-        file = ROOT / "site/visual" / name
-        if not file.is_file() or file.stat().st_size < 500:
-            raise AssertionError(f"Ilustración no disponible: {name}")
+    css = (ROOT / "site/css/visual.css").read_text(encoding="utf-8")
+    photos = ("ia-hero.jpg", "ia-news.jpg", "ia-models.jpg", "ia-learn.jpg")
+    for name in photos:
+        file = ROOT / "site/visual/photos" / name
+        if not file.is_file() or not 15000 < file.stat().st_size < 6_000_000:
+            raise AssertionError(f"Falta fotografía JPEG válida: {name}")
+        with file.open("rb") as img:
+            if img.read(3) != b"\xff\xd8\xff":
+                raise AssertionError(f"La fotografía no es JPEG: {name}")
+            img.seek(-2, 2)
+            if img.read(2) != b"\xff\xd9":
+                raise AssertionError(f"JPEG incompleto: {name}")
+        if f'url("../visual/photos/{name}")' not in css:
+            raise AssertionError(f"No se usa la fotografía real: {name}")
+    if re.search(r'url\("../visual/ai-(?:hero|news|models|learn)\.svg"\)', css):
+        raise AssertionError("El diseño sigue usando ilustraciones SVG")
+    if 'visual-hero-credit' not in html or 'visual-photo-credits' not in html:
+        raise AssertionError("Faltan atribuciones fotográficas y procedencia")
+    for item in ("Datacenter_Server_Racks_", "Woman_reading_and_working_on_laptop_at_home", "Technician_with_laptop_working_on_server_rack_at_NERSC", "Students_using_a_computer_laptop"):
+        if item not in html:
+            raise AssertionError(f"Falta crédito de fotografía {item}")
 
 
     crons = re.findall(r'^\s*- cron:\s*["\']([^"\']+)["\']', workflow, re.M)

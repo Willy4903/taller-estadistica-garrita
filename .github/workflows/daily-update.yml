@@ -34,6 +34,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Obtener fotografías reales para la portada (solo si faltan)
+        run: python scripts/fetch_ai_photos.py
+
       - name: Validar portada y automatización de IA Radar
         run: |
           python scripts/check_home.py
@@ -74,7 +77,7 @@ jobs:
         run: |
           git config user.name "ia-radar-bot"
           git config user.email "ia-radar-bot@users.noreply.github.com"
-          git add site/data site/history site/liga1/data
+          git add site/data site/history site/liga1/data site/visual/photos
           if git diff --cached --quiet; then
             echo "Sin cambios en los datos"
           else
