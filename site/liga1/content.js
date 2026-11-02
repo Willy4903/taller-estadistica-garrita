@@ -1,25 +1,231 @@
 /* Contenido editorial: historia, glosario y fuentes. Cada hecho histórico lleva su fuente. */
 window.LIGA1_CONTENT = {
   facts: [
-    { big: "1924", label: "Año de fundación", text: "El club nació el 7 de agosto de 1924, creado por estudiantes de la Universidad Mayor de San Marcos y de las Escuelas Especiales de Ingeniería y Agronomía.", src: "FutbolPeruano.com", url: "https://www.futbolperuano.com/liga-1/noticias/universitario-de-deportes-celebra-95-anos-de-vida-institucional-237362" },
-    { big: "29", label: "Títulos nacionales", text: "Las notas más recientes cuentan 29 campeonatos nacionales y lo mantienen como el club más ganador del país. El número cambia según el medio y la fecha: notas anteriores a 2023 hablaban de 26.", src: "Panamericana", url: "https://www.panamericana.pe/deportes/472461-universitario-fiesta-cremas-celebran-102-anos-historia" },
-    { big: "1972", label: "Final de Copa Libertadores", text: "Fue el primer club peruano en jugar una final de la Copa Libertadores. Cayó ante Independiente de Avellaneda (0-0 en Lima y 2-1 en Argentina).", src: "Wikipedia", url: "https://en.wikipedia.org/wiki/Club_Universitario_de_Deportes" },
-    { big: "80 mil", label: "Aforo del Monumental", text: "El Estadio Monumental, en Ate, alberga alrededor de 80 000 personas y es uno de los más grandes de Sudamérica.", src: "La República", url: "https://larepublica.pe/deportes/2024/11/08/el-unico-estadio-peruano-entre-los-50-mejores-del-mundo-es-el-segundo-con-mayor-capacidad-en-sudamerica-y-alberga-80000-personas-evat-460840" }
+    {
+      "big": "1924",
+      "label": "Año de fundación",
+      "text": "El 7 de agosto de 1924 estudiantes de San Marcos y de las escuelas de Ingeniería y Agronomía firmaron el acta de la Federación Universitaria de Fútbol, con José Rubio como primer presidente.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/historia",
+      "hk": "Nace en las aulas",
+      "hd": "Un club fundado por estudiantes que terminó siendo el más campeón del país."
+    },
+    {
+      "big": "29",
+      "label": "Estrellas nacionales",
+      "text": "La web oficial cuenta 29 campeonatos nacionales y 2 tricampeonatos: el de 1998-2000 y el de 2023-2025.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/historia",
+      "hk": "29 estrellas",
+      "hd": "Cada estrella es un campeonato nacional. Ningún club peruano tiene más."
+    },
+    {
+      "big": "1972",
+      "label": "Primera final peruana",
+      "text": "Llegó a la final de la Copa Libertadores por primera vez en la historia del fútbol peruano. Empató 0-0 en Lima y perdió 2-1 en Avellaneda ante Independiente.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/historia/dos-titulos-inolvidables-y-el-subcampeonato-de-la-copa-libertadores-1970-a-1979",
+      "hk": "Subcampeón de América",
+      "hd": "Un 0-0 en casa y un 2-1 en contra en Avellaneda separaron a la U de la gloria continental."
+    },
+    {
+      "big": "80 208",
+      "label": "Hinchas en el estreno",
+      "text": "El 2 de julio de 2000 el Monumental se estrenó con un 2-0 a Sporting Cristal, goles de Eduardo Esidio y Piero Alva, y 80 208 asistentes.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/institucional/el-estadio-monumental-u-marathon-cumple-25-anos-de-su-inauguracion",
+      "hk": "80 208 voces",
+      "hd": "La noche en que la nueva casa crema se llenó por primera vez."
+    }
   ],
   timeline: [
-    { year: "1924", title: "Nace el club", text: "El 7 de agosto de 1924 estudiantes sanmarquinos fundan el club con el nombre de Federación Universitaria de Fútbol.", src: "FutbolPeruano.com", url: "https://www.futbolperuano.com/liga-1/noticias/universitario-de-deportes-celebra-95-anos-de-vida-institucional-237362" },
-    { year: "1933", title: "Pasa a llamarse Universitario de Deportes", text: "El club adopta el nombre con el que se le conoce hasta hoy.", src: "FutbolPeruano.com", url: "https://www.futbolperuano.com/liga-1/noticias/universitario-de-deportes-celebra-95-anos-de-vida-institucional-237362" },
-    { year: "1972", title: "Subcampeón de América", text: "Llega a la final de la Copa Libertadores, la primera de un club peruano, y pierde con Independiente de Avellaneda.", src: "Wikipedia", url: "https://en.wikipedia.org/wiki/Club_Universitario_de_Deportes" },
-    { year: "2000", title: "Se inaugura el Monumental", text: "El 2 de julio de 2000 se estrena el estadio de Ate con un partido ante Sporting Cristal.", src: "Libero", url: "https://libero.pe/futbol-peruano/universitario/2022/07/02/universitario-deportes-cuando-se-inauguro-estadio-monumental-ate-22-anos-aniversario-66215" },
-    { year: "2023", title: "Campeón nacional", text: "Gana el campeonato con un 0-2 sobre Alianza Lima en la final y suma su título número 27 según el conteo de ese año.", src: "Libero", url: "https://libero.pe/futbol-peruano/universitario/2023/07/23/universitario-cuantos-titulos-nacionales-tiene-en-peru-segun-fpf-1052634" },
-    { year: "2024", title: "Cien años de historia", text: "El club celebra su centenario como el más campeón del Perú y consigue un nuevo campeonato.", src: "Expreso", url: "https://www.expreso.com.pe/deportes/universitario-de-deportes-festeja-100-anos-como-el-mas-campeon-del-peru-centenario-con-historia-y-garra-unmsm-lolo-fernandez-estadio-monumental-copa-libertadores-noticia/1121975/" },
-    { year: "2025", title: "Tricampeonato", text: "Con la Liga 1 de 2025 completa el tricampeonato (2023, 2024 y 2025).", src: "FutbolPeruano.com", url: "https://www.futbolperuano.com/liga-1/noticias/universitario-y-el-llamativo-baile-del-plantel-tras-obtener-el-tricampeonato-de-la-liga-1-546038" }
+    {
+      "year": "1924",
+      "title": "Nace el club",
+      "text": "El 7 de agosto estudiantes sanmarquinos firman el acta de la Federación Universitaria de Fútbol. El 19 de octubre juega su primer partido y vence 2-0 al Y.M.C.A.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/historia/a-98-anos-del-primer-partido-de-la-historia-de-universitario",
+      "hk": "Primer triunfo",
+      "hd": "2-0 al Y.M.C.A. en su estreno."
+    },
+    {
+      "year": "1929",
+      "title": "La primera estrella",
+      "text": "La web oficial dedica una nota a la primera estrella de la historia crema. Otra nota del mismo sitio ubica ese primer título en 1930, tras un 7-0 al Circolo Sportivo Italiano, por eso se muestran ambos años.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/historia/1929-la-primera-estrella-de-la-historia-de-universitario",
+      "hk": "Empieza la leyenda",
+      "hd": "De la primera estrella a las 29."
+    },
+    {
+      "year": "1933",
+      "title": "Nace Universitario de Deportes",
+      "text": "El club asume los derechos y obligaciones de la Federación y adopta el nombre que lleva hasta hoy.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/historia",
+      "hk": "Una nueva identidad",
+      "hd": "Universitario de Deportes, el nombre que cruzó un siglo."
+    },
+    {
+      "year": "1934",
+      "title": "El segundo título, ante Alianza",
+      "text": "Universitario consigue el segundo título nacional de su historia tras vencer 2-1 a Alianza Lima.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/historia/1934-el-segundo-titulo-de-nuestra-historia-tras-vencer-a-alianza-2",
+      "hk": "Primer clásico decisivo",
+      "hd": "Una final contra el eterno rival."
+    },
+    {
+      "year": "1945",
+      "title": "La delantera más efectiva",
+      "text": "Gana el título nacional con la delantera más efectiva del campeonato: 49 goles.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/historia/lolo-fernandez-y-los-inicios-de-su-historia-con-universitario-1931-a-1940-2",
+      "hk": "49 goles",
+      "hd": "Ataque crema en estado puro."
+    },
+    {
+      "year": "1946",
+      "title": "Primer bicampeonato",
+      "text": "Campeón por segundo año consecutivo: el primer bicampeonato de la historia crema.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/historia",
+      "hk": "De ida y vuelta",
+      "hd": "Dos años seguidos arriba."
+    },
+    {
+      "year": "1950",
+      "title": "La despedida de Lolo Fernández",
+      "text": "Tras la sexta y última estrella de su carrera en 1949, Teodoro «Lolo» Fernández juega su último partido el 30 de agosto de 1950 y sale en hombros tras un triplete.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/historia/lolo-fernandez-y-los-inicios-de-su-historia-con-universitario-1931-a-1940-2",
+      "hk": "Salió en hombros",
+      "hd": "Tres goles para cerrar una carrera de ídolo."
+    },
+    {
+      "year": "1966",
+      "title": "Primer campeón del Descentralizado",
+      "text": "La U gana el primer Campeonato Descentralizado y obtiene el boleto a la Copa Libertadores de 1967.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/historia",
+      "hk": "El primero de todos",
+      "hd": "Inauguró la era del fútbol nacional."
+    },
+    {
+      "year": "1972",
+      "title": "Subcampeón de América",
+      "text": "Llega a la final de la Libertadores por primera vez para el fútbol peruano. Cae ante Independiente de Avellaneda: 0-0 en Lima y 2-1 en Argentina.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/historia/dos-titulos-inolvidables-y-el-subcampeonato-de-la-copa-libertadores-1970-a-1979",
+      "hk": "Casi América",
+      "hd": "La noche más cercana a la copa continental."
+    },
+    {
+      "year": "1982",
+      "title": "La estrella 16",
+      "text": "Con Roberto Scarone en el banco, el club logra su estrella 16 tras ocho años sin títulos.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/historia/la-estrella-16-de-universitario-de-deportes",
+      "hk": "Fin de la sequía",
+      "hd": "Ocho años esperando; valió la pena."
+    },
+    {
+      "year": "1985",
+      "title": "La estrella 17",
+      "text": "Con Marcos Calderón como técnico, vence 4-0 a Los Espartanos en la Liguilla Final y se corona por decimoséptima vez.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/historia/la-estrella-17-la-mas-goleadora-de-nuestra-historia",
+      "hk": "La más goleadora",
+      "hd": "Una estrella escrita a goles."
+    },
+    {
+      "year": "1998",
+      "title": "Camino al tricampeonato",
+      "text": "Con Oswaldo Piazza, vence a Sporting Cristal en la final y logra la estrella 22. Siguen la 23 en 1999 ante Alianza Lima y la 24 en 2000.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/noticias-primer-equipo/1990-al-2000-seis-titulos-y-el-ultimo-tricampeonato-de-un-equipo-peruano",
+      "hk": "Tres seguidas",
+      "hd": "1998, 1999 y 2000: el primer tricampeonato crema."
+    },
+    {
+      "year": "2000",
+      "title": "Se inaugura el Monumental",
+      "text": "El 2 de julio estrena su casa con un 2-0 a Sporting Cristal y 80 208 asistentes. Ese año obtiene la estrella 24.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/institucional/el-estadio-monumental-u-marathon-cumple-25-anos-de-su-inauguracion",
+      "hk": "Casa nueva",
+      "hd": "El Coloso de Ate empezó a rugir."
+    },
+    {
+      "year": "2009",
+      "title": "Un título especial y Monumental",
+      "text": "La web oficial recuerda el campeonato de 2009 como un título especial y Monumental.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/historia/campeon-2009-un-titulo-especial-y-monumental",
+      "hk": "Campeón en casa",
+      "hd": "Una corona celebrada en el Monumental."
+    },
+    {
+      "year": "2023",
+      "title": "La estrella 27",
+      "text": "Campeón nacional tras derrotar 2-0 a Alianza Lima en Matute.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/cronica-partidos/universitario-campeon-nacional-2023-derroto-2-0-a-alianza-en-matute-y-logro-su-estrella-27",
+      "hk": "Ganar en Matute",
+      "hd": "La estrella 27 llegó en casa del rival."
+    },
+    {
+      "year": "2024",
+      "title": "Cien años de historia",
+      "text": "El 7 de agosto cumple 100 años. El club lanza con Panini el álbum oficial del Centenario y hace una fiesta con conciertos en el Monumental el 6 de agosto.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/marketing/universitario-de-deportes-y-panini-lanzan-el-album-oficial-del-centenario",
+      "hk": "Un siglo crema",
+      "hd": "100 años de camiseta, hinchada y títulos."
+    },
+    {
+      "year": "2025",
+      "title": "Tricampeón y estrella 29",
+      "text": "Gana el Apertura y el Clausura y se convierte en tricampeón por segunda vez en su historia. El título se aseguró tres fechas antes del final, en Tarma a 3 053 metros, con un 2-1 de remontada ante ADT.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/historia",
+      "hk": "La 29",
+      "hd": "Dos tricampeonatos: 1998-2000 y 2023-2025."
+    }
   ],
   curious: [
-    { title: "Un estadio con nombre de ídolo", text: "El Monumental lleva oficialmente el nombre de Teodoro \"Lolo\" Fernández, figura histórica del club.", src: "StadiumDB", url: "https://stadiumdb.com/stadiums/per/estadio_teodoro_lolo_fernandez" },
-    { title: "La Garra Crema", text: "La \"Garra Crema\" es la expresión que resume el espíritu del club y de su hinchada. De ahí viene también el nombre de la mascota, Garrita, un felino.", src: "Andina", url: "https://andina.pe/agencia/noticia-universitario-deportes-tradicional-garra-crema-cumple-hoy-98-anos-904651.aspx" },
-    { title: "Un estadio que también es escenario", text: "Dentro del complejo del Monumental funciona la Arena Monumental, un espacio para conciertos y grandes eventos.", src: "Panamericana", url: "https://panamericana.pe/deportes/452215-universitario-inaugura-arena-monumental-nuevo-espacio-conciertos-grandes-eventos" },
-    { title: "Cuántos títulos tiene", text: "El conteo depende de qué torneos se incluyan. Algunos portales internacionales suman todos los torneos oficiales, incluidos los cortos, y llegan a cifras mucho mayores que las de los campeonatos nacionales.", src: "Libero", url: "https://libero.pe/futbol-peruano/universitario/2025/07/01/universitario-tiene-realmente-52-titulos-segun-portal-internacional-67226" }
+    {
+      "title": "Lolo Fernández, el ídolo máximo",
+      "text": "Debutó a los 18 años y a los 36, en 1949, sumó la sexta y última estrella de su carrera. El estadio de Breña, casa del club entre 1952 y 2000, lleva su nombre.",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/historia/a-71-anos-de-la-inauguracion-del-mitico-estadio-lolo-fernandez",
+      "hk": "Ídolo eterno",
+      "hd": "Seis estrellas y un estadio con su nombre."
+    },
+    {
+      "title": "Histórico pase a octavos en 2025",
+      "text": "Con un 1-1 ante River Plate en Argentina, la U avanzó a octavos de final de la Libertadores. La web oficial lo titula «Histórico pase a octavos».",
+      "src": "U. de Deportes (web oficial)",
+      "url": "https://universitario.pe/noticias/cronica-partidos/historico-pase-a-octavos-universitario-igualo-1-1-con-river-plate-en-argentina-y-avanzo-de-fase",
+      "hk": "Hazaña en Argentina",
+      "hd": "Empate en casa de River y a octavos."
+    },
+    {
+      "title": "La Garra Crema",
+      "text": "La \"Garra Crema\" resume el espíritu del club y de su hinchada. De ahí viene también el nombre de la mascota, Garrita, un felino.",
+      "src": "Andina",
+      "url": "https://andina.pe/agencia/noticia-universitario-deportes-tradicional-garra-crema-cumple-hoy-98-anos-904651.aspx",
+      "hk": "Garra",
+      "hd": "Nunca se rinde, ni en la cancha ni en la tribuna."
+    },
+    {
+      "title": "Más que un estadio",
+      "text": "Dentro del complejo del Monumental funciona la Arena Monumental, un espacio para conciertos y grandes eventos.",
+      "src": "Panamericana",
+      "url": "https://panamericana.pe/deportes/452215-universitario-inaugura-arena-monumental-nuevo-espacio-conciertos-grandes-eventos",
+      "hk": "Escenario total",
+      "hd": "Fútbol, música y mucho más bajo el mismo techo."
+    }
   ],
   glossary: [
     { g: "En la tabla", t: "#", d: "Posición del club en la tabla." },
@@ -106,18 +312,23 @@ window.LIGA1_CONTENT.glory = {
     { big: "10", label: "Títulos femeninos", text: "Wikipedia registra 10 campeonatos nacionales para el equipo de fútbol femenino del club.", src: "Wikipedia", url: "https://es.wikipedia.org/wiki/Anexo:Palmar%C3%A9s_del_Club_Universitario_de_Deportes" }
   ],
   titles: [
-    { n: "4.º", year: "1941", text: "Cuarto campeonato nacional según la numeración de Andina.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
-    { n: "5.º", year: "1945", text: "Quinto título, según la misma galería.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
-    { n: "6.º", year: "1946", text: "Sexto título, según la misma galería.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
-    { n: "14.º", year: "1971", text: "Título número 14 en la numeración de Andina; un año después llegaría la final de la Libertadores.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
-    { n: "17.º", year: "1985", text: "Título número 17 según Andina.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
-    { n: "21.º", year: "1993", text: "Título número 21 según Andina.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
-    { n: "23.º", year: "1999", text: "Título número 23 según Andina.", src: "Andina", url: "https://andina.pe/agencia/galeria-27-titulos-universitario-deportes-a-largo-su-historia-20470.aspx" },
-    { n: "24.º", year: "2000", text: "La web oficial lo señala como la estrella 24.", src: "Universitario (web oficial)", url: "https://universitario.pe/historia" },
-    { n: "27.º", year: "2023", text: "Campeón con un 0-2 sobre Alianza Lima en la final; era el título 27 según el conteo de entonces.", src: "Libero", url: "https://libero.pe/futbol-peruano/universitario/2023/07/23/universitario-cuantos-titulos-nacionales-tiene" },
-    { n: "29.º", year: "2025", text: "Con la Liga 1 de 2025 completa el tricampeonato (2023, 2024 y 2025) y llega a 29 títulos.", src: "Universitario (web oficial)", url: "https://universitario.pe/historia" }
+    { n: "1.º", year: "1929", text: "Primera estrella de la historia crema; la web oficial también la ubica en 1930 tras un 7-0 al Circolo Sportivo Italiano.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/noticias/historia/1929-la-primera-estrella-de-la-historia-de-universitario" },
+    { n: "2.º", year: "1934", text: "Segundo título, tras vencer 2-1 a Alianza Lima.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/noticias/historia/1934-el-segundo-titulo-de-nuestra-historia-tras-vencer-a-alianza-2" },
+    { n: "5.º", year: "1945", text: "Campeón con la delantera más efectiva: 49 goles.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/noticias/historia/lolo-fernandez-y-los-inicios-de-su-historia-con-universitario-1931-a-1940-2" },
+    { n: "6.º", year: "1946", text: "Segundo título seguido: el primer bicampeonato de la historia.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/historia" },
+    { n: "10.º", year: "1964", text: "Las diez estrellas llegan en el año de los 40 años del club.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/historia" },
+    { n: "11.º", year: "1966", text: "Primer campeón del Campeonato Descentralizado.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/historia" },
+    { n: "14.º", year: "1971", text: "Título previo a la final de la Libertadores de 1972 (la web oficial lo ubica en 1970 o 1971).", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/noticias/historia/dos-titulos-inolvidables-y-el-subcampeonato-de-la-copa-libertadores-1970-a-1979" },
+    { n: "16.º", year: "1982", text: "Con Roberto Scarone, tras ocho años sin títulos.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/noticias/historia/la-estrella-16-de-universitario-de-deportes" },
+    { n: "17.º", year: "1985", text: "Con Marcos Calderón, tras un 4-0 a Los Espartanos en la Liguilla Final.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/noticias/historia/la-estrella-17-la-mas-goleadora-de-nuestra-historia" },
+    { n: "18.º", year: "1987", text: "Con Juan Carlos Oblitas como técnico.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/noticias/historia/cuatro-titulos-nacionales-y-el-debut-de-grandes-referentes-1981-a-1990" },
+    { n: "19.º", year: "1990", text: "Final ante Sport Boys, con Fernando Cuéllar como técnico.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/noticias/historia/cuatro-titulos-nacionales-y-el-debut-de-grandes-referentes-1981-a-1990" },
+    { n: "22.º", year: "1998", text: "Con Oswaldo Piazza, final ante Sporting Cristal. Inicio del tricampeonato 1998-2000.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/noticias/noticias-primer-equipo/1990-al-2000-seis-titulos-y-el-ultimo-tricampeonato-de-un-equipo-peruano" },
+    { n: "24.º", year: "2000", text: "Estrella del tricampeonato, el año en que se inauguró el Monumental.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/noticias/noticias-primer-equipo/1990-al-2000-seis-titulos-y-el-ultimo-tricampeonato-de-un-equipo-peruano" },
+    { n: "27.º", year: "2023", text: "Campeón con un 2-0 a Alianza Lima en Matute.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/noticias/cronica-partidos/universitario-campeon-nacional-2023-derroto-2-0-a-alianza-en-matute-y-logro-su-estrella-27" },
+    { n: "29.º", year: "2025", text: "Gana Apertura y Clausura, completa el tricampeonato 2023-2025 y llega a 29 títulos.", src: "U. de Deportes (web oficial)", url: "https://universitario.pe/historia" }
   ],
-  titlesNote: "No se publica aquí la lista año por año porque las fuentes no coinciden: por ejemplo, la web oficial ubica el segundo título en 1930 o 1935 y Wikipedia lo ubica en 1934. Los hitos de arriba son los que se pudieron confirmar con su numeración. La lista completa está en el palmarés de Wikipedia.",
+  titlesNote: "Los hitos salen de la web oficial del club. Algunas notas del propio sitio dan años distintos para el mismo título (por ejemplo, el primero en 1929 o 1930, o la estrella 14 en 1970 o 1971), por eso se avisa en cada caso. La lista completa año por año está en el palmarés de Wikipedia.",
   titlesSrc: { src: "Wikipedia: palmarés del club", url: "https://es.wikipedia.org/wiki/Anexo:Palmar%C3%A9s_del_Club_Universitario_de_Deportes" },
   run72: [
     { stage: "Primera fase", text: "Compartió grupo con Alianza Lima, Universidad de Chile y Unión San Felipe.", src: "El Comercio", url: "https://elcomercio.pe/deporte-total/futbol-peruano/universitario-y-la-final-de-la-copa-libertadores-72-las-postales-que-nunca-viste-de-la-historica-campana-en-la-libertadores-independiente-hector-chumpitaz-juan-carlos-oblitas-cachito-ramirez-noticia/" },
