@@ -1,0 +1,71 @@
+name: Liga 1 - resultados durante partidos
+
+on:
+  schedule:
+    # Cada 10 minutos; GitHub Actions puede retrasar las ejecuciones programadas.
+    - cron: "3,13,23,33,43,53 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  scores-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: "$"+"{{ steps.deployment.outputs.page_url }}"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Comprobar ventana de partido (hora de Lima)
+        id: window
+        shell: bash
+        run: |
+          if python scripts/update_liga1_scores.py --check-window; then
+            echo "active=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "active=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Instalar parser web
+        if: steps.window.outputs.active == 'true'
+        run: pip install beautifulsoup4 lxml
+      - name: Leer marcadores y comparar con datos publicados
+        if: steps.window.outputs.active == 'true'
+        run: python scripts/update_liga1_scores.py
+      - name: Identificar cambios
+        if: steps.window.outputs.active == 'true'
+        id: changes
+        shell: bash
+        run: |
+          if git diff --quiet -- site/liga1/data/live.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Guardar resultados nuevos
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "liga1-results-bot"
+          git config user.email "liga1-results-bot@users.noreply.github.com"
+          git add site/liga1/data/live.json
+          git commit -m "Actualizar resultados Liga 1"
+          git pull --rebase origin main
+          git push origin main
+      - uses: actions/configure-pages@v5
+        if: steps.changes.outputs.changed == 'true'
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.changes.outputs.changed == 'true'
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
+        if: steps.changes.outputs.changed == 'true'
