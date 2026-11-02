@@ -1,0 +1,39 @@
+name: Validar navegación y actualización de IA Radar
+
+on:
+  pull_request:
+    paths:
+      - site/index.html
+      - site/css/**
+      - site/js/**
+      - scripts/check_home.py
+      - .github/workflows/daily-update.yml
+      - .github/workflows/validate-ia-radar.yml
+  push:
+    branches: [main]
+    paths:
+      - site/index.html
+      - site/css/**
+      - site/js/**
+      - scripts/check_home.py
+      - .github/workflows/daily-update.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Comprobar estructura, enlaces y dos ejecuciones diarias
+        run: python scripts/check_home.py
+      - name: Verificar sintaxis de JavaScript
+        run: |
+          node --check site/js/core.js
+          node --check site/js/hoy.js
+          node --check site/js/ruta.js
+          node --check site/js/hero.js
+          node --check site/js/fuentes.js
