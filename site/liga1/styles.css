@@ -917,3 +917,12 @@ table.nopend .pendh,table.nopend td.pend{display:none}
   .tabs button[aria-selected="true"]::after{left:8px;right:8px}
   .calc-sum{top:calc(66px + env(safe-area-inset-top,0px))}
 }
+
+/* Títulos y gloria internacional */
+.fact-grid.fact-3{grid-template-columns:repeat(3,1fr)}
+.tl-stage{font-size:22px;line-height:1.1}
+.wdl{display:flex;height:26px;margin:12px 0 6px;border-radius:8px;overflow:hidden;border:1px solid var(--line);font:700 13px/26px var(--disp);letter-spacing:.06em;text-align:center}
+.wdl-w{background:var(--ok);color:#06210f}
+.wdl-d{background:var(--gold);color:#2a2000}
+.wdl-l{background:var(--bad);color:#2a0409}
+@media (max-width:900px){.fact-grid.fact-3{grid-template-columns:1fr}}
