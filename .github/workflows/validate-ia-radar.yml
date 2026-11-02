@@ -7,6 +7,8 @@ on:
       - site/css/**
       - site/js/**
       - scripts/check_home.py
+      - scripts/fetch_ai_photos.py
+      - site/visual/**
       - .github/workflows/daily-update.yml
       - .github/workflows/validate-ia-radar.yml
   push:
@@ -28,6 +30,8 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+      - name: Descargar y verificar las cuatro fotografías reales
+        run: python scripts/fetch_ai_photos.py
       - name: Comprobar estructura, enlaces y dos ejecuciones diarias
         run: python scripts/check_home.py
       - name: Verificar sintaxis de JavaScript
