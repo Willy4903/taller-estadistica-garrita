@@ -1,0 +1,35 @@
+/* Historia de Universitario: lectura abierta, fuentes visibles y adaptación móvil. */
+.hist-simple{max-width:1120px;margin:0 auto;color:var(--ink)}
+.hist-intro{padding:clamp(18px,3vw,28px);border:1px solid var(--line);border-radius:18px;background:var(--card-2);margin:0 0 28px}
+.hist-intro h3{font:800 clamp(1.35rem,2.8vw,1.9rem)/1.16 var(--disp);margin:0 0 9px}
+.hist-intro p{color:var(--muted);max-width:70ch;line-height:1.7;margin:0 0 18px;font-size:.94rem}
+.hist-jumps{display:flex;flex-wrap:wrap;gap:9px}
+.hist-jumps button,.hist-link-btn{cursor:pointer;font:700 .9rem/1.35 var(--body);border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:11px 14px;min-height:44px}
+.hist-jumps button:hover,.hist-link-btn:hover{border-color:var(--accent);color:var(--gold)}
+.hist-part{margin:25px 0 38px;scroll-margin-top:120px}
+.hist-part>h3{margin:0 0 16px;font:800 clamp(1.3rem,2.4vw,1.75rem)/1.2 var(--disp)}
+.hist-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.hist-fact,.hist-curiosity{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:20px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.hist-fact-number{font:800 clamp(2.1rem,4vw,3.2rem)/1 var(--disp);color:var(--gold);font-variant-numeric:tabular-nums}
+.hist-fact h3{font:800 1.15rem/1.25 var(--body);margin:0}
+.hist-fact p,.hist-curiosity p,.hist-milestone p{font-size:.94rem;line-height:1.72;color:var(--ink);margin:0 0 5px}
+.hist-fact .src-link,.hist-curiosity .src-link,.hist-milestone .src-link{margin-top:auto;font-size:.82rem;line-height:1.5;word-break:break-word;display:inline-block}
+.hist-timeline{display:grid;gap:12px;list-style:none;margin:0;padding:0}
+.hist-milestone{display:grid;grid-template-columns:95px minmax(0,1fr);gap:18px;padding:17px 20px;border-radius:12px;border:1px solid var(--line);background:var(--card)}
+.hist-year{font:800 1.6rem/1.2 var(--disp);color:var(--gold);font-variant-numeric:tabular-nums}
+.hist-milestone h4,.hist-curiosity h4{font:800 1.04rem/1.35 var(--body);margin:0 0 9px}
+.hist-other{border-radius:14px;background:var(--card-2);border:1px solid var(--line);margin:0 0 24px;scroll-margin-top:100px}
+.hist-other>summary{list-style-position:inside;padding:17px 20px;cursor:pointer;font:750 1rem/1.45 var(--body);min-height:52px}
+.hist-curiosities{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:8px 18px 18px}
+.hist-method{max-width:86ch;color:var(--muted);font-size:.87rem;line-height:1.7;margin:12px 0}
+.hist-link-btn{display:inline;color:var(--gold);background:none;padding:1px 3px;border:0;min-height:0;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:670px){
+ .hist-facts,.hist-curiosities{grid-template-columns:1fr}
+ .hist-milestone{grid-template-columns:1fr;gap:7px;padding:15px}
+ .hist-fact{padding:16px}
+ .hist-intro{padding:16px}
+ .hist-jumps{display:grid;grid-template-columns:1fr}
+ .hist-jumps button{text-align:left}
+ .hist-curiosities{padding:8px 12px 12px}
+}
+@media(prefers-reduced-motion:reduce){.hist-jumps button{transition:none}}
