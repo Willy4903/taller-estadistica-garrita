@@ -37,6 +37,7 @@
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* sin almacenamiento */ } }
 
   var preds = {};
+  var predsOn = false; /* las tablas son siempre las oficiales hasta que el usuario activa sus pronósticos */
   try { preds = JSON.parse(lsGet(STORE) || "{}") || {}; } catch (e) { preds = {}; }
   function savePreds() { lsSet(STORE, JSON.stringify(preds)); }
   function fkey(f) { return f.t + "|" + f.f + "|" + f.h + "|" + f.a; }
@@ -44,7 +45,7 @@
   /* resultado efectivo: oficial o pronóstico */
   function eff(f, usePreds) {
     if (f.hg != null && f.ag != null) return { h: f.hg, a: f.ag, src: "official" };
-    if (usePreds !== false) {
+    if (usePreds !== false && predsOn) {
       var p = preds[fkey(f)];
       if (p) return { h: p[0], a: p[1], src: "pred" };
     }
@@ -136,7 +137,7 @@
   }
   /* partidos por jugar de un equipo (sin resultado oficial ni hora ya pasada); tor = "A", "C" o "T" (todos) */
   function pendingOf(id, tor) {
-    var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg == null && !preds[fkey(f)] && (tor === "T" || f.t === tor); });
+    var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg == null && !(predsOn && preds[fkey(f)]) && (tor === "T" || f.t === tor); });
     list.sort(byWhen);
     return list;
   }
@@ -404,7 +405,7 @@
     var firstOk = rows.slice().reverse().filter(function (r) { return r.pr >= 50; })[0];
     var rivals = S.C.filter(function (r) { return r.id !== FOCUS; }).map(function (r) { return { r: r, max: r.pts + 3 * clPending(r.id), w: R.win[r.id] }; })
       .sort(function (x, y) { return y.w - x.w || y.max - x.max; }).slice(0, 4);
-    var h = '<div class="cam-head"><h2>Camino al título del Clausura</h2><p class="sub">Lo que le falta a la U para campeonar y qué pasa después. Se recalcula con los marcadores que escribas en la Calculadora.</p></div>' +
+    var h = '<div class="cam-head"><h2>Camino al título del Clausura</h2><p class="sub">Lo que le falta a la U para campeonar y qué pasa después. Por defecto usa solo resultados oficiales; si escribes marcadores en la Calculadora, se recalcula con ellos.</p></div>' +
       '<div class="cam-grid"><article class="cam-card"><h3>Lo que falta</h3>' +
       (pend.length ? '<ul class="cam-list">' + pend.map(function (f) {
         var home = f.h === FOCUS, rv = BY[home ? f.a : f.h];
@@ -495,6 +496,7 @@
     var pkey = fkey(f), had = !!preds[pkey];
     if (h !== "" && a !== "" && +h >= 0 && +a >= 0) preds[pkey] = [Math.floor(+h), Math.floor(+a)];
     else delete preds[pkey];
+    if (preds[pkey]) predsOn = true;
     savePreds();
     $(".fx-foot .tag", card).outerHTML = tagFor(f);
     renderAll(true);
@@ -511,7 +513,7 @@
       if (f.hg != null) return;
       var l = lambdas(f), k = fkey(f);
       made.push({ f: f, key: k, had: !!preds[k] });
-      preds[k] = [pois(l[0]), pois(l[1])];
+      preds[k] = [pois(l[0]), pois(l[1])]; predsOn = true;
     });
     savePreds(); renderFixtures(); renderAll(true);
     made.forEach(function (m) { L1.emit("pred", { f: m.f, key: m.key, val: preds[m.key], isNew: !m.had }); });
@@ -723,7 +725,7 @@
     if (!had) return;
     undoPreds = JSON.parse(JSON.stringify(preds));
     var clearedKeys = Object.keys(preds);
-    preds = {}; savePreds();
+    preds = {}; savePreds(); predsOn = false;
     clearTimeout(undoTimer);
     undoTimer = setTimeout(function () { undoPreds = null; renderCalcSum(); }, 8000);
     renderFixtures(); fillFechaSel(); renderAll(true);
@@ -731,7 +733,7 @@
   }
   function restorePreds() {
     if (!undoPreds) return;
-    preds = undoPreds; undoPreds = null; clearTimeout(undoTimer);
+    preds = undoPreds; undoPreds = null; predsOn = true; clearTimeout(undoTimer);
     savePreds(); renderFixtures(); fillFechaSel(); renderAll(true);
     Object.keys(preds).forEach(function (k) { var f = D.fixtures.filter(function (x) { return fkey(x) === k; })[0]; if (f) L1.emit("pred", { f: f, key: k, val: preds[k], isNew: false }); });
   }
@@ -1275,13 +1277,22 @@
 
   /* ---------- orquestación ---------- */
   var view = "acum", proStale = true;
+  function setPredsOn(v) { predsOn = v; renderFixtures(); fillFechaSel(); renderAll(true); }
   function renderPredBanner() {
     var b = $("#predBanner"); if (!b) return;
     var n = D.fixtures.filter(function (f) { return f.hg == null && preds[fkey(f)]; }).length;
     b.hidden = !n;
     if (!n) return;
-    b.innerHTML = '<strong>Estás viendo tus pronósticos.</strong> ' + n + (n === 1 ? " partido pronosticado cuenta" : " partidos pronosticados cuentan") + ' como jugados en las tablas (por eso cambian PJ y puntos). <button type="button" class="btn ghost" id="predOff">Volver a la tabla oficial</button>';
-    $("#predOff").addEventListener("click", clearPreds);
+    var pl = n === 1 ? " partido pronosticado" : " partidos pronosticados";
+    if (predsOn) {
+      b.innerHTML = '<strong>Estás viendo tus pronósticos.</strong> ' + n + pl + " cuentan como jugados en las tablas (por eso cambian PJ y puntos). " +
+        '<button type="button" class="btn ghost" id="predOff">Volver a la tabla oficial</button>';
+      $("#predOff").addEventListener("click", function () { setPredsOn(false); });
+    } else {
+      b.innerHTML = "<strong>Tablas oficiales.</strong> Tienes " + n + pl + " guardados en este navegador; no se cuentan en las tablas. " +
+        '<button type="button" class="btn ghost" id="predOn">Ver tablas con mis pronósticos</button>';
+      $("#predOn").addEventListener("click", function () { setPredsOn(true); });
+    }
   }
   function renderAll(fromCalc) {
     recompute();
