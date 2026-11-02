@@ -1,0 +1,44 @@
+/* IA Radar — portada editorial con ilustraciones SVG originales. Datos y secciones intactos. */
+body[data-page="home"]{background:linear-gradient(180deg,#081629,#0e1b2d 800px,#0b1422)}
+:root[data-theme="light"] body[data-page="home"]{background:linear-gradient(180deg,#f4f7fc,#f8fafc 800px,#f7f9fc)}
+.stage.visual-ai{max-width:1420px;padding-top:14px;padding-bottom:36px;overflow:visible}
+.stage.visual-ai .sphere{display:none}
+.stage.visual-ai .stage-grid{max-width:none;min-height:435px;position:relative;overflow:hidden;align-items:stretch;border-radius:22px;background:#061a33 url("../visual/ai-hero.svg") center/cover no-repeat;box-shadow:0 22px 62px -42px #0d315cbb}
+.stage.visual-ai .stage-grid:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#071629ee 0%,#061a35df 35%,#09274440 72%,transparent)}
+.stage.visual-ai .st-col{z-index:1;justify-content:center;max-width:790px;padding:48px 45px}
+.stage.visual-ai .st-head{text-align:left;padding:0}
+.stage.visual-ai .st-badge{background:#043f6ab0;border:1px solid #80c4ff80;color:#d8eeff;box-shadow:none;font-size:.7rem;letter-spacing:.13em;padding:7px 12px}
+.stage.visual-ai .st-title{max-width:14ch;font:800 clamp(2.2rem,4.15vw,4.2rem)/1.09 "Inter",sans-serif;letter-spacing:-.05em;background:none;color:#fff;-webkit-text-fill-color:#fff;filter:none}
+.stage.visual-ai .st-tag{max-width:32ch;margin:9px 0 0;font:800 clamp(1.5rem,2.9vw,2.7rem)/1.17 "Inter",sans-serif;color:#a8e5fc;text-shadow:none;letter-spacing:-.035em}
+.stage.visual-ai .visual-summary{margin:15px 0 0;max-width:55ch;font-size:1rem;line-height:1.65;color:#e4f4ff}
+.stage.visual-ai .st-cta{margin-top:24px;justify-content:flex-start}
+.stage.visual-ai .st-cta .btn{border-radius:99px;padding:12px 22px;min-height:44px}
+.stage.visual-ai #hero-meta{margin-top:18px;color:#dceaf9;font-size:.78rem}
+.stage.visual-ai .insight{max-width:690px;margin-top:19px;backdrop-filter:blur(12px);background:#06294bce;border:1px solid #ffffff2b;border-radius:14px}
+.stage.visual-ai .insight .ins-t p,.stage.visual-ai .insight .ins-f{color:#dceaff}
+.stage.visual-ai .simple-entry{margin:33px 0 16px}
+.stage.visual-ai .simple-entry h2{font:800 clamp(1.5rem,2.6vw,2rem)/1.2 "Inter",sans-serif;letter-spacing:-.03em}
+.stage.visual-ai .simple-entry>p:last-child{font-size:.96rem}
+.stage.visual-ai .simple-start{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.stage.visual-ai .simple-start>a{position:relative;isolation:isolate;border:0;border-radius:20px;overflow:hidden;min-height:335px;padding:23px 21px;background:#ece7fc;box-shadow:0 15px 40px -27px #132b5366;display:flex;flex-direction:column;gap:11px;color:#142638;transition:transform .18s,box-shadow .18s}
+.stage.visual-ai .simple-start>a:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.95}
+.stage.visual-ai .simple-start>a:after{content:"";position:absolute;right:0;bottom:0;width:70%;height:51%;z-index:-1;background-size:contain;background-position:right bottom;background-repeat:no-repeat}
+.stage.visual-ai .simple-start>a:nth-child(1){background:linear-gradient(135deg,#efebff,#d5c6f6)}
+.stage.visual-ai .simple-start>a:nth-child(2){background:linear-gradient(135deg,#e5f4ff,#b3dafa)}
+.stage.visual-ai .simple-start>a:nth-child(3){background:linear-gradient(135deg,#e3fff3,#afe8cd)}
+.stage.visual-ai .simple-start>a:nth-child(1):after{background-image:url("../visual/ai-news.svg")}
+.stage.visual-ai .simple-start>a:nth-child(2):after{background-image:url("../visual/ai-models.svg")}
+.stage.visual-ai .simple-start>a:nth-child(3):after{background-image:url("../visual/ai-learn.svg")}
+.stage.visual-ai .simple-start>a:hover{transform:translateY(-3px);box-shadow:0 22px 40px -25px #132b5399}
+.stage.visual-ai .simple-start .simple-step{font-weight:850;font-size:.73rem;letter-spacing:.08em;color:#3547a5}
+.stage.visual-ai .simple-start>a:nth-child(2) .simple-step{color:#0a6196}
+.stage.visual-ai .simple-start>a:nth-child(3) .simple-step{color:#0d7953}
+.stage.visual-ai .simple-start .tx{gap:9px}
+.stage.visual-ai .simple-start .tx b{font:850 clamp(1.15rem,1.8vw,1.55rem)/1.17 "Inter",sans-serif;letter-spacing:-.035em;color:#101f35;max-width:19ch}
+.stage.visual-ai .simple-start .tx>span{font-size:.88rem;line-height:1.55;color:#34455d;max-width:29ch}
+.stage.visual-ai .simple-start .simple-go{margin-top:auto;display:inline-flex;align-self:flex-start;border-radius:99px;padding:9px 14px;background:#fff;color:#1a3a7e;font-weight:800;font-size:.82rem;box-shadow:0 4px 15px #00000017}
+.stage.visual-ai .simple-extra{margin-top:20px;border-radius:15px}
+.stage.visual-ai .simple-start>a:focus-visible{outline:3px solid #2f7ed8;outline-offset:3px}
+@media(max-width:920px){.stage.visual-ai .stage-grid{min-height:380px;background-position:58% center}.stage.visual-ai .st-col{padding:30px}.stage.visual-ai .simple-start{grid-template-columns:repeat(2,minmax(0,1fr))}.stage.visual-ai .simple-start>a:nth-child(3){grid-column:1/-1}}
+@media(max-width:650px){.stage.visual-ai{padding-top:8px}.stage.visual-ai .stage-grid{min-height:420px;background-position:65% center;border-radius:14px}.stage.visual-ai .stage-grid:before{background:linear-gradient(90deg,#041426ef,#061b36d9 55%,#0b294b78)}.stage.visual-ai .st-col{padding:26px 17px;justify-content:flex-start}.stage.visual-ai .st-badge{font-size:.6rem;line-height:1.4}.stage.visual-ai .st-title{font-size:clamp(2.1rem,8.5vw,3.1rem)}.stage.visual-ai .st-tag{font-size:clamp(1.35rem,5.5vw,2.05rem)}.stage.visual-ai .visual-summary{font-size:.9rem}.stage.visual-ai .st-cta{gap:8px}.stage.visual-ai .st-cta .btn{padding:10px 14px;font-size:.82rem}.stage.visual-ai .insight{display:none}.stage.visual-ai .simple-entry{margin:22px 0 10px}.stage.visual-ai .simple-start{grid-template-columns:1fr;gap:11px}.stage.visual-ai .simple-start>a,.stage.visual-ai .simple-start>a:nth-child(3){min-height:230px;grid-column:auto;padding:18px}.stage.visual-ai .simple-start>a:after{width:53%;height:54%}.stage.visual-ai .simple-start .tx b{font-size:1.24rem}.stage.visual-ai .simple-start .tx>span{max-width:24ch;font-size:.83rem}}
+@media(prefers-reduced-motion:reduce){.stage.visual-ai .simple-start>a{transition:none}.stage.visual-ai .simple-start>a:hover{transform:none}}
