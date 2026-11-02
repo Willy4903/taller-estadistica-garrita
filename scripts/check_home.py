@@ -78,6 +78,13 @@ def main():
         raise AssertionError("Falta filtro opcional de noticias")
     if not (ROOT / "site/css/simple.css").is_file():
         raise AssertionError("No existe la hoja de estilos de lectura sencilla")
+    if "visual-ai" not in html or "css/visual.css?v=__V__" not in html:
+        raise AssertionError("Falta la portada gráfica")
+    for name in ("ai-hero.svg", "ai-news.svg", "ai-models.svg", "ai-learn.svg"):
+        file = ROOT / "site/visual" / name
+        if not file.is_file() or file.stat().st_size < 500:
+            raise AssertionError(f"Ilustración no disponible: {name}")
+
 
     crons = re.findall(r'^\s*- cron:\s*["\']([^"\']+)["\']', workflow, re.M)
     if crons != ["5 13 * * *", "5 1 * * *"]:
