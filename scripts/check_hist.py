@@ -59,6 +59,21 @@ def main():
             assert stream.read(3) == b"\xff\xd8\xff", f"No es JPEG: {name}"
             stream.seek(-2, 2)
             assert stream.read(2) == b"\xff\xd9", f"JPEG incompleto: {name}"
+    # Diseño aprobado: bandera local, datos históricos y cinco accesos funcionales.
+    assert (ROOT / "img/bandera-u-historia.svg").exists(), "Falta bandera local"
+    banner = (ROOT / "img/bandera-u-historia.svg").read_text(encoding="utf-8")
+    assert 'viewBox="0 0 1000 710"' in banner and '<svg' in banner, "Bandera SVG inválida"
+    assert "hist-reference-panel" in code and "hist-overview" in code
+    assert "hist-reference-nav" in code and "hist-showcase" in styles
+    assert "bandera-u-historia.svg" in styles
+    for item in ("Resumen", "Línea de tiempo", "Títulos", "Estadísticas", "Curiosidades"):
+        assert item in code, f"Falta navegación: {item}"
+    assert "hist-estadisticas" in code
+    assert 'data-hist-view="C"' in code, "Se perdió el acceso al Clausura"
+    assert 'class="hist-reference-tab' in code
+    assert 'var titleCount = titles ? esc(titles.big)' in code, "Los títulos deben salir de los datos"
+    assert 'stat(\'Títulos nacionales\',titleCount' in code, "Se perdió la métrica documentada"
+    assert "hist-photo-credit" in code, "No se preservaron atribuciones"
     print("OK historia: navegación, lectura directa y referencias visibles")
 
 
