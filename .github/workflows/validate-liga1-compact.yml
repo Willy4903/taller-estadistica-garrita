@@ -1,0 +1,35 @@
+name: Validar portada compacta de Liga 1
+on:
+  pull_request:
+    paths:
+      - "site/liga1/**"
+      - "scripts/check_liga1_compact.cjs"
+      - ".github/workflows/validate-liga1-compact.yml"
+  push:
+    branches: [main]
+    paths:
+      - "site/liga1/**"
+      - "scripts/check_liga1_compact.cjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Preparar Chromium
+        run: |
+          npm install --no-save playwright@1.49.0
+          npx playwright install --with-deps chromium
+      - name: Comprobar portada de Clausura en escritorio, tableta y móvil
+        run: |
+          python3 -m http.server 8765 --directory site > /tmp/liga1-http.log 2>&1 &
+          sleep 3
+          node scripts/check_liga1_compact.cjs

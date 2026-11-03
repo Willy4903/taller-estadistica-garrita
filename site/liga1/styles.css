@@ -994,3 +994,39 @@ table.nopend .pendh,table.nopend td.pend{display:none}
   .cond-l{flex:1 0 100%}
   #tbl-acum.cond th:nth-child(12),#tbl-acum.cond td:nth-child(12){display:table-cell}
 }
+
+
+/* Ajuste de densidad visual: portada Liga 1 sin espacios excesivos (2026-11-03). */
+/* No toca el diseño propio de Historia; mantiene datos, tarjetas y navegación. */
+@media (min-width:821px){
+  body:not([data-view="hist"]) > .hero{padding:25px 0 26px}
+  .hero-in{column-gap:24px}
+  .hero h1{font-size:clamp(62px,9.3vw,108px)}
+  .hero .lead{margin:10px 0 13px;line-height:1.44}
+  .hero .kpis{gap:10px}
+  .hero .kpi{padding:11px 15px;border-radius:15px}
+  .hero .kpi .v{font-size:clamp(38px,3.8vw,46px)}
+  .hero + .wrap .banner{margin-top:9px;padding:9px 13px}
+  .tabs-bar{margin-top:9px}
+  .tabs button{padding:8px 12px;font-size:15px;min-height:35px}
+  main > .view{padding-top:14px}
+}
+@media (min-width:641px) and (max-width:820px){
+  body:not([data-view="hist"]) > .hero{padding:22px 0 24px}
+  .hero-in{gap:14px}
+  .hero .lead{margin:8px 0 12px}
+  .hero .kpis{gap:9px}
+  .hero .kpi{padding:10px 13px}
+  .hero + .wrap .banner{margin-top:9px}
+  .tabs-bar{margin-top:8px}
+  .tabs button{padding:8px 11px;font-size:15px;min-height:35px}
+  main > .view{padding-top:14px}
+}
+@media (max-width:640px){
+  body:is([data-view="acum"],[data-view="A"],[data-view="C"]) > .hero{padding:12px 0 15px}
+  .hero .next{margin-top:9px}
+  .hero .kpis{gap:6px}
+  .hero .kpi{padding:9px 10px}
+  .hero + .wrap .banner{margin-top:8px}
+  main > .view{padding-top:12px}
+}
