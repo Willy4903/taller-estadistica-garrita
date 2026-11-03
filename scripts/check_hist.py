@@ -59,6 +59,23 @@ def main():
             assert stream.read(3) == b"\xff\xd8\xff", f"No es JPEG: {name}"
             stream.seek(-2, 2)
             assert stream.read(2) == b"\xff\xd9", f"JPEG incompleto: {name}"
+    # Diseño aprobado: la bandera es un recurso local y no un pantallazo con textos incrustados.
+    flag = ROOT / "img/hist-bandera.svg"
+    assert flag.exists(), "Falta imagen de la bandera en la portada"
+    flag_text = flag.read_text(encoding="utf-8")
+    assert flag_text.startswith("<svg") and 'data:image/jpeg;base64,' in flag_text, "La bandera no incluye la imagen local"
+    assert flag.stat().st_size > 30_000, "La imagen de bandera está vacía"
+    assert "hist-approved" in code and "hist-dashboard" in code, "Falta cabecera histórica aprobada"
+    assert "hist-stats-band" in code and "hist-feature-nav" in code, "Faltan cifras o navegación"
+    for action in ('data-hist-go="hist-datos"', 'data-hist-go="hist-linea"',
+                   'data-hist-view="tit"', 'data-hist-view="stats"',
+                   'data-hist-go="hist-curiosidades"'):
+        assert action in code, f"Falta botón de navegación: {action}"
+    assert 'starsFact ? starsFact.big' in code, "Los títulos deben salir del contenido verificado"
+    assert 'data-u-view="C"' in html and 'data-u-view="hist"' in html, "Faltan enlaces a Clausura e Historia"
+    assert 'body[data-view="hist"] > .hero' in styles, "Falta ocultar portada genérica SOLO en Historia"
+    assert 'body[data-view="hist"] > .tabs-bar' in styles, "Falta ocultar menú redundante SOLO en Historia"
+    assert 'url("img/hist-bandera.svg")' in styles, "Falta imagen de fondo de la maqueta"
     print("OK historia: navegación, lectura directa y referencias visibles")
 
 
