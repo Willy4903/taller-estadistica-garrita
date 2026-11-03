@@ -25,7 +25,8 @@
     const el = document.getElementById("updated");
     if (el && upd) {
       const s = D.status && D.status.sources ? Object.values(D.status.sources) : [];
-      el.textContent = "Actualizado: " + I.lima(upd).replace(" · ", " • ") + (s.length ? ` • ${s.filter((x) => x.ok).length} de ${s.length} fuentes respondieron en la última actualización.` : "");
+      el.textContent = I.home ? ("Actualización: " + I.lima(upd).replace(" PET", " (Lima)")) : ("Actualizado: " + I.lima(upd).replace(" · ", " • ") + (s.length ? ` • ${s.filter((x) => x.ok).length} de ${s.length} fuentes respondieron en la última actualización.` : ""));
+      if (I.home && s.length) el.title = `${s.filter((x) => x.ok).length} de ${s.length} fuentes respondieron en la última actualización`;
       if ((Date.now() - new Date(upd)) / 36e5 > 36) document.getElementById("hero-meta").classList.add("stale");
     } else if (el) el.textContent = "Datos no disponibles por ahora";
     document.dispatchEvent(new CustomEvent("iar:data"));
