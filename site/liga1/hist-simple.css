@@ -251,3 +251,200 @@
  .hist-redesign .hist-jumps button{transition:none}
  .hist-redesign .hist-jumps button:hover{transform:none}
 }
+
+
+/* REFERENCIA APROBADA · PORTADA HISTÓRICA DE UNIVERSITARIO
+   Composición: estadio nocturno, bandera crema, 4 indicadores y 5 accesos.
+   Los títulos y métricas son dinámicos, nunca números incrustados en el arte. */
+.hist-simple.hist-redesign.hist-reference{
+  --hist-text:#23151b;
+  --hist-soft:#6a514b;
+  max-width:1200px;
+  margin:0 auto 42px;
+}
+.hist-reference .hist-showcase{
+  min-height:400px;
+  border-radius:20px 20px 0 0;
+  padding:40px clamp(22px,4.6vw,55px) 94px;
+  position:relative;
+  align-items:center;
+  isolation:isolate;
+  background-color:#190d12;
+  background-image:linear-gradient(90deg,rgba(10,7,8,.95) 0%,rgba(17,10,12,.84) 37%,rgba(30,15,20,.4) 65%,rgba(23,10,13,.07)),url("img/monumental-hist.jpg");
+  background-position:center,center 58%;
+  background-size:cover,cover;
+}
+.hist-reference .hist-showcase:after{
+  content:"";
+  position:absolute;z-index:0;pointer-events:none;
+  right:-2%;top:-19%;bottom:-6%;
+  width:min(62%,730px);
+  background-image:url("img/bandera-u-historia.svg");
+  background-size:contain;background-position:center right;background-repeat:no-repeat;
+  filter:drop-shadow(0 16px 24px #0009);
+}
+.hist-reference .hist-showcase:before{
+  z-index:0;
+  background:linear-gradient(0deg,#100a0d90,transparent 66%);
+}
+.hist-reference .hist-showcase-content{max-width:560px;position:relative;z-index:2}
+.hist-reference .hist-eyebrow{
+  display:inline-flex;
+  align-items:center;justify-content:center;
+  margin:0 0 15px;padding:7px 13px;
+  border-radius:99px;background:#bc2632;
+  color:#fff;font-size:.75rem;line-height:1.1;letter-spacing:0;
+}
+.hist-reference .hist-eyebrow:before{display:none}
+.hist-reference #hist-headline{
+  max-width:14ch;
+  margin:0 0 17px;
+  color:#fff;
+  font:800 clamp(3.05rem,5.5vw,5.25rem)/.98 var(--body);
+  text-transform:none;letter-spacing:-.055em;text-wrap:balance;
+}
+.hist-reference .hist-showcase-lead{
+  margin:0;max-width:39ch;color:#fff4ef;
+  font:500 clamp(.92rem,1.35vw,1.08rem)/1.56 var(--body);
+}
+.hist-reference .hist-reference-panel{
+  position:relative;z-index:3;
+  margin:-32px 0 0;
+  background:linear-gradient(180deg,#fffefb,#f7f0e7);
+  padding:14px clamp(13px,2vw,23px) 19px;
+  box-shadow:0 15px 38px #0002;
+  border-radius:25px;
+  border:1px solid #e8d9d0;
+}
+.hist-reference .hist-overview{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  border-bottom:1px solid #e6d9d4;
+  padding:7px 4px 18px;gap:0;
+}
+.hist-reference .hist-overview-stat{
+  display:grid;
+  grid-template-columns:44px 1fr;
+  grid-template-rows:auto auto;
+  column-gap:10px;
+  align-content:center;
+  align-items:center;
+  min-height:77px;
+  padding:6px clamp(9px,1.5vw,21px);
+  color:#251920;
+}
+.hist-reference .hist-overview-stat+.hist-overview-stat{border-left:1px solid #e2cfc9}
+.hist-reference .hist-overview-symbol{grid-column:1;grid-row:1 / span 2;width:34px;height:34px;background-color:#d43d43;mask-position:center;mask-size:contain;mask-repeat:no-repeat}
+.hist-reference .hist-symbol-trophy .hist-overview-symbol{
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M7 2h10v3h4v4c0 3-2.2 5-5 5.5-.6 1.1-1.5 1.9-2.5 2.3V20H18v2H6v-2h4.5v-3.2C9.5 16.4 8.6 15.6 8 14.5 5.2 14 3 12 3 9V5h4V2Zm0 6H5v1c0 1.4.8 2.4 2.2 3C7 10.8 7 9.5 7 8Zm10 0c0 1.5 0 2.8-.2 4C18.2 11.4 19 10.4 19 9V7h-2v1Z'/%3E%3C/svg%3E");
+}
+.hist-reference .hist-symbol-calendar .hist-overview-symbol{
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M6 1h2v3h8V1h2v3h3v19H3V4h3V1Zm13 9H5v11h14V10ZM5 6v2h14V6H5Zm3 7h3v3H8v-3Zm5 0h3v3h-3v-3Z'/%3E%3C/svg%3E");
+}
+.hist-reference .hist-symbol-people .hist-overview-symbol{
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M8 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm8 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6ZM1 21v-3c0-3.1 2.5-5 7-5s7 1.9 7 5v3H1Zm16-8c4 0 6 2 6 5v3h-6v-3c0-1.8-.3-3.1-1.2-4.2L17 13Z'/%3E%3C/svg%3E");
+}
+.hist-reference .hist-symbol-star .hist-overview-symbol{
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m12 1 3.4 7.1 7.8 1.1-5.6 5.5 1.4 7.8L12 18.8l-7 3.7 1.3-7.8L.7 9.2l7.8-1.1L12 1Z'/%3E%3C/svg%3E");
+}
+.hist-reference .hist-overview-number{
+  grid-column:2;grid-row:1;
+  color:#680e1e;font:850 clamp(1.45rem,2.25vw,2.4rem)/1 var(--body);
+  letter-spacing:-.055em;white-space:nowrap;
+}
+.hist-reference .hist-overview-label{
+  grid-column:2;grid-row:2;color:#342228;
+  font-size:clamp(.7rem,.95vw,.85rem);font-weight:650;line-height:1.35;margin-top:4px;
+}
+.hist-reference .hist-reference-nav{
+  padding-top:17px;
+  display:grid;grid-template-columns:1fr 1.4fr .9fr 1.3fr 1.25fr;
+  gap:10px;
+}
+.hist-reference .hist-reference-tab{
+  min-height:53px;
+  border-radius:12px;
+  background:#fff;
+  border:1px solid #eee5e2;
+  color:#25191b;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  padding:10px;
+  font:750 clamp(.79rem,1.1vw,.95rem)/1.2 var(--body);
+  box-shadow:0 6px 19px #3a1b1b0c;
+  cursor:pointer;white-space:normal;
+}
+.hist-reference .hist-reference-tab.is-active,
+.hist-reference .hist-reference-tab[aria-current=page]{
+  background:#800f22;color:white;border-color:#800f22;
+}
+.hist-reference .hist-reference-tab:hover{border-color:#a02838}
+.hist-reference .hist-tab-icon{
+  width:21px;height:21px;display:inline-block;flex:none;background:currentColor;
+  mask-position:center;mask-size:contain;mask-repeat:no-repeat;
+}
+.hist-reference .hist-tab-home{
+ mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m12 2 11 9-1.7 2-2.3-2v11h-6v-7h-4v7H3V11l-2.3 2L-1 11 12 2Z'/%3E%3C/svg%3E");
+}
+.hist-reference .hist-tab-clock{
+ mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M12 1a11 11 0 1 1 0 22 11 11 0 0 1 0-22Zm0 3a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm-1 2h2v6l4 2-1 2-5-3V6Z'/%3E%3C/svg%3E");
+}
+.hist-reference .hist-tab-trophy{mask-image:inherit}
+.hist-reference .hist-tab-chart{
+ mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M2 22V12h4v10H2Zm6 0V8h4v14H8Zm6 0V3h4v19h-4Zm6 0v-7h3v7h-3Z'/%3E%3C/svg%3E");
+}
+.hist-reference .hist-tab-star{mask-image:inherit}
+.hist-reference .hist-tab-trophy{
+ mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M7 2h10v3h4v4c0 3-2 5-5 5.5-1 2-2 2.5-2.5 2.7V20H18v2H6v-2h4.5v-2.8C9 16.5 8 15 8 14.5 5 14 3 12 3 9V5h4V2Zm0 5H5v2c0 1.4 1 2.4 2.2 3L7 7Zm10 0v5c1-.6 2-1.6 2-3V7h-2Z'/%3E%3C/svg%3E");
+}
+.hist-reference .hist-tab-star{
+ mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m12 1 3.4 7.1 7.8 1.1-5.6 5.5 1.4 7.8L12 18.8l-7 3.7 1.3-7.8L.7 9.2l7.8-1.1L12 1Z'/%3E%3C/svg%3E");
+}
+.hist-reference .hist-part:first-of-type{padding-top:55px}
+.hist-reference .hist-stats-detail{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;
+}
+.hist-reference .hist-stats-detail .hist-overview-stat{
+  border:1px solid var(--hist-outline);border-radius:14px;background:white;
+  padding:19px 13px;min-height:90px;
+}
+.hist-reference .hist-stats-action{margin-top:18px}
+.hist-reference #hist-datos,
+.hist-reference #hist-linea,
+.hist-reference #hist-estadisticas{scroll-margin-top:95px}
+@media(max-width:900px){
+  .hist-reference .hist-showcase{min-height:360px;padding:30px 24px 80px}
+  .hist-reference .hist-showcase:after{right:-8%;width:64%}
+  .hist-reference .hist-overview{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hist-reference .hist-overview-stat:nth-child(3){border-left:0}
+  .hist-reference .hist-overview-stat:nth-child(-n+2){border-bottom:1px solid #e2cfc9}
+  .hist-reference .hist-reference-nav{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .hist-reference .hist-stats-detail{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:670px){
+  .hist-reference .hist-showcase{
+    min-height:415px;padding:27px 17px 86px;
+    border-radius:17px 17px 0 0;
+    background-position:center,57% center;
+  }
+  .hist-reference .hist-showcase:after{
+    width:85%;right:-27%;top:-16%;bottom:-4%;opacity:.64;
+  }
+  .hist-reference .hist-showcase-content{max-width:85%}
+  .hist-reference #hist-headline{font-size:clamp(2.38rem,9.7vw,3.5rem);max-width:12ch}
+  .hist-reference .hist-showcase-lead{font-size:.87rem;max-width:34ch}
+  .hist-reference .hist-reference-panel{margin-top:-28px;padding:12px 10px 14px;border-radius:20px}
+  .hist-reference .hist-overview{grid-template-columns:repeat(2,minmax(0,1fr));padding-bottom:12px}
+  .hist-reference .hist-overview-stat{min-height:77px;padding:8px 7px;grid-template-columns:32px 1fr;column-gap:7px}
+  .hist-reference .hist-overview-symbol{width:26px;height:26px}
+  .hist-reference .hist-overview-number{font-size:clamp(1.4rem,5vw,1.9rem)}
+  .hist-reference .hist-overview-label{font-size:.68rem}
+  .hist-reference .hist-reference-nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding-top:12px}
+  .hist-reference .hist-reference-tab{min-height:45px;padding:9px 5px;gap:6px;font-size:.74rem}
+  .hist-reference .hist-reference-tab:last-child{grid-column:1/-1}
+  .hist-reference .hist-tab-icon{width:18px;height:18px}
+  .hist-reference .hist-stats-detail{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:365px){
+ .hist-reference .hist-showcase{min-height:460px}
+ .hist-reference .hist-showcase-content{max-width:94%}
+ .hist-reference .hist-overview-stat{grid-template-columns:25px 1fr}
+}
