@@ -404,20 +404,50 @@
       : "<div><small>Temporada</small><b>Sin partidos pendientes</b></div>";
     var cr = S.C, cpos = S.pos.C[FOCUS], mine = cr.filter(function (r) { return r.id === FOCUS; })[0];
     var other = cpos === 1 ? cr[1] : cr[0];
-    var mpend = clPending(FOCUS);
-    var rivalMax = 0, rivalId = null;
-    cr.forEach(function (r) { if (r.id === FOCUS) return; var m = r.pts + 3 * clPending(r.id); if (m > rivalMax) { rivalMax = m; rivalId = r.id; } });
-    var need = rivalMax + 1 - mine.pts, canAlone = need <= 3 * mpend;
+    var G = guarantee(mine, cr);
     var dMain = cpos === 1 ? (mine.pts - other.pts ? "Ventaja de " + (mine.pts - other.pts) + " pts sobre " + BY[other.id].short : "Igualado en puntos con " + BY[other.id].short)
       : (other.pts - mine.pts) + " pts del líder (" + BY[other.id].short + ")";
     $("#kpis").innerHTML =
       '<div class="kpi main"><small>Puesto en el Clausura</small><div class="v">' + cpos + '<i>º de ' + TEAMS.length + '</i></div><div class="d">' + mine.pts + " pts · " + dMain + "</div></div>" +
       '<div class="kpi"><small>Probabilidad de campeonar</small><div class="v" id="kProb">…<i>%</i></div><div class="d">Clausura · ' + SIMS.toLocaleString("es-PE") + " escenarios</div></div>" +
-      '<div class="kpi"><small>Campeón matemático</small><div class="v">' + (need <= 0 ? "Ya" : canAlone ? "+" + need + "<i> pts</i>" : "—") + '</div><div class="d">' +
-        (need <= 0 ? "Nadie puede alcanzarnos" : canAlone ? "Llegando a " + (mine.pts + need) + " pts nadie nos alcanza" : "Aún depende de otros resultados") + "</div></div>" +
+      '<div class="kpi"><small>Campeón matemático</small><div class="v">' + (!G || !G.best ? "—" : G.best.gain === 0 ? "Ya" : G.best.gain + "<i> de " + G.max + " pts</i>") + '</div><div class="d">' +
+        (!G ? "Cálculo no disponible" : !G.best ? "Aún necesita ayuda de otros resultados" : G.best.gain === 0 ? "Nadie puede alcanzarnos" : "Con " + (mine.pts + G.best.gain) + " pts nadie nos alcanza: " + G.best.txt) + "</div></div>" +
       '<button type="button" class="kpi kpi-fin" ><small>Final del campeonato nacional</small><div class="v">29<i> nov</i></div><div class="d">Ida · vuelta el 6 dic (fechas tentativas)</div></button>';
     $$(".kpi-fin", $("#kpis")).forEach(function (b) { b.addEventListener("click", function () { show("camino"); window.scrollTo(0, 0); }); });
     scheduleCamino();
+  }
+
+  /* Puntos mínimos que aseguran el título aunque todos los demás resultados salgan en contra. Cada rival se evalúa por separado: gana todo lo que le queda salvo lo que le toca con la U, donde se aplica el resultado de la U. */
+  function guarantee(mine, cr) {
+    var uf = D.fixtures.filter(function (f) { return f.t === "C" && (f.h === FOCUS || f.a === FOCUS) && !eff(f); }), n = uf.length;
+    if (n > 8) return null;
+    var rivals = cr.filter(function (r) { return r.id !== FOCUS; }).map(function (r) {
+      var oth = 0, vs = null;
+      D.fixtures.forEach(function (f) {
+        if (f.t !== "C" || eff(f) || (f.h !== r.id && f.a !== r.id)) return;
+        if (f.h === FOCUS || f.a === FOCUS) vs = f; else oth++;
+      });
+      return { base: r.pts + 3 * oth, vs: vs };
+    });
+    var best = null, total = Math.pow(3, n);
+    for (var m = 0; m < total; m++) {
+      var x = m, gain = 0, res = [];
+      for (var i = 0; i < n; i++) { var k = x % 3; x = Math.floor(x / 3); res.push(k); gain += k === 0 ? 3 : k === 1 ? 1 : 0; } /* 0 gana la U, 1 empata, 2 pierde */
+      var P = mine.pts + gain, worst = 0;
+      rivals.forEach(function (r) {
+        var v = r.base;
+        if (r.vs) { var k2 = res[uf.indexOf(r.vs)]; v += k2 === 0 ? 0 : k2 === 1 ? 1 : 3; }
+        if (v > worst) worst = v;
+      });
+      if (P > worst && (!best || gain < best.gain || (gain === best.gain && res.filter(function (q) { return q === 0; }).length > best.wins))) best = { gain: gain, res: res, wins: res.filter(function (q) { return q === 0; }).length };
+    }
+    if (best) {
+      var words = ["ganar a ", "empatar con ", "perder con "];
+      best.txt = uf.map(function (f, i) { var rv = BY[f.h === FOCUS ? f.a : f.h]; return words[best.res[i]] + rv.short; }).join(", ");
+      best.txt = best.wins === n && n > 1 ? "ganando los " + n + " partidos" : best.txt;
+      best.txt = best.txt.charAt(0).toUpperCase() + best.txt.slice(1);
+    }
+    return { best: best, max: 3 * n };
   }
 
   /* ---------- Camino al título del Clausura ---------- */
