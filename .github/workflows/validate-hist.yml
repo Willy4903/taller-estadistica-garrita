@@ -4,6 +4,7 @@ on:
     paths:
       - site/liga1/**
       - scripts/check_hist.py
+      - scripts/fetch_hist_photos.py
       - .github/workflows/validate-hist.yml
   push:
     branches: [main]
@@ -21,6 +22,8 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+      - name: Obtener y verificar fotografías auténticas del Monumental
+        run: python scripts/fetch_hist_photos.py
       - name: Comprobar estructura, fuentes y accesibilidad
         run: python scripts/check_hist.py
       - name: Verificar scripts
