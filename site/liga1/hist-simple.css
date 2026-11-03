@@ -448,3 +448,96 @@
  .hist-reference .hist-showcase-content{max-width:94%}
  .hist-reference .hist-overview-stat{grid-template-columns:25px 1fr}
 }
+
+
+/* Ajuste fotográfico de referencia aprobado: solo Historia. */
+body[data-view="hist"]{background:#f8f4ec}
+body[data-view="hist"] > .hero,
+body[data-view="hist"] > .tabs-bar,
+body[data-view="hist"] > .wrap:has(#predBanner){display:none!important}
+body[data-view="hist"] .top{
+  background:#fff!important;color:#201719!important;
+  box-shadow:0 3px 14px #1f121b1a;border-bottom:1px solid #e7dad6!important;
+}
+body[data-view="hist"] .top .brand strong{font:800 17px/1.15 var(--body);color:#21191b;letter-spacing:-.04em;text-transform:none}
+body[data-view="hist"] .top .brand small{color:#4a3b3f;letter-spacing:0;text-transform:none;opacity:1}
+body[data-view="hist"] .top .icon-btn{color:#7d192d;background:#f6eee9;border-color:#e8d4d4}
+body[data-view="hist"] .top-in{max-width:1480px}
+.hist-site-nav{display:none}
+body[data-view="hist"] .hist-site-nav{
+  display:flex;align-items:center;justify-content:center;
+  flex:1;gap:clamp(3px,.9vw,12px);margin-left:15px;
+}
+.hist-site-nav button{
+  min-height:42px;appearance:none;border:0;border-radius:50px;
+  background:transparent;color:#2d2427;padding:9px 13px;
+  font:800 .82rem/1.3 var(--body);cursor:pointer;white-space:nowrap;
+}
+.hist-site-nav button:hover{background:#f3e8e5}
+.hist-site-nav button.hist-site-current{background:#861126;color:#fff}
+.hist-site-nav button:focus-visible{outline:3px solid #c32b39;outline-offset:2px}
+body[data-view="hist"] #main.wrap{max-width:none;width:100%;padding:0!important;margin:0 auto}
+body[data-view="hist"] #v-hist{margin:0!important;padding:0!important;min-width:0}
+body[data-view="hist"] #histBox{width:100%}
+.hist-simple.hist-redesign.hist-reference{
+  width:100%;max-width:none;margin:0 auto 0;
+  background:#f8f4ee;
+}
+.hist-reference .hist-showcase{
+  min-height:clamp(375px,35vw,495px);
+  margin:0;border-radius:0;align-items:center;
+  padding:55px max(24px,calc((100vw - 1350px)/2)) 92px;
+  box-shadow:none;
+  background-color:#1d0e14;
+  background-image:
+    linear-gradient(90deg,rgba(21,11,14,.98) 0%,rgba(24,12,16,.91) 29%,rgba(23,12,16,.58) 48%,rgba(23,12,16,.08) 78%),
+    url("img/hist-bandera.svg"),
+    url("img/monumental-hist.jpg");
+  background-size:100% 100%,auto 100%,cover;
+  background-position:center,right center,center center;
+  background-repeat:no-repeat;
+}
+.hist-reference .hist-showcase:after{display:none!important}
+.hist-reference .hist-showcase:before{background:linear-gradient(0deg,#1609103a,transparent 65%)}
+.hist-reference .hist-showcase-content{max-width:600px}
+.hist-reference .hist-eyebrow{padding:8px 17px;font-size:.78rem}
+.hist-reference #hist-headline{
+  font:850 clamp(2.7rem,5.3vw,5.1rem)/.99 var(--body);
+  letter-spacing:-.055em;text-transform:none;
+  max-width:13ch;
+}
+.hist-reference .hist-showcase-lead{max-width:45ch;line-height:1.55}
+.hist-reference .hist-reference-panel{
+  max-width:1410px;width:calc(100% - clamp(20px,3vw,62px));
+  margin:-41px auto 28px;border-radius:24px;
+  padding:23px clamp(12px,2vw,29px) 26px;
+}
+.hist-reference .hist-part,
+.hist-reference .hist-stadium,
+.hist-reference .hist-other,
+.hist-reference .hist-end{max-width:1400px;margin-left:auto;margin-right:auto}
+.hist-reference .hist-part{padding-left:clamp(18px,3vw,43px);padding-right:clamp(18px,3vw,43px)}
+.hist-reference .hist-stadium{margin-top:0;margin-bottom:0}
+.hist-reference .hist-other{margin-bottom:0}
+.hist-reference .hist-end{margin-bottom:45px}
+@media(max-width:1020px){
+ body[data-view="hist"] .hist-site-nav button{padding:9px 8px;font-size:.73rem}
+ body[data-view="hist"] .brand small{display:none}
+ .hist-reference .hist-showcase{background-position:center,right center,center}
+}
+@media(max-width:700px){
+ body[data-view="hist"] .hist-site-nav{display:none}
+ .hist-reference .hist-showcase{
+   min-height:420px;padding:35px 19px 90px;
+   background-image:linear-gradient(90deg,#1d0e14f5 0%,#1d0e14dd 55%,#1d0e147e 90%),
+   url("img/hist-bandera.svg"),url("img/monumental-hist.jpg");
+   background-size:100% 100%,auto 100%,cover;
+   background-position:center,right center,center;
+   border-radius:0;
+ }
+ .hist-reference .hist-showcase-content{max-width:90%}
+ .hist-reference #hist-headline{font-size:clamp(2.55rem,10vw,4rem)}
+ .hist-reference .hist-reference-panel{width:calc(100% - 20px);margin:-39px auto 18px;padding:14px 9px 17px}
+ .hist-reference .hist-overview-stat{padding:9px}
+ .hist-reference .hist-reference-nav{gap:7px}
+}
