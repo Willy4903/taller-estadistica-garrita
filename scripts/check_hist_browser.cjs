@@ -63,7 +63,7 @@ async function ready() {
             .filter(alpha=>alpha>100).length>300;
         }catch(e){ painted=false; }
         return {
-          h1:hero?.querySelector("#hist-headline")?.textContent?.replace(/\s+/g," ").trim(),
+          h1:hero?.querySelector("#hist-headline")?.innerText?.replace(/\s+/g," ").trim(),
           heroBg:getComputedStyle(hero).backgroundImage,
           buttons:band.map(b=>b.textContent.trim()),
           stats:document.querySelectorAll("#histBox .hist-stats-band .hist-stat").length,
