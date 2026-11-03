@@ -79,6 +79,10 @@ def main():
     with new_photo.open("rb") as fh:
         assert fh.read(3) == b"\xff\xd8\xff", "Imagen de fondo no es JPEG"
     assert 'url("img/historia-hero-fondo.jpg")' in styles, "CSS no utiliza fondo aprobado"
+    assert 'body[data-view="hist"] > .hero' in styles, "Portada genérica no se oculta en Historia"
+    assert 'body[data-view="hist"] > .tabs-bar' in styles, "Pestañas genéricas no se ocultan en Historia"
+    assert 'hist-site-nav' in html and 'data-u-view="C"' in html, "Falta navegación hacia Clausura"
+    assert 'document.querySelectorAll(".hist-site-nav [data-u-view]")' in code, "Navegación superior no vinculada"
     print("OK historia: navegación, lectura directa y referencias visibles")
 
 

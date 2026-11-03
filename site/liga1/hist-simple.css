@@ -467,3 +467,67 @@
       url("img/historia-hero-fondo.jpg");
   }
 }
+
+
+/* Ajuste de maqueta final: Historia a pantalla completa sin alterar #C. */
+body[data-view="hist"]{background:#f9f5ee}
+body[data-view="hist"] > .hero,
+body[data-view="hist"] > .tabs-bar,
+body[data-view="hist"] > .wrap:has(#predBanner){display:none!important}
+body[data-view="hist"] .top{
+  background:#fff!important;color:#22191c!important;border-bottom:1px solid #e7dcd8!important;
+  box-shadow:0 3px 16px #15081217;
+}
+body[data-view="hist"] .top .brand strong{
+  font:800 17px/1.1 var(--body);text-transform:none;letter-spacing:-.035em;color:#24181c
+}
+body[data-view="hist"] .top .brand small{color:#5f4f52;text-transform:none;letter-spacing:0;opacity:1}
+body[data-view="hist"] .top .icon-btn{color:#7e1528;background:#f5eae6;border-color:#e9d5d2}
+body[data-view="hist"] .top-in{max-width:1480px}
+.hist-site-nav{display:none}
+body[data-view="hist"] .hist-site-nav{
+  display:flex;align-items:center;justify-content:center;flex:1;gap:clamp(3px,.9vw,12px);
+  min-width:0;margin-left:15px;
+}
+.hist-site-nav button{
+  min-height:43px;border:0;border-radius:50px;appearance:none;background:transparent;
+  font:800 .84rem/1.3 var(--body);color:#2b2023;padding:9px 13px;white-space:nowrap;
+  cursor:pointer;
+}
+.hist-site-nav button:hover{background:#f4e9e6}
+.hist-site-nav button.hist-site-current{background:#8b1126;color:#fff}
+.hist-site-nav button:focus-visible{outline:3px solid #c32b39;outline-offset:2px}
+body[data-view="hist"] #main.wrap{max-width:none;width:100%;margin:0;padding:0!important}
+body[data-view="hist"] #v-hist{padding:0!important;margin:0!important;min-width:0}
+body[data-view="hist"] #histBox{width:100%}
+.hist-simple.hist-redesign.hist-reference{
+  max-width:none;width:100%;margin:0 auto;background:#faf7f1;
+}
+.hist-reference .hist-showcase{
+  min-height:clamp(390px,35vw,500px);
+  border-radius:0;box-shadow:none;
+  padding:clamp(32px,5vw,64px) max(24px,calc((100vw - 1340px)/2)) clamp(78px,7vw,106px);
+}
+.hist-reference .hist-showcase-content{max-width:590px}
+.hist-reference .hist-showcase-lead{max-width:44ch}
+.hist-reference .hist-reference-panel{
+  max-width:1410px;width:calc(100% - clamp(20px,3.5vw,60px));
+  margin:-40px auto 30px;padding:22px clamp(13px,2vw,28px) 26px;
+}
+.hist-reference .hist-part,.hist-reference .hist-stadium,
+.hist-reference .hist-other,.hist-reference .hist-end{max-width:1400px;margin-left:auto;margin-right:auto}
+.hist-reference .hist-stadium{margin-top:0;margin-bottom:0}
+.hist-reference .hist-other{margin-bottom:0}
+.hist-reference .hist-end{margin-bottom:44px}
+@media(max-width:1050px){
+ body[data-view="hist"] .hist-site-nav button{font-size:.74rem;padding:8px 9px}
+ body[data-view="hist"] .brand small{display:none}
+}
+@media(max-width:700px){
+ body[data-view="hist"] .hist-site-nav{display:none}
+ .hist-reference .hist-showcase{
+   min-height:410px;padding:30px 18px 94px;border-radius:0;
+   background-position:center,65% center;
+ }
+ .hist-reference .hist-reference-panel{width:calc(100% - 20px);margin:-37px auto 18px;padding:13px 10px 17px}
+}
