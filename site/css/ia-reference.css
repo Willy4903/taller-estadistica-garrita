@@ -124,9 +124,17 @@ body[data-page="home"]{background:#fff!important;color:#122136}
  .stage.visual-ai.iar-reference .simple-start>a.iar-ref-card:hover{transform:none}
 }
 
-/* Fondo de la portada: limpio y uniforme. Se retiran los circuitos animados y los marcos de esquina heredados del tema anterior. */
+/* Fondo de la portada: limpio, uniforme y coherente con el tema (claro u oscuro). Sin circuitos animados ni marcos de esquina heredados. */
 body[data-page="home"] #bgfx{display:none!important}
-body[data-page="home"] main{background:#fff}
-body[data-page="home"] .sec{background-color:#fff}
-body[data-page="home"] .sec.alt{background-color:#f4f7fb}
 body[data-page="home"] .card,body[data-page="home"] .hoy-card,body[data-page="home"] .chg-card,body[data-page="home"] .lvl-card,body[data-page="home"] .case,body[data-page="home"] .reg{background-image:none!important}
+:root[data-theme="light"] body[data-page="home"] main,:root:not([data-theme]) body[data-page="home"] main{background:#fff}
+:root[data-theme="light"] body[data-page="home"] .sec,:root:not([data-theme]) body[data-page="home"] .sec{background-color:#fff}
+:root[data-theme="light"] body[data-page="home"] .sec.alt,:root:not([data-theme]) body[data-page="home"] .sec.alt{background-color:#f4f7fb}
+:root[data-theme="dark"] body[data-page="home"]{background:#0b1422!important;color:#e6ebf5}
+:root[data-theme="dark"] body[data-page="home"] main{background:#0b1422}
+:root[data-theme="dark"] body[data-page="home"] .sec{background-color:#0b1422;border-top-color:#1d2a40}
+:root[data-theme="dark"] body[data-page="home"] .sec.alt{background-color:#0f1a2c}
+:root[data-theme="dark"] .stage.visual-ai.iar-reference{background:#0b1422!important}
+:root[data-theme="dark"] body[data-page="home"] .hoy-card,:root[data-theme="dark"] body[data-page="home"] .card,:root[data-theme="dark"] body[data-page="home"] .chg-card,:root[data-theme="dark"] body[data-page="home"] .lvl-card,:root[data-theme="dark"] body[data-page="home"] .case,:root[data-theme="dark"] body[data-page="home"] .reg{background-color:#132036;border-color:#26374f;color:#e6ebf5}
+:root[data-theme="dark"] body[data-page="home"] .sec h2,:root[data-theme="dark"] body[data-page="home"] .sec h3,:root[data-theme="dark"] body[data-page="home"] .sec h4{color:#f1f5fc}
+:root[data-theme="dark"] body[data-page="home"] .sec .lead,:root[data-theme="dark"] body[data-page="home"] .sec .muted{color:#a9b6cc}
