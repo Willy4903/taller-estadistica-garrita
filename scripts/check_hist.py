@@ -47,6 +47,18 @@ def main():
     assert "srcLink(f)" in block and "srcLink(t)" in block and "srcLink(c)" in block
     assert "universitario.pe" in content, "Falta la procedencia oficial"
     assert (ROOT / "hist-simple.css").stat().st_size > 1000
+    styles = (ROOT / "hist-simple.css").read_text(encoding="utf-8")
+    assert "hist-showcase" in styles and "img/monumental-hist.jpg" in styles
+    assert "hist-stadium" in code and "img/lolo-estatua.jpg" in code
+    assert "hist-photo-credit" in code and "MicroX" in code and "Sigloestadio21" in code
+    assert "hist-linea" in code and "srcLink(t)" in code
+    for name in ("monumental-hist.jpg", "lolo-estatua.jpg"):
+        img = ROOT / "img" / name
+        assert img.exists() and 30_000 < img.stat().st_size < 6_000_000, f"Falta fotografía: {name}"
+        with img.open("rb") as stream:
+            assert stream.read(3) == b"\xff\xd8\xff", f"No es JPEG: {name}"
+            stream.seek(-2, 2)
+            assert stream.read(2) == b"\xff\xd9", f"JPEG incompleto: {name}"
     print("OK historia: navegación, lectura directa y referencias visibles")
 
 
