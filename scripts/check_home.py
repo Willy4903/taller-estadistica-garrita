@@ -111,9 +111,18 @@ def main():
                  "ia-radar-robot-hero.jpg", "@media(max-width:570px)"):
         if term not in sheet:
             raise AssertionError(f"No aparece en los estilos: {term}")
+    for name in ("iar-card-news.jpg", "iar-card-models.jpg", "iar-card-learn.jpg"):
+        art = ROOT / "site/visual" / name
+        if not art.is_file() or art.stat().st_size < 12000:
+            raise AssertionError(f"Falta imagen de tarjeta: {name}")
+        with art.open("rb") as raw:
+            if raw.read(3) != b"\xff\xd8\xff":
+                raise AssertionError(f"Imagen no es JPEG: {name}")
+        if f'url("../visual/{name}")' not in sheet:
+            raise AssertionError(f"No se utiliza en los estilos la tarjeta: {name}")
     for term in ('css/ia-reference.css?v=__V__', 'class="stage visual-ai iar-reference"',
                  'class="statusbar" id="hero-meta"', 'id="st-kpi"',
-                 'id="insight"', 'class="iar-photo-credits"'):
+                 'id="insight"', 'class="start simple-start"'):
         if term not in html:
             raise AssertionError(f"No aparece en la página: {term}")
     if html.count('class="iar-ref-card ') != 3:
@@ -126,7 +135,9 @@ def main():
     if "searchTrigger.addEventListener" not in core:
         raise AssertionError("El botón Buscar debe abrir el panel de búsqueda")
     if 'href="#hoy"' not in html or 'href="#modelos"' not in html or 'href="#ruta"' not in html:
-        raise AssertionError("Faltan enlaces de las tarjetas")
+        raise AssertionError("Faltan enlaces funcionales de las tarjetas")
+    if 'visual-hero-credit' in html or 'visual-photo-credits' in html:
+        raise AssertionError("El diseño aprobado no incluye créditos de fotografías anteriores")
 
 
     crons = re.findall(r'^\s*- cron:\s*["\']([^"\']+)["\']', workflow, re.M)
