@@ -90,7 +90,7 @@ async function ready() {
       await page.waitForFunction(()=>document.body.dataset.view === "C");
       assert.notEqual(await page.locator("body > .hero").evaluate(e=>getComputedStyle(e).display),"none",
         "Clausura debe conservar su portada original");
-      if (width >= 1024) {
+      if (width >= 641) {
         assert.notEqual(await page.locator("body > .tabs-bar").evaluate(e=>getComputedStyle(e).display),"none",
           "Clausura debe conservar sus pestañas originales en escritorio");
       } else {
