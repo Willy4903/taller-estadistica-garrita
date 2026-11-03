@@ -1552,7 +1552,7 @@
     syncTabsH();
     renderTicker();
     renderHist(); renderTit(); renderGlos(); renderSources();
-    $(".hist-site-nav [data-u-view]").forEach(function (b) {
+    $$(".hist-site-nav [data-u-view]").forEach(function (b) {
       b.addEventListener("click", function () {
         show(b.dataset.uView);
         window.scrollTo(0, 0);
