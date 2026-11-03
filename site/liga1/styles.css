@@ -981,3 +981,16 @@ table.nopend .pendh,table.nopend td.pend{display:none}
 @media (max-width:900px){.cam-grid,.cam-final{grid-template-columns:1fr}}
 
 .pc.over{opacity:.55;border-style:dotted}
+
+/* Selector Local / Visita en las tablas */
+.cond-sel{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.cond-l{font:700 13px var(--disp);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.cond-sel button{font:700 14px var(--disp);letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);background:var(--card);color:var(--muted);padding:8px 16px;border-radius:999px;cursor:pointer;min-height:40px}
+.cond-sel button:hover{border-color:var(--gold)}
+.cond-sel button[aria-pressed="true"]{background:linear-gradient(90deg,var(--accent),var(--granate));color:#fff;border-color:transparent}
+.cond-note{margin:0 0 10px;max-width:70ch}
+@media (max-width:640px){
+  .cond-sel button{flex:1;min-height:44px}
+  .cond-l{flex:1 0 100%}
+  #tbl-acum.cond th:nth-child(12),#tbl-acum.cond td:nth-child(12){display:table-cell}
+}
