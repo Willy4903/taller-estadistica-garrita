@@ -1552,6 +1552,12 @@
     syncTabsH();
     renderTicker();
     renderHist(); renderTit(); renderGlos(); renderSources();
+    $(".hist-site-nav [data-u-view]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        show(b.dataset.uView);
+        window.scrollTo(0, 0);
+      });
+    });
     $("#gloSearch").addEventListener("input", renderGlos);
     cur = defaultFecha();
     recompute();
