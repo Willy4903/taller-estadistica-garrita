@@ -251,3 +251,193 @@
  .hist-redesign .hist-jumps button{transition:none}
  .hist-redesign .hist-jumps button:hover{transform:none}
 }
+
+
+/* Maqueta aprobada: bandera crema, indicadores horizontales y navegación de cinco opciones.
+   El diseño se aplica SOLO a #hist. Clausura, tablas y calculadora no se alteran. */
+body[data-view="hist"]{
+  background:#f7f4ee;
+}
+body[data-view="hist"] > .hero,
+body[data-view="hist"] > .tabs-bar,
+body[data-view="hist"] > .wrap:has(#predBanner){
+  display:none!important;
+}
+body[data-view="hist"] .top{
+  background:#fff!important;
+  color:#1e1618!important;
+  border-bottom:1px solid #e8e0dd!important;
+  box-shadow:0 3px 14px #160a1912;
+}
+body[data-view="hist"] .brand strong{color:#231719;font-family:var(--body);font-size:16px;letter-spacing:-.04em;text-transform:none}
+body[data-view="hist"] .brand small{color:#655452;opacity:1;letter-spacing:0;text-transform:none}
+body[data-view="hist"] .top .icon-btn{background:#f6f2ee;border-color:#e3d8d4;color:#511523}
+body[data-view="hist"] #main.wrap{max-width:100%;width:100%;padding:0!important;margin:0 auto}
+body[data-view="hist"] #v-hist{padding:0!important;margin:0!important;min-width:0}
+body[data-view="hist"] #histBox{width:100%;min-width:0}
+.hist-site-nav{display:none}
+body[data-view="hist"] .hist-site-nav{
+  display:flex;align-items:center;justify-content:center;gap:clamp(2px,.8vw,11px);
+  min-width:0;margin:0 auto;
+}
+.hist-site-nav button{
+  display:inline-flex;align-items:center;justify-content:center;
+  appearance:none;border:0;border-radius:99px;background:transparent;
+  font:750 .84rem/1.35 var(--body);color:#30252a;cursor:pointer;
+  min-height:42px;padding:9px 13px;white-space:nowrap;
+}
+.hist-site-nav button:hover{background:#f6ece9}
+.hist-site-nav button.hist-site-current{background:#8c1124;color:#fff}
+.hist-site-nav button:focus-visible{outline:3px solid #d43c51;outline-offset:2px}
+body[data-view="hist"] .top-in{max-width:1440px;padding-inline:clamp(12px,2.8vw,36px)}
+.hist-simple.hist-redesign.hist-approved{
+  --hist-paper:#f8f4ed;--hist-card:#fff;--hist-text:#291a1c;
+  width:100%;max-width:none;margin:0 auto 0;overflow:visible;
+  background:#f8f4ed;color:var(--hist-text);
+}
+.hist-approved .hist-showcase{
+  isolation:isolate;position:relative;display:flex;align-items:center;
+  min-height:clamp(380px,34vw,485px);padding:50px max(24px,calc((100vw - 1380px)/2));
+  margin:0;border-radius:0;overflow:hidden;box-shadow:none;
+  background-color:#1f1114;
+  background-image:
+   linear-gradient(90deg,#1c1114 0%,rgba(30,14,17,.96) 25%,rgba(30,14,17,.65) 48%,rgba(30,14,17,.10) 76%,transparent 100%),
+   url("img/hist-bandera.svg");
+  background-size:100% 100%,auto 100%;
+  background-position:center,right center;
+  background-repeat:no-repeat;
+}
+.hist-approved .hist-showcase:before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(0deg,#13090b34,transparent 55%);
+}
+.hist-approved .hist-showcase-content{position:relative;z-index:1;max-width:575px}
+.hist-approved .hist-eyebrow{
+  display:inline-flex;align-items:center;width:max-content;
+  border-radius:999px;padding:8px 17px;
+  color:#fff;background:#bd2f39;
+  font:800 .82rem/1 var(--body);letter-spacing:0;
+  text-transform:none;margin:0 0 16px;
+}
+.hist-approved .hist-eyebrow:before{display:none}
+.hist-approved #hist-headline{
+  color:#fff;font:850 clamp(2.7rem,5.25vw,5rem)/.98 var(--body);
+  letter-spacing:-.053em;text-transform:none;max-width:13ch;
+  margin:0 0 18px;text-shadow:0 3px 18px #0005;
+}
+.hist-approved .hist-showcase-lead{
+  color:#fbf5ef;max-width:42ch;
+  font:500 clamp(.99rem,1.38vw,1.15rem)/1.55 var(--body);
+  margin:0;text-shadow:0 1px 8px #0006;
+}
+.hist-approved .hist-dashboard{
+  position:relative;z-index:3;
+  max-width:1400px;width:calc(100% - clamp(24px,4vw,60px));
+  background:#fffaf4;margin:-29px auto 34px;
+  border-radius:26px;padding:25px clamp(13px,2.7vw,34px) 28px;
+  box-shadow:0 16px 36px rgba(42,20,24,.17);
+  border:1px solid #ece3de;
+}
+.hist-approved .hist-stats-band{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  align-items:center;gap:0;padding:7px 0 23px;
+  border-bottom:1px solid #e7ddd7;
+}
+.hist-approved .hist-stat{
+  min-width:0;display:flex;gap:clamp(9px,1.4vw,17px);align-items:center;
+  justify-content:center;padding:4px clamp(7px,1.4vw,19px);
+  min-height:70px;color:#341a21;
+}
+.hist-approved .hist-stat + .hist-stat{border-left:1px solid #e0d3ca}
+.hist-approved .hist-ui-icon{flex:none;width:clamp(24px,3vw,41px);height:clamp(24px,3vw,41px);stroke:#c2303d}
+.hist-approved .hist-stat strong{
+  display:block;color:#721226;font:850 clamp(1.7rem,2.7vw,2.5rem)/1 var(--body);
+  letter-spacing:-.05em;white-space:nowrap;
+}
+.hist-approved .hist-stat strong.hist-stat-words{
+  font-size:clamp(.87rem,1.35vw,1.23rem);line-height:1.15;
+  color:#251b1d;letter-spacing:-.025em;white-space:normal;
+}
+.hist-approved .hist-stat small{
+  display:block;color:#4f4040;
+  font:600 clamp(.7rem,1.07vw,.83rem)/1.35 var(--body);
+  margin-top:5px;
+}
+.hist-approved .hist-feature-nav{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:clamp(7px,1.2vw,14px);margin:22px 0 0;
+}
+.hist-approved .hist-feature-nav button{
+  border:1px solid #ede6e1;border-radius:15px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:12px 10px;min-height:62px;cursor:pointer;
+  background:#fff;color:#2c2627;
+  box-shadow:0 5px 13px #28191b0d;
+  font:800 clamp(.77rem,1.25vw,.97rem)/1.3 var(--body);
+  transition:background .15s,transform .15s,box-shadow .15s;
+}
+.hist-approved .hist-feature-nav button:hover{transform:translateY(-2px);box-shadow:0 9px 23px #28191b1a}
+.hist-approved .hist-feature-nav button:focus-visible{outline:3px solid #c82d3c;outline-offset:2px}
+.hist-approved .hist-feature-nav .hist-ui-icon{
+  width:clamp(19px,2vw,27px);height:clamp(19px,2vw,27px);stroke:currentColor;
+}
+.hist-approved .hist-feature-nav button.hist-feature-current{
+  color:#fff;background:#851126;border-color:#851126;
+}
+.hist-approved .hist-part,.hist-approved .hist-stadium,
+.hist-approved .hist-other,.hist-approved .hist-end{
+  max-width:1400px;margin-left:auto;margin-right:auto;
+}
+.hist-approved .hist-part{padding:clamp(23px,3.3vw,43px)}
+.hist-approved .hist-stadium{margin-top:0;margin-bottom:0}
+.hist-approved .hist-other{margin-top:0;margin-bottom:0}
+.hist-approved .hist-end{margin-bottom:44px}
+.hist-approved .hist-stadium-copy{color:#fff6ed}
+.hist-approved .hist-showcase~.hist-part{margin-top:0}
+body[data-view="hist"] .foot{margin-top:0}
+@media(max-width:1060px){
+  body[data-view="hist"] .brand small{display:none}
+  body[data-view="hist"] .top-in{gap:8px}
+  .hist-site-nav button{padding:8px 9px;font-size:.77rem}
+  .hist-approved .hist-dashboard{width:calc(100% - 24px);border-radius:22px}
+  .hist-approved .hist-showcase{background-size:100% 100%,auto 100%}
+}
+@media(max-width:700px){
+  body[data-view="hist"] .hist-site-nav{display:none}
+  .hist-approved .hist-showcase{
+    min-height:390px;padding:34px 20px 65px;
+    background-image:linear-gradient(90deg,#1b0e12 0%,#1b0e12df 50%,#1b0e1270 85%),url("img/hist-bandera.svg");
+    background-size:100% 100%,auto 100%;background-position:center,right center;
+  }
+  .hist-approved .hist-showcase-content{max-width:90%}
+  .hist-approved #hist-headline{font-size:clamp(2.6rem,10vw,3.9rem)}
+  .hist-approved .hist-showcase-lead{font-size:.88rem;max-width:34ch}
+  .hist-approved .hist-dashboard{margin:-25px auto 22px;padding:17px 10px;border-radius:20px}
+  .hist-approved .hist-stats-band{
+    grid-template-columns:repeat(2,minmax(0,1fr));row-gap:15px;padding-bottom:17px;
+  }
+  .hist-approved .hist-stat{justify-content:flex-start;padding:10px 12px}
+  .hist-approved .hist-stat:nth-child(3){border-left:0}
+  .hist-approved .hist-stat:nth-child(n+3){border-top:1px solid #ede5df;padding-top:15px}
+  .hist-approved .hist-feature-nav{
+    display:flex;overflow-x:auto;overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;gap:9px;padding-bottom:6px;margin-top:16px;
+  }
+  .hist-approved .hist-feature-nav button{
+    flex:0 0 157px;min-height:57px;scroll-snap-align:start;
+    font-size:.81rem;white-space:nowrap;
+  }
+  .hist-approved .hist-ui-icon{width:27px;height:27px}
+}
+@media(max-width:390px){
+  .hist-approved .hist-showcase{min-height:408px}
+  .hist-approved #hist-headline{font-size:2.8rem}
+  .hist-approved .hist-stat{padding:8px;gap:7px}
+  .hist-approved .hist-stat strong{font-size:1.53rem}
+  .hist-approved .hist-stat strong.hist-stat-words{font-size:.88rem}
+  .hist-approved .hist-stat small{font-size:.65rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .hist-approved .hist-feature-nav button{transition:none}
+  .hist-approved .hist-feature-nav button:hover{transform:none}
+}
