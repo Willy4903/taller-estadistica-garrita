@@ -302,9 +302,10 @@ body[data-view="hist"] .top-in{max-width:1440px;padding-inline:clamp(12px,2.8vw,
   background-color:#1f1114;
   background-image:
    linear-gradient(90deg,#1c1114 0%,rgba(30,14,17,.96) 25%,rgba(30,14,17,.65) 48%,rgba(30,14,17,.10) 76%,transparent 100%),
-   url("img/hist-bandera.svg");
-  background-size:100% 100%,auto 100%;
-  background-position:center,right center;
+   url("img/hist-bandera.svg"),
+   url("img/monumental-hist.jpg");
+  background-size:100% 100%,auto 100%,cover;
+  background-position:center,right center,center;
   background-repeat:no-repeat;
 }
 .hist-approved .hist-showcase:before{
@@ -406,8 +407,8 @@ body[data-view="hist"] .foot{margin-top:0}
   body[data-view="hist"] .hist-site-nav{display:none}
   .hist-approved .hist-showcase{
     min-height:390px;padding:34px 20px 65px;
-    background-image:linear-gradient(90deg,#1b0e12 0%,#1b0e12df 50%,#1b0e1270 85%),url("img/hist-bandera.svg");
-    background-size:100% 100%,auto 100%;background-position:center,right center;
+    background-image:linear-gradient(90deg,#1b0e12 0%,#1b0e12df 50%,#1b0e1270 85%),url("img/hist-bandera.svg"),url("img/monumental-hist.jpg");
+    background-size:100% 100%,auto 100%,cover;background-position:center,right center,center;
   }
   .hist-approved .hist-showcase-content{max-width:90%}
   .hist-approved #hist-headline{font-size:clamp(2.6rem,10vw,3.9rem)}
