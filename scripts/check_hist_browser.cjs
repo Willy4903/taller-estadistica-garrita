@@ -24,9 +24,27 @@ async function ready() {
       const page = await browser.newPage({viewport:{width,height:844},deviceScaleFactor:1});
       const errors = [];
       page.on("pageerror", e => errors.push(e.message));
+      page.on("console",m=>{ if(m.type()==="error")errors.push("CONSOLE: "+m.text()); });
+      const responses=[];
+      page.on("response",r=>{if(r.status()>=400)responses.push(r.status()+" "+r.url());});
       await page.goto(origin + "/liga1/#hist", {waitUntil:"domcontentloaded"});
-      await page.waitForFunction(() => document.body.dataset.view === "hist" &&
-        !!document.querySelector("#histBox .hist-approved"), {timeout:30000});
+      try {
+        await page.waitForFunction(() => document.body.dataset.view === "hist" &&
+          !!document.querySelector("#histBox .hist-approved"), null, {timeout:15000});
+      } catch(error) {
+        const diagnostics=await page.evaluate(()=>({
+          readyState:document.readyState,
+          bodyView:document.body.dataset.view,
+          hasApp:typeof window.__L1,
+          hasContent:typeof window.LIGA1_CONTENT,
+          hasData:typeof window.LIGA1_DATA,
+          hasLive:typeof window.LIVE,
+          histBox:(document.querySelector("#histBox")||{}).innerHTML?.slice(0,300),
+          scriptSources:[...document.scripts].map(s=>s.src).filter(Boolean)
+        }));
+        console.error("DIAGNÓSTICO HISTORIA",JSON.stringify({diagnostics,errors,responses,width},null,2));
+        throw error;
+      }
       const state = await page.evaluate(async()=>{
         const hero=document.querySelector("#histBox .hist-showcase");
         const band=Array.from(document.querySelectorAll("#histBox .hist-feature-nav button"));
