@@ -71,17 +71,23 @@
   /* ---------- tema ---------- */
   function applyTheme(t) { document.documentElement.dataset.theme = t; }
   const savedTheme = store.get("iar_theme", null);
-  applyTheme(savedTheme || "dark");
+  applyTheme(savedTheme || (home ? "light" : "dark"));
 
   /* ---------- cabecera y pie ---------- */
   function chrome() {
     const h = $("#site-header");
     if (h) {
-      h.innerHTML = `<div class="wrap wide hd">
-        <button class="icon-btn burger" id="burger" type="button" aria-label="Abrir el menú de secciones" aria-expanded="false" aria-controls="sidebar">${ico("menu")}</button>
-        <a class="logo" href="${href(home ? "#top" : "index.html")}" aria-label="IA Radar, inicio"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/><path d="M16 16 L26 9" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="2.4" fill="var(--accent)"/></svg><span>IA Radar</span></a>
-        <button class="icon-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">${ico("contrast")}</button>
-      </div><div class="prog" id="prog" aria-hidden="true"></div>`;
+      const networkIcon = '<svg class="iar-ref-logo-icon" width="37" height="37" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#1065dc" stroke-width="3.3" stroke-linecap="round"><path d="M24 7v34M9 16l30 16M9 32l30-16M24 7L9 16v16l15 9 15-9V16Z"/><circle cx="24" cy="7" r="4" fill="#1065dc" stroke="white" stroke-width="1.6"/><circle cx="24" cy="41" r="4" fill="#1065dc" stroke="white" stroke-width="1.6"/><circle cx="9" cy="16" r="4" fill="#1065dc" stroke="white" stroke-width="1.6"/><circle cx="9" cy="32" r="4" fill="#1065dc" stroke="white" stroke-width="1.6"/><circle cx="39" cy="16" r="4" fill="#1065dc" stroke="white" stroke-width="1.6"/><circle cx="39" cy="32" r="4" fill="#1065dc" stroke="white" stroke-width="1.6"/><circle cx="24" cy="24" r="4" fill="#1065dc" stroke="white" stroke-width="1.6"/></svg>';
+      const oldIcon = '<svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/><path d="M16 16 L26 9" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="2.4" fill="var(--accent)"/></svg>';
+      const homeNav = home ? '<nav class="iar-ref-topnav" aria-label="Accesos principales"><a href="#top" class="iar-ref-active">Inicio</a><a href="#hoy">Novedades</a><a href="#modelos">Herramientas</a><a href="#ruta">Aprende</a></nav>' : '';
+      const homeSearch = home ? '<button type="button" class="icon-btn iar-ref-search" id="iar-search-trigger" aria-label="Buscar en IA Radar" aria-controls="sidebar" aria-expanded="false">' + ico("search") + '</button>' : '';
+      h.innerHTML = '<div class="wrap wide hd' + (home ? ' iar-ref-hd' : '') + '">' +
+        '<button class="icon-btn burger" id="burger" type="button" aria-label="Abrir el menú de secciones" aria-expanded="false" aria-controls="sidebar">' + ico("menu") + '</button>' +
+        '<a class="logo" href="' + href(home ? "#top" : "index.html") + '" aria-label="IA Radar, inicio">' + (home ? networkIcon : oldIcon) +
+        '<span class="' + (home ? "iar-ref-brand" : "") + '">' + (home ? "<strong>IA Radar</strong><small>Inteligencia artificial para la vida real</small>" : "IA Radar") + '</span></a>' +
+        homeNav + homeSearch +
+        '<button class="icon-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">' + ico("contrast") + '</button>' +
+        '</div><div class="prog" id="prog" aria-hidden="true"></div>';
       $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "dark" ? "light" : "dark"; applyTheme(t); store.set("iar_theme", t); document.dispatchEvent(new CustomEvent("iar:theme")); });
       const prog = $("#prog");
       const onScroll = () => { const m = document.documentElement.scrollHeight - innerHeight; prog.style.transform = `scaleX(${m > 0 ? scrollY / m : 0})`; };
@@ -246,6 +252,7 @@
     $("#theme2", el).addEventListener("click", () => $("#theme") && $("#theme").click());
     searchBox(el);
     const burger = $("#burger"); if (burger) burger.addEventListener("click", () => (drawer.open ? closeDrawer() : openDrawer()));
+    const searchTrigger = $("#iar-search-trigger"); if (searchTrigger) searchTrigger.addEventListener("click", () => openDrawer());
     el.addEventListener("click", (e) => { if (e.target.closest(".sb-nav a, .sb-cta")) closeDrawer(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && drawer.open) { closeDrawer(); if (burger) burger.focus(); } });
     addEventListener("resize", () => { if (innerWidth > 1120) closeDrawer(); });
