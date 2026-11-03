@@ -33,35 +33,71 @@
 <link rel="stylesheet" href="css/stage.css?v=__V__">
 <link rel="stylesheet" href="css/simple.css?v=__V__">
 <link rel="stylesheet" href="css/visual.css?v=__V__">
+<link rel="stylesheet" href="css/ia-reference.css?v=__V__">
 </head>
 <body data-page="home" data-root="" data-v="__V__" id="top">
 <a class="skip" href="#hoy">Saltar al contenido</a>
 <div id="site-header"></div>
 
 <main>
-  <section class="stage wrap wide visual-ai" aria-label="Centro de mando de IA Radar">
-    <canvas id="sphere" class="sphere" aria-hidden="true"></canvas>
+  <section class="stage visual-ai iar-reference" aria-label="Portada de IA Radar">
     <div class="stage-grid">
       <div class="st-col st-c">
         <div class="st-head">
-          <p class="st-badge">IA RADAR · NOVEDADES · HERRAMIENTAS · APRENDIZAJE</p>
-          <h1 id="h1"><span class="st-title">La inteligencia artificial</span><span class="st-tag">explicada y aplicada</span></h1>
-          <p class="visual-summary">Novedades confiables, herramientas para comparar y recursos prácticos para estudiar y trabajar con IA.</p>
-          <div class="st-cta"><a class="btn big" href="#hoy" data-track="clic_hero_explorar">Ver novedades</a><a class="btn big ghost" href="#ruta" data-track="clic_hero_ruta">Aprender desde cero</a></div>
-          <div class="statusbar" id="hero-meta"><i class="live"></i><span id="updated">Cargando datos…</span></div>
+          <h1 id="h1"><span class="st-title">La inteligencia artificial,</span><span class="st-tag">explicada y aplicada</span></h1>
+          <p class="visual-summary">Novedades confiables, comparadores, tutoriales y recursos para aprovechar la IA en el estudio, el trabajo y la vida diaria.</p>
+          <div class="statusbar" id="hero-meta" role="status" aria-live="polite">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span id="updated">Consultando última actualización…</span>
+          </div>
         </div>
-        <div class="insight" id="insight" aria-live="polite" aria-label="Insight del día"></div>
       </div>
-      <a class="visual-hero-credit" href="https://commons.wikimedia.org/wiki/File:Datacenter_Server_Racks_(22370909788).jpg" target="_blank" rel="noopener noreferrer" title="Fotografía documental de un centro de datos, 2015. Carl Lender, CC BY 2.0. Imagen de archivo, recortada y oscurecida para legibilidad.">Foto de archivo: Carl Lender (2015) · CC BY 2.0</a>
     </div>
-    <details class="simple-extra"><summary>Ver cifras del catálogo de modelos de IA</summary><div class="kpis" id="st-kpi" aria-label="Indicadores del catálogo"></div></details>
-    <div class="simple-entry"><p class="simple-entry-kicker">EMPIEZA AQUÍ</p><h2>Tres formas de aprovechar la IA</h2><p>Elige una opción. No necesitas conocimientos técnicos para comenzar.</p></div>
-    <nav class="start simple-start" aria-label="Empieza aquí">
-      <a href="#hoy" data-track="inicio_noticias"><span class="simple-step">01 · ENTERARME</span><span class="tx"><b>¿Qué hay de nuevo en IA?</b><span>Noticias recientes, explicadas sin tecnicismos, con fuente y fecha.</span></span><span class="simple-go">Leer novedades →</span></a>
-      <a href="#modelos" data-track="inicio_modelos"><span class="simple-step">02 · ELEGIR</span><span class="tx"><b>¿Qué herramienta me conviene?</b><span>Compara modelos según lo que necesitas hacer y cuánto cuestan.</span></span><span class="simple-go">Comparar herramientas →</span></a>
-      <a href="#ruta" data-track="inicio_aprender"><span class="simple-step">03 · APRENDER</span><span class="tx"><b>¿Por dónde empiezo?</b><span>Una ruta guiada con pasos concretos y ejercicios breves.</span></span><span class="simple-go">Ver mi ruta →</span></a>
-    </nav>
-    <p class="visual-photo-credits">Fotografías documentales de archivo, no imágenes generadas ni registros de noticias actuales: <a href="https://commons.wikimedia.org/wiki/File:Woman_reading_and_working_on_laptop_at_home.jpg" target="_blank" rel="noopener noreferrer">trabajo con portátil, Nenad Stojković (2026, CC BY 2.0)</a> · <a href="https://commons.wikimedia.org/wiki/File:Technician_with_laptop_working_on_server_rack_at_NERSC.jpg" target="_blank" rel="noopener noreferrer">infraestructura informática, Derrick Coetzee (2011, CC0)</a> · <a href="https://commons.wikimedia.org/wiki/File:Students_using_a_computer_laptop.jpg" target="_blank" rel="noopener noreferrer">aprendizaje digital, Bright Kwame Ayisi (2024, CC0)</a>. Fotografías recortadas y superpuestas con degradados para mantener la legibilidad.</p>
+    <div class="iar-feature-shell">
+      <nav class="start simple-start" aria-label="Empieza con IA Radar">
+        <a href="#hoy" class="iar-ref-card iar-ref-news" data-track="inicio_noticias">
+          <span class="iar-card-head">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 9h9M8 13h9M8 17h5M6 8v10"/></svg>
+            <span class="iar-card-title">Novedades de IA</span>
+          </span>
+          <span class="iar-card-desc">Lo más reciente de la semana, con su impacto.</span>
+          <span class="iar-card-photo" aria-hidden="true"></span>
+          <span class="iar-card-go" aria-hidden="true">→</span>
+        </a>
+        <a href="#modelos" class="iar-ref-card iar-ref-models" data-track="inicio_modelos">
+          <span class="iar-card-head">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 2-9 5 9 5 9-5-9-5Zm-9 10 9 5 9-5M3 17l9 5 9-5"/></svg>
+            <span class="iar-card-title">¿Qué herramienta usar?</span>
+          </span>
+          <span class="iar-card-desc">Compara modelos como ChatGPT, Claude y Gemini según tu necesidad.</span>
+          <span class="iar-card-photo" aria-hidden="true"></span>
+          <span class="iar-card-go" aria-hidden="true">→</span>
+        </a>
+        <a href="#ruta" class="iar-ref-card iar-ref-learn" data-track="inicio_aprender">
+          <span class="iar-card-head">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 9 10-5 10 5-10 5L2 9Zm4 3v6c4 3 8 3 12 0v-6M22 9v7"/></svg>
+            <span class="iar-card-title">Aprende paso a paso</span>
+          </span>
+          <span class="iar-card-desc">Guías prácticas, cursos y ejemplos en español.</span>
+          <span class="iar-card-photo" aria-hidden="true"></span>
+          <span class="iar-card-go" aria-hidden="true">→</span>
+        </a>
+      </nav>
+      <details class="simple-extra iar-ref-extra">
+        <summary>Explorar indicadores y análisis del catálogo de IA</summary>
+        <div class="iar-extra-data">
+          <div class="insight" id="insight" aria-live="polite" aria-label="Indicador destacado"></div>
+          <div class="kpis" id="st-kpi" aria-label="Indicadores del catálogo"></div>
+        </div>
+      </details>
+      <details class="iar-photo-credits">
+        <summary>Créditos de imágenes de archivo</summary>
+        <p>Tarjetas: <a href="https://commons.wikimedia.org/wiki/File:Woman_reading_and_working_on_laptop_at_home.jpg" target="_blank" rel="noopener noreferrer">Nenad Stojković (CC BY 2.0)</a>,
+        <a href="https://commons.wikimedia.org/wiki/File:Technician_with_laptop_working_on_server_rack_at_NERSC.jpg" target="_blank" rel="noopener noreferrer">Derrick Coetzee (CC0)</a> y
+        <a href="https://commons.wikimedia.org/wiki/File:Students_using_a_computer_laptop.jpg" target="_blank" rel="noopener noreferrer">Bright Kwame Ayisi (CC0)</a>.
+        El fondo del robot es una representación gráfica creada para IA Radar.</p>
+      </details>
+    </div>
   </section>
 
   <section id="hoy" class="sec first" aria-labelledby="t-hoy"><div class="wrap"><div id="hoy-root"></div></div></section>
