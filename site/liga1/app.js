@@ -904,7 +904,7 @@
     return '<article class="flip" tabindex="0" aria-label="' + esc((f.title || f.label) + ". " + (f.hk || "") + ". " + (f.hd || "")) + '"><div class="flip-in"><div class="flip-f ' + cls + '">' + front + '</div><div class="flip-b ' + cls + '" aria-hidden="true">' + back + "</div></div></article>";
   }
   function renderHist() {
-    // Lectura directa: los hechos y la procedencia no deben depender de girar tarjetas.
+    // Historia editorial: fotografía auténtica, hechos verificables y fuentes visibles.
     var root = $("#histBox");
     if (!root) return;
     var facts = (CT.facts || []).map(function (f) {
@@ -913,30 +913,48 @@
     }).join("");
     var timeline = (CT.timeline || []).map(function (t) {
       return '<li class="hist-milestone"><span class="hist-year">' + esc(t.year) +
-        '</span><div><h4>' + esc(t.title) + '</h4><p>' + esc(t.text) +
+        '</span><div class="hist-event"><h4>' + esc(t.title) + '</h4><p>' + esc(t.text) +
         '</p>' + srcLink(t) + '</div></li>';
     }).join("");
     var curiosities = (CT.curious || []).map(function (c) {
       return '<article class="hist-curiosity"><h4>' + esc(c.title) +
         '</h4><p>' + esc(c.text) + '</p>' + srcLink(c) + '</article>';
     }).join("");
+    var monumental = (CT.facts || []).filter(function (f) { return String(f.big).includes("80 208"); })[0];
     root.innerHTML =
-      '<div class="hist-simple">' +
-      '<div class="hist-intro"><h3>La historia crema, en tres partes</h3>' +
-      '<p>Conoce los datos principales, recorre los años decisivos y consulta la fuente de cada hecho. No necesitas tocar una tarjeta para leer su contenido.</p>' +
-      '<div class="hist-jumps" role="group" aria-label="Ir a una parte de la historia">' +
-      '<button type="button" data-hist-go="hist-datos">Datos clave</button>' +
+      '<div class="hist-simple hist-redesign">' +
+      '<header class="hist-showcase">' +
+      '<div class="hist-showcase-content">' +
+      '<p class="hist-eyebrow">UNIVERSITARIO DE DEPORTES · DESDE 1924</p>' +
+      '<h3 id="hist-headline">Una historia escrita en crema</h3>' +
+      '<p class="hist-showcase-lead">De las aulas universitarias a las noches inolvidables del Monumental. Recorre los hechos, las fechas y las voces que construyeron la historia de la U.</p>' +
+      '<div class="hist-jumps" role="group" aria-label="Explorar la historia de Universitario">' +
+      '<button type="button" data-hist-go="hist-datos">Datos que hacen historia</button>' +
       '<button type="button" data-hist-go="hist-linea">Línea de tiempo</button>' +
-      '<button type="button" data-hist-go="hist-curiosidades">Para el hincha</button></div></div>' +
+      '<button type="button" data-hist-go="hist-curiosidades">Curiosidades</button></div>' +
+      '</div></header>' +
       '<section id="hist-datos" class="hist-part" aria-label="Datos históricos principales">' +
-      '<h3>Cuatro datos para empezar</h3><div class="hist-facts">' + facts + '</div></section>' +
+      '<div class="hist-section-header"><p class="hist-section-kicker">EL CLUB EN CIFRAS</p><h3>Cuatro datos que cuentan nuestra historia</h3>' +
+      '<p>Información histórica documentada, con referencia consultable en cada tarjeta.</p></div>' +
+      '<div class="hist-facts">' + facts + '</div></section>' +
+      '<section class="hist-stadium" aria-label="El Estadio Monumental y sus protagonistas">' +
+      '<div class="hist-stadium-photo"><img src="img/lolo-estatua.jpg" width="800" height="940" loading="lazy" decoding="async" alt="Estatua de Lolo Fernández frente al Estadio Monumental de Universitario de Deportes"></div>' +
+      '<div class="hist-stadium-copy"><p class="hist-section-kicker">LA CASA DE LA U</p>' +
+      '<h3>Donde la historia se hace tribuna</h3>' +
+      '<p>El Monumental conserva momentos fundamentales del club, desde su estreno hasta las campañas que marcaron a generaciones de hinchas.</p>' +
+      (monumental ? '<p class="hist-stadium-key">'+esc(monumental.big)+' <span>'+esc(monumental.label)+'</span></p><p>'+esc(monumental.text)+'</p>'+srcLink(monumental) : '') +
+      '<button type="button" class="hist-stadium-action" data-hist-view="tit">Ver títulos y Libertadores</button></div></section>' +
       '<section id="hist-linea" class="hist-part" aria-label="Fechas históricas">' +
-      '<h3>Fechas que marcaron a Universitario</h3><ol class="hist-timeline">' + timeline + '</ol></section>' +
+      '<div class="hist-section-header"><p class="hist-section-kicker">MOMENTOS INOLVIDABLES</p><h3>Las fechas que marcaron a Universitario</h3>' +
+      '<p>Los acontecimientos están ordenados cronológicamente; cada uno conserva su fuente.</p></div>' +
+      '<ol class="hist-timeline">' + timeline + '</ol></section>' +
       '<details id="hist-curiosidades" class="hist-other"><summary>Más historias y curiosidades del club</summary>' +
       '<div class="hist-curiosities">' + curiosities + '</div></details>' +
-      '<p class="hist-method">Metodología: se priorizan publicaciones del club y otras fuentes identificadas. Algunas publicaciones atribuyen años diferentes a ciertos títulos; se indican las discrepancias en lugar de escoger un año sin sustento. Este archivo histórico es editorial: no se actualiza automáticamente al finalizar un partido.</p>' +
-      '<p class="hist-method">Para los resultados de la temporada, consulta <button type="button" class="hist-link-btn" data-hist-view="C">la tabla del Clausura</button>. Para campeonatos y estadísticas internacionales, consulta <button type="button" class="hist-link-btn" data-hist-view="tit">Títulos y Libertadores</button>.</p>' +
-      '</div>';
+      '<div class="hist-end">' +
+      '<p class="hist-method">Las fuentes se muestran junto a cada hecho. Cuando existen discrepancias entre publicaciones históricas, se indican expresamente. Este archivo editorial no se modifica automáticamente al finalizar los partidos.</p>' +
+      '<p class="hist-method">Para la temporada actual, consulta <button type="button" class="hist-link-btn" data-hist-view="C">la tabla del Clausura</button> y <button type="button" class="hist-link-btn" data-hist-view="tit">Títulos y Libertadores</button>.</p>' +
+      '<p class="hist-photo-credit">Fotografías documentales: <a href="https://commons.wikimedia.org/wiki/File:Estadio_Monumental_Club_Universitario_de_Deportes_(cropped).JPG" target="_blank" rel="noopener noreferrer">Monumental, MicroX (2012; CC BY-SA 3.0)</a> · <a href="https://commons.wikimedia.org/wiki/File:Estadio_Monumental,_estatua_de_Lolo_Fernandez.jpg" target="_blank" rel="noopener noreferrer">Estatua de Lolo Fernández, Sigloestadio21 (2021; CC BY-SA 4.0)</a>. Imágenes recortadas para el diseño.</p>' +
+      '</div></div>';
     $$("#histBox [data-hist-go]").forEach(function (button) {
       button.addEventListener("click", function () {
         var target = document.getElementById(button.dataset.histGo);
