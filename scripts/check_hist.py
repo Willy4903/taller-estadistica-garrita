@@ -74,6 +74,11 @@ def main():
     assert 'var titleCount = titles ? esc(titles.big)' in code, "Los títulos deben salir de los datos"
     assert 'stat(\'Títulos nacionales\',titleCount' in code, "Se perdió la métrica documentada"
     assert "hist-photo-credit" in code, "No se preservaron atribuciones"
+    new_photo = ROOT / "img/historia-hero-fondo.jpg"
+    assert new_photo.exists() and new_photo.stat().st_size > 50_000, "No se reconstruyó el fondo aprobado"
+    with new_photo.open("rb") as fh:
+        assert fh.read(3) == b"\xff\xd8\xff", "Imagen de fondo no es JPEG"
+    assert 'url("img/historia-hero-fondo.jpg")' in styles, "CSS no utiliza fondo aprobado"
     print("OK historia: navegación, lectura directa y referencias visibles")
 
 

@@ -34,6 +34,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Preparar portada aprobada de Historia de Universitario
+        run: base64 --decode site/liga1/img/historia-hero-fondo.jpg.base64 > site/liga1/img/historia-hero-fondo.jpg
+
       - name: Obtener fotografías auténticas para la historia crema
         run: python scripts/fetch_hist_photos.py
 
