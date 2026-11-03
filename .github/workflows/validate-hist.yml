@@ -4,6 +4,7 @@ on:
     paths:
       - site/liga1/**
       - scripts/check_hist.py
+      - scripts/check_hist_browser.cjs
       - scripts/fetch_hist_photos.py
       - .github/workflows/validate-hist.yml
   push:
@@ -30,3 +31,9 @@ jobs:
         run: |
           node --check site/liga1/app.js
           node --check site/liga1/content.js
+          node --check scripts/check_hist_browser.cjs
+      - name: Probar interfaz real de Historia y Clausura en Chromium
+        run: |
+          npm install --no-save playwright@1.49.0
+          npx playwright install --with-deps chromium
+          node scripts/check_hist_browser.cjs
