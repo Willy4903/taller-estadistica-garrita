@@ -47,9 +47,9 @@ body[data-page="home"]{background:#fff!important;color:#122136}
 .stage.visual-ai.iar-reference .iar-card-title{display:block;max-width:22ch;color:#0d1729;font:850 clamp(1.15rem,2vw,1.65rem)/1.18 Inter,system-ui,sans-serif;letter-spacing:-.035em}
 .stage.visual-ai.iar-reference .iar-card-desc{display:block;position:relative;z-index:2;max-width:31ch;color:#1d283a;font:500 clamp(.84rem,1.18vw,.96rem)/1.5 Inter,system-ui,sans-serif}
 .stage.visual-ai.iar-reference .iar-card-photo{display:block;position:absolute;z-index:0;inset:37% 0 0 0;background-size:cover;background-position:center 54%;background-repeat:no-repeat;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 36%);mask-image:linear-gradient(to bottom,transparent,#000 36%);opacity:.96}
-.stage.visual-ai.iar-reference .iar-ref-news .iar-card-photo{background-image:url("../visual/photos/ia-news.jpg")}
-.stage.visual-ai.iar-reference .iar-ref-models .iar-card-photo{background-image:url("../visual/photos/ia-models.jpg")}
-.stage.visual-ai.iar-reference .iar-ref-learn .iar-card-photo{background-image:url("../visual/photos/ia-learn.jpg")}
+.stage.visual-ai.iar-reference .iar-ref-news .iar-card-photo{background-image:url("../visual/iar-card-news.jpg")}
+.stage.visual-ai.iar-reference .iar-ref-models .iar-card-photo{background-image:url("../visual/iar-card-models.jpg")}
+.stage.visual-ai.iar-reference .iar-ref-learn .iar-card-photo{background-image:url("../visual/iar-card-learn.jpg")}
 .stage.visual-ai.iar-reference .iar-card-go{position:absolute;z-index:3;bottom:18px;left:20px;display:grid;place-items:center;width:43px;height:43px;border-radius:50%;border:2px solid #fff;background:#5d3bb5;color:#fff;font:700 1.55rem/1 Inter,system-ui,sans-serif;box-shadow:0 5px 14px #0003}
 .stage.visual-ai.iar-reference .iar-ref-models .iar-card-go{background:#0078c9}
 .stage.visual-ai.iar-reference .iar-ref-learn .iar-card-go{background:#008b60}
