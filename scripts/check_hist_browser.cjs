@@ -90,8 +90,13 @@ async function ready() {
       await page.waitForFunction(()=>document.body.dataset.view === "C");
       assert.notEqual(await page.locator("body > .hero").evaluate(e=>getComputedStyle(e).display),"none",
         "Clausura debe conservar su portada original");
-      assert.notEqual(await page.locator("body > .tabs-bar").evaluate(e=>getComputedStyle(e).display),"none",
-        "Clausura debe conservar sus pestañas originales");
+      if (width >= 1024) {
+        assert.notEqual(await page.locator("body > .tabs-bar").evaluate(e=>getComputedStyle(e).display),"none",
+          "Clausura debe conservar sus pestañas originales en escritorio");
+      } else {
+        assert.equal(await page.locator("#bnav").isVisible(),true,
+          "Clausura debe conservar la navegación inferior de celular");
+      }
       assert.deepEqual(errors,[], "Errores Javascript del navegador");
       console.log("OK historia "+width+"px:",JSON.stringify(state));
       await page.close();
