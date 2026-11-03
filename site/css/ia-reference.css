@@ -79,7 +79,7 @@ body[data-page="home"]{background:#fff!important;color:#122136}
  #site-header .iar-ref-hd{height:58px!important;min-height:58px!important;padding:0 13px!important;gap:6px!important}
  #site-header .iar-ref-logo-icon{width:32px;height:32px}
  #site-header .iar-ref-brand strong{font-size:1.12rem}
- #site-header .iar-ref-brand small{display:none}
+ #site-header .iar-ref-brand small{font-size:.54rem}
  #site-header .iar-ref-topnav{gap:2px;margin-left:auto;margin-right:2px}
  #site-header .iar-ref-topnav a{font-size:.73rem;padding:7px 8px}
  #site-header .iar-ref-hd .iar-ref-search,#site-header .iar-ref-hd #burger{width:31px;height:33px;flex-basis:31px}
@@ -101,6 +101,7 @@ body[data-page="home"]{background:#fff!important;color:#122136}
 }
 @media(max-width:570px){
  #site-header .iar-ref-topnav{display:none}
+ #site-header .iar-ref-brand small{display:none}
  #site-header .iar-ref-hd .iar-ref-search{margin-left:auto!important}
  .stage.visual-ai.iar-reference .stage-grid{min-height:360px!important;background-position:center,70% center!important}
  .stage.visual-ai.iar-reference .stage-grid{background-image:linear-gradient(90deg,rgba(2,13,29,.94) 0%,rgba(3,18,36,.83) 52%,rgba(3,17,33,.34) 100%),url("../visual/ia-radar-robot-hero.jpg")!important}
