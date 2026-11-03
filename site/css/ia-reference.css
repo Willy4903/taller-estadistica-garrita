@@ -1,0 +1,125 @@
+/* IA Radar: reproducción responsive de la portada editorial aprobada (nov. 2026).
+   El fondo humanoide es arte original. Las tarjetas usan fotos de archivo locales.
+   Solo afecta la página principal; preserva las secciones y los datos. */
+body[data-page="home"]{background:#fff!important;color:#122136}
+#site-header{position:sticky!important;top:0!important;z-index:70!important;padding:0!important;background:#fff!important;border-bottom:1px solid #e6edf5!important;backdrop-filter:none!important;box-shadow:0 1px 12px #152d480b}
+#site-header .iar-ref-hd{box-sizing:border-box;display:flex!important;align-items:center!important;gap:12px!important;max-width:1460px!important;width:100%;height:72px!important;min-height:72px!important;margin:auto!important;padding:0 clamp(14px,3vw,44px)!important;border:0!important;border-radius:0!important;background:#fff!important;box-shadow:none!important;backdrop-filter:none!important}
+#site-header .iar-ref-hd .logo{display:flex!important;order:0!important;flex:0 0 auto;align-items:center;gap:9px;color:#0d1729!important;font:800 1.45rem/1.1 Inter,sans-serif!important;text-shadow:none!important;text-decoration:none;white-space:nowrap}
+#site-header .iar-ref-logo-icon{display:block;flex-shrink:0;width:41px;height:41px;filter:none}
+#site-header .iar-ref-brand{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+#site-header .iar-ref-brand strong{font-size:1.42rem;line-height:1.1;font-weight:850;letter-spacing:-.055em;color:#111827}
+#site-header .iar-ref-brand small{font-size:.69rem;line-height:1.3;letter-spacing:-.015em;font-weight:600;color:#26354c}
+#site-header .iar-ref-topnav{display:flex;order:1;align-items:center;justify-content:center;gap:7px;margin-left:auto;margin-right:12px}
+#site-header .iar-ref-topnav a{padding:9px 15px;border:0;border-radius:99px;font:750 .92rem/1.25 Inter,sans-serif;color:#111827;text-decoration:none;white-space:nowrap;text-shadow:none!important;box-shadow:none!important}
+#site-header .iar-ref-topnav a:hover,#site-header .iar-ref-topnav a:focus-visible{background:#e9f3ff;color:#0c50b7}
+#site-header .iar-ref-topnav a.iar-ref-active{background:#d9e9ff;color:#0b4db4}
+#site-header .iar-ref-hd .iar-ref-search,#site-header .iar-ref-hd #burger{display:grid!important;align-items:center;justify-items:center;flex:0 0 38px;width:38px;height:40px;margin:0!important;padding:0;border:0!important;border-radius:12px;background:transparent!important;box-shadow:none!important;color:#1a293d!important}
+#site-header .iar-ref-hd .iar-ref-search{order:2}
+#site-header .iar-ref-hd #burger{order:3!important}
+#site-header .iar-ref-hd .iar-ref-search:hover,#site-header .iar-ref-hd #burger:hover{background:#f2f6fb!important}
+#site-header .iar-ref-hd .iar-ref-search .ui,#site-header .iar-ref-hd #burger .ui{width:22px;height:22px}
+#site-header .iar-ref-hd #theme{display:none!important}
+#site-header .prog{left:0!important;right:0!important;bottom:0!important;height:2px!important;background:#0c6de9!important;box-shadow:none!important}
+.stage.visual-ai.iar-reference{display:block;width:100%!important;max-width:none!important;margin:0!important;padding:0 0 35px!important;background:#fff!important;overflow:visible!important}
+.stage.visual-ai.iar-reference #sphere{display:none!important}
+.stage.visual-ai.iar-reference .stage-grid{box-sizing:border-box;display:flex!important;align-items:stretch;justify-content:flex-start;position:relative;max-width:none!important;width:100%!important;margin:0!important;padding:0!important;min-height:clamp(320px,36vw,495px)!important;border:0!important;border-radius:0!important;background-color:#061626!important;background-image:linear-gradient(90deg,rgba(2,13,29,.96) 0%,rgba(3,18,36,.86) 31%,rgba(3,17,33,.38) 64%,rgba(4,18,36,.08) 100%),url("../visual/ia-radar-robot-hero.jpg")!important;background-size:cover,cover!important;background-position:center,center!important;background-repeat:no-repeat!important;box-shadow:none!important;overflow:hidden!important}
+.stage.visual-ai.iar-reference .stage-grid::before{display:none!important}
+.stage.visual-ai.iar-reference .st-col{box-sizing:border-box;position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;max-width:1440px!important;width:100%;margin:0 auto;padding:clamp(25px,4vw,55px) clamp(22px,5vw,74px) 60px!important}
+.stage.visual-ai.iar-reference .st-head{padding:0!important;text-align:left!important;max-width:900px}
+.stage.visual-ai.iar-reference .st-head #h1{max-width:900px;margin:0 0 16px;color:#fff;text-shadow:0 2px 20px #0004}
+.stage.visual-ai.iar-reference .st-title,.stage.visual-ai.iar-reference .st-tag{display:block;max-width:21ch!important;margin:0!important;padding:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:none!important;filter:none!important;text-shadow:none!important;font:850 clamp(2rem,4.5vw,4.3rem)/1.07 Inter,system-ui,sans-serif!important;letter-spacing:-.045em!important;text-wrap:balance}
+.stage.visual-ai.iar-reference .visual-summary{max-width:56ch!important;margin:0 0 21px!important;color:#f3f7ff!important;font-size:clamp(.95rem,1.55vw,1.26rem)!important;font-weight:480;line-height:1.52!important;text-shadow:0 1px 10px #0008}
+.stage.visual-ai.iar-reference #hero-meta{display:inline-flex;align-items:center;gap:9px;max-width:100%;padding:9px 14px!important;margin:0!important;border:1px solid #ffffff7e;border-radius:99px;background:#031629a1;color:#f9fbff!important;box-shadow:none;backdrop-filter:blur(7px);font-size:clamp(.76rem,1vw,.91rem)!important;font-weight:550;line-height:1.45;letter-spacing:-.01em}
+.stage.visual-ai.iar-reference #hero-meta svg{flex:0 0 19px}
+.stage.visual-ai.iar-reference #hero-meta .live{display:none!important}
+.stage.visual-ai.iar-reference #hero-meta.stale{border-color:#fbd38d}
+.stage.visual-ai.iar-reference .iar-feature-shell{box-sizing:border-box;position:relative;z-index:3;width:calc(100% - 40px);max-width:1370px;margin:-31px auto 0;padding:16px 16px 13px;border-radius:29px 29px 0 0;background:#fff;box-shadow:0 -8px 28px #072b4f15}
+.stage.visual-ai.iar-reference .simple-start{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:15px!important;margin:0!important;padding:0!important}
+.stage.visual-ai.iar-reference .simple-start>a.iar-ref-card{box-sizing:border-box;position:relative;isolation:isolate;display:flex!important;flex-direction:column;align-items:stretch;gap:12px;width:100%;min-width:0;min-height:0!important;height:350px;margin:0;padding:23px!important;border:0!important;border-radius:22px!important;overflow:hidden!important;box-shadow:0 5px 18px #0f315b12!important;text-align:left;text-decoration:none;color:#121c30!important;transition:transform .16s,box-shadow .16s}
+.stage.visual-ai.iar-reference .simple-start>a.iar-ref-news{background:linear-gradient(150deg,#eee8ff,#d6c1f6)!important}
+.stage.visual-ai.iar-reference .simple-start>a.iar-ref-models{background:linear-gradient(150deg,#e6f5ff,#b4dcfa)!important}
+.stage.visual-ai.iar-reference .simple-start>a.iar-ref-learn{background:linear-gradient(150deg,#e3fbf3,#adedd2)!important}
+.stage.visual-ai.iar-reference .simple-start>a.iar-ref-card::before,.stage.visual-ai.iar-reference .simple-start>a.iar-ref-card::after{display:none!important;content:none!important}
+.stage.visual-ai.iar-reference .iar-card-head{display:flex;position:relative;z-index:2;align-items:flex-start;gap:13px}
+.stage.visual-ai.iar-reference .iar-card-head svg{flex:0 0 32px;width:32px;height:32px;color:#5d31ba}
+.stage.visual-ai.iar-reference .iar-ref-models .iar-card-head svg{color:#0875bf}
+.stage.visual-ai.iar-reference .iar-ref-learn .iar-card-head svg{color:#079963}
+.stage.visual-ai.iar-reference .iar-card-title{display:block;max-width:22ch;color:#0d1729;font:850 clamp(1.15rem,2vw,1.65rem)/1.18 Inter,system-ui,sans-serif;letter-spacing:-.035em}
+.stage.visual-ai.iar-reference .iar-card-desc{display:block;position:relative;z-index:2;max-width:31ch;color:#1d283a;font:500 clamp(.84rem,1.18vw,.96rem)/1.5 Inter,system-ui,sans-serif}
+.stage.visual-ai.iar-reference .iar-card-photo{display:block;position:absolute;z-index:0;inset:37% 0 0 0;background-size:cover;background-position:center 54%;background-repeat:no-repeat;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 36%);mask-image:linear-gradient(to bottom,transparent,#000 36%);opacity:.96}
+.stage.visual-ai.iar-reference .iar-ref-news .iar-card-photo{background-image:url("../visual/iar-card-news.jpg")}
+.stage.visual-ai.iar-reference .iar-ref-models .iar-card-photo{background-image:url("../visual/iar-card-models.jpg")}
+.stage.visual-ai.iar-reference .iar-ref-learn .iar-card-photo{background-image:url("../visual/iar-card-learn.jpg")}
+.stage.visual-ai.iar-reference .iar-card-go{position:absolute;z-index:3;bottom:18px;left:20px;display:grid;place-items:center;width:43px;height:43px;border-radius:50%;border:2px solid #fff;background:#5d3bb5;color:#fff;font:700 1.55rem/1 Inter,system-ui,sans-serif;box-shadow:0 5px 14px #0003}
+.stage.visual-ai.iar-reference .iar-ref-models .iar-card-go{background:#0078c9}
+.stage.visual-ai.iar-reference .iar-ref-learn .iar-card-go{background:#008b60}
+.stage.visual-ai.iar-reference .simple-start>a.iar-ref-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px #153c6730!important}
+.stage.visual-ai.iar-reference .simple-start>a.iar-ref-card:focus-visible{outline:3px solid #105ebc;outline-offset:3px}
+.stage.visual-ai.iar-reference .iar-ref-extra{max-width:none;margin:18px 3px 0;border:1px solid #dfe6ef;border-radius:14px;background:#fff;color:#172335;box-shadow:none}
+.stage.visual-ai.iar-reference .iar-ref-extra>summary{cursor:pointer;padding:12px 16px;color:#33445c;font:650 .85rem/1.5 Inter,sans-serif;min-height:44px}
+.stage.visual-ai.iar-reference .iar-extra-data{padding:10px 16px 20px}
+.stage.visual-ai.iar-reference .iar-extra-data .insight{max-width:none;background:#091d34;color:#e4f6ff;border:1px solid #325875}
+.stage.visual-ai.iar-reference .iar-extra-data .kpis{max-width:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
+.stage.visual-ai.iar-reference .iar-photo-credits{color:#5f6b7c;font:400 .73rem/1.6 Inter,system-ui,sans-serif;margin:9px 6px 0;max-width:110ch}
+.stage.visual-ai.iar-reference .iar-photo-credits>summary{cursor:pointer;padding:6px 0;font-size:.75rem}
+.stage.visual-ai.iar-reference .iar-photo-credits p{margin:5px 0}
+.stage.visual-ai.iar-reference .iar-photo-credits a{color:#30598e}
+#hoy,#modelos,#ruta{scroll-margin-top:86px}
+@media(max-width:1080px){
+ #site-header .iar-ref-topnav a{font-size:.85rem;padding:8px 10px}
+ #site-header .iar-ref-brand strong{font-size:1.23rem}
+ #site-header .iar-ref-brand small{font-size:.58rem}
+ .stage.visual-ai.iar-reference .stage-grid{min-height:350px!important}
+ .stage.visual-ai.iar-reference .iar-card-title{font-size:1.25rem}
+ .stage.visual-ai.iar-reference .simple-start>a.iar-ref-card{height:320px;padding:19px!important}
+ .stage.visual-ai.iar-reference .iar-card-photo{inset:43% 0 0}
+ .stage.visual-ai.iar-reference .iar-extra-data .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ #site-header .iar-ref-hd{height:58px!important;min-height:58px!important;padding:0 13px!important;gap:6px!important}
+ #site-header .iar-ref-logo-icon{width:32px;height:32px}
+ #site-header .iar-ref-brand strong{font-size:1.12rem}
+ #site-header .iar-ref-brand small{font-size:.54rem}
+ #site-header .iar-ref-topnav{gap:2px;margin-left:auto;margin-right:2px}
+ #site-header .iar-ref-topnav a{font-size:.73rem;padding:7px 8px}
+ #site-header .iar-ref-hd .iar-ref-search,#site-header .iar-ref-hd #burger{width:31px;height:33px;flex-basis:31px}
+ #site-header .iar-ref-hd .iar-ref-search .ui,#site-header .iar-ref-hd #burger .ui{width:19px;height:19px}
+ .stage.visual-ai.iar-reference .stage-grid{min-height:275px!important;background-position:center,64% center!important}
+ .stage.visual-ai.iar-reference .st-col{padding:27px 24px 40px!important;max-width:75%}
+ .stage.visual-ai.iar-reference .st-title,.stage.visual-ai.iar-reference .st-tag{font-size:clamp(1.75rem,4.55vw,2.6rem)!important}
+ .stage.visual-ai.iar-reference .visual-summary{font-size:.87rem!important;max-width:46ch;margin-bottom:14px!important}
+ .stage.visual-ai.iar-reference #hero-meta{padding:7px 10px!important;font-size:.7rem!important}
+ .stage.visual-ai.iar-reference .iar-feature-shell{width:calc(100% - 12px);margin-top:-26px;padding:10px;border-radius:21px 21px 0 0}
+ .stage.visual-ai.iar-reference .simple-start{gap:9px!important}
+ .stage.visual-ai.iar-reference .simple-start>a.iar-ref-card{height:265px;padding:13px!important;border-radius:15px!important;gap:9px}
+ .stage.visual-ai.iar-reference .iar-card-head{gap:7px}
+ .stage.visual-ai.iar-reference .iar-card-head svg{width:24px;height:24px;flex-basis:24px}
+ .stage.visual-ai.iar-reference .iar-card-title{font-size:1rem;letter-spacing:-.035em}
+ .stage.visual-ai.iar-reference .iar-card-desc{font-size:.74rem;line-height:1.43}
+ .stage.visual-ai.iar-reference .iar-card-photo{inset:43% 0 0}
+ .stage.visual-ai.iar-reference .iar-card-go{width:34px;height:34px;bottom:11px;left:11px;font-size:1.3rem}
+}
+@media(max-width:570px){
+ #site-header .iar-ref-topnav{display:none}
+ #site-header .iar-ref-brand small{display:none}
+ #site-header .iar-ref-hd .iar-ref-search{margin-left:auto!important}
+ .stage.visual-ai.iar-reference .stage-grid{min-height:360px!important;background-position:center,70% center!important}
+ .stage.visual-ai.iar-reference .stage-grid{background-image:linear-gradient(90deg,rgba(2,13,29,.94) 0%,rgba(3,18,36,.83) 52%,rgba(3,17,33,.34) 100%),url("../visual/ia-radar-robot-hero.jpg")!important}
+ .stage.visual-ai.iar-reference .st-col{max-width:100%;padding:34px 18px 55px!important}
+ .stage.visual-ai.iar-reference .st-head{max-width:89%}
+ .stage.visual-ai.iar-reference .st-title,.stage.visual-ai.iar-reference .st-tag{font-size:clamp(1.8rem,7.8vw,2.8rem)!important}
+ .stage.visual-ai.iar-reference .visual-summary{font-size:.9rem!important;max-width:34ch}
+ .stage.visual-ai.iar-reference .iar-feature-shell{width:calc(100% - 22px);margin-top:-27px;padding:12px;border-radius:22px 22px 0 0}
+ .stage.visual-ai.iar-reference .simple-start{grid-template-columns:1fr!important;gap:12px!important}
+ .stage.visual-ai.iar-reference .simple-start>a.iar-ref-card{min-height:240px!important;height:240px;padding:20px!important;border-radius:19px!important}
+ .stage.visual-ai.iar-reference .iar-card-head{gap:11px}
+ .stage.visual-ai.iar-reference .iar-card-title{font-size:1.27rem}
+ .stage.visual-ai.iar-reference .iar-card-desc{font-size:.88rem;max-width:28ch}
+ .stage.visual-ai.iar-reference .iar-card-photo{inset:35% 0 0;background-position:center 54%}
+ .stage.visual-ai.iar-reference .iar-card-go{width:41px;height:41px;bottom:14px;left:15px}
+ .stage.visual-ai.iar-reference .iar-extra-data .kpis{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+ .stage.visual-ai.iar-reference .simple-start>a.iar-ref-card{transition:none}
+ .stage.visual-ai.iar-reference .simple-start>a.iar-ref-card:hover{transform:none}
+}
