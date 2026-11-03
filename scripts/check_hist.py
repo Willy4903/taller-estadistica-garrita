@@ -74,6 +74,15 @@ def main():
     assert 'var titleCount = titles ? esc(titles.big)' in code, "Los títulos deben salir de los datos"
     assert 'stat(\'Títulos nacionales\',titleCount' in code, "Se perdió la métrica documentada"
     assert "hist-photo-credit" in code, "No se preservaron atribuciones"
+    # Hero aprobado: fotografía de bandera encapsulada en un SVG local.
+    approved = ROOT / "img/hist-bandera.svg"
+    assert approved.is_file() and approved.stat().st_size > 80_000, "Falta el fondo aprobado"
+    assert 'data:image/jpeg;base64,' in approved.read_text(encoding="utf-8"), "Fondo sin fotografía"
+    assert 'url("img/hist-bandera.svg")' in styles, "La portada no usa la bandera aprobada"
+    assert 'body[data-view="hist"] > .hero' in styles, "Falta aislar diseño histórico"
+    assert 'body[data-view="hist"] > .tabs-bar' in styles, "Falta ocultar pestañas duplicadas"
+    assert 'hist-site-nav' in html and 'data-u-view="C"' in html, "Faltan enlaces de navegación"
+    assert 'document.querySelectorAll(".hist-site-nav [data-u-view]")' in code, "Navegación no conectada"
     print("OK historia: navegación, lectura directa y referencias visibles")
 
 
