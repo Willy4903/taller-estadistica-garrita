@@ -123,3 +123,10 @@ body[data-page="home"]{background:#fff!important;color:#122136}
  .stage.visual-ai.iar-reference .simple-start>a.iar-ref-card{transition:none}
  .stage.visual-ai.iar-reference .simple-start>a.iar-ref-card:hover{transform:none}
 }
+
+/* Fondo de la portada: limpio y uniforme. Se retiran los circuitos animados y los marcos de esquina heredados del tema anterior. */
+body[data-page="home"] #bgfx{display:none!important}
+body[data-page="home"] main{background:#fff}
+body[data-page="home"] .sec{background-color:#fff}
+body[data-page="home"] .sec.alt{background-color:#f4f7fb}
+body[data-page="home"] .card,body[data-page="home"] .hoy-card,body[data-page="home"] .chg-card,body[data-page="home"] .lvl-card,body[data-page="home"] .case,body[data-page="home"] .reg{background-image:none!important}
