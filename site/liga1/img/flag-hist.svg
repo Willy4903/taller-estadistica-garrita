@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 550" fill="none" aria-hidden="true"><defs>
+<linearGradient id="cloth" x1="0" y1=".25" x2="1" y2="1"><stop stop-color="#fff6d4"/><stop offset=".19" stop-color="#e7c997"/><stop offset=".34" stop-color="#fff5d6"/><stop offset=".49" stop-color="#c59c72"/><stop offset=".66" stop-color="#f9e9bb"/><stop offset=".82" stop-color="#c99e70"/><stop offset="1" stop-color="#fff2d3"/></linearGradient>
+<linearGradient id="burgundy" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a52a32"/><stop offset=".6" stop-color="#5c091c"/><stop offset="1" stop-color="#390510"/></linearGradient>
+<filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="-10" dy="18" stdDeviation="16" flood-color="#000" flood-opacity=".65"/></filter>
+<clipPath id="fabric"><path d="M105 100C320 30 465 87 650 28L809 22 790 482C608 510 412 420 231 500L96 482C139 368 46 227 105 100Z"/></clipPath>
+</defs><g filter="url(#shadow)">
+<path d="M105 100C320 30 465 87 650 28L809 22 790 482C608 510 412 420 231 500L96 482C139 368 46 227 105 100Z" fill="url(#cloth)" stroke="#790d26" stroke-width="27"/>
+<g clip-path="url(#fabric)">
+<path d="M110 77C235 170 240 380 184 520M350 40C315 135 340 220 300 345S315 475 355 540M574 13C519 128 590 241 548 362S550 467 602 527" stroke="#7e513f" stroke-opacity=".22" stroke-width="49"/>
+<path d="M185 51C225 184 202 310 190 520M440 5C390 152 441 321 425 533M697 -1C648 157 702 325 653 522" stroke="#fff" stroke-opacity=".32" stroke-width="36"/>
+<path d="M95 106C320 37 469 102 647 43L814 38" stroke="#480816" stroke-width="16"/>
+<path d="M92 482C248 482 374 429 533 456S698 499 816 469" stroke="#650c22" stroke-width="18"/>
+<ellipse cx="465" cy="273" rx="177" ry="171" transform="rotate(-9 465 273)" stroke="url(#burgundy)" stroke-width="17" fill="none"/>
+<path d="M362 168V324C362 391 423 414 469 413 527 412 568 378 568 311V167H516V307C516 343 503 359 469 360 433 359 415 344 415 309V168Z" fill="url(#burgundy)"/>
+</g></g></svg>
