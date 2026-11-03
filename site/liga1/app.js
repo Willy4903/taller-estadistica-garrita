@@ -904,10 +904,25 @@
     return '<article class="flip" tabindex="0" aria-label="' + esc((f.title || f.label) + ". " + (f.hk || "") + ". " + (f.hd || "")) + '"><div class="flip-in"><div class="flip-f ' + cls + '">' + front + '</div><div class="flip-b ' + cls + '" aria-hidden="true">' + back + "</div></div></article>";
   }
   function renderHist() {
-    // Historia editorial: fotografía auténtica, hechos verificables y fuentes visibles.
+    // Diseño aprobado: bandera protagonista, datos verificables y navegación funcional.
     var root = $("#histBox");
     if (!root) return;
-    var facts = (CT.facts || []).map(function (f) {
+    var historicFacts = CT.facts || [];
+    var starsFact = historicFacts.filter(function (f) { return /estrellas nacionales/i.test(f.label); })[0];
+    var foundation = historicFacts.filter(function (f) { return /año de fundación/i.test(f.label); })[0];
+    function historicalIcon(name) {
+      var paths = {
+        trophy:'<path d="M7 4h10v8a5 5 0 0 1-10 0V4Zm0 2H4v3a4 4 0 0 0 4 4m9-7h3v3a4 4 0 0 1-4 4M12 17v4m-5 0h10"/>',
+        calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 10h18M8 14h2m4 0h2m-8 4h2"/>',
+        users:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6m1 3a6 6 0 0 1 4 6"/>',
+        star:'<path d="m12 2 3.1 6.4 7.1 1.1-5.1 5 .9 7.1-6-3.4-6 3.4.9-7.1-5.1-5 7.1-1.1L12 2Z"/>',
+        home:'<path d="m3 11 9-8 9 8v10h-6v-7H9v7H3V11Z"/>',
+        clock:'<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>',
+        stats:'<path d="M4 21V12h4v9M10 21V7h4v14m2 0v-10h4v10M3 21h18"/>'
+      };
+      return '<svg class="hist-ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+paths[name]+'</svg>';
+    }
+    var facts = historicFacts.map(function (f) {
       return '<article class="hist-fact"><div class="hist-fact-number">' + esc(f.big) +
         '</div><h3>' + esc(f.label) + '</h3><p>' + esc(f.text) + '</p>' + srcLink(f) + '</article>';
     }).join("");
@@ -920,25 +935,34 @@
       return '<article class="hist-curiosity"><h4>' + esc(c.title) +
         '</h4><p>' + esc(c.text) + '</p>' + srcLink(c) + '</article>';
     }).join("");
-    var monumental = (CT.facts || []).filter(function (f) { return String(f.big).includes("80 208"); })[0];
+    var monumental = historicFacts.filter(function (f) { return String(f.big).includes("80 208"); })[0];
     root.innerHTML =
-      '<div class="hist-simple hist-redesign">' +
-      '<header class="hist-showcase">' +
+      '<div class="hist-simple hist-redesign hist-approved">' +
+      '<header class="hist-showcase" aria-labelledby="hist-headline">' +
       '<div class="hist-showcase-content">' +
-      '<p class="hist-eyebrow">UNIVERSITARIO DE DEPORTES · DESDE 1924</p>' +
-      '<h3 id="hist-headline">Una historia escrita en crema</h3>' +
-      '<p class="hist-showcase-lead">De las aulas universitarias a las noches inolvidables del Monumental. Recorre los hechos, las fechas y las voces que construyeron la historia de la U.</p>' +
-      '<div class="hist-jumps" role="group" aria-label="Explorar la historia de Universitario">' +
-      '<button type="button" data-hist-go="hist-datos">Datos que hacen historia</button>' +
-      '<button type="button" data-hist-go="hist-linea">Línea de tiempo</button>' +
-      '<button type="button" data-hist-go="hist-curiosidades">Curiosidades</button></div>' +
+      '<p class="hist-eyebrow">Historia</p>' +
+      '<h3 id="hist-headline">Universitario<br>de Deportes</h3>' +
+      '<p class="hist-showcase-lead">Más de 100 años de historia, pasión y grandeza. Conoce sus títulos, hitos y el legado que lo convierten en un referente del fútbol peruano.</p>' +
       '</div></header>' +
+      '<div class="hist-dashboard">' +
+      '<div class="hist-stats-band" role="group" aria-label="Datos destacados del club">' +
+      '<div class="hist-stat">'+historicalIcon("trophy")+'<div><strong>'+esc(starsFact ? starsFact.big : "—")+'</strong><small>Títulos nacionales</small></div></div>' +
+      '<div class="hist-stat">'+historicalIcon("calendar")+'<div><strong>'+esc(foundation ? foundation.big : "1924")+'</strong><small>Año de fundación</small></div></div>' +
+      '<div class="hist-stat">'+historicalIcon("users")+'<div><strong class="hist-stat-words">Más de un siglo</strong><small>De pasión crema</small></div></div>' +
+      '<div class="hist-stat">'+historicalIcon("star")+'<div><strong class="hist-stat-words">Lolo Fernández</strong><small>Ídolo de generaciones</small></div></div>' +
+      '</div>' +
+      '<nav class="hist-feature-nav" aria-label="Secciones de historia">' +
+      '<button type="button" class="hist-feature-current" data-hist-go="hist-datos">'+historicalIcon("home")+'Resumen</button>' +
+      '<button type="button" data-hist-go="hist-linea">'+historicalIcon("clock")+'Línea de tiempo</button>' +
+      '<button type="button" data-hist-view="tit">'+historicalIcon("trophy")+'Títulos</button>' +
+      '<button type="button" data-hist-view="stats">'+historicalIcon("stats")+'Estadísticas</button>' +
+      '<button type="button" data-hist-go="hist-curiosidades">'+historicalIcon("star")+'Curiosidades</button></nav></div>' +
       '<section id="hist-datos" class="hist-part" aria-label="Datos históricos principales">' +
       '<div class="hist-section-header"><p class="hist-section-kicker">EL CLUB EN CIFRAS</p><h3>Cuatro datos que cuentan nuestra historia</h3>' +
-      '<p>Información histórica documentada, con referencia consultable en cada tarjeta.</p></div>' +
+      '<p>Información documentada, con una fuente consultable junto a cada dato.</p></div>' +
       '<div class="hist-facts">' + facts + '</div></section>' +
       '<section class="hist-stadium" aria-label="El Estadio Monumental y sus protagonistas">' +
-      '<div class="hist-stadium-photo"><img src="img/lolo-estatua.jpg" width="800" height="940" loading="lazy" decoding="async" alt="Estatua de Lolo Fernández frente al Estadio Monumental de Universitario de Deportes"></div>' +
+      '<div class="hist-stadium-photo"><img src="img/lolo-estatua.jpg" width="800" height="940" loading="lazy" decoding="async" alt="Estatua de Lolo Fernández en el Estadio Monumental"></div>' +
       '<div class="hist-stadium-copy"><p class="hist-section-kicker">LA CASA DE LA U</p>' +
       '<h3>Donde la historia se hace tribuna</h3>' +
       '<p>El Monumental conserva momentos fundamentales del club, desde su estreno hasta las campañas que marcaron a generaciones de hinchas.</p>' +
@@ -946,17 +970,19 @@
       '<button type="button" class="hist-stadium-action" data-hist-view="tit">Ver títulos y Libertadores</button></div></section>' +
       '<section id="hist-linea" class="hist-part" aria-label="Fechas históricas">' +
       '<div class="hist-section-header"><p class="hist-section-kicker">MOMENTOS INOLVIDABLES</p><h3>Las fechas que marcaron a Universitario</h3>' +
-      '<p>Los acontecimientos están ordenados cronológicamente; cada uno conserva su fuente.</p></div>' +
+      '<p>Los acontecimientos se presentan en orden cronológico y con sus respectivas fuentes.</p></div>' +
       '<ol class="hist-timeline">' + timeline + '</ol></section>' +
       '<details id="hist-curiosidades" class="hist-other"><summary>Más historias y curiosidades del club</summary>' +
       '<div class="hist-curiosities">' + curiosities + '</div></details>' +
       '<div class="hist-end">' +
       '<p class="hist-method">Las fuentes se muestran junto a cada hecho. Cuando existen discrepancias entre publicaciones históricas, se indican expresamente. Este archivo editorial no se modifica automáticamente al finalizar los partidos.</p>' +
       '<p class="hist-method">Para la temporada actual, consulta <button type="button" class="hist-link-btn" data-hist-view="C">la tabla del Clausura</button> y <button type="button" class="hist-link-btn" data-hist-view="tit">Títulos y Libertadores</button>.</p>' +
-      '<p class="hist-photo-credit">Fotografías documentales: <a href="https://commons.wikimedia.org/wiki/File:Estadio_Monumental_Club_Universitario_de_Deportes_(cropped).JPG" target="_blank" rel="noopener noreferrer">Monumental, MicroX (2012; CC BY-SA 3.0)</a> · <a href="https://commons.wikimedia.org/wiki/File:Estadio_Monumental,_estatua_de_Lolo_Fernandez.jpg" target="_blank" rel="noopener noreferrer">Estatua de Lolo Fernández, Sigloestadio21 (2021; CC BY-SA 4.0)</a>. Imágenes recortadas para el diseño.</p>' +
+      '<p class="hist-photo-credit">La imagen de la bandera en la portada es una ilustración digital. Las fotografías documentales del Monumental son <a href="https://commons.wikimedia.org/wiki/File:Estadio_Monumental_Club_Universitario_de_Deportes_(cropped).JPG" target="_blank" rel="noopener noreferrer">MicroX (2012, CC BY-SA 3.0)</a> y <a href="https://commons.wikimedia.org/wiki/File:Estadio_Monumental,_estatua_de_Lolo_Fernandez.jpg" target="_blank" rel="noopener noreferrer">Sigloestadio21 (2021, CC BY-SA 4.0)</a>.</p>' +
       '</div></div>';
     $$("#histBox [data-hist-go]").forEach(function (button) {
       button.addEventListener("click", function () {
+        $$("#histBox .hist-feature-nav button").forEach(function (b) { b.classList.remove("hist-feature-current"); });
+        if (button.closest(".hist-feature-nav")) button.classList.add("hist-feature-current");
         var target = document.getElementById(button.dataset.histGo);
         if (!target) return;
         if (target.tagName === "DETAILS") target.open = true;
@@ -964,7 +990,7 @@
       });
     });
     $$("#histBox [data-hist-view]").forEach(function (button) {
-      button.addEventListener("click", function () { show(button.dataset.histView); });
+      button.addEventListener("click", function () { show(button.dataset.histView); window.scrollTo(0, 0); });
     });
   }
   /* Efecto de tarjetas: foco de luz que sigue al mouse y volteo en toque o teclado. */
