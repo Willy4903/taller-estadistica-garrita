@@ -136,8 +136,8 @@
     });
   }
   /* partidos por jugar de un equipo (sin resultado oficial ni hora ya pasada); tor = "A", "C" o "T" (todos) */
-  function pendingOf(id, tor) {
-    var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg == null && !(predsOn && preds[fkey(f)]) && (tor === "T" || f.t === tor); });
+  function pendingOf(id, tor, cond) {
+    var list = D.fixtures.filter(function (f) { return (f.h === id || f.a === id) && f.hg == null && !(predsOn && preds[fkey(f)]) && (tor === "T" || f.t === tor) && (!cond || cond === "all" || (cond === "L" ? f.h === id : f.a === id)); });
     list.sort(byWhen);
     return list;
   }
@@ -217,8 +217,8 @@
       return "<i" + ttAttrs(x.rival, head, sub).replace('class="tt-el"', 'class="tt-el ' + x.k + '"') + ">" + (x.k === "D" ? "E" : x.home ? "L" : "V") + "</i>";
     }).join("") + "</span>";
   }
-  function pendHtml(id, tor, cap) {
-    var list = pendingOf(id, tor);
+  function pendHtml(id, tor, cap, cond) {
+    var list = pendingOf(id, tor, cond);
     if (!list.length) return '<span class="pend-none" title="Sin partidos pendientes">\u2014</span>';
     var shown = list.slice(0, cap), more = list.length - shown.length;
     return shown.map(function (f) {
@@ -236,7 +236,76 @@
     return '<td class="acum"><div class="acum-in"><b>' + row.pts + "</b>" + dsc + "</div></td>";
   }
 
+  /* ---------- tablas por condición: solo partidos de local o solo de visita ---------- */
+  var COND = "all"; /* "all" | "L" | "V" */
+  var CONDS = [["all", "Todos"], ["L", "Local"], ["V", "Visita"]];
+  function tallyCond(fixtures, cond) {
+    var m = {};
+    TEAMS.forEach(function (t) { m[t.id] = blank(t.id); });
+    fixtures.forEach(function (f) {
+      var r = eff(f);
+      if (!r) return;
+      var home = cond === "L", x = m[home ? f.h : f.a], mine = home ? r.h : r.a, his = home ? r.a : r.h;
+      x.pj++; x.gf += mine; x.gc += his;
+      if (mine > his) { x.pg++; x.pts += 3; } else if (mine < his) x.pp++; else { x.pe++; x.pts++; }
+    });
+    return Object.keys(m).map(function (k) { var x = m[k]; x.dg = x.gf - x.gc; return x; });
+  }
+  function condRows(key, cond) {
+    var fx = function (t) { return D.fixtures.filter(function (f) { return f.t === t; }); };
+    if (key !== "T") return sorted(tallyCond(fx(key), cond));
+    var pa = {}, pc = {};
+    tallyCond(fx("A"), cond).forEach(function (r) { pa[r.id] = r.pts; });
+    tallyCond(fx("C"), cond).forEach(function (r) { pc[r.id] = r.pts; });
+    return sorted(tallyCond(D.fixtures, cond)).map(function (r) { r.pa = pa[r.id]; r.pc = pc[r.id]; return r; });
+  }
+  function renderStdCond(el, key) {
+    var rows = condRows(key, COND), who = COND === "L" ? "de local" : "de visita";
+    var head = "<thead><tr>" + th("#") + th("Club", "club") + th("PJ", "", "Partidos jugados " + who) + th("PG") + th("PE") + th("PP") + th("GF") + th("GC") + th("DG");
+    var anyPend = rows.some(function (r) { return pendingOf(r.id, key, COND).length; });
+    if (key === "T") head += th("Pts Ap.", "", "Puntos obtenidos " + who + " en el Apertura") + th("Pts Cl.", "", "Puntos obtenidos " + who + " en el Clausura") + th("Total", "acumh", "Puntos obtenidos " + who + " en Apertura más Clausura (sin descuentos por sanción)");
+    else head += th("Pts", "", "Puntos obtenidos " + who + ": 3 por victoria y 1 por empate");
+    head += th("Pend.", "pendh", "Partidos por jugar " + who) + "</tr></thead>";
+    var body = rows.map(function (r, i) {
+      var dgc = r.dg > 0 ? " pos-n" : r.dg < 0 ? " neg-n" : "";
+      var tds = '<td class="pos"><span class="n">' + (i + 1) + '</span></td><td class="club">' + teamCell(BY[r.id]) + '<span class="pend-m">' + pendHtml(r.id, key, 4, COND) + "</span></td>" +
+        "<td>" + r.pj + "</td><td>" + r.pg + "</td><td>" + r.pe + "</td><td>" + r.pp + "</td><td>" + r.gf + "</td><td>" + r.gc + '</td><td class="dg' + dgc + '">' + (r.dg > 0 ? "+" : "") + r.dg + "</td>";
+      if (key === "T") tds += "<td>" + r.pa + "</td><td>" + r.pc + '</td><td class="acum"><div class="acum-in"><b>' + r.pts + "</b></div></td>";
+      else tds += '<td class="pts">' + r.pts + "</td>";
+      tds += '<td class="pend">' + pendHtml(r.id, key, 6, COND) + "</td>";
+      return '<tr class="' + (r.id === FOCUS ? "me" : "") + '">' + tds + "</tr>";
+    }).join("");
+    el.classList.add("cond");
+    el.classList.toggle("nopend", !anyPend);
+    el.innerHTML = head + "<tbody>" + body + "</tbody>";
+  }
+  function renderCondUI() {
+    $$(".cond-sel button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.cond === COND)); });
+    $$(".cond-note").forEach(function (n) {
+      n.hidden = COND === "all";
+      n.textContent = COND === "all" ? "" : "Solo se cuentan los partidos jugados " + (COND === "L" ? "de local" : "de visita") + ". No es la tabla oficial: no incluye descuentos de puntos ni zonas de clasificación.";
+    });
+  }
+  function initCond() {
+    var h = '<div class="cond-sel" role="group" aria-label="Condición del partido"><span class="cond-l">Condición</span>' +
+      CONDS.map(function (c) { return '<button type="button" data-cond="' + c[0] + '" aria-pressed="' + (c[0] === COND) + '">' + c[1] + "</button>"; }).join("") + "</div>" +
+      '<p class="note cond-note" role="status" hidden></p>';
+    ["acum", "A", "C"].forEach(function (id) {
+      var vh = $("#v-" + id + " .view-head");
+      if (vh) vh.insertAdjacentHTML("afterend", h);
+    });
+    $$(".cond-sel button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        COND = b.dataset.cond;
+        renderStd($("#tbl-acum"), "T"); renderStd($("#tbl-A"), "A"); renderStd($("#tbl-C"), "C");
+        renderCondUI();
+      });
+    });
+  }
+
   function renderStd(el, key, opts) {
+    if (COND !== "all") return renderStdCond(el, key);
+    el.classList.remove("cond");
     var rows = key === "T" ? S.T : S[key];
     var head = "<thead><tr>" + th("#") + th("Club", "club") + th("PJ") + th("PG") + th("PE") + th("PP") + th("GF") + th("GC") + th("DG");
     var anyPend = rows.some(function (r) { return pendingOf(r.id, key).length; });
@@ -1415,6 +1484,7 @@
       $("#v-" + id).insertAdjacentHTML("afterbegin", '<div class="seg-tabla" role="group" aria-label="Elegir tabla"><button type="button" data-view="acum">Acumulado</button><button type="button" data-view="A">Apertura</button><button type="button" data-view="C">Clausura</button><button type="button" data-view="cmp">Comparar</button></div>');
     });
     $$(".seg-tabla button").forEach(function (b) { b.addEventListener("click", function () { show(b.dataset.view); }); });
+    initCond();
   }
 
   function init() {
