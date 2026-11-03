@@ -66,7 +66,7 @@ def main():
         raise AssertionError(f"Quedaron etiquetas sin cerrar: {stack}")
 
     for fragment in (
-        'class="start simple-start"', 'class="simple-extra"',
+        'class="start simple-start"', 'class="simple-extra iar-ref-extra"',
         'css/simple.css?v=__V__', 'id="st-kpi"',
         'js/core.js?v=__V__', 'js/hoy.js?v=__V__',
     ):
@@ -96,11 +96,37 @@ def main():
             raise AssertionError(f"No se usa la fotografía real: {name}")
     if re.search(r'url\("../visual/ai-(?:hero|news|models|learn)\.svg"\)', css):
         raise AssertionError("El diseño sigue usando ilustraciones SVG")
-    if 'visual-hero-credit' not in html or 'visual-photo-credits' not in html:
-        raise AssertionError("Faltan atribuciones fotográficas y procedencia")
-    for item in ("Datacenter_Server_Racks_", "Woman_reading_and_working_on_laptop_at_home", "Technician_with_laptop_working_on_server_rack_at_NERSC", "Students_using_a_computer_laptop"):
-        if item not in html:
-            raise AssertionError(f"Falta crédito de fotografía {item}")
+    # Portada aprobada: cabecera blanca, imagen de robot original y tres tarjetas.
+    hero = ROOT / "site/visual/ia-radar-robot-hero.jpg"
+    if not hero.is_file() or hero.stat().st_size < 40000:
+        raise AssertionError("No se encuentra el fondo gráfico del robot")
+    with hero.open("rb") as img:
+        if img.read(3) != b"\xff\xd8\xff":
+            raise AssertionError("El fondo del robot no es un JPEG")
+    reference_css = ROOT / "site/css/ia-reference.css"
+    if not reference_css.is_file():
+        raise AssertionError("Falta la hoja de estilos de la maqueta")
+    sheet = reference_css.read_text(encoding="utf-8")
+    for term in ("iar-ref-hd", "iar-ref-topnav", "iar-ref-card", "iar-card-photo",
+                 "ia-radar-robot-hero.jpg", "@media(max-width:570px)"):
+        if term not in sheet:
+            raise AssertionError(f"No aparece en los estilos: {term}")
+    for term in ('css/ia-reference.css?v=__V__', 'class="stage visual-ai iar-reference"',
+                 'class="statusbar" id="hero-meta"', 'id="st-kpi"',
+                 'id="insight"', 'class="iar-photo-credits"'):
+        if term not in html:
+            raise AssertionError(f"No aparece en la página: {term}")
+    if html.count('class="iar-ref-card ') != 3:
+        raise AssertionError("La portada debe mostrar tres tarjetas principales")
+    for title in ("Novedades de IA", "¿Qué herramienta usar?", "Aprende paso a paso"):
+        if title not in html:
+            raise AssertionError(f"Falta la tarjeta: {title}")
+    if "iar-ref-topnav" not in core or "iar-search-trigger" not in core:
+        raise AssertionError("No se instaló la navegación y búsqueda de la nueva cabecera")
+    if "searchTrigger.addEventListener" not in core:
+        raise AssertionError("El botón Buscar debe abrir el panel de búsqueda")
+    if 'href="#hoy"' not in html or 'href="#modelos"' not in html or 'href="#ruta"' not in html:
+        raise AssertionError("Faltan enlaces de las tarjetas")
 
 
     crons = re.findall(r'^\s*- cron:\s*["\']([^"\']+)["\']', workflow, re.M)
