@@ -24,6 +24,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Obtener y verificar fotografías auténticas del Monumental
         run: python scripts/fetch_hist_photos.py
+      - name: Reconstruir imagen fotográfica aprobada desde asset local
+        run: base64 --decode site/liga1/img/historia-hero-fondo.jpg.base64 > site/liga1/img/historia-hero-fondo.jpg
       - name: Comprobar estructura, fuentes y accesibilidad
         run: python scripts/check_hist.py
       - name: Verificar scripts
