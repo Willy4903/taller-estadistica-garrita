@@ -112,8 +112,11 @@ def normalize_standings(items):
         rows.sort(key=lambda r: r["rank"])
         if len({r["rank"] for r in rows}) != len(rows):
             raise ValueError("Posiciones duplicadas en una clasificación")
-        groups.append({"name": str(first.get("name") or "Grupo") if len(raw_groups) == 1
-                       else f"Grupo {i+1}", "rows": rows})
+        source_group = group[0].get("group") if group else None
+        if source_group and any(item.get("group") != source_group for item in group):
+            raise ValueError("Nombre de grupo contradictorio")
+        groups.append({"name": str(source_group or ("Tabla general" if len(raw_groups) == 1
+                       else "Fase sin nombre en la fuente")), "rows": rows})
     return groups
 
 def normalize_fixtures(events, upcoming):
