@@ -1,15 +1,11 @@
-import {datasets,standings} from './data.js';
-
 export const ASSETS={
-  hero:'https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1200&q=80',
-  celebration:'https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=600&q=80'
+  hero:'https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1200&q=80'
 };
 
 export const formLetter=f=>f==='G'||f==='W'?'V':f==='P'||f==='L'?'D':f;
 
-/** Filas de la tabla según la fuente elegida. Sin captura publicada devuelve []. */
-export function getRows({league,source,snapshot,group,venue='all'}){
-  if(source==='demo')return standings(league,datasets[league.id],venue);
+/** Filas de la tabla publicada. Sin captura devuelve [] y la interfaz no muestra cifras. */
+export function getRows({league,snapshot,group}){
   const g=snapshot[league.id]?.groups?.[group??0];
   return (g?.rows||[]).map(t=>({...t,form:(t.form||[]).map(formLetter),effectiveness:t.pj>0?t.pts/(3*t.pj)*100:null}));
 }
@@ -55,15 +51,10 @@ const teamsOf=group=>new Set(group.flatMap(m=>[m.home,m.away]));
  * 1) corta donde hay más de 36 horas sin partidos;
  * 2) dentro de cada bloque, corta cuando un club vuelve a aparecer;
  * 3) une fragmentos sin clubes en común (partidos reprogramados) si caben en una jornada.
- * Sin fechas (demostración) agrupa por ronda.
  */
 export function matchdays(list){
   const dated=list.filter(m=>Number.isFinite(Date.parse(m.date)));
-  if(!dated.length){
-    const byRound=new Map();
-    for(const m of list){const k=m.round??0;if(!byRound.has(k))byRound.set(k,[]);byRound.get(k).push(m);}
-    return [...byRound.entries()].sort((a,b)=>a[0]-b[0]).map(e=>e[1]);
-  }
+  if(!dated.length)return [];
   const time=m=>Date.parse(m.date),sorted=[...dated].sort((a,b)=>time(a)-time(b)),blocks=[];
   for(const m of sorted){
     const last=blocks[blocks.length-1];
@@ -94,4 +85,36 @@ export function matchdayLabel(day){
   const f=t=>new Date(t).toLocaleDateString('es-PE',{weekday:'short',day:'numeric',month:'short',timeZone:'America/Lima'});
   const a=f(Math.min(...times)),b=f(Math.max(...times));
   return a===b?a:`${a} al ${b}`;
+}
+
+/** Resumen de la última fecha jugada y tendencia de goles por partido, calculados solo con resultados publicados. */
+export function lastRound(results){
+  const days=matchdays(results.filter(m=>m.hg!=null&&m.ag!=null));
+  if(!days.length)return null;
+  const day=days[days.length-1],cap=Math.max(...days.map(d=>d.length));
+  const goals=day.reduce((s,m)=>s+m.hg+m.ag,0);
+  const home=day.filter(m=>m.hg>m.ag).length,away=day.filter(m=>m.hg<m.ag).length;
+  const biggest=[...day].sort((a,b)=>Math.abs(b.hg-b.ag)-Math.abs(a.hg-a.ag)||(b.hg+b.ag)-(a.hg+a.ag))[0];
+  const trend=days.filter(d=>d.length>=cap/2).slice(-6).map(d=>({label:matchdayLabel(d),n:d.length,gpg:d.reduce((s,m)=>s+m.hg+m.ag,0)/d.length}));
+  return {label:matchdayLabel(day),n:day.length,goals,gpg:goals/day.length,home,draws:day.length-home-away,away,biggest,trend,partial:day.length<cap*.6};
+}
+
+/** Partidos de la próxima fecha entre los clubes mejor ubicados de la tabla. */
+export function highImpact(rows,fixtures,limit=3){
+  const days=matchdays(fixtures);
+  if(!days.length||!rows.length)return null;
+  const byId=new Map(rows.filter(t=>t.team_id).map(t=>[t.team_id,t])),byName=new Map(rows.map(t=>[t.name,t]));
+  const find=(id,name)=>byId.get(id)||byName.get(name);
+  const items=days[0].map(m=>{const h=find(m.home_id,m.home),a=find(m.away_id,m.away);return h&&a?{match:m,h,a,score:h.rank+a.rank,gap:Math.abs(h.pts-a.pts)}:null;})
+    .filter(Boolean).sort((x,y)=>x.score-y.score).slice(0,limit);
+  return items.length?{label:matchdayLabel(days[0]),items}:null;
+}
+
+/** Rachas según los últimos cinco resultados de la tabla publicada. */
+export function streaks(rows){
+  const withForm=rows.filter(t=>t.form?.length>=5);
+  return {
+    hot:withForm.filter(t=>t.form.filter(f=>f==='V').length>=4).sort((a,b)=>a.rank-b.rank).slice(0,3),
+    cold:withForm.filter(t=>!t.form.includes('V')).sort((a,b)=>b.rank-a.rank).slice(0,3)
+  };
 }

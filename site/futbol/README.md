@@ -63,14 +63,16 @@ Pruebas offline: `python -m unittest discover -s scripts -p test_willy_stats.py 
 
 ## Funciones
 
-Rediseño oscuro (estadio nocturno). 16 competiciones con filtro por continente; tabla con búsqueda, favoritos persistentes y detalle de club con radar; pestañas Tabla, Rendimiento, Vista integrada y Partidos; comparador de tres ligas; índice de competitividad calculado; metodología. Código en `apps/willy-stats/src/` (`components/` por sección, `lib.js` para el cálculo desde los datos publicados).
+Rediseño oscuro. 16 competiciones con filtro por continente; tabla con búsqueda, favoritos persistentes y detalle de club con radar; pestañas Tabla, Rendimiento, Vista integrada y Partidos (por fecha, con navegación entre jornadas); análisis calculado con resultados reales (última fecha en números, tendencia de goles, partidos de alto impacto, rachas); comparador de tres ligas; índice de competitividad; metodología. Código en `apps/willy-stats/src/`.
 
 ## Integridad y límites
 
-- Por defecto se muestran los datos publicados con temporada, proveedor y fecha de captura. Una captura de otro año se rotula como archivo; una de más de 36 horas, como posiblemente desactualizada.
-- La demostración es ficticia, sale de un generador con semilla fija y solo se activa a petición del visitante.
+- Solo se muestran datos publicados, con temporada, proveedor y fecha de captura. No hay modo de demostración ni cifras simuladas: sin captura, la interfaz no muestra tablas ni métricas.
+- Una captura de otro año se rotula como archivo; una de más de 36 horas, como posiblemente desactualizada.
+- Fechas: se agrupan con los resultados publicados (corte tras más de 36 horas sin partidos o cuando un club vuelve a jugar; los partidos reprogramados se unen a su fecha si caben).
+- Análisis: goles por partido y distribución local/empate/visita de la última fecha, tendencia de goles, partidos de la próxima fecha entre los mejor ubicados y rachas de los últimos cinco partidos. Todo sale de las tablas y marcadores publicados.
 - El radar usa cinco ejes calculables desde la tabla (ataque, defensa, efectividad, diferencia de gol y forma), normalizados contra la liga. No hay xG, posesión ni presión: la fuente no entrega tiros.
-- Las ondas de dominio y la cronología xG de la barra lateral son ilustraciones sintéticas y se rotulan como tales. Las fotografías (Unsplash) son ilustrativas y no corresponden a los clubes.
+- La ilustración del hero es decorativa. Las fotografías de fondo (Unsplash) no representan a ningún club.
 - ICL = 10 × (1 − 0.4 × σ/μ), limitado a [0,10], sobre puntos por partido. Mide paridad en la tabla, no calidad entre ligas.
 - PJ = G + E + P, PTS = 3G + E, DG = GF − GC.
 

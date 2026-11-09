@@ -13,7 +13,6 @@ const server=spawn('python3',['-m','http.server','8782','--bind','127.0.0.1','--
   assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`desborde ${width}`);
   assert((await p.locator('meta[name="viewport"]').getAttribute('content')).includes('viewport-fit=cover'));
   const dash=p.locator('#dashboard');
-  await dash.locator('select').last().selectOption('demo');
   if(width<1024){await p.getByRole('button',{name:'Abrir menú',exact:true}).tap();assert(await p.getByRole('navigation',{name:'Principal móvil'}).isVisible());
    await p.getByRole('navigation',{name:'Principal móvil'}).getByRole('button',{name:'Partidos',exact:true}).tap();assert.equal(await p.locator('#menu-movil').count(),0);}
   await dash.getByRole('tab',{name:'Tabla de posiciones'}).tap();

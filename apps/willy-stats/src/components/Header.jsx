@@ -3,7 +3,7 @@ import {Star,Menu,X,ArrowRight} from 'lucide-react';
 import {Brand,Num,Photo} from './ui.jsx';
 import {ASSETS} from '../lib.js';
 
-export const NAV=[['Explorar','explorar'],['Comparador de Ligas','comparador'],['Modelos xG','modelos'],['Partidos','dashboard','fixtures'],['Metodología','metodologia']];
+export const NAV=[['Explorar','explorar'],['Comparador de Ligas','comparador'],['Partidos','dashboard','fixtures'],['Metodología','metodologia']];
 
 export function Navbar({favorites,savedOnly,onSaved,onJump}){
   const [open,setOpen]=useState(false),btn=useRef(null);
