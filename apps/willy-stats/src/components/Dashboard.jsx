@@ -85,8 +85,8 @@ export function Dashboard(p){
 }
 
 export function ReadingCard({league,reading,source,projection}){
-  if(!reading)return <section className="rounded-2xl border border-[#10B981]/30 bg-gradient-to-br from-[#0F291E] via-[#11221C] to-[#0B1612] p-6">
-    <p className="font-mono text-xs uppercase tracking-wider text-[#22C55E]">La lectura de Willy Stats</p><h3 className="mt-1 font-heading text-2xl font-extrabold text-white">Sin lectura disponible.</h3>
+  if(!reading)return <section className="rounded-2xl border border-[#10B981]/30 bg-gradient-to-br from-[#0F291E] via-[#11221C] to-[#0B1612] p-4">
+    <p className="font-mono text-[11px] uppercase tracking-wider text-[#22C55E]">La lectura de Willy Stats</p><h3 className="mt-1 font-heading text-xl font-extrabold text-white">Sin lectura disponible.</h3>
     <p className="mt-2 text-sm text-gray-300">No hay una tabla con partidos jugados para {league.name}.</p></section>;
   const {leader,second,gap,ppg,attackRank,defenseRank}=reading;
   const strengths=[attackRank===1&&'mejor ataque por partido',defenseRank===1&&'mejor defensa por partido'].filter(Boolean);
@@ -94,24 +94,24 @@ export function ReadingCard({league,reading,source,projection}){
   const kpis=source==='demo'&&proj
     ?[[`${number(proj.prob)}%`,'Prob. de título (ilustrativa)'],[`${proj.points} PTS`,'Puntos proyectados'],[`${number(leader.effectiveness)}%`,'% de efectividad'],[number(ppg,2),'Puntos por partido']]
     :[[number(ppg,2),'Puntos por partido'],[`${number(leader.effectiveness)}%`,'% de efectividad'],[leader.dg>0?`+${leader.dg}`:`${leader.dg}`,'Diferencia de gol'],[gap==null?'—':`${gap} PTS`,'Ventaja sobre el 2.º']];
-  return <section aria-label="La lectura de Willy Stats" className="rounded-2xl border border-[#10B981]/30 bg-gradient-to-br from-[#0F291E] via-[#11221C] to-[#0B1612] p-6">
-    <p className="font-mono text-xs uppercase tracking-wider text-[#22C55E]">La lectura de Willy Stats</p>
-    <h3 className="mt-1 font-heading text-2xl font-extrabold text-white">{leader.name} marca el paso.</h3>
-    <p className="mt-2 text-sm leading-relaxed text-gray-300">{second?(gap===0?`Empata en puntos con ${second.name}.`:`Tiene ${gap} ${gap===1?'punto':'puntos'} de ventaja sobre ${second.name}.`):'Es el único club con partidos jugados.'}{strengths.length?` Además tiene el ${strengths.join(' y el ')} de la tabla.`:''}</p>
-    <dl className="mt-6 grid grid-cols-2 gap-2 border-t border-[#10B981]/20 pt-4 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-4">
-      {kpis.map(([v,l])=><div key={l} className="rounded-lg bg-black/20 p-2.5"><dd><Num className="text-xl font-bold text-[#22C55E] 2xl:text-lg">{v}</Num></dd><dt className="mt-1 text-[11px] leading-tight text-gray-400">{l}</dt></div>)}
+  return <section aria-label="La lectura de Willy Stats" className="rounded-2xl border border-[#10B981]/30 bg-gradient-to-br from-[#0F291E] via-[#11221C] to-[#0B1612] p-4">
+    <p className="font-mono text-[11px] uppercase tracking-wider text-[#22C55E]">La lectura de Willy Stats</p>
+    <h3 className="mt-1 font-heading text-xl font-extrabold leading-tight text-white">{leader.name} marca el paso.</h3>
+    <p className="mt-2 text-xs leading-relaxed text-gray-300">{second?(gap===0?`Empata en puntos con ${second.name}.`:`Tiene ${gap} ${gap===1?'punto':'puntos'} de ventaja sobre ${second.name}.`):'Es el único club con partidos jugados.'}{strengths.length?` Además tiene el ${strengths.join(' y el ')} de la tabla.`:''}</p>
+    <dl className="mt-3 grid grid-cols-2 gap-1.5 border-t border-[#10B981]/20 pt-3 sm:grid-cols-4 xl:grid-cols-2">
+      {kpis.map(([v,l])=><div key={l} className="rounded-lg bg-black/20 px-2 py-1.5"><dd><Num className="text-base font-bold text-[#22C55E]">{v}</Num></dd><dt className="text-[10px] leading-tight text-gray-400">{l}</dt></div>)}
     </dl>
   </section>;
 }
 
 export function SideCards({leader,iclItems}){
   return <>
-    <section className="rounded-2xl border border-[#1E2630] bg-[#12171D] p-6" aria-label="Telemetría ilustrativa">
+    <section className="rounded-2xl border border-[#1E2630] bg-[#12171D] p-4" aria-label="Telemetría ilustrativa">
       <div className="flex items-start justify-between gap-2"><h3 className="font-heading text-lg font-bold text-white">Live match momentum</h3><span className="shrink-0 rounded-full border border-[#F97316]/40 px-2 py-0.5 text-[10px] uppercase tracking-wide text-orange-300">Ilustrativo</span></div>
       <p className="mb-2 text-xs text-gray-500">Simulación de ejemplo. Los datos de partido a partido no están disponibles en la fuente.</p>
       <Momentum home={leader?.name||'Local'}/><XgTimeline home={leader?.name||'Local'}/>
     </section>
-    <section className="rounded-2xl border border-[#1E2630] bg-[#12171D] p-6" aria-label="League Competitiveness Index">
+    <section className="rounded-2xl border border-[#1E2630] bg-[#12171D] p-4" aria-label="League Competitiveness Index">
       <h3 className="font-heading text-lg font-bold text-white">League Competitiveness Index</h3>
       <p className="mb-3 text-xs text-gray-500">Paridad de la tabla (0 a 10), calculada con los puntos por partido. No mide calidad entre ligas.</p>
       <IclBars items={iclItems}/>
