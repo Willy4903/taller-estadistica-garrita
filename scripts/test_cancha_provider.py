@@ -84,6 +84,21 @@ class ProviderTests(unittest.TestCase):
         self.assertEqual(len(data['warnings']), 2)
         self.assertFalse(data['historical'])
 
+    def test_scoreboard_falls_back_to_smaller_ranges(self):
+        calls = []
+
+        def fake(url):
+            calls.append(url)
+            date = url.split('dates=')[1]
+            if '-' in date:
+                raise ValueError('HTTP 400 rango')
+            return {'events': [{'id': date, 'competitions': []}]}
+        warnings = []
+        with patch.object(provider, 'fetch', side_effect=fake):
+            page = provider.scoreboard('per.1', datetime(2026, 11, 9, tzinfo=timezone.utc), datetime(2026, 11, 11, tzinfo=timezone.utc), warnings)
+        self.assertEqual([e['id'] for e in page['events']], ['20261109', '20261110', '20261111'])
+        self.assertEqual(warnings, [])
+
 
 if __name__ == '__main__':
     unittest.main()
