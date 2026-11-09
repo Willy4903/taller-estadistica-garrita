@@ -37,3 +37,8 @@ jobs:
           npm ci
           npm test
           npm run build
+      - name: Probar interfaz publicada en Chromium
+        run: |
+          npm install --no-save playwright@1.49.0
+          npx playwright install --with-deps chromium
+          node scripts/check_cancha.cjs
