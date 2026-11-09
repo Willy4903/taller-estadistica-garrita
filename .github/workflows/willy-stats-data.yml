@@ -14,7 +14,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: willy-stats-data
   cancel-in-progress: false
 
 jobs:
@@ -25,6 +25,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     env:
       API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+      API_FOOTBALL_MIN_INTERVAL: '6.5'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
