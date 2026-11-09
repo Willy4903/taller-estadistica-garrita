@@ -10,6 +10,8 @@ const server=spawn('python3',['-m','http.server','8780','--bind','127.0.0.1','--
  await p.goto('http://127.0.0.1:8780/futbol/',{waitUntil:'networkidle'});
  await p.getByRole('heading',{name:'¿Dónde analizamos hoy?'}).waitFor();
  assert.equal(await p.locator('.competition').count(),14);
+ const {competitions}=await import('../apps/willy-stats/src/data.js');const manifest=await (await fetch('http://127.0.0.1:8780/futbol/crests/manifest.json')).json();for(const c of competitions){for(const name of c.teams.split('|'))assert(manifest.clubs[c.id+':'+name],`Escudo faltante: ${c.id}:${name}`);}
+
  await p.waitForFunction(()=>document.querySelector('.club-crest')?.complete&&document.querySelector('.club-crest')?.naturalWidth>0);
  for(const [id,trophy] of [['lib','libertadores'],['sud','sudamericana'],['ucl','champions'],['uel','europa']]){const image=p.locator(`[data-league="${id}"] .trophy-insignia`);assert((await image.getAttribute('src')).includes(trophy));assert(await image.evaluate(i=>i.complete&&i.naturalWidth>0));}
 
