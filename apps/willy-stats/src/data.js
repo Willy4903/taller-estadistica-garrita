@@ -42,7 +42,7 @@ export const MODEL_BETA=(low+high)/2;
 export function metrics(c,rows){
  const played=rows.reduce((s,t)=>s+t.pj,0)/2,goals=rows.reduce((s,t)=>s+t.gf,0),values=rows.map(t=>t.pj?t.pts/t.pj:0),mean=values.reduce((a,b)=>a+b,0)/values.length;
  const deviation=Math.sqrt(values.reduce((s,x)=>s+(x-mean)**2,0)/values.length);
- return {gpg:played?goals/played:0,icl:Math.max(0,Math.min(10,10*(1-0.4*(mean?deviation/mean:0))))};
+ return {gpg:played?goals/played:0,cv:mean>0?deviation/mean:null,icl:Math.max(0,Math.min(10,10*(1-0.4*(mean?deviation/mean:0))))};
 }
 export function projection(c,rows){
  const total=c.format==='swiss'?8:c.teams.split('|').length-1;
