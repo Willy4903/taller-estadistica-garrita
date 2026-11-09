@@ -1,0 +1,48 @@
+name: Willy Stats - datos deportivos verificables
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Una actualización diaria a las 09:17 de Lima; aprox. 43 peticiones/día.
+    # GitHub puede demorar los trabajos programados.
+    - cron: "17 14 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: willy-stats-data
+  cancel-in-progress: false
+
+jobs:
+  publish-data:
+    runs-on: ubuntu-latest
+    env:
+      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validar parser y esquema sin llamadas de red
+        run: python -m unittest discover -s scripts -p test_willy_stats.py -v
+      - name: Actualizar instantáneas con proveedor documentado
+        if: env.API_FOOTBALL_KEY != ''
+        continue-on-error: true
+        run: python scripts/update_willy_stats.py
+      - name: Explicar configuración faltante
+        if: env.API_FOOTBALL_KEY == ''
+        run: echo "No existe el secreto API_FOOTBALL_KEY. No se han creado ni simulado datos."
+      - name: Versionar solamente si hay datos nuevos
+        if: env.API_FOOTBALL_KEY != ''
+        run: |
+          git config user.name "willy-stats-data-bot"
+          git config user.email "willy-stats-data-bot@users.noreply.github.com"
+          git add site/futbol/data/snapshot.json
+          if git diff --cached --quiet; then
+            echo "Sin cambios verificables."
+          else
+            git commit -m "Actualizar instantáneas reales Willy Stats"
+            git pull --rebase origin main
+            git push origin main
+          fi
