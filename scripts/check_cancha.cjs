@@ -9,7 +9,7 @@ const server=spawn('python3',['-m','http.server','8780','--bind','127.0.0.1','--
  p.on('pageerror',e=>errors.push(e.message));p.on('response',r=>{if(r.url().includes('127.0.0.1')&&r.status()>=400)bad.push(r.url());});
  await p.goto('http://127.0.0.1:8780/futbol/',{waitUntil:'networkidle'});
  await p.getByRole('heading',{name:'¿Dónde analizamos hoy?'}).waitFor();
- const cards=p.locator('#explorar li button');assert.equal(await cards.count(),14);
+ const cards=p.locator('#explorar li button');assert.equal(await cards.count(),16);
  // Por defecto se muestran datos publicados, nunca la demostración.
  const dash=p.locator('#dashboard');
  assert.equal(await dash.locator('select').last().inputValue(),'published');

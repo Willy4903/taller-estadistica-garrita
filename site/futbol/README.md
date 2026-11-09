@@ -63,7 +63,7 @@ Pruebas offline: `python -m unittest discover -s scripts -p test_willy_stats.py 
 
 ## Funciones
 
-Rediseño oscuro (estadio nocturno). 14 competiciones con filtro por continente; tabla con búsqueda, favoritos persistentes y detalle de club con radar; pestañas Tabla, Rendimiento, Vista integrada y Partidos; comparador de tres ligas; índice de competitividad calculado; metodología. Código en `apps/willy-stats/src/` (`components/` por sección, `lib.js` para el cálculo desde los datos publicados).
+Rediseño oscuro (estadio nocturno). 16 competiciones con filtro por continente; tabla con búsqueda, favoritos persistentes y detalle de club con radar; pestañas Tabla, Rendimiento, Vista integrada y Partidos; comparador de tres ligas; índice de competitividad calculado; metodología. Código en `apps/willy-stats/src/` (`components/` por sección, `lib.js` para el cálculo desde los datos publicados).
 
 ## Integridad y límites
 

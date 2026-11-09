@@ -1,9 +1,9 @@
-import React from 'react';
-import {Info,AlertTriangle,RefreshCw} from 'lucide-react';
-import {Crest,Form,Num,Photo,LeagueMark} from './ui.jsx';
+import React,{useState,useMemo} from 'react';
+import {Info,AlertTriangle,RefreshCw,ChevronLeft,ChevronRight} from 'lucide-react';
+import {Crest,Form,Num,LeagueMark} from './ui.jsx';
 import {Radar,Momentum,XgTimeline,IclBars} from './Charts.jsx';
 import {Standings} from './Standings.jsx';
-import {radarAxes,ASSETS,stamp} from '../lib.js';
+import {radarAxes,stamp,matchdays,matchdayLabel} from '../lib.js';
 import {number,metrics} from '../data.js';
 
 const TABS=[['table','Tabla de posiciones'],['performance','Rendimiento'],['both','Vista integrada'],['fixtures','Partidos']];
@@ -31,9 +31,11 @@ function Performance({rows,league,leader,reading}){
     <div className="rounded-lg bg-[#FEF3C7] px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-[#78350F]">Modo análisis · Métricas y rendimiento de {leader.name}, líder de la tabla.</div>
     <div className="mt-5 grid gap-6 md:grid-cols-[1fr_1.1fr] xl:grid-cols-[1fr_1.2fr_.8fr]">
       <figure className="md:col-span-2 xl:col-span-1">
-        <div className="relative overflow-hidden rounded-xl border border-[#26303D]"><Photo src={ASSETS.celebration} alt="Imagen ilustrativa de celebración de un equipo de fútbol" className="h-44 w-full xl:h-56"/>
-          <div className="absolute inset-x-0 bottom-0 flex items-center gap-3 bg-gradient-to-t from-[#0B0E11] to-transparent p-3"><Crest name={leader.name} leagueId={league.id} logo={leader.logo} size={34}/><figcaption className="font-heading text-lg font-extrabold leading-tight text-white">{leader.name}</figcaption></div></div>
-        <p className="mt-1.5 text-[11px] text-gray-500">Fotografía ilustrativa; no corresponde al club.</p>
+        <div className="relative grid h-44 place-items-center overflow-hidden rounded-xl border border-[#26303D] bg-gradient-to-br from-[#10301f] via-[#12171D] to-[#0B0E11] xl:h-56">
+          <div className="absolute h-40 w-40 rounded-full bg-[#22C55E]/15 blur-3xl" aria-hidden="true"/>
+          <Crest name={leader.name} leagueId={league.id} logo={leader.logo} size={112}/>
+          <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0B0E11] to-transparent px-4 pb-3 pt-8 font-heading text-lg font-extrabold leading-tight text-white">{leader.name}</figcaption>
+        </div>
       </figure>
       <div><Radar axes={axes} teamName={leader.name}/><p className="mt-1 text-center text-xs text-gray-400"><i className="mr-1 inline-block h-2 w-2 rounded-sm bg-[#22C55E]"/>{leader.name} <i className="ml-3 mr-1 inline-block h-2 w-2 rounded-sm bg-[#F97316]"/>Promedio de la liga</p></div>
       <dl className="grid grid-cols-2 gap-2 md:col-span-2 xl:col-span-1 xl:grid-cols-1">
@@ -45,16 +47,27 @@ function Performance({rows,league,leader,reading}){
 }
 
 function Fixtures({fixtures,results,favorites,savedOnly,type,onType}){
-  const list=(type==='next'?fixtures:results).filter(m=>!savedOnly||favorites.includes(m.home)||favorites.includes(m.away));
-  const when=iso=>new Date(iso).toLocaleString('es-PE',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'America/Lima'});
+  const days=useMemo(()=>matchdays(type==='next'?fixtures:results),[type,fixtures,results]);
+  const [picked,setPicked]=useState(null);
+  const idx=Math.min(picked??(type==='next'?0:days.length-1),days.length-1);
+  const day=(days[idx]||[]).filter(m=>!savedOnly||favorites.includes(m.home)||favorites.includes(m.away));
+  const when=iso=>Number.isFinite(Date.parse(iso))?new Date(iso).toLocaleString('es-PE',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'America/Lima'}):'Por definir';
+  const change=t=>{setPicked(null);onType(t);};
   return <div>
-    <div role="group" aria-label="Tipo de partidos" className="mb-4 inline-flex rounded-lg border border-[#1E2630] bg-[#0B0E11] p-1">
-      {[['next','Próximos'],['played','Resultados']].map(([v,l])=><button key={v} aria-pressed={type===v} onClick={()=>onType(v)} className={`rounded-md px-4 py-1.5 text-sm ${type===v?'bg-[#22C55E] font-semibold text-[#04210F]':'text-gray-300'}`}>{l}</button>)}
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <div role="group" aria-label="Tipo de partidos" className="inline-flex rounded-lg border border-[#1E2630] bg-[#0B0E11] p-1">
+        {[['next','Próximos'],['played','Resultados']].map(([v,l])=><button key={v} aria-pressed={type===v} onClick={()=>change(v)} className={`rounded-md px-4 py-1.5 text-sm ${type===v?'bg-[#22C55E] font-semibold text-[#04210F]':'text-gray-300'}`}>{l}</button>)}
+      </div>
+      {days.length>0&&<div className="flex items-center gap-2 text-sm">
+        <button aria-label="Fecha anterior" disabled={idx<=0} onClick={()=>setPicked(idx-1)} className="grid h-11 w-11 place-items-center rounded-lg bg-[#1A212B] text-gray-200 disabled:opacity-30"><ChevronLeft size={16}/></button>
+        <span className="min-w-[150px] text-center text-gray-200" aria-live="polite">{type==='next'?'Próxima fecha':'Última fecha'}{idx!==(type==='next'?0:days.length-1)&&` (${idx+1} de ${days.length})`}<br/><span className="text-xs text-gray-400">{matchdayLabel(days[idx])}</span></span>
+        <button aria-label="Fecha siguiente" disabled={idx>=days.length-1} onClick={()=>setPicked(idx+1)} className="grid h-11 w-11 place-items-center rounded-lg bg-[#1A212B] text-gray-200 disabled:opacity-30"><ChevronRight size={16}/></button>
+      </div>}
     </div>
-    {!list.length?<p className="rounded-xl border border-dashed border-[#26303D] p-8 text-center text-sm text-gray-400">{type==='next'?'No hay próximos partidos en la captura publicada.':'No hay resultados recientes en la captura publicada.'}</p>
-    :<ul className="divide-y divide-[#1E2630]">{list.slice(0,24).map(m=><li key={m.id} className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 py-3 text-sm">
+    {!day.length?<p className="rounded-xl border border-dashed border-[#26303D] p-8 text-center text-sm text-gray-400">{type==='next'?'No hay próximos partidos en la captura publicada.':'No hay resultados recientes en la captura publicada.'}</p>
+    :<ul className="divide-y divide-[#1E2630]">{day.map(m=><li key={m.id} className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 py-3 text-sm">
       <span className="text-right text-white">{m.home}</span>
-      <span className="min-w-[88px] text-center">{m.hg==null?<Num className="text-xs text-gray-400">{when(m.date)}</Num>:<Num className="rounded bg-[#1A212B] px-3 py-1 font-bold text-white">{m.hg} - {m.ag}</Num>}</span>
+      <span className="min-w-[96px] text-center">{m.hg==null?<Num className="text-xs text-gray-400">{when(m.date)}</Num>:<Num className="rounded bg-[#1A212B] px-3 py-1 font-bold text-white">{m.hg} - {m.ag}</Num>}</span>
       <span className="text-white">{m.away}</span></li>)}</ul>}
   </div>;
 }
@@ -79,7 +92,7 @@ export function Dashboard(p){
     <div role="tabpanel" id="panel-main" aria-labelledby={`tab-${tab}`} className="mt-5 space-y-8">
       {showTable&&<Standings rows={rows} leagueId={league.id} favorites={p.favorites} onFavorite={p.onFavorite} onDetail={p.onDetail} query={p.query} onQuery={p.onQuery} savedOnly={p.savedOnly} onClearSaved={p.onClearSaved}/>}
       {showPerf&&<Performance rows={rows} league={league} leader={leader} reading={reading}/>}
-      {tab==='fixtures'&&<Fixtures fixtures={p.fixtures} results={p.results} favorites={p.favorites} savedOnly={p.savedOnly} type={p.fixtureType} onType={p.onFixtureType}/>}
+      {tab==='fixtures'&&<Fixtures key={`${league.id}-${source}`} fixtures={p.fixtures} results={p.results} favorites={p.favorites} savedOnly={p.savedOnly} type={p.fixtureType} onType={p.onFixtureType}/>}
     </div>
   </section>;
 }
