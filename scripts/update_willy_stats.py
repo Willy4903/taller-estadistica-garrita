@@ -167,13 +167,13 @@ def update(output, api_key, selected, season_override=None):
         try:
             league_id, season, name = select_league(catalog, code, season_override)
             standings = api_get("standings", {"league":league_id,"season":season}, api_key)
-            # Un torneo histórico terminado no puede tener próximos encuentros.
-            upcoming = [] if season < datetime.now(timezone.utc).year - 1 else api_get(
-                "fixtures", {"league":league_id,"season":season,"next":10}, api_key)
-            previous = api_get("fixtures", {"league":league_id,"season":season,"last":10}, api_key)
+            # El plan Free no admite last/next. Consultar la temporada completa,
+            # filtrar cronológicamente en Python y nunca fabricar resultados.
+            season_events = api_get("fixtures", {"league":league_id,"season":season}, api_key)
             groups = normalize_standings(standings)
-            fixtures = normalize_fixtures(upcoming, True)
-            results = normalize_fixtures(previous, False)
+            historical = season < datetime.now(timezone.utc).year - 1
+            fixtures = [] if historical else normalize_fixtures(season_events, True)[:10]
+            results = normalize_fixtures(season_events, False)[:10]
             if not (groups or fixtures or results):
                 raise ValueError("Ningún dato verificable para la competición")
             old["competitions"][code] = {
