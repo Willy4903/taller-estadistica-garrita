@@ -63,7 +63,7 @@ function App(){
       <div className="mx-auto mt-8 grid max-w-[1440px] grid-cols-1 gap-6 px-5 md:px-8 xl:grid-cols-12">
         <div className="min-w-0 xl:col-span-9"><Dashboard league={league} rows={rows} reading={reading} tab={tab} onTab={setTab} publication={publication} source={source} groups={groups} group={safeGroup} groupName={groups[safeGroup]?.name} onGroup={setGroup} onSource={s=>{setSource(s);setGroup(0);}} venue={venue} onVenue={setVenue}
           loadError={loadError} refreshing={refreshing} onRefresh={loadSnapshot} favorites={favorites} onFavorite={toggleFavorite} onDetail={setDetail} query={query} onQuery={setQuery} savedOnly={savedOnly} onClearSaved={()=>setSavedOnly(false)}
-          fixtures={source==='demo'?datasets[leagueId].filter(m=>m.hg==null):(publication?.fixtures||[])} results={source==='demo'?datasets[leagueId].filter(m=>m.hg!=null).slice(-18).reverse():(publication?.results||[])} fixtureType={fixtureType} onFixtureType={setFixtureType}/></div>
+          fixtures={source==='demo'?datasets[leagueId].filter(m=>m.hg==null):(publication?.fixtures||[])} results={source==='demo'?datasets[leagueId].filter(m=>m.hg!=null):(publication?.results||[])} fixtureType={fixtureType} onFixtureType={setFixtureType}/></div>
         <aside className="min-w-0 space-y-5 xl:col-span-3" aria-label="Análisis"><ReadingCard league={league} reading={reading} source={source} projection={proj}/><SideCards leader={reading?.leader} iclItems={iclItems}/></aside>
       </div>
       <Comparator competitions={competitions} compare={compare} onCompare={setCompare} source={source} snapshot={snapshot}/>

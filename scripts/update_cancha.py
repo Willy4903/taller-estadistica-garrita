@@ -16,7 +16,7 @@ from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
-CODES = dict(per='per.1', bra='bra.1', arg='arg.1', col='col.1', ecu='ecu.1', sud='conmebol.sudamericana', lib='conmebol.libertadores', ita='ita.1', esp='esp.1', eng='eng.1', ger='ger.1', fra='fra.1', ucl='uefa.champions', uel='uefa.europa')
+CODES = dict(per='per.1', bra='bra.1', arg='arg.1', col='col.1', ecu='ecu.1', mex='mex.1', usa='usa.1', sud='conmebol.sudamericana', lib='conmebol.libertadores', ita='ita.1', esp='esp.1', eng='eng.1', ger='ger.1', fra='fra.1', ucl='uefa.champions', uel='uefa.europa')
 EUROPE = {'ita', 'esp', 'eng', 'ger', 'fra', 'ucl', 'uel'}
 
 
