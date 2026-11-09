@@ -22,6 +22,39 @@ node --require /workspace/.onboarding-garrita/chromium.cjs scripts/check_cancha.
 python3 -m unittest discover -s scripts -p test_cancha_provider.py -v
 ```
 
+## Estado de datos reales (configuración nueva)
+
+La interfaz abre **Datos reales publicados** por defecto. La demostración reproducible
+se mantiene como opción explícita, siempre etiquetada como ficticia. No existen
+respuestas de respaldo inventadas. Los comparadores y tarjetas calculan sobre
+la fuente seleccionada; sin captura válida muestran "—" o "Sin datos".
+
+El colector principal es `scripts/update_willy_stats.py`, que usa
+[API-Football](https://www.api-football.com/) mediante una clave almacenada en
+**Settings → Secrets and variables → Actions → New repository secret**
+con nombre `API_FOOTBALL_KEY` (nunca guardar la clave en git).
+El workflow `willy-stats-data.yml` actualiza una vez al día
+(presupuesto aproximado: 43 peticiones, siempre sujeto a la API y cobertura).
+Se puede activar manualmente con `workflow_dispatch`.
+La ejecución diaria de `daily-update.yml` compila el frontend y publica los
+archivos bajo `site/futbol/` después de fusionar los cambios.
+
+El colector determina la temporada desde la metadata del proveedor y exige
+coincidencia exacta de país/nombre de liga. Si no hay correspondencia inequívoca,
+no inventa una. Valida marcadores, puntos y participaciones; conserva la última
+captura real con su fecha original cuando falla. El frontend alerta si una
+instantánea tiene más de 36 horas. **No es una aplicación de marcadores minuto a minuto.**
+
+El script ESPN preexistente permanece como referencia histórica, pero usa
+endpoints no oficiales; no forma parte del workflow nuevo. Si se desea publicar
+datos derivados de ESPN, verificar antes autorización de reutilización.
+API-Football también señala que sus clientes deben revisar derechos de datos
+y marcas según competición: tener clave gratuita no concede automáticamente
+licencia para todos los contenidos. Los escudos existentes tienen sus propias
+condiciones de uso.
+
+Pruebas offline: `python -m unittest discover -s scripts -p test_willy_stats.py -v`.
+
 ## Funciones
 
 14 competiciones; filtro por continente; métricas de goles por partido; tabla General, Local y Visitante; búsqueda; favoritos persistentes; detalle de equipo; efectividad; gráfico de ataque/defensa; calendario y resultados ficticios; formatos; comparador de tres ligas con selección; archivo histórico con fechas de corte y enlaces; metodología desplegable. React mantiene estados reales para todas las interacciones.
@@ -40,7 +73,7 @@ Proyección de puntos: puntos actuales más restantes por puntos/partido, con ho
 
 El archivo Libertadores y Champions tiene corte 1 de junio de 2024. No es el palmarés actual.
 
-## Fuentes publicadas
+## Fuente ESPN heredada (manual, no incluida en la actualización automática)
 
 ```sh
 python3 scripts/update_cancha.py

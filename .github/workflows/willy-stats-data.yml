@@ -1,0 +1,79 @@
+name: Willy Stats - datos deportivos verificables
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/willy-stats-data.yml"
+  schedule:
+    # Una actualización diaria a las 07:30 de Lima; aprox. 43 peticiones/día.
+    # GitHub puede demorar los trabajos programados.
+    - cron: "30 12 * * *"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish-data:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validar parser y esquema sin llamadas de red
+        run: python -m unittest discover -s scripts -p test_willy_stats.py -v
+      - name: Actualizar instantáneas con proveedor documentado
+        if: env.API_FOOTBALL_KEY != ''
+        continue-on-error: true
+        run: python scripts/update_willy_stats.py
+      - name: Explicar configuración faltante
+        if: env.API_FOOTBALL_KEY == ''
+        run: echo "No existe el secreto API_FOOTBALL_KEY. No se han creado ni simulado datos."
+      - name: Versionar solamente si hay datos nuevos
+        if: env.API_FOOTBALL_KEY != ''
+        run: |
+          git config user.name "willy-stats-data-bot"
+          git config user.email "willy-stats-data-bot@users.noreply.github.com"
+          git add site/futbol/data/snapshot.json
+          if git diff --cached --quiet; then
+            echo "Sin cambios verificables."
+          else
+            git commit -m "Actualizar instantáneas reales Willy Stats"
+            git pull --rebase origin main
+            git push origin main
+          fi
+      - uses: actions/setup-node@v4
+        if: env.API_FOOTBALL_KEY != ''
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: apps/willy-stats/package-lock.json
+      - name: Compilar Willy Stats para GitHub Pages
+        if: env.API_FOOTBALL_KEY != ''
+        run: |
+          cd apps/willy-stats
+          npm ci
+          npm test
+          npm run build
+      - uses: actions/configure-pages@v5
+        if: env.API_FOOTBALL_KEY != ''
+      - uses: actions/upload-pages-artifact@v3
+        if: env.API_FOOTBALL_KEY != ''
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
+        if: env.API_FOOTBALL_KEY != ''

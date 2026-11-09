@@ -11,6 +11,7 @@ const server=spawn('python3',['-m','http.server','8782','--bind','127.0.0.1','--
   const p=await ctx.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));
   await p.goto('http://127.0.0.1:8782/futbol/',{waitUntil:'networkidle'});
   assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`desborde ${width}`);
+  assert.equal(await p.getByLabel('Temporada y fuente').inputValue(),'published');await p.getByLabel('Temporada y fuente').selectOption('demo');
   const viewport=await p.locator('meta[name="viewport"]').getAttribute('content');assert(viewport.includes('viewport-fit=cover'));
   await p.getByRole('button',{name:'Abrir navegación',exact:true}).tap();assert(await p.getByRole('navigation').isVisible());
   await p.getByRole('navigation').getByRole('link',{name:'Partidos',exact:true}).tap();await p.locator('.fixture').first().waitFor();assert.equal(await p.getByRole('button',{name:'Abrir navegación',exact:true}).getAttribute('aria-expanded'),'false');
