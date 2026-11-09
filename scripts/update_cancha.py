@@ -143,16 +143,36 @@ def normalize_fixtures(payload, now, upcoming=True):
 
 
 def scoreboard(code, start, end, warnings):
-    """Partidos del rango. Si el proveedor los rechaza, la tabla se publica igual y queda el aviso."""
-    span = start.strftime('%Y%m%d') + '-' + end.strftime('%Y%m%d')
-    base = f'https://site.api.espn.com/apis/site/v2/sports/soccer/{code}/scoreboard'
+    """Partidos del rango, pidiendo al proveedor rangos cada vez más pequeños si rechaza el amplio.
+
+    Si ninguna forma funciona, la tabla se publica igual y queda el aviso con el motivo.
+    """
+    base = f'https://site.api.espn.com/apis/site/v2/sports/soccer/{code}/scoreboard?limit=300&dates='
+
+    def label(first, last):
+        return first.strftime('%Y%m%d') + ('' if first == last else '-' + last.strftime('%Y%m%d'))
+
+    def blocks(days):
+        out, first = [], start
+        while first <= end:
+            last = min(first + timedelta(days=days - 1), end)
+            out.append((first, last))
+            first = last + timedelta(days=1)
+        return out
+
     failures = []
-    for query in (f'?limit=300&dates={span}', f'?dates={span}'):
+    for days in (None, 7, 1):
+        events, seen = [], set()
         try:
-            return fetch(base + query)
+            for first, last in ([(start, end)] if days is None else blocks(days)):
+                for event in fetch(base + label(first, last)).get('events', []):
+                    if event.get('id') not in seen:
+                        seen.add(event.get('id'))
+                        events.append(event)
+            return {'events': events}
         except Exception as error:
-            failures.append(str(error)[:200])
-    warnings.append(f'Partidos {span} no disponibles: ' + ' / '.join(failures))
+            failures.append(f'{"rango completo" if days is None else f"bloques de {days} d"}: {str(error)[:160]}')
+    warnings.append(f'Partidos {label(start, end)} no disponibles. ' + ' / '.join(failures))
     return {'events': []}
 
 
