@@ -5,6 +5,8 @@ on:
     paths:
       - "apps/willy-stats/**"
       - "scripts/update_willy_stats.py"
+      - "scripts/update_cancha.py"
+      - "scripts/test_cancha_provider.py"
       - "scripts/test_willy_stats.py"
       - "site/futbol/README.md"
       - ".github/workflows/willy-stats-data.yml"
