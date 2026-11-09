@@ -3,9 +3,9 @@ name: Willy Stats - datos deportivos verificables
 on:
   workflow_dispatch:
   schedule:
-    # Una actualización diaria a las 09:17 de Lima; aprox. 43 peticiones/día.
+    # Una actualización diaria a las 07:30 de Lima; aprox. 43 peticiones/día.
     # GitHub puede demorar los trabajos programados.
-    - cron: "17 14 * * *"
+    - cron: "30 12 * * *"
 
 permissions:
   contents: write
