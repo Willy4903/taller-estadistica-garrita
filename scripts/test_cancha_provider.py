@@ -70,6 +70,20 @@ class ProviderTests(unittest.TestCase):
                 self.assertEqual(provider.main(), 1)
             self.assertEqual(json.loads(path.read_text()), previous)
 
+    def test_scoreboard_failure_keeps_standings(self):
+        standings = {'season': {'year': 2026, 'displayName': '2026'}, 'standings': {'entries': [entry('Club A')]}}
+
+        def fake(url):
+            if 'scoreboard' in url:
+                raise ValueError('HTTP 400 en scoreboard')
+            return standings
+        with patch.object(provider, 'fetch', side_effect=fake):
+            data = provider.refresh('per', datetime(2026, 11, 9, tzinfo=timezone.utc))
+        self.assertEqual(data['groups'][0]['rows'][0]['name'], 'Club A')
+        self.assertEqual((data['fixtures'], data['results']), ([], []))
+        self.assertEqual(len(data['warnings']), 2)
+        self.assertFalse(data['historical'])
+
 
 if __name__ == '__main__':
     unittest.main()

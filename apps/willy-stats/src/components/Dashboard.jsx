@@ -18,7 +18,7 @@ function SourceNote({source,publication,groupName,loadError,refreshing,onRefresh
   else text=`Temporada ${publication.season}${groupName?` · ${groupName}`:''}. Captura del ${stamp(publication.updated_at)}. Fuente: ${publication.provider||'proveedor'}. No es un marcador en vivo.`;
   return <div role="status" className={`mt-4 flex items-start gap-2 rounded-lg border px-3 py-2.5 text-xs leading-relaxed ${tone}`}>
     {tone.includes('EAB308')||tone.includes('F97316')?<AlertTriangle size={14} className="mt-0.5 shrink-0" aria-hidden="true"/>:<Info size={14} className="mt-0.5 shrink-0" aria-hidden="true"/>}
-    <span className="flex-1">{text}{loadError&&' No se pudo recargar; se conserva la última captura.'}</span>
+    <span className="flex-1">{text}{source==='published'&&publication?.warnings?.length?' Los partidos no estuvieron disponibles en esta captura.':''}{loadError&&' No se pudo recargar; se conserva la última captura.'}</span>
     <button onClick={onRefresh} className="flex shrink-0 items-center gap-1 text-gray-300 hover:text-white" aria-label="Recargar captura publicada"><RefreshCw size={13} className={refreshing?'animate-spin':''}/></button>
   </div>;
 }

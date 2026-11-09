@@ -142,6 +142,20 @@ def normalize_fixtures(payload, now, upcoming=True):
     return sorted(games, key=lambda g: g['date'], reverse=not upcoming)
 
 
+def scoreboard(code, start, end, warnings):
+    """Partidos del rango. Si el proveedor los rechaza, la tabla se publica igual y queda el aviso."""
+    span = start.strftime('%Y%m%d') + '-' + end.strftime('%Y%m%d')
+    base = f'https://site.api.espn.com/apis/site/v2/sports/soccer/{code}/scoreboard'
+    failures = []
+    for query in (f'?limit=300&dates={span}', f'?dates={span}'):
+        try:
+            return fetch(base + query)
+        except Exception as error:
+            failures.append(str(error)[:200])
+    warnings.append(f'Partidos {span} no disponibles: ' + ' / '.join(failures))
+    return {'events': []}
+
+
 def refresh(league, now):
     code, season = CODES[league], expected_season(league, now)
     routes = [f'https://site.api.espn.com/apis/v2/sports/soccer/{code}/standings?season={season}',
@@ -158,9 +172,9 @@ def refresh(league, now):
     else:
         raise ValueError(' / '.join(errors))
     groups = normalize_standings(payload)
-    base = f'https://site.api.espn.com/apis/site/v2/sports/soccer/{code}/scoreboard?limit=1000&dates='
-    future = fetch(base + now.strftime('%Y%m%d') + '-' + (now + timedelta(days=21)).strftime('%Y%m%d'))
-    past = fetch(base + (now - timedelta(days=35)).strftime('%Y%m%d') + '-' + now.strftime('%Y%m%d'))
+    warnings = []
+    future = scoreboard(code, now, now + timedelta(days=21), warnings)
+    past = scoreboard(code, now - timedelta(days=35), now, warnings)
     results = normalize_fixtures(past, now, upcoming=False)
     for group in groups:
         for row in group['rows']:
@@ -174,7 +188,7 @@ def refresh(league, now):
     return {'provider': 'ESPN', 'season': label, 'season_year': year, 'historical': False,
             'source': f'https://www.espn.com/soccer/standings/_/league/{code}/season/{season}',
             'updated_at': now.isoformat(), 'groups': groups, 'default_group': default_group,
-            'fixtures': normalize_fixtures(future, now), 'results': results,
+            'fixtures': normalize_fixtures(future, now), 'results': results, 'warnings': warnings,
             'methodology': 'Orden y puntos del proveedor, incluidas sanciones. Últimos resultados de los 35 días consultados; no es un marcador en vivo.'}
 
 
