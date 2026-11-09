@@ -63,7 +63,7 @@ Pruebas offline: `python -m unittest discover -s scripts -p test_willy_stats.py 
 
 ## Funciones
 
-Rediseño oscuro. 16 competiciones con filtro por continente; tabla con búsqueda, favoritos persistentes y detalle de club con radar; pestañas Tabla, Rendimiento, Vista integrada y Partidos (por fecha, con navegación entre jornadas); análisis calculado con resultados reales (última fecha en números, tendencia de goles, partidos de alto impacto, rachas); comparador de tres ligas; índice de competitividad; metodología. Código en `apps/willy-stats/src/`.
+Rediseño oscuro. 16 competiciones con filtro por continente; tabla con búsqueda, favoritos persistentes y detalle de club con radar; pestañas Tabla, Rendimiento, Vista integrada y Partidos (por fecha, con navegación entre jornadas); análisis calculado con resultados reales (última fecha en números, tendencia de goles, partidos de alto impacto, rachas); comparador de tres ligas; paridad entre ligas con margen de error; metodología. Código en `apps/willy-stats/src/`.
 
 ## Integridad y límites
 
@@ -73,7 +73,7 @@ Rediseño oscuro. 16 competiciones con filtro por continente; tabla con búsqued
 - Análisis: goles por partido y distribución local/empate/visita de la última fecha, tendencia de goles, partidos de la próxima fecha entre los mejor ubicados y rachas de los últimos cinco partidos. Todo sale de las tablas y marcadores publicados.
 - El radar usa cinco ejes calculables desde la tabla (ataque, defensa, efectividad, diferencia de gol y forma), normalizados contra la liga. No hay xG, posesión ni presión: la fuente no entrega tiros.
 - La ilustración del hero es decorativa. Las fotografías de fondo (Unsplash) no representan a ningún club.
-- ICL = 10 × (1 − 0.4 × σ/μ), limitado a [0,10], sobre puntos por partido. Mide paridad en la tabla, no calidad entre ligas.
+- Paridad entre ligas: diferencia típica de nivel entre clubes en puntos por partido, sin el azar. Se calcula como √(σ² observada − σ² del azar), con σ² del azar = varianza de los puntos de un partido (según la tasa de empates de la liga) ÷ partidos por club. El margen de error usa σ/√(2(n−1)). Solo se calcula en tablas de al menos 10 clubes y 8 partidos por club; los grupos pequeños y las fases de copa se marcan como no comparables. Reemplaza al índice anterior 10 × (1 − 0.4 × σ/μ), que dependía del número de partidos jugados y de un factor arbitrario. Mide paridad dentro de la liga, no calidad entre ligas.
 - PJ = G + E + P, PTS = 3G + E, DG = GF − GC.
 
 ## Fuente ESPN heredada (manual, no incluida en la actualización automática)

@@ -1,7 +1,7 @@
 import React,{useState,useMemo} from 'react';
 import {Info,AlertTriangle,RefreshCw,ChevronLeft,ChevronRight} from 'lucide-react';
 import {Crest,Form,Num,LeagueMark} from './ui.jsx';
-import {Radar,IclBars} from './Charts.jsx';
+import {Radar,ParityBars} from './Charts.jsx';
 import {Standings} from './Standings.jsx';
 import {radarAxes,stamp,matchdays,matchdayLabel} from '../lib.js';
 import {number} from '../data.js';
@@ -112,10 +112,12 @@ export function ReadingCard({league,reading}){
   </section>;
 }
 
-export function IclCard({iclItems}){
-  return <section className="rounded-2xl border border-[#1E2630] bg-[#12171D] p-4" aria-label="League Competitiveness Index">
-    <h3 className="font-heading text-base font-bold text-white">League Competitiveness Index</h3>
-    <p className="mb-3 text-xs text-gray-400">Paridad de la tabla (0 a 10), con los puntos por partido de cada liga. No mide calidad entre ligas.</p>
-    <IclBars items={iclItems}/>
+export function ParityCard({items,activeId}){
+  if(!items.length)return null;
+  const sorted=[...items].sort((a,b)=>a.p.level-b.p.level);
+  return <section className="rounded-2xl border border-[#1E2630] bg-[#12171D] p-4" aria-label="Paridad entre ligas">
+    <h3 className="font-heading text-base font-bold text-white">Paridad entre ligas</h3>
+    <p className="mb-3 text-xs leading-relaxed text-gray-400">Diferencia típica de nivel entre clubes, en puntos por partido, sin el efecto del azar. Barra corta: liga pareja. La línea fina es el margen de error: si dos ligas se solapan, la diferencia no es concluyente.</p>
+    <ParityBars items={sorted} activeId={activeId}/>
   </section>;
 }

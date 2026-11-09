@@ -1,11 +1,11 @@
 import React,{useState,useMemo,useEffect,useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {X} from 'lucide-react';
-import {competitions,metrics,number} from './data.js';
+import {competitions,parity,number} from './data.js';
 import {getRows,reading as readingOf,radarAxes,lastRound,highImpact,streaks as streaksOf} from './lib.js';
 import {Navbar,Hero} from './components/Header.jsx';
 import {Carousel} from './components/Carousel.jsx';
-import {Dashboard,ReadingCard,IclCard} from './components/Dashboard.jsx';
+import {Dashboard,ReadingCard,ParityCard} from './components/Dashboard.jsx';
 import {LastRoundCard,ImpactCard,StreaksCard} from './components/Insights.jsx';
 import {Comparator,Methodology} from './components/Sections.jsx';
 import {CrestContext,Crest,Form,Num,Brand} from './components/ui.jsx';
@@ -46,10 +46,7 @@ function App(){
   const impact=useMemo(()=>highImpact(rows,publication?.fixtures||[]),[rows,publication]);
   const streaks=useMemo(()=>streaksOf(rows),[rows]);
 
-  const iclItems=useMemo(()=>['per','bra','esp','eng'].map(id=>{
-    const l=competitions.find(c=>c.id===id),r=getRows({league:l,snapshot,group:0}),played=r.filter(t=>t.pj>0);
-    return {id,name:l.name,continent:l.continent,icl:played.length?metrics(r).icl:null};
-  }),[snapshot]);
+  const parityItems=useMemo(()=>competitions.map(l=>({id:l.id,name:l.name,continent:l.continent,p:parity(getRows({league:l,snapshot,group:0}))})).filter(x=>x.p),[snapshot]);
 
   function selectLeague(id){setLeagueId(id);setGroup(0);setQuery('');window.history.replaceState(null,'',`#liga=${id}`);}
   function selectContinent(v){setContinent(v);if(v!=='Todas'&&league.continent!==v)selectLeague(competitions.find(c=>c.continent===v).id);}
@@ -66,7 +63,7 @@ function App(){
         <div className="min-w-0 space-y-6 xl:col-span-9"><Dashboard league={league} rows={rows} reading={reading} tab={tab} onTab={setTab} publication={publication} groups={groups} group={safeGroup} groupName={groups[safeGroup]?.name} onGroup={setGroup}
           loadError={loadError} refreshing={refreshing} onRefresh={loadSnapshot} favorites={favorites} onFavorite={toggleFavorite} onDetail={setDetail} query={query} onQuery={setQuery} savedOnly={savedOnly} onClearSaved={()=>setSavedOnly(false)}
           fixtures={publication?.fixtures||[]} results={publication?.results||[]} fixtureType={fixtureType} onFixtureType={setFixtureType}/><div className="grid gap-6 md:grid-cols-2 [&>*:only-child]:md:col-span-2"><ImpactCard impact={impact}/><StreaksCard streaks={streaks}/></div></div>
-        <aside className="min-w-0 space-y-5 xl:col-span-3" aria-label="Análisis"><ReadingCard league={league} reading={reading}/><LastRoundCard summary={summary}/><IclCard iclItems={iclItems}/></aside>
+        <aside className="min-w-0 space-y-5 xl:col-span-3" aria-label="Análisis"><ReadingCard league={league} reading={reading}/><LastRoundCard summary={summary}/><ParityCard items={parityItems} activeId={leagueId}/></aside>
       </div>
       <Comparator competitions={competitions} compare={compare} onCompare={setCompare} snapshot={snapshot}/>
       <Methodology/>
