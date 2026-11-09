@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import sys
+import time
 import unicodedata
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -46,7 +47,14 @@ def integer(value, label, min_value=0):
         raise ValueError(f"{label}: valor inválido {value!r}")
     return value
 
+_last_request = None
+
 def api_get(path, params, key):
+    global _last_request
+    delay = float(os.environ.get("API_FOOTBALL_MIN_INTERVAL", "0"))
+    if delay > 0 and _last_request is not None:
+        time.sleep(max(0, delay - (time.monotonic() - _last_request)))
+    _last_request = time.monotonic()
     url = BASE + "/" + path + ("?" + urlencode(params) if params else "")
     request = Request(url, headers={"x-apisports-key": key,
                                    "Accept": "application/json",
