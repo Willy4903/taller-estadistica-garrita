@@ -33,15 +33,14 @@ El colector principal es `scripts/update_willy_stats.py`, que usa
 [API-Football](https://www.api-football.com/) mediante una clave almacenada en
 **Settings → Secrets and variables → Actions → New repository secret**
 con nombre `API_FOOTBALL_KEY` (nunca guardar la clave en git).
-El workflow `willy-stats-data.yml` descarga la temporada **2024** porque la
-clave gratuita ha respondido expresamente que solo permite temporadas
-**2022–2024**, aunque el panel comercial liste todas las ligas. El archivo
-2024 se presenta como histórico; **no es una clasificación 2026**.
-La captura se ejecuta al fusionar cambios en su workflow o script, o
-manualmente con `workflow_dispatch`. No se consultan diariamente los mismos
-datos históricos para evitar consumir innecesariamente la cuota.
-La ejecución diaria de `daily-update.yml` compila el frontend y publica los
-archivos bajo `site/futbol/` después de fusionar los cambios.
+El archivo real **2024** se obtuvo con `scripts/update_willy_stats.py --season 2024`,
+porque el plan gratuito no permite consultar temporadas posteriores a 2024.
+Esta fuente nunca se representa como actualidad. Por separado, el workflow
+`willy-stats-data.yml` ejecuta `scripts/update_cancha.py` para intentar
+actualizar la temporada vigente desde ESPN, valida el año de respuesta y conserva
+la última captura válida cuando falla. El estado por liga se registra en
+`site/futbol/data/health.json`. La distribución se publica mediante GitHub Pages.
+Ninguna actualización fallida se reemplaza por una clasificación ficticia.
 
 El colector puede determinar la temporada desde la metadata del proveedor
 cuando el plan lo permite; en el flujo Free fija explícitamente 2024 y exige
@@ -51,13 +50,11 @@ captura real con su fecha original cuando falla. El frontend identifica las capt
 una captura no histórica tiene más de 36 horas. **No es una aplicación de
 marcadores minuto a minuto.**
 
-El script ESPN preexistente permanece como referencia histórica, pero usa
-endpoints no oficiales; no forma parte del workflow nuevo. Si se desea publicar
-datos derivados de ESPN, verificar antes autorización de reutilización.
-API-Football también señala que sus clientes deben revisar derechos de datos
-y marcas según competición: tener clave gratuita no concede automáticamente
-licencia para todos los contenidos. Los escudos existentes tienen sus propias
-condiciones de uso.
+ESPN utiliza endpoints públicos no oficiales: su estabilidad, disponibilidad
+y permisos de reutilización no equivalen a una API licenciada para terceros.
+Corresponde verificar los términos aplicables antes de hacer uso comercial.
+API-Football tampoco concede automáticamente derechos sobre todas las marcas
+o imágenes. Los escudos mantienen sus condiciones de uso particulares.
 
 Pruebas offline: `python -m unittest discover -s scripts -p test_willy_stats.py -v`.
 
@@ -79,7 +76,7 @@ Proyección de puntos: puntos actuales más restantes por puntos/partido, con ho
 
 El archivo Libertadores y Champions tiene corte 1 de junio de 2024. No es el palmarés actual.
 
-## Fuente ESPN heredada (manual, no incluida en la actualización automática)
+## Fuente ESPN actual (también ejecutable manualmente)
 
 ```sh
 python3 scripts/update_cancha.py
