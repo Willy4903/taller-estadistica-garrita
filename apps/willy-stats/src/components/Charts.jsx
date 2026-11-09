@@ -15,32 +15,17 @@ export function Radar({axes,teamName}){
   </svg>;
 }
 
-/** Datos sintéticos y deterministas. Se rotulan como ilustrativos donde se usan. */
-export function Momentum({home}){
-  const id=useId().replace(/:/g,''),W=600,H=150,mid=H/2;
-  const pts=Array.from({length:91},(_,m)=>{const v=Math.sin(m/5.5)*.55+Math.sin(m/2.1+1.3)*.28+Math.sin(m/13)*.3;return [m/90*W,mid-v*mid*.78];});
-  const line=pts.map(([x,y],i)=>`${i?'L':'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join('');
-  const area=`${line}L${W} ${mid}L0 ${mid}Z`;
+/** Goles por partido en las últimas jornadas completas. Cifras reales de los resultados publicados. */
+export function GoalsTrend({trend}){
+  const max=Math.max(1,...trend.map(t=>t.gpg));
   return <div>
-    <svg viewBox={`0 0 ${W} ${H+22}`} className="w-full" role="img" aria-label="Ilustración de ondas de dominio entre el minuto 0 y el 90. Datos sintéticos, no corresponden a un partido real.">
-      <defs><clipPath id={`${id}u`}><rect width={W} height={mid}/></clipPath><clipPath id={`${id}d`}><rect y={mid} width={W} height={mid}/></clipPath></defs>
-      <path d={area} fill="#22C55E" fillOpacity=".75" clipPath={`url(#${id}u)`}/><path d={area} fill="#F97316" fillOpacity=".75" clipPath={`url(#${id}d)`}/>
-      <line x1="0" x2={W} y1={mid} y2={mid} stroke="#3a4757"/>
-      {[0,10,20,30,40,50,60,70,80,90].map(m=><text key={m} x={m/90*W} y={H+16} fontSize="10" textAnchor={m===0?'start':m===90?'end':'middle'} className="fill-gray-500 font-mono">{m}</text>)}
-    </svg>
-    <p className="mt-1 flex gap-4 text-xs text-gray-400"><span><i className="mr-1 inline-block h-2 w-2 rounded-sm bg-[#22C55E]"/>{home}</span><span><i className="mr-1 inline-block h-2 w-2 rounded-sm bg-[#F97316]"/>Rival</span></p>
-  </div>;
-}
-
-export function XgTimeline({home}){
-  const events=[18,32,41,63,78];
-  return <div>
-    <div className="relative mt-5 h-3.5 overflow-hidden rounded-full bg-[#1A212B]" role="img" aria-label="Ilustración de una cronología de xG con cinco ocasiones. Datos sintéticos.">
-      <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#22C55E] to-[#15803d]" style={{width:'46%'}}/><div className="absolute inset-y-0 right-0 bg-gradient-to-r from-[#c2410c] to-[#F97316]" style={{width:'54%'}}/>
-      {events.map(m=><span key={m} className="absolute top-0 h-full w-px bg-white/80" style={{left:`${m/90*100}%`}}/>)}
-    </div>
-    <div className="relative h-8">{events.map(m=><span key={m} className="absolute top-1 -translate-x-1/2 text-center" style={{left:`${m/90*100}%`}}><span className="mx-auto block h-3 w-3 rounded-full border border-white bg-[#0B0E11]"/><Num className="text-[10px] text-gray-400">{m}&apos;</Num></span>)}</div>
-    <p className="text-xs text-gray-400">xG {home} vs rival</p>
+    <ul className="flex h-24 items-end gap-2" aria-label="Goles por partido en las últimas fechas">
+      {trend.map((t,i)=><li key={i} className="flex h-full flex-1 flex-col items-center justify-end gap-1" title={`${t.label}: ${t.gpg.toFixed(2)} goles por partido en ${t.n} partidos`}>
+        <Num className="text-[10px] text-gray-300">{t.gpg.toFixed(1)}</Num>
+        <div className={`w-full rounded-t ${i===trend.length-1?'bg-[#22C55E]':'bg-[#22C55E]/40'}`} style={{height:`${Math.max(6,t.gpg/max*64)}px`}}/>
+      </li>)}
+    </ul>
+    <p className="mt-1 flex justify-between text-[10px] text-gray-500"><span>Más antigua</span><span>Última fecha</span></p>
   </div>;
 }
 

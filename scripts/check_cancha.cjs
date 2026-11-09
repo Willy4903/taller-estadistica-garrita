@@ -12,16 +12,12 @@ const server=spawn('python3',['-m','http.server','8780','--bind','127.0.0.1','--
  const cards=p.locator('#explorar li button');assert.equal(await cards.count(),16);
  // Por defecto se muestran datos publicados, nunca la demostración.
  const dash=p.locator('#dashboard');
- assert.equal(await dash.locator('select').last().inputValue(),'published');
- const snap=await (await fetch('http://127.0.0.1:8780/futbol/data/snapshot.json')).json();
+  const snap=await (await fetch('http://127.0.0.1:8780/futbol/data/snapshot.json')).json();
  const rows=snap.competitions?.per?.groups?.[0]?.rows||[];
  await dash.getByRole('button',{name:/Ver todas las posiciones/}).click().catch(()=>{});
  assert.equal(await dash.locator('tbody tr').count(),rows.length);
  assert.doesNotMatch(await dash.getByRole('status').innerText(),/demostraci/i);
- // Demostración: solo si se pide, y rotulada como ficticia.
- await dash.locator('select').last().selectOption('demo');
- assert.match(await dash.getByRole('status').innerText(),/ficticio/i);
- assert.match(await p.getByText('marca el paso').innerText(),/Universitario/);
+ assert.equal(await p.getByText(/demostraci|ficticio|ilustrativo/i).count(),0);
  for(const name of ['Premier League','LaLiga','Brasileirão']){await p.locator('#explorar').getByRole('button',{name:new RegExp(name)}).click();assert.match(await dash.locator('h2').innerText(),new RegExp(name.slice(0,5)));assert((await dash.locator('tbody tr').count())>0);}
  await dash.getByRole('tab',{name:'Rendimiento'}).click();assert(await dash.locator('svg[role="img"]').first().isVisible());
  await dash.getByRole('tab',{name:'Partidos'}).click();assert((await dash.locator('li').count())>0);

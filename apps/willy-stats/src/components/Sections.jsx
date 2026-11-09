@@ -3,10 +3,10 @@ import {Num,LeagueMark} from './ui.jsx';
 import {metrics,number} from '../data.js';
 import {getRows} from '../lib.js';
 
-export function Comparator({competitions,compare,onCompare,source,snapshot}){
+export function Comparator({competitions,compare,onCompare,snapshot}){
   const cols=compare.map(id=>{
-    const league=competitions.find(c=>c.id===id),rows=getRows({league,source,snapshot,group:0}),played=rows.filter(r=>r.pj>0);
-    const m=played.length?metrics(league,rows):null;
+    const league=competitions.find(c=>c.id===id),rows=getRows({league,snapshot,group:0}),played=rows.filter(r=>r.pj>0);
+    const m=played.length?metrics(rows):null;
     return {league,m,clubs:rows.length,leader:played[0]};
   });
   return <section id="comparador" className="mx-auto max-w-[1440px] px-5 py-14 md:px-8">
@@ -25,20 +25,7 @@ export function Comparator({competitions,compare,onCompare,source,snapshot}){
         </dl>
       </article>)}
     </div>
-    <p className="mt-4 text-xs text-gray-500">Se calcula sobre la tabla seleccionada en cada liga (primer grupo publicado) y la fuente elegida arriba.</p>
-  </section>;
-}
-
-export function Models(){
-  const items=[['Qué es xG','Los goles esperados estiman la probabilidad de gol de cada tiro según su contexto. Requiere datos de eventos de cada disparo.'],
-    ['Por qué no se publica','La fuente actual entrega tablas y marcadores, no tiros. Calcular xG a partir de goles observados sería inventar el dato.'],
-    ['Qué se calcula hoy','Puntos por partido, efectividad, goles a favor y en contra por partido, diferencia de gol y el índice de competitividad de la liga.']];
-  return <section id="modelos" className="border-y border-[#1E2630] bg-[#0f1318]">
-    <div className="mx-auto max-w-[1440px] px-5 py-14 md:px-8">
-      <p className="font-mono text-xs uppercase tracking-widest text-[#22C55E]">Modelos xG</p>
-      <h2 className="mt-1 font-heading text-3xl font-extrabold text-white">Sin tiros, no hay xG.</h2>
-      <div className="mt-6 grid gap-4 md:grid-cols-3">{items.map(([t,d])=><article key={t} className="rounded-2xl border border-[#1E2630] bg-[#12171D] p-5"><h3 className="font-heading text-lg font-bold text-white">{t}</h3><p className="mt-2 text-sm leading-relaxed text-gray-400">{d}</p></article>)}</div>
-    </div>
+    <p className="mt-4 text-xs text-gray-500">Se calcula sobre el primer grupo de la tabla publicada de cada liga.</p>
   </section>;
 }
 
@@ -50,8 +37,8 @@ export function Methodology(){
       <ul className="mt-5 space-y-3 text-sm leading-relaxed text-gray-400">
         <li>Las tablas publicadas indican temporada, proveedor y fecha de captura. Si la captura es de un año anterior se muestra como archivo.</li>
         <li>Si una consulta falla se conserva la última captura válida con su fecha original. No se rellenan datos faltantes.</li>
-        <li>La demostración es ficticia, se genera con una semilla fija y se rotula como tal.</li>
-        <li>Las ilustraciones de telemetría (ondas de dominio y cronología xG) son sintéticas y se marcan como ilustrativas.</li>
+        <li>Si una cifra no está en la fuente (xG, posesión, tiros), no se muestra ni se estima.</li>
+        <li>Las fechas se agrupan con los resultados publicados: una fecha termina tras más de 36 horas sin partidos o cuando un club vuelve a jugar.</li>
         <li>No es un marcador en vivo: las capturas se actualizan cada tres horas como máximo.</li>
       </ul></div>
     <dl className="self-start rounded-2xl border border-[#1E2630] bg-[#12171D] p-5 text-sm">

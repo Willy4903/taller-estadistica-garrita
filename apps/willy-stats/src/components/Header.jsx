@@ -3,7 +3,7 @@ import {Star,Menu,X,ArrowRight} from 'lucide-react';
 import {Brand,Num,Photo} from './ui.jsx';
 import {ASSETS} from '../lib.js';
 
-export const NAV=[['Explorar','explorar'],['Comparador de Ligas','comparador'],['Modelos xG','modelos'],['Partidos','dashboard','fixtures'],['Metodología','metodologia']];
+export const NAV=[['Explorar','explorar'],['Comparador de Ligas','comparador'],['Partidos','dashboard','fixtures'],['Metodología','metodologia']];
 
 export function Navbar({favorites,savedOnly,onSaved,onJump}){
   const [open,setOpen]=useState(false),btn=useRef(null);
@@ -13,7 +13,7 @@ export function Navbar({favorites,savedOnly,onSaved,onJump}){
     document.addEventListener('keydown',esc);return()=>document.removeEventListener('keydown',esc);
   },[open]);
   const go=(id,tab)=>{setOpen(false);onJump(id,tab);};
-  return <header className="sticky top-0 z-40 border-b border-[#1E2630] bg-[#0B0E11]/90 backdrop-blur-md">
+  return <header className="sticky top-0 z-50 border-b border-[#1E2630] bg-[#0B0E11]/90 backdrop-blur-md">
     <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between gap-4 px-4 md:px-8">
       <a href="#" className="flex shrink-0 items-center gap-2.5" aria-label="Willy Stats, inicio">
         <Brand/><span className="whitespace-nowrap font-heading text-2xl font-extrabold tracking-tight text-white">Willy Stats<span className="text-[#22C55E]">.</span></span>
@@ -53,8 +53,8 @@ function PitchBoard(){
 }
 
 export function Hero({onExplore}){
-  return <section className="mx-auto grid max-w-[1440px] items-center gap-8 px-5 py-10 md:px-8 lg:grid-cols-2">
-    <div>
+  return <section className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-8 px-5 pb-10 pt-12 sm:pt-20 md:px-8 lg:grid-cols-12">
+    <div className="lg:col-span-7">
       <p className="flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-widest text-[#22C55E]">
         <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#22C55E] opacity-70"/><span className="relative inline-flex h-2 w-2 rounded-full bg-[#22C55E]"/></span>
         Análisis global. Datos con fecha y fuente.
@@ -63,7 +63,7 @@ export function Hero({onExplore}){
       <p className="mt-4 max-w-xl text-base leading-relaxed text-gray-400">De Lima a Londres. Todas tus ligas, el rendimiento de los clubes y las métricas que explican quién domina el juego. Cada cifra indica su fuente y su fecha de corte.</p>
       <button onClick={onExplore} className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#F97316] px-6 py-3.5 font-semibold text-white shadow-lg shadow-orange-500/20 transition hover:bg-[#EA580C]">Explorar competiciones <ArrowRight size={18} aria-hidden="true"/></button>
     </div>
-    <div className="relative h-[300px] overflow-hidden rounded-2xl border border-[#26303D] shadow-2xl sm:h-[340px]">
+    <div className="relative h-[300px] overflow-hidden rounded-2xl border border-[#26303D] shadow-2xl sm:h-[340px] lg:col-span-5">
       <Photo src={ASSETS.hero} alt="" className="h-full w-full opacity-55"/>
       <div className="absolute inset-0 bg-gradient-to-tr from-[#0B0E11] via-transparent to-[#0B0E11]/60"/>
       <PitchBoard/>
