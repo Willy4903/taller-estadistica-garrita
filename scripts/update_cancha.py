@@ -5,6 +5,7 @@ No acepta temporadas anteriores a la solicitada. Conserva la última captura
 válida por liga si falla su actualización y registra el resultado de cada fuente.
 """
 import argparse
+import gzip
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 import json
@@ -19,13 +20,25 @@ CODES = dict(per='per.1', bra='bra.1', arg='arg.1', col='col.1', ecu='ecu.1', su
 EUROPE = {'ita', 'esp', 'eng', 'ger', 'fra', 'ucl', 'uel'}
 
 
+def _decode(response):
+    raw = response.read()
+    if raw[:2] == b'\x1f\x8b':
+        raw = gzip.decompress(raw)
+    return raw
+
+
 def fetch(url):
+    request = Request(url, headers={'User-Agent': 'Mozilla/5.0 (compatible; WillyStats/1.0)', 'Accept': 'application/json',
+                                    'Accept-Encoding': 'identity'})
     try:
-        with urlopen(Request(url, headers={'User-Agent': 'Mozilla/5.0 (compatible; WillyStats/1.0)', 'Accept': 'application/json'}), timeout=25) as response:
-            return json.load(response)
+        with urlopen(request, timeout=25) as response:
+            return json.loads(_decode(response).decode('utf-8'))
     except HTTPError as error:
-        detail = error.read(400).decode('utf-8', errors='replace')
-        raise ValueError(f'HTTP {error.code}: {detail[:250]}') from error
+        try:
+            detail = _decode(error)[:400].decode('utf-8', errors='replace')
+        except Exception:
+            detail = ''
+        raise ValueError(f'HTTP {error.code} en {url.split("?")[0]}: {detail[:250]}') from error
 
 
 def expected_season(league, now):

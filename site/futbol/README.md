@@ -63,21 +63,16 @@ Pruebas offline: `python -m unittest discover -s scripts -p test_willy_stats.py 
 
 ## Funciones
 
-14 competiciones; filtro por continente; métricas de goles por partido; tabla General, Local y Visitante; búsqueda; favoritos persistentes; detalle de equipo; efectividad; gráfico de ataque/defensa; calendario y resultados ficticios; formatos; comparador de tres ligas con selección; archivo histórico con fechas de corte y enlaces; metodología desplegable. React mantiene estados reales para todas las interacciones.
+Rediseño oscuro (estadio nocturno). 14 competiciones con filtro por continente; tabla con búsqueda, favoritos persistentes y detalle de club con radar; pestañas Tabla, Rendimiento, Vista integrada y Partidos; comparador de tres ligas; índice de competitividad calculado; metodología. Código en `apps/willy-stats/src/` (`components/` por sección, `lib.js` para el cálculo desde los datos publicados).
 
 ## Integridad y límites
 
-Demostración explícitamente ficticia. Los 14 escenarios se calculan desde partidos reproducibles. PJ = G + E + P, PTS = 3G + E, DG = GF − GC, goles globales a favor = goles en contra. Local + Visitante reconstruye General. El ejemplo de Universitario es exactamente 12 PJ, 9 G, 2 E, 1 P, 24 GF, 7 GC, +17 DG, 29 puntos, 80.6% de efectividad y últimos cinco V–V–E–V–V. El escolta tiene 26 puntos.
-
-La efectividad local de ese escenario es **88.9%** (16/18 puntos). El 94.4% solicitado en el boceto no es compatible con los seis partidos locales de ese balance. Se muestra el dato calculado.
-
-ICL = 10 × (1 − 0.4 × σ/μ), limitado a [0,10], sobre puntos por partido. Perú muestra 8.4. Mide paridad en la tabla, no calidad entre ligas.
-
-Proyección de puntos: puntos actuales más restantes por puntos/partido, con horizonte de una vuelta (N−1), o 8 para UEFA. El peso de título ilustrativo normaliza exp(β × puntos/partido). β se calibra para reproducir 68.4% en el ejemplo peruano; no se ajusta con resultados históricos, no es un modelo validado ni una probabilidad del campeonato oficial. Universitario proyecta 41 puntos. Todo está explicado en la interfaz.
-
-**xG no disponible**: faltan eventos de tiros y un modelo calibrado. No se inventa xG desde goles observados. Los formatos con fases tienen advertencias; las tablas de demostración son agregadas y no son grupos oficiales ni tablas de promedios. Zonas orientativas; copas, sanciones y reglamentos pueden cambiar los cupos.
-
-El archivo Libertadores y Champions tiene corte 1 de junio de 2024. No es el palmarés actual.
+- Por defecto se muestran los datos publicados con temporada, proveedor y fecha de captura. Una captura de otro año se rotula como archivo; una de más de 36 horas, como posiblemente desactualizada.
+- La demostración es ficticia, sale de un generador con semilla fija y solo se activa a petición del visitante.
+- El radar usa cinco ejes calculables desde la tabla (ataque, defensa, efectividad, diferencia de gol y forma), normalizados contra la liga. No hay xG, posesión ni presión: la fuente no entrega tiros.
+- Las ondas de dominio y la cronología xG de la barra lateral son ilustraciones sintéticas y se rotulan como tales. Las fotografías (Unsplash) son ilustrativas y no corresponden a los clubes.
+- ICL = 10 × (1 − 0.4 × σ/μ), limitado a [0,10], sobre puntos por partido. Mide paridad en la tabla, no calidad entre ligas.
+- PJ = G + E + P, PTS = 3G + E, DG = GF − GC.
 
 ## Fuente ESPN heredada (manual, no incluida en la actualización automática)
 
