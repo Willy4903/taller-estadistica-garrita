@@ -77,3 +77,6 @@
  .muted,.footnote,.demo-label,.legend,.context-note p,.table-bottom>p,.table-bottom-line>span,.methodology>div>p:not(.eyebrow),.method-items details>p,.history-card>p:not(.eyebrow),.xg-section>div>p:not(.eyebrow):not(.footnote),.footer p,.footer>.mono{color:#66715b}
  .source-note>span:last-child{color:#6d725f}.tabs button{color:#68735d}.tabs button[aria-selected=true]{color:#0f2419}.standings .position,.fixture-time,.fixture-time small{color:#68715d}.format-panel dd{color:#626d57}
 }
+.data-refresh{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:4px 22px 12px;font-size:9px;color:#747d69}.data-refresh button{display:flex;align-items:center;gap:7px;color:#426539;min-height:36px;flex-shrink:0;font-weight:600}.refresh-spin{animation:refresh-spin 1s linear infinite}@keyframes refresh-spin{to{transform:rotate(360deg)}}
+@media(max-width:767px),(max-width:1023px) and (pointer:coarse){.data-refresh{padding:0 14px 10px;gap:8px;font-size:11px;line-height:1.6;flex-wrap:wrap}.data-refresh button{min-height:44px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){.refresh-spin{animation:none}}
