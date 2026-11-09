@@ -16,6 +16,15 @@ class WillyStatsTests(unittest.TestCase):
         ]
         self.assertEqual(w.select_league(catalog,"eng"),(39,2026,"Premier League"))
 
+    def test_archived_season_is_explicit_and_labeled(self):
+        catalog=[{"league":{"id":39,"name":"Premier League"},
+                  "country":{"name":"England"},
+                  "seasons":[{"year":2024,"current":False},
+                             {"year":2026,"current":True}]}]
+        self.assertEqual(w.select_league(catalog,"eng",2024),(39,2024,"Premier League"))
+        with self.assertRaisesRegex(ValueError,"temporada 2023"):
+            w.select_league(catalog,"eng",2023)
+
     def test_ambiguous_league_rejected(self):
         catalog=[{"league":{"id":x,"name":"Serie A"},"country":{"name":"Italy"},
                   "seasons":[{"year":2026,"current":True}]} for x in [1,2]]
