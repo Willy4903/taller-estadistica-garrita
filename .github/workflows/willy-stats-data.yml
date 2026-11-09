@@ -6,10 +6,7 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/willy-stats-data.yml"
-  schedule:
-    # Una actualización diaria a las 07:30 de Lima; aprox. 43 peticiones/día.
-    # GitHub puede demorar los trabajos programados.
-    - cron: "30 12 * * *"
+      - "scripts/update_willy_stats.py"
 
 permissions:
   contents: write
@@ -38,10 +35,26 @@ jobs:
       - name: Actualizar instantáneas con proveedor documentado
         if: env.API_FOOTBALL_KEY != ''
         continue-on-error: true
-        run: python scripts/update_willy_stats.py
+        run: python scripts/update_willy_stats.py --season 2024
       - name: Explicar configuración faltante
         if: env.API_FOOTBALL_KEY == ''
         run: echo "No existe el secreto API_FOOTBALL_KEY. No se han creado ni simulado datos."
+      - name: Validar que exista al menos un registro deportivo real
+        if: env.API_FOOTBALL_KEY != ''
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          f=Path("site/futbol/data/snapshot.json")
+          data=json.loads(f.read_text(encoding="utf-8"))
+          active={key:v for key,v in data.get("competitions",{}).items()
+                  if str(v.get("season"))=="2024"
+                  and (any(g.get("rows") for g in v.get("groups",[]))
+                       or v.get("results"))}
+          if not active:
+              raise SystemExit("No se obtuvo ningún registro real de 2024; no se publicará.")
+          print("Ligas con registros reales de 2024:",", ".join(sorted(active)))
+          PY
       - name: Versionar solamente si hay datos nuevos
         if: env.API_FOOTBALL_KEY != ''
         run: |
