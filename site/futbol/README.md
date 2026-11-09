@@ -1,32 +1,54 @@
-# Cancha
+# Willy Stats.
 
-Producto independiente en `site/futbol/`, sin imports, navegación, estilos ni cambios en Liga 1. HTML, CSS y JavaScript sin compilación. Fuentes tipográficas externas opcionales con alternativas locales. Los emblemas son monogramas decorativos, no escudos oficiales.
+Interfaz independiente de Liga 1, implementada con **React 19, Tailwind CSS 4 y Vite**. Código fuente: `apps/willy-stats/`. Distribución compilada: `site/futbol/`, publicada en `/taller-estadistica-garrita/futbol/`. No modifica el sitio de Liga 1.
 
-Desde la raíz del repositorio:
+## Desarrollo y compilación
 
 ```sh
-python3 -m http.server 8000 --directory site/futbol --bind 127.0.0.1
+cd apps/willy-stats
+npm ci
+npm run dev
+npm test
+npm run build
 ```
 
-Las 13 competiciones tienen una demostración explícitamente ficticia: clubes ilustrativos, resultados reproducibles y partidos ilustrativos futuros. No es una lista oficial de participantes de una temporada. La simulación respeta PJ = G + E + P, DG = GF − GC y puntos = 3G + E. No se modelan calendarios oficiales, cupos extra ni desempates específicos. Las zonas son orientativas; no se infiere descenso desde fases de Perú, Argentina, Colombia o Ecuador.
+`build` genera HTML y recursos versionados dentro de `site/futbol/`. Conserva `flags/`, `icon.svg` y la instantánea de datos existente; no descarga ni reemplaza datos publicados. El servidor de desarrollo sirve esos recursos locales. La distribución se versiona para que el flujo actual de GitHub Pages pueda publicarla sin agregar Node a los workflows existentes. Tipografías de Google Fonts con alternativas locales.
 
-## Datos publicados
-
-```sh
-python3 scripts/update_cancha.py
-# Una competición, sin escribir en el sitio:
-python3 scripts/update_cancha.py --league eng --output /tmp/cancha-snapshot.json
-```
-
-Requiere HTTPS hacia `site.web.api.espn.com` (posiciones) y `site.api.espn.com` (próximos 14 días). Sin claves de API. ESPN es un proveedor externo sin garantía de disponibilidad ni estabilidad de esquema. Se conservan grupos separados y la última instantánea válida por competición ante errores. Si cualquier consulta falla, el comando sale con código 1; no publica datos ficticios como reales. El archivo inicial está vacío porque el acceso al proveedor está bloqueado en el entorno de desarrollo.
-
-Después de descargar datos y desplegar el directorio, selecciona «Fuente publicada». El proveedor determina el orden y los puntos, incluidas deducciones. No se infieren zonas oficiales desde los datos de ESPN; las zonas orientativas corresponden solo al modo demostración. Resultados de forma reciente no disponibles aparecen como —. Los horarios se muestran en Lima. No es tiempo real: volver a ejecutar el actualizador refresca la instantánea, y la interfaz muestra cuándo se consultó. No se han modificado los workflows existentes ni se ha desplegado el proyecto.
-
-El archivo histórico tiene cortes explícitos: Libertadores y Champions al 1 de junio de 2024; títulos nacionales al 31 de diciembre de 2024. Los enlaces de origen están en la interfaz. No se presenta como palmarés actual ni como clasificación de todos los trofeos continentales.
-
-Favoritos locales sin cuenta. Búsqueda, filtros, detalles de equipo, fases, calendario y vistas accesibles con teclado. Para validar en un entorno con Playwright y Chromium del sistema:
+Desde la raíz, para verificar la distribución como en Pages:
 
 ```sh
+python3 -m http.server 8000 --directory site
 node --require /workspace/.onboarding-garrita/chromium.cjs scripts/check_cancha.cjs
 python3 -m unittest discover -s scripts -p test_cancha_provider.py -v
 ```
+
+## Funciones
+
+14 competiciones; filtro por continente; métricas de goles por partido; tabla General, Local y Visitante; búsqueda; favoritos persistentes; detalle de equipo; efectividad; gráfico de ataque/defensa; calendario y resultados ficticios; formatos; comparador de tres ligas con selección; archivo histórico con fechas de corte y enlaces; metodología desplegable. React mantiene estados reales para todas las interacciones.
+
+## Integridad y límites
+
+Demostración explícitamente ficticia. Los 14 escenarios se calculan desde partidos reproducibles. PJ = G + E + P, PTS = 3G + E, DG = GF − GC, goles globales a favor = goles en contra. Local + Visitante reconstruye General. El ejemplo de Universitario es exactamente 12 PJ, 9 G, 2 E, 1 P, 24 GF, 7 GC, +17 DG, 29 puntos, 80.6% de efectividad y últimos cinco V–V–E–V–V. El escolta tiene 26 puntos.
+
+La efectividad local de ese escenario es **88.9%** (16/18 puntos). El 94.4% solicitado en el boceto no es compatible con los seis partidos locales de ese balance. Se muestra el dato calculado.
+
+ICL = 10 × (1 − 0.4 × σ/μ), limitado a [0,10], sobre puntos por partido. Perú muestra 8.4. Mide paridad en la tabla, no calidad entre ligas.
+
+Proyección de puntos: puntos actuales más restantes por puntos/partido, con horizonte de una vuelta (N−1), o 8 para UEFA. El peso de título ilustrativo normaliza exp(β × puntos/partido). β se calibra para reproducir 68.4% en el ejemplo peruano; no se ajusta con resultados históricos, no es un modelo validado ni una probabilidad del campeonato oficial. Universitario proyecta 41 puntos. Todo está explicado en la interfaz.
+
+**xG no disponible**: faltan eventos de tiros y un modelo calibrado. No se inventa xG desde goles observados. Los formatos con fases tienen advertencias; las tablas de demostración son agregadas y no son grupos oficiales ni tablas de promedios. Zonas orientativas; copas, sanciones y reglamentos pueden cambiar los cupos.
+
+El archivo Libertadores y Champions tiene corte 1 de junio de 2024. No es el palmarés actual.
+
+## Fuentes publicadas
+
+```sh
+python3 scripts/update_cancha.py
+python3 scripts/update_cancha.py --league eng --output /tmp/willy-snapshot.json
+```
+
+Requiere HTTPS a `site.web.api.espn.com` y `site.api.espn.com`; sin claves. Selecciona «Fuente publicada» para leer `data/snapshot.json`. No mezcla datos reales con demostración: si falta una instantánea, muestra un estado vacío. El actualizador conserva la última instantánea por competición si la consulta falla y devuelve código 1. Grupos publicados se seleccionan por separado; las vistas Local/Visitante están desactivadas cuando la fuente no trae desglose. No se asignan zonas oficiales por inferencia. No es tiempo real.
+
+## Escudos e insignias
+
+Los clubes usan imágenes reales locales indexadas por competición y nombre exacto, no monogramas ni coincidencia aproximada. `crests/manifest.json` conserva la procedencia y SHA-256; `crests/SOURCES.md` detalla las colecciones. Los PNG se optimizan a 128 píxeles conservando aspecto. Un escudo no identificado muestra un indicador neutral, sin atribuirle la imagen de otro club. El actualizador de escudos intenta resolver cuatro identidades adicionales por ID ESPN durante el despliegue. Las cuatro copas tienen ilustraciones SVG propias basadas en la silueta de su trofeo; no son logotipos oficiales.

@@ -1,2 +1,4 @@
 __pycache__/
 *.pyc
+
+apps/willy-stats/node_modules/

@@ -1,57 +1,37 @@
-/* Pruebas funcionales de Cancha. El servidor es exclusivo de esta prueba. */
+/* Integración de Willy Stats en su ruta publicada /futbol/. */
 const assert=require('node:assert/strict');
 const {spawn}=require('node:child_process');
 const {chromium}=require('playwright');
-const server=spawn('python3',['-m','http.server','8777','--bind','127.0.0.1','--directory','site/futbol'],{stdio:'ignore'});
-(async()=>{
- let browser;
- try{
-  for(let i=0;i<50;i++){try{if((await fetch('http://127.0.0.1:8777/')).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
-  browser=await chromium.launch();
-  const page=await browser.newPage({viewport:{width:1440,height:1000}});
-  const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('http://127.0.0.1:8777/',{waitUntil:'networkidle'});
-  assert.equal(await page.locator('.competition').count(),13);
-  const ids=await page.locator('.competition').evaluateAll(bs=>bs.map(b=>b.dataset.league));
-  for(const id of ids){
-   await page.locator(`[data-league="${id}"]`).click();
-   assert.match(await page.locator('#data-note').innerText(),/FICTICIOS|ficticios/);
-   const count=await page.locator('#standings tr').count();assert(count>=4,id+' tabla vacía');
-   const rows=await page.locator('#standings tr').evaluateAll(rs=>rs.map(r=>[...r.cells].slice(2,8).map(c=>Number(c.textContent))));
-   for(const [pj,g,e,p,dg,pts] of rows){assert.equal(pj,g+e+p);assert.equal(pts,3*g+e);}
-  }
-  await page.locator('[data-league="sud"]').click();assert.equal(await page.locator('#stage-filter option').count(),8);
-  const first=await page.locator('.team-button').first().innerText();await page.locator('#stage-filter').selectOption('1');assert.notEqual(await page.locator('.team-button').first().innerText(),first);
-  await page.locator('[data-league="per"]').click();
-  await page.locator('.star').first().click();assert.equal(await page.locator('#saved-count').innerText(),'1');
-  await page.locator('#zone-filter').selectOption('favorite');assert.equal(await page.locator('#standings tr').count(),1);
-  await page.locator('.team-button').first().click();await page.locator('#team-dialog').waitFor({state:'visible'});assert.equal(await page.locator('.detail-stats div').count(),6);await page.keyboard.press('Escape');
-  await page.reload({waitUntil:'networkidle'});assert.equal(await page.locator('#saved-count').innerText(),'1');
-  await page.locator('#team-search').fill('equipo inexistente');assert.equal(await page.locator('#standings tr').count(),0);assert(await page.locator('#table-empty').isVisible());await page.locator('#team-search').fill('');
-  await page.locator('#tab-fixtures').click();assert((await page.locator('.fixture').count())>0);
-  await page.locator('#tab-guide').click();assert.match(await page.locator('#guide-view').innerText(),/Perú/);
-  await page.locator('#data-mode').selectOption('verified');await page.locator('#tab-table').click();assert.equal(await page.locator('#standings tr').count(),0);assert.match(await page.locator('#table-empty').innerText(),/publicadas/);
-  await page.locator('#data-mode').selectOption('demo');
-  await page.locator('[data-history="europa"]').click();assert.match(await page.locator('#history-content').innerText(),/Real Madrid/);
-  await page.locator('[data-history="paises"]').click();assert.equal(await page.locator('.country-grid article').count(),6);
-  await page.locator('#about-data').click();assert(await page.locator('#data-dialog').isVisible());await page.keyboard.press('Escape');
-  for(const width of [390,768,1440]){
-   await page.setViewportSize({width,height:960});
-   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),width+' desborde horizontal');
-  }
-  await page.screenshot({path:'/tmp/cancha-desktop.png',fullPage:true});
-  await page.setViewportSize({width:390,height:844});await page.screenshot({path:'/tmp/cancha-mobile.png',fullPage:true});
-  // Instantánea de prueba aislada: verifica el contrato de datos sin simular acceso real a ESPN.
-  const row={name:'Club de prueba',rank:1,pj:3,g:2,e:1,p:0,gf:5,gc:2,dg:3,pts:6,form:[],zone:'none'};
-  await page.route('**/data/snapshot.json',route=>route.fulfill({json:{schema_version:1,competitions:{per:{season:'Prueba aislada',updated_at:'2026-11-09T12:00:00Z',source:'https://www.espn.com/',groups:[{name:'Grupo A',rows:[row]},{name:'Grupo B',rows:[{...row,name:'Segundo grupo'}]}],fixtures:[]}}}}));
-  await page.reload({waitUntil:'networkidle'});
-  await page.locator('#data-mode').selectOption('verified');
-  assert.match(await page.locator('#data-note').innerText(),/Prueba aislada/);
-  assert.equal(await page.locator('.points').innerText(),'6');
-  await page.locator('#stage-filter').selectOption('1');
-  assert.match(await page.locator('.team-button').innerText(),/Segundo grupo/);
-  await page.unroute('**/data/snapshot.json');
-  assert.deepEqual(errors,[]);
-  console.log('OK: 13 competiciones; coherencia de tablas ficticias; grupos Sudamericana; favoritos persistentes; filtros; detalles; calendario; reglas; fuente vacía; historia; móvil/tableta/escritorio.');
- }finally{if(browser)await browser.close();server.kill('SIGTERM');}
-})().catch(e=>{console.error(e);process.exitCode=1;});
+const server=spawn('python3',['-m','http.server','8780','--bind','127.0.0.1','--directory','site'],{stdio:'ignore'});
+(async()=>{let browser;try{
+ for(let i=0;i<40;i++){try{if((await fetch('http://127.0.0.1:8780/futbol/')).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
+ browser=await chromium.launch();const p=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[],bad=[];
+ p.on('pageerror',e=>errors.push(e.message));p.on('response',r=>{if(r.url().includes('127.0.0.1')&&r.status()>=400)bad.push(r.url());});
+ await p.goto('http://127.0.0.1:8780/futbol/',{waitUntil:'networkidle'});
+ await p.getByRole('heading',{name:'¿Dónde analizamos hoy?'}).waitFor();
+ assert.equal(await p.locator('.competition').count(),14);
+ await p.waitForFunction(()=>document.querySelector('.club-crest')?.complete&&document.querySelector('.club-crest')?.naturalWidth>0);
+ for(const [id,trophy] of [['lib','libertadores'],['sud','sudamericana'],['ucl','champions'],['uel','europa']]){const image=p.locator(`[data-league="${id}"] .trophy-insignia`);assert((await image.getAttribute('src')).includes(trophy));assert(await image.evaluate(i=>i.complete&&i.naturalWidth>0));}
+
+ const peru=await p.locator('tbody tr').first().innerText();assert.match(peru,/Universitario/);assert.match(peru,/80.6%/);assert.match(peru,/\+17/);
+ assert.match(await p.locator('.analysis-body').innerText(),/3 puntos de ventaja/);assert.match(await p.locator('.analysis-body').innerText(),/0.58/);
+ assert.equal(await p.locator('.projection-grid strong').first().innerText(),'68.4%');
+ for(const id of ['eng','esp','per']){await p.locator(`[data-league="${id}"]`).click();const title=await p.locator('.league-identity h3').innerText();assert(title.length>0);const leader=await p.locator('.club-name>span:last-child').first().innerText();assert((await p.locator('.analysis-card h3').innerText()).includes(leader.trim()));}
+ const general=await p.locator('tbody tr').first().innerText();await p.getByLabel('Vista de la tabla').selectOption('home');assert.notEqual(await p.locator('tbody tr').first().innerText(),general);await p.getByLabel('Vista de la tabla').selectOption('all');
+ await p.locator('.club-search input').fill('Universitario');assert.equal(await p.locator('tbody tr').count(),1);
+ await p.locator('.save-team').first().click();assert.match(await p.locator('.favorite-pill').innerText(),/1/);await p.locator('.club-name').first().click();assert(await p.locator('.team-dialog').isVisible());await p.keyboard.press('Escape');await p.locator('.club-search input').fill('');
+ await p.getByRole('tab',{name:'Rendimiento Avanzado'}).click();assert(await p.locator('.advanced-panel svg[role="img"]').isVisible());
+ await p.getByRole('tab',{name:'Calendario y Resultados'}).click();assert((await p.locator('.fixture').count())>0);await p.locator('.fixture-panel').getByRole('button',{name:'Resultados',exact:true}).click();assert.match(await p.locator('.fixture-time').first().innerText(),/FINAL/);
+ await p.getByRole('tab',{name:'Formato',exact:true}).click();assert.match(await p.locator('.format-panel').innerText(),/Apertura/);
+ await p.getByRole('button',{name:'Europa',exact:true}).click();assert.equal(await p.locator('.competition').count(),7);assert.equal(await p.locator('.competition [alt="Bandera de Perú"]').count(),0);
+ await p.getByRole('button',{name:'América',exact:true}).click();assert.equal(await p.locator('.competition').count(),7);await p.getByRole('button',{name:'Todas',exact:true}).click();
+ await p.getByLabel('Competición a comparar 1').selectOption('eng');assert.match(await p.locator('.compare-card').first().innerText(),/Inglaterra/);
+ await p.locator('.history-section').getByRole('button',{name:'Champions',exact:true}).click();assert.match(await p.locator('.history-grid').innerText(),/Real Madrid/);
+ await p.getByLabel('Temporada y fuente').selectOption('published');await p.getByRole('tab',{name:'Tabla de posiciones'}).click();assert.equal(await p.locator('tbody tr').count(),0);assert.match(await p.locator('.empty-state').innerText(),/publicada/);await p.getByLabel('Temporada y fuente').selectOption('demo');
+ await p.reload({waitUntil:'networkidle'});assert.match(await p.locator('.favorite-pill').innerText(),/1/);
+ for(const width of [390,768,1440]){await p.setViewportSize({width,height:1000});assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`Desborde ${width}`);}
+ await p.locator('[data-league="per"]').click();await p.evaluate(()=>window.scrollTo(0,0));await p.screenshot({path:'/tmp/willy-stats-desktop.png',fullPage:true});
+ await p.setViewportSize({width:390,height:844});await p.screenshot({path:'/tmp/willy-stats-mobile.png',fullPage:true});
+ assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);
+ console.log('OK: React en /futbol/, ligas dinámicas, métricas, General/Local/Visitante, búsqueda, favoritos persistentes, detalle, gráfico, calendario/resultados, formatos, continentes, comparador, historia, fuente vacía, responsive y recursos sin errores.');
+}finally{if(browser)await browser.close();server.kill();}})().catch(e=>{console.error(e);process.exitCode=1;});

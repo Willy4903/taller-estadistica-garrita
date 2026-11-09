@@ -79,11 +79,15 @@ jobs:
         continue-on-error: true
         run: python scripts/fetch_liga1_players.py
 
+      - name: Completar escudos verificados de Willy Stats
+        continue-on-error: true
+        run: python scripts/update_cancha_crests.py
+
       - name: Guardar datos en el repositorio
         run: |
           git config user.name "ia-radar-bot"
           git config user.email "ia-radar-bot@users.noreply.github.com"
-          git add site/data site/history site/liga1/data site/liga1/img site/visual/photos
+          git add site/data site/history site/liga1/data site/liga1/img site/visual/photos site/futbol/crests
           if git diff --cached --quiet; then
             echo "Sin cambios en los datos"
           else
