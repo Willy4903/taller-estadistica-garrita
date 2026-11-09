@@ -30,7 +30,7 @@ const FORM={V:['bg-[#22C55E] text-[#04210F]','Victoria'],E:['bg-[#EAB308] text-[
 export function Form({values=[]}){
   if(!values.length)return <span className="text-gray-600">—</span>;
   return <span className="inline-flex gap-1" role="img" aria-label={`Últimos resultados: ${values.join(', ')}`}>
-    {values.map((v,i)=>{const [cls,title]=FORM[v]||FORM.E;return <span key={i} title={title} className={`grid h-6 w-6 place-items-center rounded-full font-mono text-[10px] font-bold ${cls}`}>{v}</span>;})}
+    {values.map((v,i)=>{const [cls,title]=FORM[v]||FORM.E;return <span key={i} title={title} className={`grid h-7 w-7 place-items-center rounded-full font-mono text-xs font-bold ${cls}`}>{v}</span>;})}
   </span>;
 }
 
