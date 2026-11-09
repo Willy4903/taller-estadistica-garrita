@@ -121,6 +121,14 @@ jobs:
         with:
           enablement: true
 
+      - name: Incorporar la última captura deportiva antes de publicar
+        run: |
+          git fetch origin main
+          git restore --source=origin/main -- site/futbol/data/snapshot.json
+          if git cat-file -e origin/main:site/futbol/data/health.json 2>/dev/null; then
+            git restore --source=origin/main -- site/futbol/data/health.json
+          fi
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

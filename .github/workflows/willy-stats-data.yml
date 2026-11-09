@@ -14,15 +14,12 @@ permissions:
   pages: write
   id-token: write
 concurrency:
-  group: pages
+  group: willy-current-fetch
   cancel-in-progress: false
 jobs:
-  publish-data:
+  refresh-data:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -58,6 +55,19 @@ jobs:
               raise SystemExit('No se recibieron tablas actuales válidas. Revisar data/health.json; no se publica una página vacía como actualizada.')
           print('Competiciones con datos actuales:', ', '.join(sorted(current)))
           PY
+  publish-data:
+    needs: refresh-data
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
