@@ -20,8 +20,12 @@ EUROPE = {'ita', 'esp', 'eng', 'ger', 'fra', 'ucl', 'uel'}
 
 
 def fetch(url):
-    with urlopen(Request(url, headers={'User-Agent': 'Mozilla/5.0 (compatible; WillyStats/1.0)', 'Accept': 'application/json'}), timeout=25) as response:
-        return json.load(response)
+    try:
+        with urlopen(Request(url, headers={'User-Agent': 'Mozilla/5.0 (compatible; WillyStats/1.0)', 'Accept': 'application/json'}), timeout=25) as response:
+            return json.load(response)
+    except HTTPError as error:
+        detail = error.read(400).decode('utf-8', errors='replace')
+        raise ValueError(f'HTTP {error.code}: {detail[:250]}') from error
 
 
 def expected_season(league, now):
@@ -41,7 +45,7 @@ def season_info(payload, expected):
         match = re.search(r'\b(20\d{2})\b', label)
         year = int(match[1]) if match else None
     if year is None or int(year) != expected:
-        raise ValueError(f'Temporada de la respuesta {year!r}; se requiere {expected}')
+        raise ValueError(f'Temporada de la respuesta {year!r}; se requiere {expected}. Metadata: {selected!r}; campos: {list(payload)[:12]}')
     return str(label or expected), int(year)
 
 
@@ -127,9 +131,19 @@ def normalize_fixtures(payload, now, upcoming=True):
 
 def refresh(league, now):
     code, season = CODES[league], expected_season(league, now)
-    endpoint = f'https://site.web.api.espn.com/apis/v2/sports/soccer/{code}/standings?season={season}'
-    payload = fetch(endpoint)
-    label, year = season_info(payload, season)
+    routes = [f'https://site.api.espn.com/apis/v2/sports/soccer/{code}/standings?season={season}',
+              f'https://site.api.espn.com/apis/v2/sports/soccer/{code}/standings',
+              f'https://site.web.api.espn.com/apis/v2/sports/soccer/{code}/standings?region=us&lang=en&contentorigin=espn&season={season}']
+    errors = []
+    for endpoint in routes:
+        try:
+            payload = fetch(endpoint)
+            label, year = season_info(payload, season)
+            break
+        except Exception as error:
+            errors.append(str(error))
+    else:
+        raise ValueError(' / '.join(errors))
     groups = normalize_standings(payload)
     base = f'https://site.api.espn.com/apis/site/v2/sports/soccer/{code}/scoreboard?limit=1000&dates='
     future = fetch(base + now.strftime('%Y%m%d') + '-' + (now + timedelta(days=21)).strftime('%Y%m%d'))
