@@ -72,6 +72,38 @@ class WillyStatsTests(unittest.TestCase):
                 w.update(path,"",["eng"])
             self.assertEqual(json.loads(path.read_text()),previous)
 
+    def test_free_archive_uses_no_restricted_last_parameter(self):
+        with tempfile.TemporaryDirectory() as d:
+            path=Path(d)/"snapshot.json"
+            catalog=[{"league":{"id":39,"name":"Premier League"},
+                      "country":{"name":"England"},
+                      "seasons":[{"year":2024,"current":False},
+                                 {"year":2026,"current":True}]}]
+            table=[{"league":{"standings":[[
+                {"team":{"name":"Club A"},"rank":1,
+                 "all":{"played":1,"win":1,"draw":0,"lose":0,
+                        "goals":{"for":2,"against":0}},
+                 "points":3,"form":"W"}]]}}]
+            games=[{"fixture":{"id":10,"date":"2025-05-01T12:00:00Z",
+                               "status":{"short":"FT"}},
+                    "teams":{"home":{"name":"Club A"},"away":{"name":"Club B"}},
+                    "goals":{"home":2,"away":0}}]
+            def fake_get(endpoint,params,key):
+                if endpoint=="leagues": return catalog
+                if endpoint=="standings": return table
+                if endpoint=="fixtures":
+                    self.assertEqual(params,{"league":39,"season":2024})
+                    return games
+                raise AssertionError(endpoint)
+            with patch.object(w,"api_get",side_effect=fake_get):
+                self.assertEqual(w.update(path,"test-key",["eng"],2024),0)
+            saved=json.loads(path.read_text())["competitions"]["eng"]
+            self.assertEqual(saved["season"],"2024")
+            self.assertTrue(saved["historical"])
+            self.assertEqual(saved["results"][0]["hg"],2)
+            self.assertEqual(len(saved["groups"][0]["rows"]),1)
+            self.assertEqual(saved["fixtures"],[])
+
     def test_bad_new_data_preserves_old_snapshot(self):
         with tempfile.TemporaryDirectory() as d:
             path=Path(d)/"snapshot.json"
