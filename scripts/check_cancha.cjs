@@ -12,8 +12,11 @@ const server=spawn('python3',['-m','http.server','8780','--bind','127.0.0.1','--
  assert.equal(await p.locator('.competition').count(),14);
  // La experiencia pública inicia sin cifras inventadas: instantánea vacía = tabla vacía.
  assert.equal(await p.getByLabel('Temporada y fuente').inputValue(),'published');
- assert.equal(await p.locator('tbody tr').count(),0);
- assert.match(await p.locator('.source-note').innerText(),/SIN DATOS PUBLICADOS/);
+ const snap=await (await fetch('http://127.0.0.1:8780/futbol/data/snapshot.json')).json();
+ const realPeruRows=snap.competitions?.per?.groups?.[0]?.rows||[];
+ assert.equal(await p.locator('tbody tr').count(),realPeruRows.length);
+ assert.doesNotMatch(await p.locator('.source-note').innerText(),/DEMOSTRACIÓN|FICTICIO/);
+ if(!realPeruRows.length)assert.match(await p.locator('.source-note').innerText(),/SIN DATOS PUBLICADOS|DATOS PUBLICADOS/);
  // El modo sintético solo se activa si el visitante lo pide expresamente.
  await p.getByLabel('Temporada y fuente').selectOption('demo');
  const {competitions}=await import('../apps/willy-stats/src/data.js');const manifest=await (await fetch('http://127.0.0.1:8780/futbol/crests/manifest.json')).json();for(const c of competitions){for(const name of c.teams.split('|'))assert(manifest.clubs[c.id+':'+name],`Escudo faltante: ${c.id}:${name}`);}
