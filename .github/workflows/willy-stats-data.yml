@@ -1,93 +1,66 @@
-name: Willy Stats - datos deportivos verificables
-
+name: Willy Stats - datos deportivos actuales
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/willy-stats-data.yml"
-      - "scripts/update_willy_stats.py"
-
+      - .github/workflows/willy-stats-data.yml
+      - scripts/update_cancha.py
+  schedule:
+    # Cada tres horas; son instantáneas, no un marcador en vivo.
+    - cron: '17 */3 * * *'
 permissions:
   contents: write
   pages: write
   id-token: write
-
 concurrency:
-  group: willy-stats-data
+  group: pages
   cancel-in-progress: false
-
 jobs:
   publish-data:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    env:
-      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-      API_FOOTBALL_MIN_INTERVAL: '6.5'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-      - name: Validar parser y esquema sin llamadas de red
-        run: python -m unittest discover -s scripts -p test_willy_stats.py -v
-      - name: Actualizar instantáneas con proveedor documentado
-        if: env.API_FOOTBALL_KEY != ''
+          python-version: '3.12'
+      - name: Validar integridad del proveedor sin red
+        run: python -m unittest discover -s scripts -p test_cancha_provider.py -v
+      - name: Consultar tablas y partidos de las temporadas vigentes
         continue-on-error: true
-        run: python scripts/update_willy_stats.py --season 2024
-      - name: Explicar configuración faltante
-        if: env.API_FOOTBALL_KEY == ''
-        run: echo "No existe el secreto API_FOOTBALL_KEY. No se han creado ni simulado datos."
-      - name: Validar que exista al menos un registro deportivo real
-        if: env.API_FOOTBALL_KEY != ''
+        run: python scripts/update_cancha.py
+      - name: Guardar capturas verificadas y estado de cada fuente
         run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          f=Path("site/futbol/data/snapshot.json")
-          data=json.loads(f.read_text(encoding="utf-8"))
-          active={key:v for key,v in data.get("competitions",{}).items()
-                  if str(v.get("season"))=="2024"
-                  and (any(g.get("rows") for g in v.get("groups",[]))
-                       or v.get("results"))}
-          if not active:
-              raise SystemExit("No se obtuvo ningún registro real de 2024; no se publicará.")
-          print("Ligas con registros reales de 2024:",", ".join(sorted(active)))
-          PY
-      - name: Versionar solamente si hay datos nuevos
-        if: env.API_FOOTBALL_KEY != ''
-        run: |
-          git config user.name "willy-stats-data-bot"
-          git config user.email "willy-stats-data-bot@users.noreply.github.com"
-          git add site/futbol/data/snapshot.json
-          if git diff --cached --quiet; then
-            echo "Sin cambios verificables."
-          else
-            git commit -m "Actualizar instantáneas reales Willy Stats"
+          git config user.name 'willy-stats-data-bot'
+          git config user.email 'willy-stats-data-bot@users.noreply.github.com'
+          git add site/futbol/data/snapshot.json site/futbol/data/health.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Actualizar datos deportivos actuales y estado de fuentes'
             git pull --rebase origin main
             git push origin main
           fi
-      - uses: actions/setup-node@v4
-        if: env.API_FOOTBALL_KEY != ''
-        with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: apps/willy-stats/package-lock.json
-      - name: Compilar Willy Stats para GitHub Pages
-        if: env.API_FOOTBALL_KEY != ''
+      - name: Exigir datos actuales antes de publicar
         run: |
-          cd apps/willy-stats
-          npm ci
-          npm test
-          npm run build
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+          data=json.loads(Path('site/futbol/data/snapshot.json').read_text())
+          now=datetime.now(timezone.utc)
+          current={k:v for k,v in data['competitions'].items() if v.get('historical') is False
+                   and any(g.get('rows') for g in v.get('groups', []))
+                   and datetime.fromisoformat(v['updated_at']) >= now-timedelta(hours=24)}
+          if not current:
+              raise SystemExit('No se recibieron tablas actuales válidas. Revisar data/health.json; no se publica una página vacía como actualizada.')
+          print('Competiciones con datos actuales:', ', '.join(sorted(current)))
+          PY
       - uses: actions/configure-pages@v5
-        if: env.API_FOOTBALL_KEY != ''
       - uses: actions/upload-pages-artifact@v3
-        if: env.API_FOOTBALL_KEY != ''
         with:
           path: site
       - id: deployment
         uses: actions/deploy-pages@v4
-        if: env.API_FOOTBALL_KEY != ''

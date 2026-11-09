@@ -39,6 +39,28 @@ class ProviderTests(unittest.TestCase):
         self.assertEqual(len(games), 1)
         self.assertFalse(games[0]['demo'])
 
+    def test_season_must_match_provider_response(self):
+        label, year = provider.season_info({'seasons': [{'year': 2026, 'displayName': '2026-27'}]}, 2026)
+        self.assertEqual((label, year), ('2026-27', 2026))
+        with self.assertRaises(ValueError):
+            provider.season_info({'season': {'year': 2024}}, 2026)
+        with self.assertRaises(ValueError):
+            provider.season_info({}, 2026)
+
+    def test_calendar_year_vs_european_season(self):
+        now = datetime(2026, 2, 1, tzinfo=timezone.utc)
+        self.assertEqual(provider.expected_season('per', now), 2026)
+        self.assertEqual(provider.expected_season('eng', now), 2025)
+
+    def test_completed_scores_are_kept_and_upcoming_are_not_invented(self):
+        base = {'id': '1', 'date': '2026-11-08T20:00Z', 'status': {'type': {'state': 'post'}},
+                'competitors': [{'homeAway': 'home', 'score': '2', 'team': {'displayName': 'A', 'id': '10'}},
+                                {'homeAway': 'away', 'score': '1', 'team': {'displayName': 'B', 'id': '20'}}]}
+        now = datetime(2026, 11, 9, tzinfo=timezone.utc)
+        games = provider.normalize_fixtures({'events': [{'competitions': [base]}]}, now, False)
+        self.assertEqual((games[0]['hg'], games[0]['ag']), (2, 1))
+        self.assertFalse(provider.normalize_fixtures({'events': [{'competitions': [base]}]}, now, True))
+
     def test_failed_refresh_preserves_snapshot(self):
         with tempfile.TemporaryDirectory() as d:
             path = Path(d) / 'snapshot.json'
