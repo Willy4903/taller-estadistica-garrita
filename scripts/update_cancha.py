@@ -127,7 +127,7 @@ def normalize_fixtures(payload, now, upcoming=True):
 
 def refresh(league, now):
     code, season = CODES[league], expected_season(league, now)
-    endpoint = f'https://site.web.api.espn.com/apis/v2/sports/soccer/{code}/standings?season={season}'
+    endpoint = f'https://site.web.api.espn.com/apis/v2/sports/soccer/{code}/standings'
     payload = fetch(endpoint)
     label, year = season_info(payload, season)
     groups = normalize_standings(payload)
