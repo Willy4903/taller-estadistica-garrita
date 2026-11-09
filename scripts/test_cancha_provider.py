@@ -61,6 +61,22 @@ class ProviderTests(unittest.TestCase):
         self.assertEqual((games[0]['hg'], games[0]['ag']), (2, 1))
         self.assertFalse(provider.normalize_fixtures({'events': [{'competitions': [base]}]}, now, True))
 
+    def test_refresh_uses_supported_endpoint_and_validates_year(self):
+        urls=[]
+        def fake_fetch(url):
+            urls.append(url)
+            if '/standings' in url:
+                return {'season': {'year': 2026}, 'standings': {'entries': [entry('Club A')]}}
+            if '/scoreboard?' in url:
+                return {'events': []}
+            raise AssertionError(url)
+        with patch.object(provider,'fetch',side_effect=fake_fetch):
+            result=provider.refresh('eng',datetime(2026,11,9,tzinfo=timezone.utc))
+        self.assertEqual(result['season_year'],2026)
+        self.assertTrue(result['historical'] is False)
+        self.assertTrue(urls[0].endswith('/eng.1/standings'),urls[0])
+        self.assertEqual(len(urls),3)
+
     def test_failed_refresh_preserves_snapshot(self):
         with tempfile.TemporaryDirectory() as d:
             path = Path(d) / 'snapshot.json'
