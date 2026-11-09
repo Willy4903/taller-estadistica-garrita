@@ -61,7 +61,7 @@ def api_get(path, params, key):
         raise ValueError(f"Respuesta sin lista verificable en {path}")
     return data["response"]
 
-def select_league(catalog, code):
+def select_league(catalog, code, season_override=None):
     country, names = SELECTORS[code]
     matches = [item for item in catalog
                if token(item.get("league", {}).get("name", "")) in {token(n) for n in names}
@@ -71,11 +71,17 @@ def select_league(catalog, code):
     if len(unique) != 1:
         raise ValueError(f"{code}: {len(unique)} competiciones candidatas; no se selecciona por aproximación")
     item = next(iter(unique.values()))
-    current = [s["year"] for s in item.get("seasons", []) if s.get("current") is True
-               and isinstance(s.get("year"), int)]
-    if len(current) != 1:
-        raise ValueError(f"{code}: no hay una temporada actual inequívoca")
-    return integer(item["league"]["id"], "ID de liga", 1), current[0], item["league"]["name"]
+    seasons = item.get("seasons", [])
+    if season_override is not None:
+        selected = [s["year"] for s in seasons if s.get("year") == season_override]
+        if len(selected) != 1:
+            raise ValueError(f"{code}: la temporada {season_override} no figura en el catálogo")
+    else:
+        selected = [s["year"] for s in seasons if s.get("current") is True
+                    and isinstance(s.get("year"), int)]
+        if len(selected) != 1:
+            raise ValueError(f"{code}: no hay una temporada actual inequívoca")
+    return integer(item["league"]["id"], "ID de liga", 1), selected[0], item["league"]["name"]
 
 def normalize_standings(items):
     if not items:
@@ -140,7 +146,7 @@ def normalize_fixtures(events, upcoming):
                       "hg":hg, "ag":ag, "status":status, "demo":False})
     return sorted(games, key=lambda m: m["date"], reverse=not upcoming)
 
-def update(output, api_key, selected):
+def update(output, api_key, selected, season_override=None):
     if not api_key:
         raise ValueError("Falta API_FOOTBALL_KEY; no se publican datos sintéticos")
     old = json.loads(output.read_text(encoding="utf-8")) if output.exists() else {
@@ -151,9 +157,11 @@ def update(output, api_key, selected):
     failed = []
     for code in selected:
         try:
-            league_id, season, name = select_league(catalog, code)
+            league_id, season, name = select_league(catalog, code, season_override)
             standings = api_get("standings", {"league":league_id,"season":season}, api_key)
-            upcoming = api_get("fixtures", {"league":league_id,"season":season,"next":10}, api_key)
+            # Un torneo histórico terminado no puede tener próximos encuentros.
+            upcoming = [] if season < datetime.now(timezone.utc).year - 1 else api_get(
+                "fixtures", {"league":league_id,"season":season,"next":10}, api_key)
             previous = api_get("fixtures", {"league":league_id,"season":season,"last":10}, api_key)
             groups = normalize_standings(standings)
             fixtures = normalize_fixtures(upcoming, True)
@@ -162,7 +170,8 @@ def update(output, api_key, selected):
                 raise ValueError("Ningún dato verificable para la competición")
             old["competitions"][code] = {
                 "provider":"API-Football", "league_id":league_id,
-                "season":str(season), "source":"https://www.api-football.com/",
+                "season":str(season), "historical":season < datetime.now(timezone.utc).year - 1,
+                "source":"https://www.api-football.com/",
                 "updated_at":datetime.now(timezone.utc).isoformat(),
                 "groups":groups, "fixtures":fixtures, "results":results,
             }
@@ -179,10 +188,11 @@ def update(output, api_key, selected):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--league",choices=SELECTORS,action="append")
+    parser.add_argument("--season", type=int, help="Temporada explícita disponible en el plan; ej. 2024")
     parser.add_argument("--output",type=Path,default=DEST)
     args = parser.parse_args()
     try:
-        return update(args.output, os.environ.get("API_FOOTBALL_KEY",""),args.league or list(SELECTORS))
+        return update(args.output, os.environ.get("API_FOOTBALL_KEY",""),args.league or list(SELECTORS), args.season)
     except Exception as exc:
         print(f"ERROR GLOBAL: {exc}",file=sys.stderr)
         return 1

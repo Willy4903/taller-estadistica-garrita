@@ -33,17 +33,23 @@ El colector principal es `scripts/update_willy_stats.py`, que usa
 [API-Football](https://www.api-football.com/) mediante una clave almacenada en
 **Settings → Secrets and variables → Actions → New repository secret**
 con nombre `API_FOOTBALL_KEY` (nunca guardar la clave en git).
-El workflow `willy-stats-data.yml` actualiza una vez al día
-(presupuesto aproximado: 43 peticiones, siempre sujeto a la API y cobertura).
-Se puede activar manualmente con `workflow_dispatch`.
+El workflow `willy-stats-data.yml` descarga la temporada **2024** porque la
+clave gratuita ha respondido expresamente que solo permite temporadas
+**2022–2024**, aunque el panel comercial liste todas las ligas. El archivo
+2024 se presenta como histórico; **no es una clasificación 2026**.
+La captura se ejecuta al fusionar cambios en su workflow o script, o
+manualmente con `workflow_dispatch`. No se consultan diariamente los mismos
+datos históricos para evitar consumir innecesariamente la cuota.
 La ejecución diaria de `daily-update.yml` compila el frontend y publica los
 archivos bajo `site/futbol/` después de fusionar los cambios.
 
-El colector determina la temporada desde la metadata del proveedor y exige
+El colector puede determinar la temporada desde la metadata del proveedor
+cuando el plan lo permite; en el flujo Free fija explícitamente 2024 y exige
 coincidencia exacta de país/nombre de liga. Si no hay correspondencia inequívoca,
 no inventa una. Valida marcadores, puntos y participaciones; conserva la última
-captura real con su fecha original cuando falla. El frontend alerta si una
-instantánea tiene más de 36 horas. **No es una aplicación de marcadores minuto a minuto.**
+captura real con su fecha original cuando falla. El frontend identifica las capturas históricas por su año y advierte cuando
+una captura no histórica tiene más de 36 horas. **No es una aplicación de
+marcadores minuto a minuto.**
 
 El script ESPN preexistente permanece como referencia histórica, pero usa
 endpoints no oficiales; no forma parte del workflow nuevo. Si se desea publicar
