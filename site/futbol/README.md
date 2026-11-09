@@ -63,7 +63,7 @@ Pruebas offline: `python -m unittest discover -s scripts -p test_willy_stats.py 
 
 ## Funciones
 
-Rediseño oscuro. 16 competiciones con filtro por continente; tabla con búsqueda, favoritos persistentes y detalle de club con radar; pestañas Tabla, Rendimiento, Vista integrada y Partidos (por fecha, con navegación entre jornadas); análisis calculado con resultados reales (última fecha en números, tendencia de goles, partidos de alto impacto, rachas); comparador de tres ligas; índice de competitividad; metodología. Código en `apps/willy-stats/src/`.
+Rediseño oscuro. 16 competiciones con filtro por continente; tabla con búsqueda, favoritos persistentes y detalle de club con radar; pestañas Tabla, Rendimiento, Vista integrada y Partidos (por fecha, con navegación entre jornadas); análisis calculado con resultados reales (última fecha en números, tendencia de goles, partidos de alto impacto, rachas); comparador de tres ligas; paridad entre ligas con margen de error; metodología. Código en `apps/willy-stats/src/`.
 
 ## Integridad y límites
 
