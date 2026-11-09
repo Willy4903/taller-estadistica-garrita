@@ -5,6 +5,7 @@ No acepta temporadas anteriores a la solicitada. Conserva la última captura
 válida por liga si falla su actualización y registra el resultado de cada fuente.
 """
 import argparse
+import gzip
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 import json
@@ -19,13 +20,25 @@ CODES = dict(per='per.1', bra='bra.1', arg='arg.1', col='col.1', ecu='ecu.1', su
 EUROPE = {'ita', 'esp', 'eng', 'ger', 'fra', 'ucl', 'uel'}
 
 
+def _decode(response):
+    raw = response.read()
+    if raw[:2] == b'\x1f\x8b':
+        raw = gzip.decompress(raw)
+    return raw
+
+
 def fetch(url):
+    request = Request(url, headers={'User-Agent': 'Mozilla/5.0 (compatible; WillyStats/1.0)', 'Accept': 'application/json',
+                                    'Accept-Encoding': 'identity'})
     try:
-        with urlopen(Request(url, headers={'User-Agent': 'Mozilla/5.0 (compatible; WillyStats/1.0)', 'Accept': 'application/json'}), timeout=25) as response:
-            return json.load(response)
+        with urlopen(request, timeout=25) as response:
+            return json.loads(_decode(response).decode('utf-8'))
     except HTTPError as error:
-        detail = error.read(400).decode('utf-8', errors='replace')
-        raise ValueError(f'HTTP {error.code}: {detail[:250]}') from error
+        try:
+            detail = _decode(error)[:400].decode('utf-8', errors='replace')
+        except Exception:
+            detail = ''
+        raise ValueError(f'HTTP {error.code} en {url.split("?")[0]}: {detail[:250]}') from error
 
 
 def expected_season(league, now):
@@ -129,6 +142,20 @@ def normalize_fixtures(payload, now, upcoming=True):
     return sorted(games, key=lambda g: g['date'], reverse=not upcoming)
 
 
+def scoreboard(code, start, end, warnings):
+    """Partidos del rango. Si el proveedor los rechaza, la tabla se publica igual y queda el aviso."""
+    span = start.strftime('%Y%m%d') + '-' + end.strftime('%Y%m%d')
+    base = f'https://site.api.espn.com/apis/site/v2/sports/soccer/{code}/scoreboard'
+    failures = []
+    for query in (f'?limit=300&dates={span}', f'?dates={span}'):
+        try:
+            return fetch(base + query)
+        except Exception as error:
+            failures.append(str(error)[:200])
+    warnings.append(f'Partidos {span} no disponibles: ' + ' / '.join(failures))
+    return {'events': []}
+
+
 def refresh(league, now):
     code, season = CODES[league], expected_season(league, now)
     routes = [f'https://site.api.espn.com/apis/v2/sports/soccer/{code}/standings?season={season}',
@@ -145,9 +172,9 @@ def refresh(league, now):
     else:
         raise ValueError(' / '.join(errors))
     groups = normalize_standings(payload)
-    base = f'https://site.api.espn.com/apis/site/v2/sports/soccer/{code}/scoreboard?limit=1000&dates='
-    future = fetch(base + now.strftime('%Y%m%d') + '-' + (now + timedelta(days=21)).strftime('%Y%m%d'))
-    past = fetch(base + (now - timedelta(days=35)).strftime('%Y%m%d') + '-' + now.strftime('%Y%m%d'))
+    warnings = []
+    future = scoreboard(code, now, now + timedelta(days=21), warnings)
+    past = scoreboard(code, now - timedelta(days=35), now, warnings)
     results = normalize_fixtures(past, now, upcoming=False)
     for group in groups:
         for row in group['rows']:
@@ -161,7 +188,7 @@ def refresh(league, now):
     return {'provider': 'ESPN', 'season': label, 'season_year': year, 'historical': False,
             'source': f'https://www.espn.com/soccer/standings/_/league/{code}/season/{season}',
             'updated_at': now.isoformat(), 'groups': groups, 'default_group': default_group,
-            'fixtures': normalize_fixtures(future, now), 'results': results,
+            'fixtures': normalize_fixtures(future, now), 'results': results, 'warnings': warnings,
             'methodology': 'Orden y puntos del proveedor, incluidas sanciones. Últimos resultados de los 35 días consultados; no es un marcador en vivo.'}
 
 
