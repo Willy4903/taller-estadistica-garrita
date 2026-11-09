@@ -52,3 +52,15 @@ Requiere HTTPS a `site.web.api.espn.com` y `site.api.espn.com`; sin claves. Sele
 ## Escudos e insignias
 
 Los clubes usan imágenes reales locales indexadas por competición y nombre exacto, no monogramas ni coincidencia aproximada. `crests/manifest.json` conserva la procedencia y SHA-256; `crests/SOURCES.md` detalla las colecciones. Los PNG se optimizan a 128 píxeles conservando aspecto. Un escudo no identificado muestra un indicador neutral, sin atribuirle la imagen de otro club. Las 336 identidades de club del catálogo tienen un escudo asociado (los clubes repetidos en distintas competiciones comparten imagen). El actualizador de ESPN se conserva como respaldo para las cuatro identidades que necesitaron fuentes adicionales. Las cuatro copas tienen ilustraciones SVG propias basadas en la silueta de su trofeo; no son logotipos oficiales.
+
+## iPhone y pantallas táctiles
+
+Viewport con `viewport-fit=cover`, márgenes `safe-area-inset`, controles de 44 px e inputs de 16 px para evitar zoom al enfocar en iOS. Tabla móvil resumida con club, PJ, puntos y efectividad; botón «Todas las estadísticas» para acceder a las demás columnas con desplazamiento horizontal. Menú táctil, favoritos, detalles y gráficos conservan sus funciones en vertical y horizontal.
+
+Validación táctil local con Chromium:
+
+```sh
+node --require /workspace/.onboarding-garrita/chromium.cjs scripts/check_willy_iphone.cjs
+```
+
+El workflow `validate-willy-iphone.yml` ejecuta la misma suite con WebKit, motor usado por Safari, en seis tamaños de pantalla (320, 375, 390, 393, 430 y 844 px). Esto es emulación de navegador; no sustituye una prueba física del teléfono.

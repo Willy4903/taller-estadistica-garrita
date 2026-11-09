@@ -1,0 +1,45 @@
+name: Validar Willy Stats en iPhone (WebKit)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - apps/willy-stats/**
+      - site/futbol/**
+      - scripts/check_willy_iphone.cjs
+      - .github/workflows/validate-willy-iphone.yml
+  pull_request:
+    paths:
+      - apps/willy-stats/**
+      - site/futbol/**
+      - scripts/check_willy_iphone.cjs
+      - .github/workflows/validate-willy-iphone.yml
+permissions:
+  contents: read
+jobs:
+  iphone:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar Playwright y WebKit
+        run: |
+          npm install --prefix /tmp/willy-browser --no-save --package-lock=false playwright@1.62.1
+          node /tmp/willy-browser/node_modules/playwright/cli.js install --with-deps webkit
+      - name: Probar navegación táctil y tablas en seis tamaños de iPhone
+        env:
+          NODE_PATH: /tmp/willy-browser/node_modules
+          PW_ENGINE: webkit
+        run: node scripts/check_willy_iphone.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: willy-iphone-webkit
+          path: /tmp/willy-iphone-*.png
+          if-no-files-found: ignore
