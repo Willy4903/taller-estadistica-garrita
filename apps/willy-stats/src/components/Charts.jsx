@@ -29,12 +29,20 @@ export function GoalsTrend({trend}){
   </div>;
 }
 
-export function IclBars({items}){
-  return <ul className="space-y-2.5">
-    {items.map(({id,name,icl,continent})=><li key={id} className="grid grid-cols-[1fr_auto] items-center gap-3 text-sm">
-      <div><div className="mb-1 flex justify-between text-xs"><span className="text-gray-300">{name}</span><Num className="text-gray-400">{icl==null?'—':icl.toFixed(1)}</Num></div>
-        <div className="h-2 overflow-hidden rounded-full bg-[#1A212B]" role="img" aria-label={`${name}: ${icl==null?'sin datos':icl.toFixed(1)} sobre 10`}>{icl!=null&&<div className={`h-full rounded-full ${continent==='América'?'bg-[#22C55E]':'bg-[#F97316]'}`} style={{width:`${icl*10}%`}}/>}</div></div>
+const SCALE=1;
+/** Barra = diferencia típica de nivel (pts/partido); la línea fina es el margen de error. Más corta = más pareja. */
+export function ParityBars({items,activeId}){
+  const pct=v=>`${Math.min(100,v/SCALE*100)}%`;
+  return <ul className="space-y-3">
+    {items.map(({id,name,continent,p})=><li key={id} className={id===activeId?'rounded-lg bg-[#1A212B] p-2 -mx-2':''}>
+      <div className="mb-1 flex justify-between text-xs"><span className={id===activeId?'font-semibold text-white':'text-gray-300'}>{name}</span>
+        <Num className="text-gray-300">{p.level.toFixed(2)} <span className="text-gray-500">({p.low.toFixed(2)} a {p.high.toFixed(2)})</span></Num></div>
+      <div className="relative h-2 rounded-full bg-[#1A212B]" role="img" aria-label={`${name}: diferencia de nivel ${p.level.toFixed(2)} puntos por partido, rango ${p.low.toFixed(2)} a ${p.high.toFixed(2)}`}>
+        <div className={`h-full rounded-full ${continent==='América'?'bg-[#22C55E]':'bg-[#F97316]'}`} style={{width:pct(p.level)}}/>
+        <div className="absolute top-1/2 h-px -translate-y-1/2 bg-white/70" style={{left:pct(p.low),width:`calc(${pct(p.high)} - ${pct(p.low)})`}}/>
+        <div className="absolute top-1/2 h-2.5 w-px -translate-y-1/2 bg-white/70" style={{left:pct(p.low)}}/><div className="absolute top-1/2 h-2.5 w-px -translate-y-1/2 bg-white/70" style={{left:pct(p.high)}}/>
+      </div>
     </li>)}
-    <li className="flex gap-4 pt-1 text-xs text-gray-400"><span><i className="mr-1 inline-block h-2 w-2 rounded-sm bg-[#22C55E]"/>Sudamérica</span><span><i className="mr-1 inline-block h-2 w-2 rounded-sm bg-[#F97316]"/>Europa</span></li>
+    <li className="flex gap-4 pt-1 text-xs text-gray-400"><span><i className="mr-1 inline-block h-2 w-2 rounded-sm bg-[#22C55E]"/>América</span><span><i className="mr-1 inline-block h-2 w-2 rounded-sm bg-[#F97316]"/>Europa</span></li>
   </ul>;
 }

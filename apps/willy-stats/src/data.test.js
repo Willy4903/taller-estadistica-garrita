@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {competitions,metrics} from './data.js';
+import {competitions,parity,goalsPerMatch} from './data.js';
 import {matchdays,lastRound,highImpact,streaks} from './lib.js';
 
 const m=(id,home,away,date,hg=null,ag=null)=>({id,home,away,date,hg,ag,home_id:home,away_id:away});
@@ -9,11 +9,31 @@ test('16 competiciones con identificador único',()=>{
  assert.equal(competitions.length,16);
  assert.equal(new Set(competitions.map(c=>c.id)).size,16);
 });
-test('índice de competitividad: tabla pareja vale 10 y una dispareja menos',()=>{
- const even=[1,2,3,4].map(i=>({pj:10,pts:15,gf:10,gc:10}));
- assert.equal(metrics(even).icl,10);
- const uneven=[{pj:10,pts:30,gf:30,gc:5},{pj:10,pts:3,gf:5,gc:30}];
- assert(metrics(uneven).icl<10);
+const club=(i,g,e,p,gf=10,gc=10)=>({name:'C'+i,pj:g+e+p,g,e,p,pts:3*g+e,gf,gc});
+const league=(n,make)=>Array.from({length:n},(_,i)=>make(i));
+
+test('goles por partido cuenta cada partido una sola vez',()=>{
+ assert.equal(goalsPerMatch([{pj:2,gf:3},{pj:2,gf:1}]),2);
+});
+test('paridad: clubes idénticos no tienen diferencia de nivel',()=>{
+ const p=parity(league(12,i=>club(i,4,4,4)));
+ assert.equal(p.level,0);assert.equal(p.low,0);
+});
+test('paridad: una liga con clubes muy dispares tiene diferencia de nivel alta',()=>{
+ const rows=league(12,i=>i<6?club(i,10,1,1):club(i,1,1,10));
+ const p=parity(rows);
+ assert(p.level>0.8,`nivel ${p.level}`);assert(p.low<=p.level&&p.level<=p.high);
+});
+test('paridad: la misma dispersión pesa menos con pocos partidos (el azar la explica)',()=>{
+ // Misma dispersión de puntos por partido, observada en 10 y en 30 partidos por club.
+ const short=parity(league(12,i=>i%2?club(i,6,2,2):club(i,3,3,4)));
+ const long=parity(league(12,i=>i%2?club(i,18,6,6):club(i,9,9,12)));
+ assert(short.sdChance>long.sdChance);
+ assert(short.level<long.level);
+});
+test('paridad: tablas no comparables devuelven null',()=>{
+ assert.equal(parity(league(6,i=>club(i,10,5,5))),null);   // grupo de pocos clubes
+ assert.equal(parity(league(36,i=>club(i,2,1,1))),null);   // fase de liga con 4 partidos
 });
 test('matchdays separa jornadas cuando un club vuelve a aparecer',()=>{
  const days=matchdays([m(1,'A','B','2026-11-01T20:00Z'),m(2,'C','D','2026-11-02T20:00Z'),m(3,'A','C','2026-11-04T20:00Z'),m(4,'B','D','2026-11-05T20:00Z')]);
