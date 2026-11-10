@@ -125,7 +125,21 @@ jobs:
             echo "Sin cambios en los datos"
           else
             git commit -m "Actualización diaria de datos ($(date -u +%F))"
-            git pull --rebase origin main && git push
+            # La compilación modifica archivos publicados que no forman parte del commit de datos.
+            # Autostash los conserva durante el rebase y los restaura para el despliegue.
+            guardado=no
+            for intento in 1 2 3; do
+              if git pull --rebase --autostash origin main && git push; then
+                guardado=si
+                break
+              fi
+              if [ -n "$(git ls-files -u)" ]; then
+                echo "Conflicto de Git: se detiene la publicación para conservar ambos cambios." >&2
+                exit 1
+              fi
+              sleep 5
+            done
+            test "$guardado" = si
           fi
 
       - name: Generar páginas de guías, sitemap y robots
