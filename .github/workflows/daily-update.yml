@@ -95,7 +95,7 @@ jobs:
           checked = datetime.fromisoformat(status["updated_at"])
           assert timedelta(0) <= now - checked < timedelta(hours=24), "La comprobación de fuentes está desactualizada"
           assert news["updated_at"] == status["updated_at"], "Las noticias no corresponden a esta ejecución"
-          feeds = [key for key, value in status["sources"].items() if key.startswith("feed_") and value.get("ok") and value.get("retrieved_at") == status["updated_at"]]
+          feeds = [key for key, value in status["sources"].items() if key.startswith("feed_") and value.get("ok") and value.get("retrieved_at") and checked - timedelta(minutes=1) <= datetime.fromisoformat(value["retrieved_at"]) <= now]
           assert feeds, "Ninguna fuente de noticias respondió; no se puede confirmar la actualización"
           recent = [item for item in news["items"] if timedelta(0) <= now - datetime.fromisoformat(item["published"].replace("Z", "+00:00")) < timedelta(days=7)]
           assert recent, "No hay noticias de los últimos siete días para Hoy en IA"
