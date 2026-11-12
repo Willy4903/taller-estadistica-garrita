@@ -205,7 +205,11 @@ def refresh(league, now):
     groups = normalize_standings(payload, preserve_hierarchy=league == 'unl')
     warnings = []
     future = scoreboard(code, now, now + timedelta(days=21), warnings)
-    past = scoreboard(code, now - timedelta(days=35), now, warnings)
+    # International windows can be more than 35 days apart. Keep the edition's
+    # completed matches so Nations League does not lose its latest matchday
+    # between windows; domestic leagues retain their existing recent window.
+    past_start = datetime(year, 7, 1, tzinfo=timezone.utc) if league == 'unl' else now - timedelta(days=35)
+    past = scoreboard(code, past_start, now, warnings) if past_start <= now else {'events': []}
     results = normalize_fixtures(past, now, upcoming=False)
     for group in groups:
         for row in group['rows']:
@@ -216,11 +220,13 @@ def refresh(league, now):
     default_group = 0
     if league in ['per', 'arg', 'col'] and now.month >= 7:
         default_group = next((i for i, g in enumerate(groups) if 'clausura' in g['name'].casefold()), 0)
+    results_period = (f'Resultados de esta edición desde el {past_start:%d/%m/%Y}' if league == 'unl'
+                      else 'Últimos resultados de los 35 días consultados')
     return {'provider': 'ESPN', 'season': label, 'season_year': year, 'historical': False,
             'source': f'https://www.espn.com/soccer/standings/_/league/{code}/season/{season}',
             'updated_at': now.isoformat(), 'groups': groups, 'default_group': default_group,
             'fixtures': normalize_fixtures(future, now), 'results': results, 'warnings': warnings,
-            'methodology': 'Orden y puntos del proveedor, incluidas sanciones. Últimos resultados de los 35 días consultados; no es un marcador en vivo.'}
+            'methodology': f'Orden y puntos del proveedor, incluidas sanciones. {results_period}; no es un marcador en vivo.'}
 
 
 def atomic_json(path, data):

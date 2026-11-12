@@ -1,5 +1,5 @@
 """Contratos del proveedor: fases, sanciones, calendario y fallos sin pérdida de datos."""
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
 import tempfile
@@ -83,9 +83,14 @@ class ProviderTests(unittest.TestCase):
                     {'homeAway': 'home', 'score': home_score, 'team': {'displayName': 'Spain', 'id': '164'}},
                     {'homeAway': 'away', 'score': away_score, 'team': {'displayName': 'Portugal', 'id': '482'}}]}]}
 
+        calls = []
+
         def fake(url):
+            calls.append(url)
             if 'scoreboard' in url:
-                return {'events': [event('past', 'post', '2026-11-10T19:45Z', '2', '1'),
+                # The October international window falls outside a 35-day
+                # lookback from November 12, but still belongs to this edition.
+                return {'events': [event('past', 'post', '2026-10-06T19:45Z', '2', '1'),
                                    event('next', 'pre', '2026-11-14T19:45Z')]}
             self.assertIn('/uefa.nations/standings', url)
             self.assertIn('season=2026', url)
@@ -101,6 +106,21 @@ class ProviderTests(unittest.TestCase):
         self.assertEqual((data['fixtures'][0]['hg'], data['fixtures'][0]['ag']), (None, None))
         self.assertEqual([m['id'] for m in data['results']], ['past'])
         self.assertEqual((data['results'][0]['hg'], data['results'][0]['ag']), (2, 1))
+        self.assertTrue(any('dates=20260701-20261112' in url for url in calls))
+        self.assertTrue(any('dates=20261112-20261203' in url for url in calls))
+        self.assertIn('01/07/2026', data['methodology'])
+        self.assertNotIn('35 días', data['methodology'])
+
+    def test_other_competitions_keep_35_day_results_window(self):
+        now = datetime(2026, 11, 12, tzinfo=timezone.utc)
+        standings = {'season': {'year': 2026, 'displayName': '2026-27 Premier League'},
+                     'standings': {'entries': [entry('Club A')]}}
+        with patch.object(provider, 'fetch', return_value=standings), patch.object(provider, 'scoreboard', return_value={'events': []}) as scoreboard:
+            data = provider.refresh('eng', now)
+        self.assertEqual(scoreboard.call_count, 2)
+        self.assertEqual(scoreboard.call_args_list[0].args[:3], ('eng.1', now, now + timedelta(days=21)))
+        self.assertEqual(scoreboard.call_args_list[1].args[:3], ('eng.1', now - timedelta(days=35), now))
+        self.assertIn('35 días consultados', data['methodology'])
 
     def test_nations_rejects_old_edition_even_when_requested_route_is_current(self):
         old = {'season': {'year': 2024, 'displayName': '2024-25 UEFA Nations League'},
