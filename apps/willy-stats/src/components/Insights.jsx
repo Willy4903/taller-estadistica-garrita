@@ -3,7 +3,7 @@ import {Num} from './ui.jsx';
 import {GoalsTrend} from './Charts.jsx';
 import {number} from '../data.js';
 
-const Card=({title,subtitle,children})=><section className="rounded-2xl border border-[#1E2630] bg-[#12171D] p-4" aria-label={title}>
+const Card=({title,subtitle,children})=><section className="min-w-0 rounded-2xl border border-[#1E2630] bg-[#12171D] p-4" aria-label={title}>
   <h3 className="font-heading text-base font-bold text-white">{title}</h3>
   {subtitle&&<p className="mb-3 text-xs text-gray-400">{subtitle}</p>}
   {children}

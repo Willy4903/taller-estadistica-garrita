@@ -65,7 +65,7 @@ function App(){
       <div className="mx-auto mt-8 grid max-w-[1440px] grid-cols-1 gap-6 px-5 md:px-8 xl:grid-cols-12">
         <div className="min-w-0 space-y-6 xl:col-span-9"><Dashboard league={league} rows={rows} reading={reading} tab={tab} onTab={setTab} publication={publication} groups={groups} group={safeGroup} groupName={groups[safeGroup]?.name} onGroup={setGroup}
           loadError={loadError} refreshing={refreshing} onRefresh={loadSnapshot} favorites={favorites} onFavorite={toggleFavorite} onDetail={setDetail} query={query} onQuery={setQuery} savedOnly={savedOnly} onClearSaved={()=>setSavedOnly(false)}
-          fixtures={fixtures} results={results} fixtureType={fixtureType} onFixtureType={setFixtureType}/><div className="grid gap-6 md:grid-cols-2 [&>*:only-child]:md:col-span-2"><ImpactCard impact={impact}/><StreaksCard streaks={streaks}/></div></div>
+          fixtures={fixtures} results={results} fixtureType={fixtureType} onFixtureType={setFixtureType}/><div className="grid min-w-0 grid-cols-1 gap-6 md:grid-cols-2 [&>*:only-child]:md:col-span-2"><ImpactCard impact={impact}/><StreaksCard streaks={streaks}/></div></div>
         <aside className="min-w-0 space-y-5 xl:col-span-3" aria-label="Análisis"><ReadingCard league={league} reading={reading}/><LastRoundCard summary={summary}/><ParityCard items={parityItems} activeId={leagueId}/></aside>
       </div>
       <Comparator competitions={competitions} compare={compare} onCompare={setCompare} snapshot={snapshot}/>
