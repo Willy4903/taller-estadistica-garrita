@@ -16,7 +16,10 @@ let testContext='Preparar servidor y navegador';
   await p.goto('http://127.0.0.1:8782/futbol/',{waitUntil:'networkidle'});
   stage('Viewport y desbordamiento inicial');
   const viewport=await p.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,innerWidth}));
-  assert(viewport.scrollWidth<=viewport.innerWidth+1,`desborde ${width}: ${JSON.stringify(viewport)}`);
+  if(viewport.scrollWidth>viewport.innerWidth+1){
+   const overflow=await p.evaluate(()=>[...document.querySelectorAll('header,main,footer,section,nav,main>section>div,header>div,header a,header button')].map(e=>({tag:e.tagName,classes:e.className,left:e.getBoundingClientRect().left,right:e.getBoundingClientRect().right})).filter(e=>e.left<0||e.right>innerWidth+1).slice(0,12));
+   assert.fail(`desborde ${width}: ${JSON.stringify(viewport)}; elementos: ${JSON.stringify(overflow)}`);
+  }
   assert((await p.locator('meta[name="viewport"]').getAttribute('content')).includes('viewport-fit=cover'),`viewport-fit=cover ausente en ${width}×${height}`);
   const dash=p.locator('#dashboard');
   stage('Menú táctil');

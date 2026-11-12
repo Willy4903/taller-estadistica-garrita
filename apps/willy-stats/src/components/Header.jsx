@@ -14,9 +14,9 @@ export function Navbar({favorites,savedOnly,onSaved,onJump}){
   },[open]);
   const go=(id,tab)=>{setOpen(false);onJump(id,tab);};
   return <header className="sticky top-0 z-50 border-b border-[#1E2630] bg-[#0B0E11]/90 backdrop-blur-md">
-    <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between gap-4 px-4 md:px-8">
-      <a href="#" className="flex shrink-0 items-center gap-2.5" aria-label="Willy Stats, inicio">
-        <Brand/><span className="whitespace-nowrap font-heading text-2xl font-extrabold tracking-tight text-white">Willy Stats<span className="text-[#22C55E]">.</span></span>
+    <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between gap-2 px-4 sm:gap-4 md:px-8">
+      <a href="#" className="flex shrink-0 items-center gap-2 min-[375px]:gap-2.5" aria-label="Willy Stats, inicio">
+        <Brand className="h-7 w-7 min-[375px]:h-8 min-[375px]:w-8"/><span className="whitespace-nowrap font-heading text-xl font-extrabold tracking-tight text-white min-[375px]:text-2xl">Willy Stats<span className="text-[#22C55E]">.</span></span>
       </a>
       <nav className="hidden items-center gap-8 lg:flex" aria-label="Principal">
         {NAV.map(([label,id,tab],i)=><button key={id} onClick={()=>go(id,tab)} className={`text-sm transition hover:text-white ${i===0?'text-white':'text-gray-400'}`}>{label}</button>)}
