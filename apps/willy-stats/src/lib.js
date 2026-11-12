@@ -10,6 +10,17 @@ export function getRows({league,snapshot,group}){
   return (g?.rows||[]).map(t=>({...t,form:(t.form||[]).map(formLetter),effectiveness:t.pj>0?t.pts/(3*t.pj)*100:null}));
 }
 
+/** Partidos de las selecciones de un grupo, incluidos cruces eliminatorios.
+ * Prioriza IDs del proveedor; el nombre exacto solo se usa si falta un ID.
+ */
+export function matchesForTeams(matches,rows){
+  const ids=new Set(rows.filter(r=>r.team_id).map(r=>String(r.team_id)));
+  const names=new Set(rows.map(r=>r.name));
+  const withoutId=new Set(rows.filter(r=>!r.team_id).map(r=>r.name));
+  const includes=(id,name)=>id!=null&&id!==''?ids.has(String(id))||withoutId.has(name):names.has(name);
+  return matches.filter(m=>includes(m.home_id,m.home)||includes(m.away_id,m.away));
+}
+
 const per=(t,k)=>t.pj?t[k]/t.pj:0;
 const formScore=t=>t.form?.length?t.form.reduce((s,f)=>s+(f==='V'?3:f==='E'?1:0),0)/(3*t.form.length):0;
 const AXES=[

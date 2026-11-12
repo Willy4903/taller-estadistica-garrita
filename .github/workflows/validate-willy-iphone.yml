@@ -7,12 +7,14 @@ on:
       - apps/willy-stats/**
       - site/futbol/**
       - scripts/check_willy_iphone.cjs
+      - scripts/check_nations_league.cjs
       - .github/workflows/validate-willy-iphone.yml
   pull_request:
     paths:
       - apps/willy-stats/**
       - site/futbol/**
       - scripts/check_willy_iphone.cjs
+      - scripts/check_nations_league.cjs
       - .github/workflows/validate-willy-iphone.yml
 permissions:
   contents: read
@@ -37,6 +39,11 @@ jobs:
           NODE_PATH: /tmp/willy-browser/node_modules
           PW_ENGINE: webkit
         run: node scripts/check_willy_iphone.cjs
+      - name: Probar Nations League, grupos y partidos en iPhone
+        env:
+          NODE_PATH: /tmp/willy-browser/node_modules
+          PW_ENGINE: webkit
+        run: node scripts/check_nations_league.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

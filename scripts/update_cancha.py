@@ -16,7 +16,7 @@ from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
-CODES = dict(per='per.1', bra='bra.1', arg='arg.1', col='col.1', ecu='ecu.1', mex='mex.1', usa='usa.1', sud='conmebol.sudamericana', lib='conmebol.libertadores', ita='ita.1', esp='esp.1', eng='eng.1', ger='ger.1', fra='fra.1', ucl='uefa.champions', uel='uefa.europa')
+CODES = dict(per='per.1', bra='bra.1', arg='arg.1', col='col.1', ecu='ecu.1', mex='mex.1', usa='usa.1', sud='conmebol.sudamericana', lib='conmebol.libertadores', ita='ita.1', esp='esp.1', eng='eng.1', ger='ger.1', fra='fra.1', ucl='uefa.champions', uel='uefa.europa', unl='uefa.nations')
 EUROPE = {'ita', 'esp', 'eng', 'ger', 'fra', 'ucl', 'uel'}
 
 
@@ -42,6 +42,10 @@ def fetch(url):
 
 
 def expected_season(league, now):
+    # Nations League editions begin in even years and finish the following year;
+    # the July turnover of a domestic European league does not apply.
+    if league == 'unl':
+        return now.year - now.year % 2
     return now.year - (league in EUROPE and now.month < 7)
 
 
@@ -62,11 +66,17 @@ def season_info(payload, expected):
     return str(label or expected), int(year)
 
 
-def normalize_standings(payload):
+def normalize_standings(payload, preserve_hierarchy=False):
     groups = []
 
-    def visit(node):
+    def visit(node, parents=()):
         table = node.get('standings') or {}
+        name = node.get('name') or table.get('name')
+        # Do not repeat the competition's root label in every option. Keep its
+        # subdivisions, e.g. "League A · Group 1" versus "League B · Group 1".
+        path = parents
+        if name and (node is not payload or table.get('entries')) and (not path or path[-1] != name):
+            path += (name,)
         if table.get('entries'):
             rows = []
             for entry in table['entries']:
@@ -94,10 +104,11 @@ def normalize_standings(payload):
                 rows.append(row)
             if len({r['name'] for r in rows}) != len(rows) or len({r['rank'] for r in rows}) != len(rows):
                 raise ValueError('Identidades o posiciones repetidas dentro de un grupo')
-            groups.append({'name': node.get('name') or table.get('name') or 'Tabla general', 'rows': sorted(rows, key=lambda r: r['rank'])})
+            group_name = ' · '.join(path) if preserve_hierarchy else name
+            groups.append({'name': group_name or 'Tabla general', 'rows': sorted(rows, key=lambda r: r['rank'])})
         else:
             for child in node.get('children', []):
-                visit(child)
+                visit(child, path)
     visit(payload)
     if not groups:
         raise ValueError('No hay clasificaciones disponibles en esta fase')
@@ -191,7 +202,7 @@ def refresh(league, now):
             errors.append(str(error))
     else:
         raise ValueError(' / '.join(errors))
-    groups = normalize_standings(payload)
+    groups = normalize_standings(payload, preserve_hierarchy=league == 'unl')
     warnings = []
     future = scoreboard(code, now, now + timedelta(days=21), warnings)
     past = scoreboard(code, now - timedelta(days=35), now, warnings)

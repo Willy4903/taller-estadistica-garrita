@@ -1,13 +1,33 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {competitions,parity,goalsPerMatch} from './data.js';
-import {matchdays,lastRound,highImpact,streaks} from './lib.js';
+import {getRows,matchesForTeams,matchdays,lastRound,highImpact,streaks} from './lib.js';
 
 const m=(id,home,away,date,hg=null,ag=null)=>({id,home,away,date,hg,ag,home_id:home,away_id:away});
 
-test('16 competiciones con identificador único',()=>{
- assert.equal(competitions.length,16);
- assert.equal(new Set(competitions.map(c=>c.id)).size,16);
+test('17 competiciones con identificador único',()=>{
+ assert.equal(competitions.length,17);
+ assert.equal(new Set(competitions.map(c=>c.id)).size,17);
+});
+test('Nations League es una competición europea de selecciones con grupos',()=>{
+ const l=competitions.find(c=>c.id==='unl');
+ assert.equal(l.code,'uefa.nations');assert.equal(l.continent,'Europa');
+ assert.equal(l.teamType,'national');assert.equal(l.format,'groups');
+ assert.deepEqual(getRows({league:l,snapshot:{},group:0}),[]);
+});
+test('partidos de selecciones: filtra otros grupos y conserva cruces eliminatorios',()=>{
+ const rows=[{name:'España',team_id:'esp'},{name:'Portugal',team_id:'por'}];
+ const list=[m(1,'España','Portugal','2026-11-12T20:00Z'),m(2,'Inglaterra','Grecia','2026-11-12T20:00Z'),m(3,'España','Inglaterra','2027-03-25T20:00Z')];
+ list[0].home_id='esp';list[0].away_id='por';list[2].home_id='esp';
+ assert.deepEqual(matchesForTeams(list,rows).map(g=>g.id),[1,3]);
+ assert.deepEqual(matchesForTeams(list,[]),[]);
+});
+test('partidos de selecciones: identidad exacta y nombre solo si falta el ID',()=>{
+ const rows=[{name:'España',team_id:'esp'}];
+ const list=[{id:1,home:'España',away:'Portugal'},{id:2,home:'España',home_id:'otro',away:'Portugal',away_id:'por'},
+ {id:3,home:'España juvenil',away:'Portugal'}];
+ assert.deepEqual(matchesForTeams(list,rows).map(g=>g.id),[1]);
+ assert.deepEqual(matchesForTeams([{id:4,home:'España',home_id:5,away:'Portugal'}],[{name:'España'}]).map(g=>g.id),[4]);
 });
 const club=(i,g,e,p,gf=10,gc=10)=>({name:'C'+i,pj:g+e+p,g,e,p,pts:3*g+e,gf,gc});
 const league=(n,make)=>Array.from({length:n},(_,i)=>make(i));

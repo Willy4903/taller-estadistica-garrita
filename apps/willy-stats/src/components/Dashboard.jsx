@@ -37,7 +37,7 @@ function Performance({rows,league,leader,reading}){
           <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0B0E11] to-transparent px-4 pb-3 pt-8 font-heading text-lg font-extrabold leading-tight text-white">{leader.name}</figcaption>
         </div>
       </figure>
-      <div><Radar axes={axes} teamName={leader.name}/><p className="mt-1 text-center text-xs text-gray-400"><i className="mr-1 inline-block h-2 w-2 rounded-sm bg-[#22C55E]"/>{leader.name} <i className="ml-3 mr-1 inline-block h-2 w-2 rounded-sm bg-[#F97316]"/>Promedio de la liga</p></div>
+      <div><Radar axes={axes} teamName={leader.name}/><p className="mt-1 text-center text-xs text-gray-400"><i className="mr-1 inline-block h-2 w-2 rounded-sm bg-[#22C55E]"/>{leader.name} <i className="ml-3 mr-1 inline-block h-2 w-2 rounded-sm bg-[#F97316]"/>{league.teamType==='national'?'Promedio del grupo':'Promedio de la liga'}</p></div>
       <dl className="grid grid-cols-2 gap-2 md:col-span-2 xl:col-span-1 xl:grid-cols-1">
         {pills.map(([l,v])=><div key={l} className="flex items-center justify-between rounded-lg bg-[#1A212B] px-3 py-2.5"><dt className="text-xs text-gray-300">{l}</dt><dd><Num className="rounded bg-[#22C55E]/15 px-2 py-0.5 text-sm font-bold text-[#22C55E]">{v}</Num></dd></div>)}
         <p className="col-span-full text-[11px] leading-relaxed text-gray-500">Ejes calculados con los puntos, goles y últimos resultados de la tabla, normalizados contra el resto de la liga. No incluyen xG, posesión ni presión porque la fuente no los entrega.</p>
@@ -79,18 +79,19 @@ export function Dashboard(p){
   return <section id="dashboard" className="panel rounded-2xl border border-[#1E2630] bg-[#12171D] p-4 md:p-6">
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div className="flex items-center gap-3"><LeagueMark league={league} size={40}/><div><p className="text-xs text-gray-400">{league.country} · {league.continent}</p><h2 className="font-heading text-2xl font-extrabold text-white">{league.name}</h2></div></div>
-      <div className="flex flex-wrap items-center gap-2 text-xs text-gray-400">
-        {groups.length>1&&<label className="flex items-center gap-2">Tabla<select value={group} onChange={e=>onGroup(+e.target.value)} className="rounded-lg border border-[#26303D] bg-[#0B0E11] px-2 py-1.5 text-gray-200">{groups.map((g,i)=><option key={i} value={i}>{g.name}</option>)}</select></label>}
+      <div className="min-w-0 max-w-full text-xs text-gray-400">
+        {groups.length>1&&<label className="flex min-w-0 flex-wrap items-center gap-2">{league.teamType==='national'?'Liga y grupo':'Tabla'}<select value={group} onChange={e=>onGroup(+e.target.value)} className="min-h-11 min-w-0 max-w-full rounded-lg border border-[#26303D] bg-[#0B0E11] px-2 py-1.5 text-base text-gray-200">{groups.map((g,i)=><option key={i} value={i}>{g.name}</option>)}</select></label>}
       </div>
     </div>
     <SourceNote publication={publication} groupName={groupName} loadError={p.loadError} refreshing={p.refreshing} onRefresh={p.onRefresh}/>
+    {league.teamType==='national'&&groups.length>0&&<p className="mt-3 text-xs leading-relaxed text-gray-400">Tabla y análisis del grupo elegido. Los partidos incluyen a sus selecciones, también en cruces eliminatorios.</p>}
     <div role="tablist" aria-label="Análisis de la liga" className="mt-4 flex gap-1 overflow-x-auto border-b border-[#1E2630]" onKeyDown={e=>{const ids=TABS.map(t=>t[0]),i=ids.indexOf(tab);if(e.key==='ArrowRight')onTab(ids[(i+1)%ids.length]);if(e.key==='ArrowLeft')onTab(ids[(i+ids.length-1)%ids.length]);}}>
       {TABS.map(([id,label])=><button key={id} role="tab" id={`tab-${id}`} aria-selected={tab===id} aria-controls="panel-main" tabIndex={tab===id?0:-1} onClick={()=>onTab(id)} className={`-mb-px whitespace-nowrap border-b-2 px-4 py-3 text-sm transition ${tab===id?'border-[#22C55E] font-semibold text-white':'border-transparent text-gray-400 hover:text-gray-200'}`}>{label}</button>)}
     </div>
     <div role="tabpanel" id="panel-main" aria-labelledby={`tab-${tab}`} className="mt-5 space-y-8">
-      {showTable&&<Standings rows={rows} leagueId={league.id} favorites={p.favorites} onFavorite={p.onFavorite} onDetail={p.onDetail} query={p.query} onQuery={p.onQuery} savedOnly={p.savedOnly} onClearSaved={p.onClearSaved}/>}
+      {showTable&&<Standings rows={rows} leagueId={league.id} national={league.teamType==='national'} favorites={p.favorites} onFavorite={p.onFavorite} onDetail={p.onDetail} query={p.query} onQuery={p.onQuery} savedOnly={p.savedOnly} onClearSaved={p.onClearSaved}/>}
       {showPerf&&<Performance rows={rows} league={league} leader={leader} reading={reading}/>}
-      {tab==='fixtures'&&<Fixtures key={league.id} fixtures={p.fixtures} results={p.results} favorites={p.favorites} savedOnly={p.savedOnly} type={p.fixtureType} onType={p.onFixtureType}/>}
+      {tab==='fixtures'&&<Fixtures key={`${league.id}:${group}`} fixtures={p.fixtures} results={p.results} favorites={p.favorites} savedOnly={p.savedOnly} type={p.fixtureType} onType={p.onFixtureType}/>}
     </div>
   </section>;
 }
@@ -105,7 +106,7 @@ export function ReadingCard({league,reading}){
   return <section aria-label="La lectura de Willy Stats" className="rounded-2xl border border-[#10B981]/30 bg-gradient-to-br from-[#0F291E] via-[#11221C] to-[#0B1612] p-4">
     <p className="font-mono text-[11px] uppercase tracking-wider text-[#22C55E]">La lectura de Willy Stats</p>
     <h3 className="mt-1 font-heading text-xl font-extrabold leading-tight text-white">{leader.name} marca el paso.</h3>
-    <p className="mt-2 text-xs leading-relaxed text-gray-300">{second?(gap===0?`Empata en puntos con ${second.name}.`:`Tiene ${gap} ${gap===1?'punto':'puntos'} de ventaja sobre ${second.name}.`):'Es el único club con partidos jugados.'}{strengths.length?` Además tiene el ${strengths.join(' y el ')} de la tabla.`:''}</p>
+    <p className="mt-2 text-xs leading-relaxed text-gray-300">{second?(gap===0?`Empata en puntos con ${second.name}.`:`Tiene ${gap} ${gap===1?'punto':'puntos'} de ventaja sobre ${second.name}.`):league.teamType==='national'?'Es la única selección con partidos jugados.':'Es el único club con partidos jugados.'}{strengths.length?` Además tiene el ${strengths.join(' y el ')} de la tabla.`:''}</p>
     <dl className="mt-3 grid grid-cols-2 gap-1.5 border-t border-[#10B981]/20 pt-3 sm:grid-cols-4 xl:grid-cols-2">
       {kpis.map(([v,l])=><div key={l} className="rounded-lg bg-black/20 px-2 py-1.5"><dd><Num className="text-base font-bold text-[#22C55E]">{v}</Num></dd><dt className="text-[10px] leading-tight text-gray-400">{l}</dt></div>)}
     </dl>

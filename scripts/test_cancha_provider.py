@@ -52,6 +52,65 @@ class ProviderTests(unittest.TestCase):
         self.assertEqual(provider.expected_season('per', now), 2026)
         self.assertEqual(provider.expected_season('eng', now), 2025)
 
+    def test_nations_league_uses_biennial_edition(self):
+        self.assertEqual(provider.CODES['unl'], 'uefa.nations')
+        for year, month, expected in [(2025, 11, 2024), (2026, 11, 2026),
+                                      (2027, 2, 2026), (2027, 11, 2026), (2028, 11, 2028)]:
+            with self.subTest(year=year, month=month):
+                self.assertEqual(provider.expected_season('unl', datetime(year, month, 12, tzinfo=timezone.utc)), expected)
+
+    def test_nations_league_preserves_division_and_group(self):
+        payload = {'name': 'UEFA Nations League', 'children': [
+            {'name': 'Liga A', 'children': [{'name': 'Grupo 1', 'standings': {'entries': [entry('Selección A')]}}]},
+            {'name': 'Liga B', 'children': [{'name': 'Grupo 1', 'standings': {'entries': [entry('Selección B')]}}]}
+        ]}
+        groups = provider.normalize_standings(payload, preserve_hierarchy=True)
+        self.assertEqual([g['name'] for g in groups], ['Liga A · Grupo 1', 'Liga B · Grupo 1'])
+        self.assertEqual([g['rows'][0]['name'] for g in groups], ['Selección A', 'Selección B'])
+        # Existing competitions retain their original leaf labels.
+        self.assertEqual([g['name'] for g in provider.normalize_standings(payload)], ['Grupo 1', 'Grupo 1'])
+
+    def test_nations_refresh_keeps_groups_and_real_match_statuses(self):
+        standings = {'season': {'year': 2026, 'displayName': '2026-27 UEFA Nations League'}, 'children': [
+            {'name': 'League A', 'children': [{'name': 'Group 1', 'standings': {'entries': [entry('Spain')]}}]},
+            {'name': 'League B', 'children': [{'name': 'Group 1', 'standings': {'entries': [entry('Sweden')]}}]}
+        ]}
+
+        def event(ident, state, date, home_score=None, away_score=None):
+            return {'id': ident, 'competitions': [{'id': ident, 'date': date,
+                'status': {'type': {'state': state, 'name': 'STATUS_FINAL' if state == 'post' else 'STATUS_SCHEDULED'}},
+                'competitors': [
+                    {'homeAway': 'home', 'score': home_score, 'team': {'displayName': 'Spain', 'id': '164'}},
+                    {'homeAway': 'away', 'score': away_score, 'team': {'displayName': 'Portugal', 'id': '482'}}]}]}
+
+        def fake(url):
+            if 'scoreboard' in url:
+                return {'events': [event('past', 'post', '2026-11-10T19:45Z', '2', '1'),
+                                   event('next', 'pre', '2026-11-14T19:45Z')]}
+            self.assertIn('/uefa.nations/standings', url)
+            self.assertIn('season=2026', url)
+            return standings
+
+        with patch.object(provider, 'fetch', side_effect=fake):
+            data = provider.refresh('unl', datetime(2026, 11, 12, tzinfo=timezone.utc))
+        self.assertEqual(data['season_year'], 2026)
+        self.assertEqual(data['season'], '2026-27 UEFA Nations League')
+        self.assertFalse(data['historical'])
+        self.assertEqual([g['name'] for g in data['groups']], ['League A · Group 1', 'League B · Group 1'])
+        self.assertEqual([m['id'] for m in data['fixtures']], ['next'])
+        self.assertEqual((data['fixtures'][0]['hg'], data['fixtures'][0]['ag']), (None, None))
+        self.assertEqual([m['id'] for m in data['results']], ['past'])
+        self.assertEqual((data['results'][0]['hg'], data['results'][0]['ag']), (2, 1))
+
+    def test_nations_rejects_old_edition_even_when_requested_route_is_current(self):
+        old = {'season': {'year': 2024, 'displayName': '2024-25 UEFA Nations League'},
+               'standings': {'entries': [entry('Spain')]}}
+        with patch.object(provider, 'fetch', return_value=old) as fetch:
+            with self.assertRaisesRegex(ValueError, 'se requiere 2026'):
+                provider.refresh('unl', datetime(2027, 11, 12, tzinfo=timezone.utc))
+        self.assertEqual(fetch.call_count, 3)
+        self.assertTrue(all('standings' in args[0] for args, kwargs in fetch.call_args_list))
+
     def test_completed_scores_are_kept_and_upcoming_are_not_invented(self):
         base = {'id': '1', 'date': '2026-11-08T20:00Z', 'status': {'type': {'state': 'post'}},
                 'competitors': [{'homeAway': 'home', 'score': '2', 'team': {'displayName': 'A', 'id': '10'}},
@@ -69,6 +128,18 @@ class ProviderTests(unittest.TestCase):
             with patch('sys.argv', ['update_cancha.py', '--league', 'eng', '--output', str(path)]), patch.object(provider, 'fetch', side_effect=OSError('sin conexión')):
                 self.assertEqual(provider.main(), 1)
             self.assertEqual(json.loads(path.read_text()), previous)
+
+    def test_failed_first_nations_refresh_does_not_invent_capture(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / 'snapshot.json'
+            previous = {'schema_version': 1, 'competitions': {'eng': {'season': 'Anterior', 'groups': []}}}
+            path.write_text(json.dumps(previous))
+            with patch('sys.argv', ['update_cancha.py', '--league', 'unl', '--output', str(path)]), patch.object(provider, 'fetch', side_effect=OSError('sin conexión')):
+                self.assertEqual(provider.main(), 1)
+            self.assertEqual(json.loads(path.read_text()), previous)
+            health = json.loads(path.with_name('health.json').read_text())
+            self.assertFalse(health['competitions']['unl']['ok'])
+            self.assertFalse(health['competitions']['unl']['retained_previous'])
 
     def test_scoreboard_failure_keeps_standings(self):
         standings = {'season': {'year': 2026, 'displayName': '2026'}, 'standings': {'entries': [entry('Club A')]}}

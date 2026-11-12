@@ -6,6 +6,9 @@ on:
       - "apps/willy-stats/**"
       - "scripts/update_willy_stats.py"
       - "scripts/test_willy_stats.py"
+      - "scripts/update_cancha.py"
+      - "scripts/test_cancha_provider.py"
+      - "scripts/check_nations_league.cjs"
       - "site/futbol/README.md"
       - ".github/workflows/willy-stats-data.yml"
       - ".github/workflows/validate-willy-stats.yml"
@@ -42,3 +45,4 @@ jobs:
           npm install --no-save playwright@1.49.0
           npx playwright install --with-deps chromium
           node scripts/check_cancha.cjs
+          node scripts/check_nations_league.cjs

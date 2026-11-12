@@ -1,4 +1,4 @@
-/* Catálogo de competiciones. Los datos de clubes, tablas y partidos vienen siempre de la captura publicada. */
+/* Catálogo de competiciones. Los datos de equipos, tablas y partidos vienen siempre de la captura publicada. */
 export const catalog = {
  competitions: [
   {id:'per',flagAsset:'flags/per.svg',code:'per.1',name:'Liga 1',country:'Perú',flag:'🇵🇪',continent:'América',format:'apertura'},
@@ -16,6 +16,7 @@ export const catalog = {
   {id:'ger',flagAsset:'flags/ger.svg',code:'ger.1',name:'Bundesliga',country:'Alemania',flag:'🇩🇪',continent:'Europa',format:'league'},
   {id:'fra',flagAsset:'flags/fra.svg',code:'fra.1',name:'Ligue 1',country:'Francia',flag:'🇫🇷',continent:'Europa',format:'league'},
   {id:'ucl',trophyAsset:'trophies/champions.svg',code:'uefa.champions',name:'Champions League',country:'UEFA',flag:'✦',continent:'Europa',format:'swiss'},
-  {id:'uel',trophyAsset:'trophies/europa.svg',code:'uefa.europa',name:'Europa League',country:'UEFA',flag:'◈',continent:'Europa',format:'swiss'}
+  {id:'uel',trophyAsset:'trophies/europa.svg',code:'uefa.europa',name:'Europa League',country:'UEFA',flag:'◈',continent:'Europa',format:'swiss'},
+  {id:'unl',trophyAsset:'trophies/nations.svg',code:'uefa.nations',name:'UEFA Nations League',country:'UEFA · Selecciones',flag:'',continent:'Europa',format:'groups',teamType:'national'}
  ]
 };

@@ -21,7 +21,7 @@ export function Comparator({competitions,compare,onCompare,snapshot}){
         <div className="mt-4 flex items-center gap-3"><LeagueMark league={c.league} size={32}/><div><h3 className="font-heading text-xl font-extrabold leading-tight text-white">{c.league.name}</h3>{c.groupName&&<p className="text-[11px] text-gray-500">{c.groupName}</p>}</div></div>
         <dl className="mt-4 space-y-3 text-sm">
           {[['Goles por partido',c.gpg!=null?number(c.gpg,2):'—'],
-            ['Partidos por club',c.p?number(c.p.matches,0):'—'],
+            [c.league.teamType==='national'?'Partidos por selección':'Partidos por club',c.p?number(c.p.matches,0):'—'],
             ['Líder',c.leader?`${c.leader.name} (${c.leader.pts} PTS)`:'—'],
             ['Ventaja del líder',c.gap!=null?`${c.gap} ${c.gap===1?'punto':'puntos'}`:'—']].map(([l,v])=>
             <div key={l} className="flex items-baseline justify-between gap-3 border-b border-[#1E2630] pb-2"><dt className="text-gray-400">{l}</dt><dd><Num className="text-right font-semibold text-white">{v}</Num></dd></div>)}
@@ -31,7 +31,7 @@ export function Comparator({competitions,compare,onCompare,snapshot}){
           {c.p?<>
             <p className="mt-1"><Num className="text-2xl font-bold text-[#22C55E]">±{c.p.level.toFixed(2)}</Num> <span className="text-xs text-gray-400">pts por partido</span></p>
             <p className="mt-1 text-xs leading-relaxed text-gray-400">Equivale a unos <Num className="text-gray-200">{Math.round(c.p.level*38)}</Num> puntos en 38 partidos. Margen de error: <Num className="text-gray-200">{c.p.low.toFixed(2)} a {c.p.high.toFixed(2)}</Num>.</p>
-          </>:<p className="mt-1 text-xs leading-relaxed text-gray-400">No comparable: la tabla tiene menos de {MIN_CLUBS} clubes o menos de {MIN_MATCHES} partidos por club (grupos pequeños o fases de copa).</p>}
+          </>:<p className="mt-1 text-xs leading-relaxed text-gray-400">No comparable: la tabla tiene menos de {MIN_CLUBS} {c.league.teamType==='national'?'selecciones':'clubes'} o menos de {MIN_MATCHES} partidos por {c.league.teamType==='national'?'selección':'club'} (grupos pequeños o fases de copa).</p>}
         </div>
       </article>)}
     </div>

@@ -60,7 +60,7 @@ export function Hero({onExplore}){
         Análisis global. Datos con fecha y fuente.
       </p>
       <h1 className="mt-4 font-heading text-5xl font-extrabold leading-[1.05] tracking-tight text-white lg:text-6xl">El mundo gira.<br/><span className="text-[#22C55E]">Los datos definen.</span></h1>
-      <p className="mt-4 max-w-xl text-base leading-relaxed text-gray-400">De Lima a Londres. Todas tus ligas, el rendimiento de los clubes y las métricas que explican quién domina el juego. Cada cifra indica su fuente y su fecha de corte.</p>
+      <p className="mt-4 max-w-xl text-base leading-relaxed text-gray-400">De Lima a Londres. Tus ligas y selecciones, el rendimiento de los equipos y las métricas que explican quién domina el juego. Cada cifra indica su fuente y su fecha de corte.</p>
       <button onClick={onExplore} className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#F97316] px-6 py-3.5 font-semibold text-white shadow-lg shadow-orange-500/20 transition hover:bg-[#EA580C]">Explorar competiciones <ArrowRight size={18} aria-hidden="true"/></button>
     </div>
     <div className="relative h-[300px] overflow-hidden rounded-2xl border border-[#26303D] shadow-2xl sm:h-[340px] lg:col-span-5">

@@ -2,7 +2,7 @@ import React,{useState,useMemo,useEffect,useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {X} from 'lucide-react';
 import {competitions,parity,number} from './data.js';
-import {getRows,reading as readingOf,radarAxes,lastRound,highImpact,streaks as streaksOf} from './lib.js';
+import {getRows,matchesForTeams,reading as readingOf,radarAxes,lastRound,highImpact,streaks as streaksOf} from './lib.js';
 import {Navbar,Hero} from './components/Header.jsx';
 import {Carousel} from './components/Carousel.jsx';
 import {Dashboard,ReadingCard,ParityCard} from './components/Dashboard.jsx';
@@ -42,8 +42,11 @@ function App(){
   const safeGroup=Math.min(group,Math.max(0,groups.length-1));
   const rows=useMemo(()=>getRows({league,snapshot,group:safeGroup}),[league,snapshot,safeGroup]);
   const reading=useMemo(()=>readingOf(rows),[rows]);
-  const summary=useMemo(()=>lastRound(publication?.results||[]),[publication]);
-  const impact=useMemo(()=>highImpact(rows,publication?.fixtures||[]),[rows,publication]);
+  const scoped=league.teamType==='national'&&groups.length>0;
+  const results=useMemo(()=>scoped?matchesForTeams(publication?.results||[],rows):publication?.results||[],[publication,rows,scoped]);
+  const fixtures=useMemo(()=>scoped?matchesForTeams(publication?.fixtures||[],rows):publication?.fixtures||[],[publication,rows,scoped]);
+  const summary=useMemo(()=>lastRound(results),[results]);
+  const impact=useMemo(()=>highImpact(rows,fixtures),[rows,fixtures]);
   const streaks=useMemo(()=>streaksOf(rows),[rows]);
 
   const parityItems=useMemo(()=>competitions.map(l=>({id:l.id,name:l.name,continent:l.continent,p:parity(getRows({league:l,snapshot,group:0}))})).filter(x=>x.p),[snapshot]);
@@ -62,7 +65,7 @@ function App(){
       <div className="mx-auto mt-8 grid max-w-[1440px] grid-cols-1 gap-6 px-5 md:px-8 xl:grid-cols-12">
         <div className="min-w-0 space-y-6 xl:col-span-9"><Dashboard league={league} rows={rows} reading={reading} tab={tab} onTab={setTab} publication={publication} groups={groups} group={safeGroup} groupName={groups[safeGroup]?.name} onGroup={setGroup}
           loadError={loadError} refreshing={refreshing} onRefresh={loadSnapshot} favorites={favorites} onFavorite={toggleFavorite} onDetail={setDetail} query={query} onQuery={setQuery} savedOnly={savedOnly} onClearSaved={()=>setSavedOnly(false)}
-          fixtures={publication?.fixtures||[]} results={publication?.results||[]} fixtureType={fixtureType} onFixtureType={setFixtureType}/><div className="grid gap-6 md:grid-cols-2 [&>*:only-child]:md:col-span-2"><ImpactCard impact={impact}/><StreaksCard streaks={streaks}/></div></div>
+          fixtures={fixtures} results={results} fixtureType={fixtureType} onFixtureType={setFixtureType}/><div className="grid gap-6 md:grid-cols-2 [&>*:only-child]:md:col-span-2"><ImpactCard impact={impact}/><StreaksCard streaks={streaks}/></div></div>
         <aside className="min-w-0 space-y-5 xl:col-span-3" aria-label="Análisis"><ReadingCard league={league} reading={reading}/><LastRoundCard summary={summary}/><ParityCard items={parityItems} activeId={leagueId}/></aside>
       </div>
       <Comparator competitions={competitions} compare={compare} onCompare={setCompare} snapshot={snapshot}/>

@@ -9,7 +9,7 @@ const server=spawn('python3',['-m','http.server','8780','--bind','127.0.0.1','--
  p.on('pageerror',e=>errors.push(e.message));p.on('response',r=>{if(r.url().includes('127.0.0.1')&&r.status()>=400)bad.push(r.url());});
  await p.goto('http://127.0.0.1:8780/futbol/',{waitUntil:'networkidle'});
  await p.getByRole('heading',{name:'¿Dónde analizamos hoy?'}).waitFor();
- const cards=p.locator('#explorar li button');assert.equal(await cards.count(),16);
+ const cards=p.locator('#explorar li button');assert.equal(await cards.count(),17);
  // Por defecto se muestran datos publicados, nunca la demostración.
  const dash=p.locator('#dashboard');
   const snap=await (await fetch('http://127.0.0.1:8780/futbol/data/snapshot.json')).json();
@@ -25,7 +25,7 @@ const server=spawn('python3',['-m','http.server','8780','--bind','127.0.0.1','--
  await dash.getByPlaceholder('Filtrar club...').fill('zzzz');assert.match(await dash.innerText(),/Ningún club coincide/);await dash.getByPlaceholder('Filtrar club...').fill('');
  await dash.getByRole('button',{name:/Agregar a .* a favoritos/}).first().click();assert.match(await p.getByRole('button',{name:/Mis equipos/}).getAttribute('aria-label'),/1/);
  await p.reload({waitUntil:'networkidle'});assert.match(await p.getByRole('button',{name:/Mis equipos/}).getAttribute('aria-label'),/1/);
- await p.locator('#explorar').getByRole('button',{name:'Europa',exact:true}).click();assert.equal(await p.locator('#explorar li button').count(),7);
+ await p.locator('#explorar').getByRole('button',{name:'Europa',exact:true}).click();assert.equal(await p.locator('#explorar li button').count(),8);
  await p.locator('#comparador select').first().selectOption('eng');assert.match(await p.locator('#comparador article').first().innerText(),/Premier League/);
  for(const width of [390,768,1440]){await p.setViewportSize({width,height:1000});assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`Desborde ${width}`);}
  assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);
