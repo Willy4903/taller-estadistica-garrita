@@ -43,7 +43,7 @@ Pruebas offline: `python -m unittest discover -s scripts -p test_cancha_provider
 
 ## Funciones
 
-Diseño «Dark Stadium Analytics»: fondo azul pizarra, tarjetas elevadas, acento esmeralda (#10B981), coral (#EF4444) para derrotas y gris (#94A3B8) para empates; cifras con `tabular-nums`. Encabezado fijo con el título «Taller Estadística Garrita», selector de competición sincronizado con `#liga=` y pestañas Tabla, Equipos, Partidos y Estadísticas avanzadas.
+Diseño «Dark Stadium Analytics»: fondo azul pizarra, tarjetas elevadas, acento esmeralda (#10B981), coral (#EF4444) para derrotas y gris (#94A3B8) para empates; cifras con `tabular-nums`. Encabezado fijo con la marca Willy Stats., selector de competición sincronizado con `#liga=` y pestañas Tabla, Equipos, Partidos y Estadísticas avanzadas.
 
 - Carrusel de próximos partidos que avanza de derecha a izquierda, con separadores por día (hora de Lima), cuenta regresiva en las tres horas previas y etiqueta de grupo. Se detiene al pasar el puntero, al enfocar, al tocar o con el botón Pausa; con «reducir movimiento» queda fijo y se desliza a mano. Tocar un partido abre su grupo y resalta a ambos equipos en la tabla.
 - Selector de grupos por liga (A, B, C, D) con tarjetas que muestran las selecciones y el líder de cada grupo, y paso rápido anterior/siguiente. El grupo se guarda en el enlace: `#liga=unl&grupo=A2`.

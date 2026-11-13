@@ -31,9 +31,9 @@ export function Navbar({competitions,league,onLeague,tab,onTab,favorites,savedOn
     if(n){e.preventDefault();onTab(n);document.getElementById(`tab-${n}`)?.focus();}};
   return <header className="sticky top-0 z-50 border-b border-white/[.08] bg-[#0B111E]/85 backdrop-blur-xl">
     <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-3 px-4 md:px-8">
-      <a href="#" className="flex min-w-0 items-center gap-2.5" aria-label="Taller Estadística Garrita, inicio">
+      <a href="#" className="flex min-w-0 items-center gap-2.5" aria-label="Willy Stats, inicio">
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#10B981]/15 ring-1 ring-[#10B981]/30"><Brand className="h-5 w-5"/></span>
-        <span className="font-heading text-[15px] font-extrabold leading-tight tracking-tight text-white sm:text-lg">Taller Estadística <span className="text-[#10B981]">Garrita</span></span>
+        <span className="whitespace-nowrap font-heading text-xl font-extrabold tracking-tight text-white sm:text-2xl">Willy Stats<span className="text-[#10B981]">.</span></span>
       </a>
       <LeagueSelect competitions={competitions} league={league} onSelect={onLeague} className="hidden w-[260px] md:flex"/>
       <nav className="hidden items-center gap-6 xl:flex" aria-label="Principal">
