@@ -78,10 +78,10 @@ export function ScorersCard({list,scope,complete,leagueId,logo}){
 
 function Line({m,leagueId,logo,score=true}){
   const done=m.hg!=null;
-  return <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-[13px]">
-    <span className="flex min-w-0 items-center justify-end gap-2"><span className={`truncate ${done&&m.hg<m.ag?'text-slate-400':'font-semibold text-white'}`}>{m.home}</span><Crest name={m.home} leagueId={leagueId} logo={logo(m.home_id,m.home)} size={20}/></span>
+  return <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 text-[13px]">
+    <span className="flex min-w-0 items-center justify-end gap-2"><span className={`min-w-0 truncate ${done&&m.hg<m.ag?'text-slate-400':'font-semibold text-white'}`}>{m.home}</span><Crest name={m.home} leagueId={leagueId} logo={logo(m.home_id,m.home)} size={20}/></span>
     {score&&done?<Num className="min-w-[48px] rounded-md bg-[#162032] px-2 py-0.5 text-center font-bold text-white">{m.hg} - {m.ag}</Num>:<span className="min-w-[48px] rounded-md bg-[#06B6D4]/15 px-2 py-0.5 text-center text-[11px] font-bold text-[#67E8F9]">VS</span>}
-    <span className="flex min-w-0 items-center gap-2"><Crest name={m.away} leagueId={leagueId} logo={logo(m.away_id,m.away)} size={20}/><span className={`truncate ${done&&m.ag<m.hg?'text-slate-400':'font-semibold text-white'}`}>{m.away}</span></span>
+    <span className="flex min-w-0 items-center gap-2"><Crest name={m.away} leagueId={leagueId} logo={logo(m.away_id,m.away)} size={20}/><span className={`min-w-0 truncate ${done&&m.ag<m.hg?'text-slate-400':'font-semibold text-white'}`}>{m.away}</span></span>
   </div>;
 }
 
@@ -131,6 +131,14 @@ export function GoalsByRoundCard({days}){
   </section>;
 }
 
+/** Fecha y hora de Lima en dos líneas cortas, para que la columna central no empuje a los nombres. */
+function Kick({iso}){
+  const t=Date.parse(iso);
+  if(!Number.isFinite(t))return <span className="text-[11px] text-slate-400">Por definir</span>;
+  const d=new Date(t),z={timeZone:'America/Lima'};
+  return <span className="flex flex-col items-center leading-tight"><Num className="text-sm font-bold text-white">{d.toLocaleTimeString('es-PE',{...z,hour:'2-digit',minute:'2-digit',hour12:false})}</Num><span className="text-[10px] text-slate-500">{d.toLocaleDateString('es-PE',{...z,weekday:'short',day:'numeric',month:'short'})}</span></span>;
+}
+
 /** Partidos agrupados por fecha. Próximos con probabilidad estimada; jugados con goleadores si el proveedor los publica. */
 export function MatchList({list,mode,rows,results,leagueId,logo,favorites,savedOnly,find}){
   const days=matchdays(list.filter(m=>!savedOnly||favorites.includes(m.home)||favorites.includes(m.away)));
@@ -142,10 +150,10 @@ export function MatchList({list,mode,rows,results,leagueId,logo,favorites,savedO
       <h4 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400"><span className="rounded-md bg-[#162032] px-2 py-0.5 text-white">{mode==='played'?`Fecha ${idx}`:k===0?'Próxima fecha':`Fecha +${k}`}</span><span className="normal-case tracking-normal text-slate-500">{matchdayLabel(d)}</span></h4>
       <ul className="space-y-1.5">{d.map(m=>{const h=find(m.home_id,m.home),a=find(m.away_id,m.away),p=mode==='next'&&h&&a?probabilities(h,a,rows,results):null;
         const goals=Array.isArray(m.goals)?m.goals:null;return <li key={m.id} className="rounded-xl border border-white/[.05] bg-white/[.02] px-3 py-2.5">
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-sm">
-          <span className="flex min-w-0 items-center justify-end gap-2"><span className={`truncate ${m.hg!=null&&m.hg<m.ag?'text-slate-400':'font-semibold text-white'}`}>{m.home}</span><Crest name={m.home} leagueId={leagueId} logo={logo(m.home_id,m.home)} size={22}/></span>
-          <span className="min-w-[84px] text-center">{m.hg==null?<Num className="text-[11px] text-slate-400">{when(m.date)}</Num>:<Num className="rounded-md bg-[#162032] px-3 py-1 font-bold text-white">{m.hg} - {m.ag}</Num>}</span>
-          <span className="flex min-w-0 items-center gap-2"><Crest name={m.away} leagueId={leagueId} logo={logo(m.away_id,m.away)} size={22}/><span className={`truncate ${m.hg!=null&&m.ag<m.hg?'text-slate-400':'font-semibold text-white'}`}>{m.away}</span></span>
+        <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 text-sm sm:gap-3">
+          <span className="flex min-w-0 items-center justify-end gap-2 text-right"><span className={`min-w-0 break-words leading-tight [overflow-wrap:anywhere] ${m.hg!=null&&m.hg<m.ag?'text-slate-400':'font-semibold text-white'}`}>{m.home}</span><span className="shrink-0"><Crest name={m.home} leagueId={leagueId} logo={logo(m.home_id,m.home)} size={22}/></span></span>
+          <span className="w-[76px] text-center sm:w-[92px]">{m.hg==null?<Kick iso={m.date}/>:<Num className="inline-block rounded-md bg-[#162032] px-3 py-1 font-bold text-white">{m.hg} - {m.ag}</Num>}</span>
+          <span className="flex min-w-0 items-center gap-2"><span className="shrink-0"><Crest name={m.away} leagueId={leagueId} logo={logo(m.away_id,m.away)} size={22}/></span><span className={`min-w-0 break-words leading-tight [overflow-wrap:anywhere] ${m.hg!=null&&m.ag<m.hg?'text-slate-400':'font-semibold text-white'}`}>{m.away}</span></span>
         </div>
         {p&&<div className="mx-auto mt-2 max-w-sm"><ProbBar p={p} compact/><p className="mt-1 flex justify-between text-[10px] tabular-nums text-slate-500"><span>{pct(p.home)}</span><span>Empate {pct(p.draw)}</span><span>{pct(p.away)}</span></p></div>}
         {goals?.length>0&&<p className="mt-1.5 flex flex-wrap justify-center gap-x-3 gap-y-0.5 text-[11px] text-slate-500"><Goal size={12} className="text-slate-600" aria-hidden="true"/>{goals.map((g,i)=><span key={i}>{g.player||'Sin dato'}{g.minute?` ${g.minute}`:''}{g.penalty?' (p)':''}{g.own_goal?' (ag)':''}</span>)}</p>}
