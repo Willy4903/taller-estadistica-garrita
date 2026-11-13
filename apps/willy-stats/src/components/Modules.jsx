@@ -140,14 +140,14 @@ function Kick({iso}){
 }
 
 /** Partidos agrupados por fecha. Próximos con probabilidad estimada; jugados con goleadores si el proveedor los publica. */
-export function MatchList({list,mode,rows,results,leagueId,logo,favorites,savedOnly,find}){
+export function MatchList({list,mode,rows,results,leagueId,logo,favorites,savedOnly,find,compact=false}){
   const days=matchdays(list.filter(m=>!savedOnly||favorites.includes(m.home)||favorites.includes(m.away)));
   const ordered=mode==='played'?[...days].reverse():days;
   if(!ordered.length)return <p className="rounded-xl border border-dashed border-white/[.08] p-8 text-center text-sm text-slate-400">{mode==='next'?'No hay próximos partidos en la captura publicada.':'No hay resultados en la captura publicada.'}</p>;
   const total=days.length;
   return <div className="space-y-5">
     {ordered.map((d,k)=>{const idx=mode==='played'?total-k:k+1;return <section key={idx} aria-label={`Fecha ${matchdayLabel(d)}`}>
-      <h4 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400"><span className="rounded-md bg-[#162032] px-2 py-0.5 text-white">{mode==='played'?`Fecha ${idx}`:k===0?'Próxima fecha':`Fecha +${k}`}</span><span className="normal-case tracking-normal text-slate-500">{matchdayLabel(d)}</span></h4>
+      {!compact&&<h4 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400"><span className="rounded-md bg-[#162032] px-2 py-0.5 text-white">{mode==='played'?`Fecha ${idx}`:k===0?'Próxima fecha':`Fecha +${k}`}</span><span className="normal-case tracking-normal text-slate-500">{matchdayLabel(d)}</span></h4>}
       <ul className="space-y-1.5">{d.map(m=>{const h=find(m.home_id,m.home),a=find(m.away_id,m.away),p=mode==='next'&&h&&a?probabilities(h,a,rows,results):null;
         const goals=Array.isArray(m.goals)?m.goals:null;return <li key={m.id} className="rounded-xl border border-white/[.05] bg-white/[.02] px-3 py-2.5">
         <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 text-sm sm:gap-3">
@@ -159,6 +159,36 @@ export function MatchList({list,mode,rows,results,leagueId,logo,favorites,savedO
         {goals?.length>0&&<p className="mt-1.5 flex flex-wrap justify-center gap-x-3 gap-y-0.5 text-[11px] text-slate-500"><Goal size={12} className="text-slate-600" aria-hidden="true"/>{goals.map((g,i)=><span key={i}>{g.player||'Sin dato'}{g.minute?` ${g.minute}`:''}{g.penalty?' (p)':''}{g.own_goal?' (ag)':''}</span>)}</p>}
       </li>;})}</ul>
     </section>;})}
-    {mode==='next'&&<p className="text-[11px] text-slate-500">Barras: probabilidad estimada (local, empate, visita) con un modelo de Poisson sobre los goles por partido de la tabla. No es una cuota ni un pronóstico oficial.</p>}
+    {mode==='next'&&!compact&&<p className="text-[11px] text-slate-500">Barras: probabilidad estimada (local, empate, visita) con un modelo de Poisson sobre los goles por partido de la tabla. No es una cuota ni un pronóstico oficial.</p>}
   </div>;
+}
+
+/** Próxima fecha del ámbito: hasta cinco partidos con su probabilidad estimada. */
+export function NextRoundCard({fixtures,rows,results,leagueId,logo,favorites,find,onTab,limit=5}){
+  const day=matchdays(fixtures)[0];
+  if(!day?.length)return null;
+  const shown=day.slice(0,limit);
+  return <section className={`${card} p-4 md:p-5`} aria-label="Próxima fecha">
+    <div className="mb-3 flex items-center justify-between gap-2"><h3 className="font-heading text-sm font-extrabold uppercase tracking-wider text-white">Próxima fecha</h3>
+      <button onClick={()=>onTab('fixtures')} className="min-h-9 rounded-md px-2 text-xs text-[#10B981] hover:bg-[#10B981]/10">{day.length>shown.length?`Ver los ${day.length} partidos`:'Ver todos los partidos'}</button></div>
+    <MatchList list={shown} mode="next" rows={rows} results={results} leagueId={leagueId} logo={logo} favorites={favorites} savedOnly={false} find={find} compact/>
+  </section>;
+}
+
+/** Disciplina: amarillas y rojas por equipo según el detalle publicado. */
+export function DisciplineCard({list,leagueId,complete}){
+  if(!list?.length)return null;
+  const max=Math.max(1,...list.map(t=>t.yellow+t.red*3)),rows=list.slice(0,8);
+  return <section className={`${card} p-4`} aria-label="Disciplina por equipo">
+    <div className="flex items-baseline justify-between gap-2"><h3 className="font-heading text-base font-bold text-white">Disciplina</h3><span className="text-[11px] text-slate-500">{complete?'Temporada':'Últimos 35 días'}</span></div>
+    <ul className="mt-3 space-y-2.5">
+      {rows.map(t=><li key={t.name} className="flex items-center gap-3">
+        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/[.05]"><Crest name={t.name} leagueId={leagueId} logo={t.logo} size={20}/></span>
+        <span className="min-w-0 flex-1"><span className="flex items-baseline justify-between gap-2 text-[13px]"><span className="truncate font-medium text-white">{t.name}</span>
+          <span className="flex shrink-0 items-center gap-2 tabular-nums"><span className="flex items-center gap-1"><CardIcon color="#F59E0B"/><Num className="text-slate-200">{t.yellow}</Num></span><span className="flex items-center gap-1"><CardIcon color="#EF4444"/><Num className="text-slate-200">{t.red}</Num></span></span></span>
+          <span className="mt-1 flex h-1 overflow-hidden rounded-full bg-white/[.06]"><span className="bg-[#F59E0B]" style={{width:`${t.yellow/max*100}%`}}/><span className="bg-[#EF4444]" style={{width:`${t.red*3/max*100}%`}}/></span></span>
+      </li>)}
+    </ul>
+    <p className="mt-3 text-[11px] text-slate-500">Tarjetas del detalle de cada partido publicado. La barra pondera cada roja como tres amarillas.</p>
+  </section>;
 }

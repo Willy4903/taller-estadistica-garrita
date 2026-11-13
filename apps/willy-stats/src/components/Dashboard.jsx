@@ -4,8 +4,8 @@ import {Crest,Form,Num} from './ui.jsx';
 import {Radar,GoalsChart,MetricBars} from './Charts.jsx';
 import {Standings} from './Standings.jsx';
 import {ContextBar} from './ContextBar.jsx';
-import {Kpis,ScorersCard,HistoryCard,GoalsByRoundCard,MatchList,card} from './Modules.jsx';
-import {radarAxes,groupLabel,splitTables,movement,scorers,cardTotals,goalsByMatchday,totalMatches,coverage,highImpact} from '../lib.js';
+import {Kpis,ScorersCard,HistoryCard,GoalsByRoundCard,MatchList,NextRoundCard,DisciplineCard,card} from './Modules.jsx';
+import {radarAxes,groupLabel,splitTables,movement,scorers,cardTotals,cardsByTeam,goalsByMatchday,totalMatches,coverage,highImpact} from '../lib.js';
 import {number,goalsPerMatch} from '../data.js';
 
 const signed=(v,d=0)=>v>0?`+${number(v,d)}`:number(v,d);
@@ -127,6 +127,9 @@ export function Dashboard(p){
   const complete=useMemo(()=>coverage(rows,results),[rows,results]);
   const cards=useMemo(()=>cardTotals(results),[results]);
   const rounds=useMemo(()=>goalsByMatchday(results),[results]);
+  const discipline=useMemo(()=>cardsByTeam(rows,results),[rows,results]);
+  // Con tablas largas, goles y disciplina pasan a la columna derecha para equilibrar alturas.
+  const longTable=rows.length>8;
   const keyMatch=useMemo(()=>highImpact(rows,fixtures,1)?.items?.[0]||null,[rows,fixtures]);
   const done=results.filter(m=>m.hg!=null),homeShare=done.length?{home:done.filter(m=>m.hg>m.ag).length,n:done.length}:null;
   const gpgRef=multi?(()=>{const others=groups.filter((_,i)=>i!==group).flatMap(g=>g.rows||[]);return others.length?goalsPerMatch(others):null;})():p.refGpg;
@@ -136,6 +139,7 @@ export function Dashboard(p){
     <Kpis rows={rows} leagueId={league.id} national={national} scope={scope} played={Math.round(rows.reduce((s,t)=>s+t.pj,0)/2)} total={totalMatches(league,rows.length)}
       gpg={goalsPerMatch(rows)} gpgRef={gpgRef} refLabel={multi?'resto de grupos':'promedio de las otras ligas'} cards={cards} homeShare={homeShare}/>
     <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,65fr)_minmax(0,35fr)]">
+      <div className="min-w-0 space-y-4">
       <div role="tabpanel" id="panel-main" aria-labelledby={`tab-${tab}`} className={`${card} min-w-0 p-3 md:p-5`}>
         {tab==='table'&&<TableCard key={`${league.id}:${group}`} {...p} national={national} title={tableTitle} moves={moves}/>}
         {tab==='history'&&<><h3 className="mb-4 font-heading text-sm font-extrabold uppercase tracking-wider text-white">Histórico de resultados</h3><MatchList list={results} mode="played" rows={rows} results={results} leagueId={league.id} logo={logos} favorites={p.favorites} savedOnly={p.savedOnly} find={byId}/></>}
@@ -145,10 +149,19 @@ export function Dashboard(p){
           <div className="grid gap-4 xl:grid-cols-2"><GoalsCard rows={rows} focus={p.focus} onFocus={p.onFocus} national={national}/><MetricsCard rows={rows} focus={p.focus} onFocus={p.onFocus} national={national}/></div>
           <Advanced rows={rows} leagueId={league.id} national={national} onDetail={p.onDetail}/></div>}
       </div>
+      {tab==='table'&&<>
+        <NextRoundCard fixtures={fixtures} rows={rows} results={results} leagueId={league.id} logo={logos} favorites={p.favorites} find={byId} onTab={p.onTab} limit={longTable?8:5}/>
+        {!longTable&&<div className={`grid gap-4 ${discipline?.length?'md:grid-cols-2':''}`}>
+          <GoalsCard rows={rows} focus={p.focus} onFocus={p.onFocus} national={national}/>
+          <DisciplineCard list={discipline} leagueId={league.id} complete={complete}/>
+        </div>}
+      </>}
+      </div>
       <aside className="min-w-0 space-y-4" aria-label="Módulos de análisis">
         <ScorersCard list={top} scope={scope} complete={complete} leagueId={league.id} logo={logos}/>
         <HistoryCard results={results} keyMatch={keyMatch} rows={rows} leagueId={league.id} logo={logos} onTab={p.onTab}/>
         <GoalsByRoundCard days={rounds}/>
+        {longTable&&tab!=='advanced'&&<><DisciplineCard list={discipline} leagueId={league.id} complete={complete}/><GoalsCard rows={rows} focus={p.focus} onFocus={p.onFocus} national={national}/></>}
       </aside>
     </div>
   </section>;
