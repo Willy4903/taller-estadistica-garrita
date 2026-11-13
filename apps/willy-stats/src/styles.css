@@ -6,15 +6,16 @@
 }
 @layer base{
   html{scroll-behavior:smooth;scroll-padding-top:96px;color-scheme:dark}
-  body{margin:0;background:#0B0E11;color:#e5e7eb;font-family:var(--font-sans);font-size:14px;overflow-x:clip;-webkit-text-size-adjust:100%}
+  body{margin:0;background:#0B111E;color:#e5e7eb;font-family:var(--font-sans);font-size:14px;overflow-x:clip;-webkit-text-size-adjust:100%}
   button,a,select{touch-action:manipulation}
   button{cursor:pointer}
   button,input,select{font:inherit}
   select,input{font-size:16px}
-  :focus-visible{outline:2px solid #22C55E;outline-offset:3px}
-  ::-webkit-scrollbar{height:8px;width:8px}::-webkit-scrollbar-thumb{background:#26303D;border-radius:8px}
+  :focus-visible{outline:2px solid #10B981;outline-offset:3px}
+  ::-webkit-scrollbar{height:8px;width:8px}::-webkit-scrollbar-thumb{background:#334155;border-radius:8px}
   h1,h2,h3{font-family:var(--font-heading)}
   dialog{max-height:90dvh;overflow-y:auto}
   .tabular-nums,.font-mono{font-variant-numeric:tabular-nums}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+.ticker-mask{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 20px,#000 calc(100% - 48px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 20px,#000 calc(100% - 48px),transparent 100%)}

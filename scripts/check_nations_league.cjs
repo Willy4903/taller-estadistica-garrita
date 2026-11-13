@@ -54,11 +54,14 @@ async function main(){
    p.on('pageerror',e=>errors.push(e.message));
    p.on('response',r=>{if(r.url().startsWith(origin)&&r.status()>=400)bad.push(r.url());});
    await p.goto(origin+'/futbol/#liga=unl',{waitUntil:'networkidle'});
-   const dash=p.locator('#dashboard'),select=dash.locator('select');
+   const dash=p.locator('#dashboard'),picker=dash.getByRole('group',{name:'Liga',exact:true});
+   const groupCard=name=>dash.getByRole('button',{name,exact:true});
    await dash.getByRole('heading',{name:'UEFA Nations League',exact:true}).waitFor();
-   await select.waitFor();
+   await picker.waitFor();
    assert.equal(await p.locator('#explorar li button').count(),17);
-   assert.deepEqual(await select.locator('option').allTextContents(),groups.map(g=>g.name));
+   assert.deepEqual(await picker.getByRole('button').allTextContents(),['Liga A1','Liga B1'],'una pestaña por liga con su número de grupos');
+   assert.equal(await groupCard('Liga A · Grupo 1').getAttribute('aria-pressed'),'true');
+   assert.match(await dash.getByRole('group',{name:'Cambiar de grupo'}).innerText(),/Liga A · Grupo 1[\s\S]*1 de 2/);
    assert.equal(await dash.locator('tbody tr').count(),4);
    assert.equal(await dash.getByRole('columnheader',{name:'Selección',exact:true}).count(),1);
    assert.equal(await dash.getByPlaceholder('Filtrar selección...').count(),1);
@@ -67,19 +70,35 @@ async function main(){
    assert.match(await p.locator('section[aria-label="Última fecha en números"]').innerText(),/España/);
    assert.doesNotMatch(await p.locator('section[aria-label="Última fecha en números"]').innerText(),/Inglaterra/);
    if(width<600){
-    assert(await select.evaluate(e=>parseFloat(getComputedStyle(e).fontSize)>=16),'selector no provoca zoom en iOS');
-    assert((await select.boundingBox()).height>=43,'selector con altura táctil de 44 px');
+    assert((await groupCard('Liga A · Grupo 1').boundingBox()).height>=43,'tarjeta de grupo con altura táctil de 44 px');
+    assert((await picker.getByRole('button').first().boundingBox()).height>=35,'pestaña de liga táctil');
    }
+   // Carrusel de próximos partidos: toda la competición y filtro por grupo.
+   const agenda=p.locator('#agenda'),firstCopy=agenda.locator('ul').first();
+   await agenda.waitFor();
+   assert.match(await firstCopy.innerText(),/España/);assert.match(await firstCopy.innerText(),/Inglaterra/);
+   await agenda.getByRole('button',{name:/^Liga A · Grupo 1/}).click();
+   assert.doesNotMatch(await firstCopy.innerText(),/Grecia/,'el filtro del carrusel deja solo el grupo elegido');
+   assert.match(await firstCopy.innerText(),/Inglaterra/,'el cruce eliminatorio sigue en el grupo');
+   await agenda.getByRole('button',{name:/^Todos/}).click();
+   // Tocar un partido de otro grupo abre ese grupo y resalta a sus selecciones.
+   await firstCopy.getByRole('button',{name:/^Inglaterra contra Grecia/}).click();
+   assert.equal(await groupCard('Liga B · Grupo 1').getAttribute('aria-pressed'),'true');
+   assert.match(new URL(p.url()).hash,/grupo=B1/);
+   assert.match(await dash.locator('tbody').innerText(),/Grecia[\s\S]*Próximo|Próximo[\s\S]*Grecia/);
+   await groupCard('Liga B · Grupo 1').waitFor();
+   await picker.getByRole('button',{name:/Liga A/}).click();await groupCard('Liga A · Grupo 1').click();
+   assert.match(new URL(p.url()).hash,/grupo=A1/);
    assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`sin desborde en tabla ${width}`);
 
-   await dash.getByRole('tab',{name:'Partidos',exact:true}).click();
+   await p.getByRole('tab',{name:'Partidos',exact:true}).click();
    const panel=dash.getByRole('tabpanel');
    assert.match(await panel.innerText(),/España/);
    assert.doesNotMatch(await panel.innerText(),/Grecia/);
    await dash.getByRole('button',{name:'Fecha siguiente',exact:true}).click();
    assert.match(await panel.innerText(),/España/);
    assert.match(await panel.innerText(),/Inglaterra/,'un cruce eliminatorio no se oculta por tener rival de otro grupo');
-   await select.selectOption('1');
+   await picker.getByRole('button',{name:/Liga B/}).click();await groupCard('Liga B · Grupo 1').click();
    // Al cambiar grupo se vuelve a su primera fecha, sin arrastrar la elegida antes.
    assert.match(await panel.innerText(),/Grecia/);
    assert.doesNotMatch(await panel.innerText(),/Portugal/);
@@ -92,7 +111,7 @@ async function main(){
    assert.doesNotMatch(await summary.innerText(),/España/);
    assert.equal(await summary.locator('dl > div').nth(1).locator('dd').innerText(),'8');
    assert.equal(await summary.locator('dl > div').nth(2).locator('dd').innerText(),'2');
-   await dash.getByRole('tab',{name:'Tabla de posiciones',exact:true}).click();
+   await p.getByRole('tab',{name:'Tabla',exact:true}).click();
    assert.match(await dash.locator('tbody').innerText(),/Inglaterra/);
    assert.doesNotMatch(await dash.locator('tbody').innerText(),/España/);
    await dash.getByPlaceholder('Filtrar selección...').fill('zzzz');
@@ -110,6 +129,11 @@ async function main(){
    assert.match(await p.locator('#comparador article').first().innerText(),/No comparable/,'grupos pequeños no reciben índice de paridad');
    await p.reload({waitUntil:'networkidle'});
    assert.equal(await dash.locator('h2').innerText(),'UEFA Nations League');
+   // Enlace directo a un grupo.
+   await p.goto(origin+'/futbol/#liga=unl&grupo=B1',{waitUntil:'networkidle'});
+   await groupCard('Liga B · Grupo 1').waitFor();
+   assert.equal(await groupCard('Liga B · Grupo 1').getAttribute('aria-pressed'),'true');
+   assert.match(await dash.locator('tbody').innerText(),/Inglaterra/);
    assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`sin desborde ${width}`);
 
    // Sin captura no aparecen selecciones, estadísticas ni un respaldo inventado.
