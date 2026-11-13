@@ -1,28 +1,14 @@
-import React,{useState,useMemo} from 'react';
-import {Info,AlertTriangle,RefreshCw,ChevronLeft,ChevronRight,ArrowUp,ArrowDown} from 'lucide-react';
-import {Crest,Form,Num,LeagueMark} from './ui.jsx';
+import React,{useState,useMemo,useEffect} from 'react';
+import {ArrowUp,ArrowDown,Lock} from 'lucide-react';
+import {Crest,Form,Num} from './ui.jsx';
 import {Radar,GoalsChart,MetricBars} from './Charts.jsx';
 import {Standings} from './Standings.jsx';
-import {GroupChips} from './GroupPicker.jsx';
-import {radarAxes,stamp,matchdays,matchdayLabel,groupLabel} from '../lib.js';
-import {number} from '../data.js';
+import {ContextBar} from './ContextBar.jsx';
+import {Kpis,ScorersCard,HistoryCard,GoalsByRoundCard,MatchList,card} from './Modules.jsx';
+import {radarAxes,groupLabel,splitTables,movement,scorers,cardTotals,goalsByMatchday,totalMatches,coverage,highImpact} from '../lib.js';
+import {number,goalsPerMatch} from '../data.js';
 
-const card='rounded-2xl border border-white/[.08] bg-[#162032]';
 const signed=(v,d=0)=>v>0?`+${number(v,d)}`:number(v,d);
-
-function SourceNote({publication,groupName,loadError,refreshing,onRefresh}){
-  const stale=publication&&!publication.historical&&Date.now()-Date.parse(publication.updated_at)>36*3600*1000;
-  let warn=false,text;
-  if(!publication){warn=true;text='Todavía no hay una captura publicada para esta competición. No se muestran cifras.';}
-  else if(publication.historical){warn=true;text=`Archivo de la temporada ${publication.season}${groupName?` (${groupName})`:''}. No es la clasificación vigente. Fuente: ${publication.provider||'proveedor'}. Captura: ${stamp(publication.updated_at)}.`;}
-  else if(stale){warn=true;text=`La captura tiene más de 36 horas (${stamp(publication.updated_at)}). Puede estar desactualizada.`;}
-  else text=`Temporada ${publication.season} · Fuente: ${publication.provider||'proveedor'} · Captura: ${stamp(publication.updated_at)}. No es un marcador en vivo.`;
-  return <div role="status" className={`mt-3 flex items-start gap-2 text-[11px] leading-relaxed ${warn?'rounded-xl border border-[#EAB308]/40 bg-[#EAB308]/10 px-3 py-2 text-yellow-100':'text-slate-500'}`}>
-    {warn?<AlertTriangle size={14} className="mt-0.5 shrink-0" aria-hidden="true"/>:<Info size={14} className="mt-0.5 shrink-0" aria-hidden="true"/>}
-    <span className="flex-1">{text}{publication?.warnings?.length?' Los partidos no estuvieron disponibles en esta captura.':''}{loadError&&' No se pudo recargar; se conserva la última captura.'}</span>
-    <button onClick={onRefresh} className="-my-1.5 grid h-7 w-7 shrink-0 place-items-center rounded-md text-slate-400 hover:text-white" aria-label="Recargar captura publicada"><RefreshCw size={13} className={refreshing?'animate-spin':''}/></button>
-  </div>;
-}
 
 function Teams({rows,leagueId,favorites,onDetail,onFocus}){
   if(!rows.length)return <p className="rounded-xl border border-dashed border-white/[.08] p-8 text-center text-sm text-slate-400">No hay equipos publicados para esta competición.</p>;
@@ -74,32 +60,6 @@ function Advanced({rows,leagueId,national,onDetail}){
   </div>;
 }
 
-function Fixtures({fixtures,results,favorites,savedOnly,type,onType}){
-  const days=useMemo(()=>matchdays(type==='next'?fixtures:results),[type,fixtures,results]);
-  const [picked,setPicked]=useState(null);
-  const idx=Math.min(picked??(type==='next'?0:days.length-1),days.length-1);
-  const day=(days[idx]||[]).filter(m=>!savedOnly||favorites.includes(m.home)||favorites.includes(m.away));
-  const when=iso=>Number.isFinite(Date.parse(iso))?new Date(iso).toLocaleString('es-PE',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'America/Lima'}):'Por definir';
-  const change=t=>{setPicked(null);onType(t);};
-  return <div>
-    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <div role="group" aria-label="Tipo de partidos" className="inline-flex rounded-lg border border-white/[.08] bg-[#0B111E] p-1">
-        {[['next','Próximos'],['played','Resultados']].map(([v,l])=><button key={v} aria-pressed={type===v} onClick={()=>change(v)} className={`rounded-md px-4 py-1.5 text-sm ${type===v?'bg-[#10B981] font-semibold text-[#04210F]':'text-slate-300'}`}>{l}</button>)}
-      </div>
-      {days.length>0&&<div className="flex items-center gap-2 text-sm">
-        <button aria-label="Fecha anterior" disabled={idx<=0} onClick={()=>setPicked(idx-1)} className="grid h-11 w-11 place-items-center rounded-lg bg-[#1E293B] text-slate-200 disabled:opacity-30"><ChevronLeft size={16}/></button>
-        <span className="min-w-[150px] text-center text-slate-200" aria-live="polite">{type==='next'?'Próxima fecha':'Última fecha'}{idx!==(type==='next'?0:days.length-1)&&` (${idx+1} de ${days.length})`}<br/><span className="text-xs text-slate-400">{matchdayLabel(days[idx])}</span></span>
-        <button aria-label="Fecha siguiente" disabled={idx>=days.length-1} onClick={()=>setPicked(idx+1)} className="grid h-11 w-11 place-items-center rounded-lg bg-[#1E293B] text-slate-200 disabled:opacity-30"><ChevronRight size={16}/></button>
-      </div>}
-    </div>
-    {!day.length?<p className="rounded-xl border border-dashed border-white/[.08] p-8 text-center text-sm text-slate-400">{type==='next'?'No hay próximos partidos en la captura publicada.':'No hay resultados recientes en la captura publicada.'}</p>
-    :<ul className="space-y-1.5">{day.map(m=><li key={m.id} className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg bg-white/[.02] px-2 py-3 text-sm">
-      <span className="text-right font-medium text-white">{m.home}</span>
-      <span className="min-w-[96px] text-center">{m.hg==null?<Num className="text-xs text-slate-400">{when(m.date)}</Num>:<Num className="rounded-md bg-[#1E293B] px-3 py-1 font-bold text-white">{m.hg} - {m.ag}</Num>}</span>
-      <span className="font-medium text-white">{m.away}</span></li>)}</ul>}
-  </div>;
-}
-
 function GoalsCard({rows,focus,onFocus,national}){
   return <section className={`${card} p-4`} aria-label="Goles a favor y en contra">
     <div className="flex flex-wrap items-start justify-between gap-2">
@@ -120,7 +80,7 @@ function MetricsCard({rows,focus,onFocus,national}){
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h3 className="font-heading text-base font-bold text-white">Métricas de rendimiento</h3>
       <label className="relative"><span className="sr-only">{national?'Selección':'Equipo'} a analizar</span>
-        <select value={team.name} onChange={e=>onFocus(e.target.value)} className="min-h-11 max-w-[190px] rounded-lg border border-white/[.08] bg-[#0B111E] px-2 text-base text-white sm:text-sm">{played.map(r=><option key={r.name} value={r.name}>{r.rank}. {r.name}</option>)}</select></label>
+        <select value={team.name} onChange={e=>onFocus(e.target.value)} className="min-h-11 max-w-[190px] rounded-lg border border-white/[.08] bg-[#080D17] px-2 text-base text-white sm:text-sm">{played.map(r=><option key={r.name} value={r.name}>{r.rank}. {r.name}</option>)}</select></label>
     </div>
     <div className="mt-3 grid items-center gap-4 @md:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)]">
       <div className="mx-auto w-full max-w-[260px]"><Radar axes={axes} teamName={team.name}/></div>
@@ -130,25 +90,65 @@ function MetricsCard({rows,focus,onFocus,national}){
   </section>;
 }
 
-export function Dashboard(p){
-  const {league,rows,tab,publication,groups,group,onGroup,results}=p;
-  const national=league.teamType==='national',groupName=groups.length>1?groupLabel(groups[group]?.name,group).full:null;
-  return <section id="dashboard" className="mx-auto mt-6 max-w-[1440px] px-4 md:px-8">
-    <div className="flex min-w-0 items-center gap-3"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-white/[.08] bg-[#162032]"><LeagueMark league={league} size={32}/></span>
-      <div className="min-w-0"><p className="text-xs text-slate-400">{league.country} · {league.continent}{groupName&&<> · <span className="font-semibold text-[#10B981]">{groupName}</span></>}</p><h2 className="font-heading text-2xl font-extrabold tracking-tight text-white md:text-3xl">{league.name}</h2></div></div>
-    <SourceNote publication={publication} groupName={groupName} loadError={p.loadError} refreshing={p.refreshing} onRefresh={p.onRefresh}/>
-    <div className="mt-4 grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,65fr)_minmax(0,35fr)]">
-      <div role="tabpanel" id="panel-main" aria-labelledby={`tab-${tab}`} className={`${card} min-w-0 p-3 md:p-5`}>
-        <GroupChips groups={groups} group={group} onGroup={onGroup}/>
-        {tab!=='table'&&<h3 className="mb-3 font-heading text-sm font-bold uppercase tracking-wider text-slate-300">{{table:national?'Tabla del grupo':'Tabla de posiciones',teams:national?'Selecciones':'Equipos',fixtures:'Partidos',advanced:'Estadísticas avanzadas'}[tab]}</h3>}
-        {tab==='table'&&<Standings title={national?'Tabla del grupo':'Tabla de posiciones'} rows={rows} leagueId={league.id} national={national} favorites={p.favorites} onFavorite={p.onFavorite} onDetail={p.onDetail} query={p.query} onQuery={p.onQuery} savedOnly={p.savedOnly} onClearSaved={p.onClearSaved} highlight={p.highlight}/>}
-        {tab==='teams'&&<Teams rows={rows} leagueId={league.id} favorites={p.favorites} onDetail={p.onDetail} onFocus={p.onFocus}/>}
-        {tab==='fixtures'&&<Fixtures key={`${league.id}:${group}`} fixtures={p.fixtures} results={results} favorites={p.favorites} savedOnly={p.savedOnly} type={p.fixtureType} onType={p.onFixtureType}/>}
-        {tab==='advanced'&&<Advanced rows={rows} leagueId={league.id} national={national} onDetail={p.onDetail}/>}
+const VIEWS=[['general','General'],['home','Local'],['away','Visitante'],['perf','Rendimiento']];
+
+function TableCard(p){
+  const {rows,results,league,national,title,analysis,moves}=p;
+  const [view,setView]=useState('general');
+  const splits=useMemo(()=>splitTables(rows,results),[rows,results]);
+  useEffect(()=>{if(!splits&&(view==='home'||view==='away'))setView('general');},[splits,view]);
+  const common={leagueId:league.id,national,favorites:p.favorites,onFavorite:p.onFavorite,onDetail:p.onDetail,query:p.query,onQuery:p.onQuery,savedOnly:p.savedOnly,onClearSaved:p.onClearSaved,analysis};
+  const lockMsg='Requiere todos los resultados de la temporada; esta captura solo incluye los partidos recientes.';
+  return <div>
+    <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+      <h3 className="font-heading text-sm font-extrabold uppercase tracking-wider text-white">{title}</h3>
+      <div role="group" aria-label="Vista de la tabla" className="flex max-w-full overflow-x-auto rounded-full border border-white/[.08] bg-[#080D17] p-1 [scrollbar-width:none]">
+        {VIEWS.map(([v,l])=>{const locked=(v==='home'||v==='away')&&!splits;return <button key={v} aria-pressed={view===v} disabled={locked} title={locked?lockMsg:undefined} onClick={()=>setView(v)}
+          className={`flex min-h-9 shrink-0 items-center gap-1 rounded-full px-3.5 text-xs transition ${view===v?'bg-[#162032] font-semibold text-white shadow ring-1 ring-white/10':'text-slate-400 hover:text-white'} disabled:cursor-not-allowed disabled:opacity-40`}>{locked&&<Lock size={11} aria-hidden="true"/>}{l}</button>;})}
       </div>
-      <aside className="min-w-0 space-y-5" aria-label="Visualizaciones">
-        <GoalsCard rows={rows} focus={p.focus} onFocus={p.onFocus} national={national}/>
-        <MetricsCard rows={rows} focus={p.focus} onFocus={p.onFocus} national={national}/>
+    </div>
+    {view==='general'&&<Standings rows={rows} {...common} highlight={p.highlight} moves={moves}/>}
+    {view==='home'&&splits&&<Standings rows={splits.home} {...common} emptyText="Sin partidos de local."/>}
+    {view==='away'&&splits&&<Standings rows={splits.away} {...common} emptyText="Sin partidos de visita."/>}
+    {view==='perf'&&<Advanced rows={rows} leagueId={league.id} national={national} onDetail={p.onDetail}/>}
+    {!splits&&rows.length>0&&<p className="mt-2 flex items-center gap-1.5 text-[11px] text-slate-500"><Lock size={11} aria-hidden="true"/>Local y Visitante: {lockMsg.toLowerCase()}</p>}
+  </div>;
+}
+
+export function Dashboard(p){
+  const {league,rows,tab,publication,groups,group,onGroup,results,fixtures}=p;
+  const national=league.teamType==='national',multi=groups.length>1;
+  const current=multi?groupLabel(groups[group]?.name,group):null;
+  const scope=multi&&(national||current?.tier||/^Grupo/.test(current?.label||''))?'del grupo':'de la liga';
+  const byId=useMemo(()=>{const id=new Map(),name=new Map();rows.forEach(r=>{if(r.team_id)id.set(String(r.team_id),r);name.set(r.name,r);});return (i,n)=>(i!=null&&i!==''&&id.get(String(i)))||name.get(n)||null;},[rows]);
+  const logos=useMemo(()=>{const id=new Map(),name=new Map();groups.forEach(g=>(g.rows||[]).forEach(r=>{if(r.logo){if(r.team_id)id.set(String(r.team_id),r.logo);name.set(r.name,r.logo);}}));return (i,n)=>id.get(String(i))||name.get(n);},[groups]);
+  const moves=useMemo(()=>movement(rows,results),[rows,results]);
+  const top=useMemo(()=>scorers(rows,results),[rows,results]);
+  const complete=useMemo(()=>coverage(rows,results),[rows,results]);
+  const cards=useMemo(()=>cardTotals(results),[results]);
+  const rounds=useMemo(()=>goalsByMatchday(results),[results]);
+  const keyMatch=useMemo(()=>highImpact(rows,fixtures,1)?.items?.[0]||null,[rows,fixtures]);
+  const done=results.filter(m=>m.hg!=null),homeShare=done.length?{home:done.filter(m=>m.hg>m.ag).length,n:done.length}:null;
+  const gpgRef=multi?(()=>{const others=groups.filter((_,i)=>i!==group).flatMap(g=>g.rows||[]);return others.length?goalsPerMatch(others):null;})():p.refGpg;
+  const tableTitle=multi&&current?`Clasificación · ${current.tier?current.code:current.label}`:'Clasificación';
+  return <section id="dashboard" className="mx-auto mt-4 max-w-[1440px] space-y-4 px-4 md:px-8">
+    <ContextBar competitions={p.competitions} league={league} onLeague={p.onLeague} groups={groups} group={group} onGroup={onGroup} publication={publication} loadError={p.loadError} refreshing={p.refreshing} onRefresh={p.onRefresh}/>
+    <Kpis rows={rows} leagueId={league.id} national={national} scope={scope} played={Math.round(rows.reduce((s,t)=>s+t.pj,0)/2)} total={totalMatches(league,rows.length)}
+      gpg={goalsPerMatch(rows)} gpgRef={gpgRef} refLabel={multi?'resto de grupos':'promedio de las otras ligas'} cards={cards} homeShare={homeShare}/>
+    <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,65fr)_minmax(0,35fr)]">
+      <div role="tabpanel" id="panel-main" aria-labelledby={`tab-${tab}`} className={`${card} min-w-0 p-3 md:p-5`}>
+        {tab==='table'&&<TableCard key={`${league.id}:${group}`} {...p} national={national} title={tableTitle} moves={moves}/>}
+        {tab==='history'&&<><h3 className="mb-4 font-heading text-sm font-extrabold uppercase tracking-wider text-white">Histórico de resultados</h3><MatchList list={results} mode="played" rows={rows} results={results} leagueId={league.id} logo={logos} favorites={p.favorites} savedOnly={p.savedOnly} find={byId}/></>}
+        {tab==='teams'&&<><h3 className="mb-4 font-heading text-sm font-extrabold uppercase tracking-wider text-white">{national?'Selecciones':'Equipos'}</h3><Teams rows={rows} leagueId={league.id} favorites={p.favorites} onDetail={p.onDetail} onFocus={p.onFocus}/></>}
+        {tab==='fixtures'&&<><h3 className="mb-4 font-heading text-sm font-extrabold uppercase tracking-wider text-white">Próximos partidos</h3><MatchList list={fixtures} mode="next" rows={rows} results={results} leagueId={league.id} logo={logos} favorites={p.favorites} savedOnly={p.savedOnly} find={byId}/></>}
+        {tab==='advanced'&&<div className="space-y-4"><h3 className="font-heading text-sm font-extrabold uppercase tracking-wider text-white">Estadísticas avanzadas</h3>
+          <div className="grid gap-4 xl:grid-cols-2"><GoalsCard rows={rows} focus={p.focus} onFocus={p.onFocus} national={national}/><MetricsCard rows={rows} focus={p.focus} onFocus={p.onFocus} national={national}/></div>
+          <Advanced rows={rows} leagueId={league.id} national={national} onDetail={p.onDetail}/></div>}
+      </div>
+      <aside className="min-w-0 space-y-4" aria-label="Módulos de análisis">
+        <ScorersCard list={top} scope={scope} complete={complete} leagueId={league.id} logo={logos}/>
+        <HistoryCard results={results} keyMatch={keyMatch} rows={rows} leagueId={league.id} logo={logos} onTab={p.onTab}/>
+        <GoalsByRoundCard days={rounds}/>
       </aside>
     </div>
   </section>;

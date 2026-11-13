@@ -26,7 +26,7 @@ export function Crest({name,leagueId,logo,size=28}){
     :<span role="img" aria-label={`Escudo de ${name} pendiente de verificar`} title="Escudo pendiente de verificar" className="grid place-items-center text-slate-600" style={{height:size,width:size}}><ShieldCheck size={size*.7}/></span>;
 }
 
-const FORM={V:['bg-[#10B981] text-[#04210F]','Victoria'],E:['bg-[#94A3B8] text-[#0B111E]','Empate'],D:['bg-[#EF4444] text-white','Derrota']};
+const FORM={V:['bg-[#10B981] text-[#04210F]','Victoria'],E:['bg-[#94A3B8] text-[#080D17]','Empate'],D:['bg-[#EF4444] text-white','Derrota']};
 export function Form({values=[],small=false}){
   if(!values.length)return <span className="text-slate-600">—</span>;
   return <span className="inline-flex gap-1" role="img" aria-label={`Últimos resultados: ${values.join(', ')}`}>
@@ -39,6 +39,6 @@ export function Num({children,className=''}){return <span className={`font-mono 
 export function Photo({src,alt,className=''}){
   const [failed,setFailed]=useState(false);
   return failed
-    ?<div role="img" aria-label={alt} className={`bg-gradient-to-br from-[#10301f] via-[#0f1a16] to-[#0B111E] ${className}`}/>
+    ?<div role="img" aria-label={alt} className={`bg-gradient-to-br from-[#10301f] via-[#0f1a16] to-[#080D17] ${className}`}/>
     :<img src={src} alt={alt} loading="lazy" referrerPolicy="no-referrer" onError={()=>setFailed(true)} className={`object-cover ${className}`}/>;
 }

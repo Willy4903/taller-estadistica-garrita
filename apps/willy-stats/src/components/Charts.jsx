@@ -34,10 +34,10 @@ const SCALE=1;
 export function ParityBars({items,activeId}){
   const pct=v=>`${Math.min(100,v/SCALE*100)}%`;
   return <ul className="space-y-3">
-    {items.map(({id,name,continent,p})=><li key={id} className={id===activeId?'rounded-lg bg-[#1E293B] p-2 -mx-2':''}>
+    {items.map(({id,name,continent,p})=><li key={id} className={id===activeId?'rounded-lg bg-[#162032] p-2 -mx-2':''}>
       <div className="mb-1 flex justify-between text-xs"><span className={id===activeId?'font-semibold text-white':'text-slate-300'}>{name}</span>
         <Num className="text-slate-300">{p.level.toFixed(2)} <span className="text-slate-500">({p.low.toFixed(2)} a {p.high.toFixed(2)})</span></Num></div>
-      <div className="relative h-2 rounded-full bg-[#1E293B]" role="img" aria-label={`${name}: diferencia de nivel ${p.level.toFixed(2)} puntos por partido, rango ${p.low.toFixed(2)} a ${p.high.toFixed(2)}`}>
+      <div className="relative h-2 rounded-full bg-[#162032]" role="img" aria-label={`${name}: diferencia de nivel ${p.level.toFixed(2)} puntos por partido, rango ${p.low.toFixed(2)} a ${p.high.toFixed(2)}`}>
         <div className={`h-full rounded-full ${continent==='América'?'bg-[#10B981]':'bg-[#F97316]'}`} style={{width:pct(p.level)}}/>
         <div className="absolute top-1/2 h-px -translate-y-1/2 bg-white/70" style={{left:pct(p.low),width:`calc(${pct(p.high)} - ${pct(p.low)})`}}/>
         <div className="absolute top-1/2 h-2.5 w-px -translate-y-1/2 bg-white/70" style={{left:pct(p.low)}}/><div className="absolute top-1/2 h-2.5 w-px -translate-y-1/2 bg-white/70" style={{left:pct(p.high)}}/>
@@ -94,11 +94,11 @@ export function GoalsChart({rows,onPick,focus}){
         <text x={x(i)} y={H-12} textAnchor="middle" fontSize={n>14?8.5:10} className={active?'fill-white font-semibold':'fill-slate-400'}>{abbr(r.name)}</text>
       </g>;})}
       <path d={line} fill="none" stroke="#EF4444" strokeWidth="2" strokeLinejoin="round"/>
-      {list.map((r,i)=><circle key={r.name} cx={x(i)} cy={y(r.gc)} r={hover===i?4.5:3} fill="#0B111E" stroke="#EF4444" strokeWidth="2"/>)}
+      {list.map((r,i)=><circle key={r.name} cx={x(i)} cy={y(r.gc)} r={hover===i?4.5:3} fill="#080D17" stroke="#EF4444" strokeWidth="2"/>)}
       {list.map((r,i)=><rect key={r.name} x={L+slot*i} y={T} width={slot} height={ih+B} fill="transparent" className="cursor-pointer"
         onMouseEnter={()=>setHover(i)} onMouseLeave={()=>setHover(null)} onClick={()=>onPick?.(r)}/>)}
     </svg>
-    {h&&<div className="pointer-events-none absolute top-1 rounded-lg border border-white/[.08] bg-[#0B111E]/95 px-3 py-2 text-xs shadow-xl" style={{left:`clamp(0px, calc(${(x(hover)/W*100).toFixed(1)}% - 70px), calc(100% - 150px))`}}>
+    {h&&<div className="pointer-events-none absolute top-1 rounded-lg border border-white/[.08] bg-[#080D17]/95 px-3 py-2 text-xs shadow-xl" style={{left:`clamp(0px, calc(${(x(hover)/W*100).toFixed(1)}% - 70px), calc(100% - 150px))`}}>
       <p className="font-semibold text-white">{h.rank}. {h.name}</p>
       <p className="mt-0.5 text-slate-300"><i className="mr-1 inline-block h-2 w-2 rounded-sm bg-[#10B981]"/>A favor <Num className="text-white">{h.gf}</Num> <i className="ml-2 mr-1 inline-block h-2 w-2 rounded-full bg-[#EF4444]"/>En contra <Num className="text-white">{h.gc}</Num></p>
     </div>}

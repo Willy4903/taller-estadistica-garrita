@@ -26,7 +26,7 @@ let testContext='Preparar servidor y navegador';
   if(width<1024){await p.getByRole('button',{name:'Abrir menú',exact:true}).tap();assert(await p.getByRole('navigation',{name:'Principal móvil'}).isVisible(),`menú móvil no visible en ${width}×${height}`);
    await p.getByRole('navigation',{name:'Principal móvil'}).getByRole('button',{name:'Partidos',exact:true}).tap();assert.equal(await p.locator('#menu-movil').count(),0,`menú móvil no se cerró en ${width}×${height}`);}
   stage('Tabla y columnas visibles');
-  await p.getByRole('tab',{name:'Tabla',exact:true}).tap();
+  await p.getByRole('tab',{name:'Clasificación',exact:true}).tap();
   const table=await dash.locator('table').evaluate(e=>({scrollWidth:e.parentElement.scrollWidth,clientWidth:e.parentElement.clientWidth}));
   assert(table.scrollWidth<=table.clientWidth+1,`tabla sin scroll horizontal ${width}: ${JSON.stringify(table)}`);
   const pts=await dash.locator('tbody tr').first().locator('td').nth(2).boundingBox();assert(pts&&pts.x>=0&&pts.x+pts.width<=width,`columnas visibles ${width}: ${JSON.stringify(pts)}`);
