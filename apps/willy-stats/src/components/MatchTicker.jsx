@@ -135,8 +135,8 @@ export function MatchTicker({league,publication,groups,group,favorites,onPick}){
     :<li key={it.key} className="shrink-0" aria-hidden={hidden||undefined}><MatchCard match={it.match} now={now} leagueId={league.id} logo={logos} tag={tagOf(it.match)} selected={multi&&groupOf.get(it.match.id)===group} favs={favs} onPick={onPick} hidden={hidden}/></li>);
 
   return <section id="agenda" aria-labelledby="agenda-title" className="mx-auto mt-4 max-w-[1440px] px-4 md:mt-8 md:px-8">
-    <div className="rounded-2xl border border-white/[.08] bg-[#111A2B] py-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 px-4 md:px-5">
+    <div className="rounded-2xl border border-white/[.08] bg-[#111A2B] py-3 sm:py-4">
+      <div className="flex items-center justify-between gap-3 px-4 md:px-5">
         <div className="flex min-w-0 items-center gap-3">
           <span className="hidden h-10 w-10 shrink-0 place-items-center rounded-xl sm:grid bg-[#10B981]/15 text-[#10B981]"><CalendarClock size={20} aria-hidden="true"/></span>
           <div className="min-w-0">
@@ -144,8 +144,8 @@ export function MatchTicker({league,publication,groups,group,favorites,onPick}){
             <p className="text-xs text-slate-400"><Num>{total}</Num> {total===1?'partido':'partidos'}{span.length>1&&` en ${span.length} días`} · Hora de Lima<span className="hidden sm:inline"> · Según la captura publicada, no es un marcador en vivo</span></p>
           </div>
         </div>
-        <div className="flex w-full items-center gap-2 sm:w-auto">
-          {multi&&<div role="group" aria-label="Partidos a mostrar" className="flex min-w-0 flex-1 rounded-lg border border-white/[.08] bg-[#0B111E] p-1 text-xs sm:flex-none">
+        <div className="flex items-center gap-2">
+          {multi&&<div role="group" aria-label="Partidos a mostrar" className="hidden min-w-0 flex-1 rounded-lg border border-white/[.08] bg-[#0B111E] p-1 text-xs sm:flex sm:flex-none">
             {[['all','Todos'],['group',current?.full]].map(([v,l])=><button key={v} aria-pressed={scope===v} onClick={()=>setScope(v)} className={`min-h-9 min-w-0 flex-1 truncate rounded-md px-2 sm:max-w-[200px] sm:flex-none sm:px-3 ${scope===v?'bg-[#10B981] font-semibold text-[#04210F]':'text-slate-300 hover:text-white'}`}>{l}<span className="ml-1 opacity-70">({v==='all'?withGroup.length:inGroup.length})</span></button>)}
           </div>}
           {loop&&<button onClick={()=>setManualPause(v=>!v)} aria-pressed={manualPause} aria-label={manualPause?'Reanudar desplazamiento':'Pausar desplazamiento'} className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-white/[.08] bg-[#0B111E] text-slate-200 hover:text-white">{manualPause?<Play size={15}/>:<Pause size={15}/>}</button>}
@@ -158,7 +158,7 @@ export function MatchTicker({league,publication,groups,group,favorites,onPick}){
         onPointerEnter={e=>{if(e.pointerType==='mouse')pause.current.hover=true;}} onPointerLeave={e=>{if(e.pointerType==='mouse')pause.current.hover=false;}}
         onTouchStart={()=>{clearTimeout(touchTimer.current);pause.current.touch=true;}} onTouchEnd={()=>{clearTimeout(touchTimer.current);touchTimer.current=setTimeout(()=>{pause.current.touch=false;},4000);}}
         onFocus={()=>{pause.current.focus=true;}} onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget))pause.current.focus=false;}}
-        className="ticker-mask mt-4 overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        className="ticker-mask mt-3 overflow-x-auto sm:mt-4 overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div ref={track} className="flex w-max pl-4 md:pl-5">
           <ul className="flex gap-2.5 py-1 pr-2.5" aria-label={mode==='next'?'Próximos partidos':'Resultados recientes'}>{renderItems(false)}</ul>
           {loop&&<ul className="flex gap-2.5 py-1 pr-2.5" aria-hidden="true">{renderItems(true)}</ul>}

@@ -1,12 +1,12 @@
 import React,{useState,useMemo,useEffect,useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {X} from 'lucide-react';
-import {competitions,parity,number} from './data.js';
-import {getRows,matchesForTeams,reading as readingOf,radarAxes,lastRound,highImpact,streaks as streaksOf,groupLabel,teamGroups,stamp} from './lib.js';
+import {competitions,number} from './data.js';
+import {getRows,matchesForTeams,radarAxes,lastRound,highImpact,streaks as streaksOf,groupLabel,teamGroups,stamp} from './lib.js';
 import {Navbar,LeagueSelect} from './components/Header.jsx';
 import {MatchTicker} from './components/MatchTicker.jsx';
 import {Carousel} from './components/Carousel.jsx';
-import {Dashboard,ReadingCard,ParityCard} from './components/Dashboard.jsx';
+import {Dashboard} from './components/Dashboard.jsx';
 import {LastRoundCard,ImpactCard,StreaksCard} from './components/Insights.jsx';
 import {Comparator,Methodology} from './components/Sections.jsx';
 import {CrestContext,Crest,Form,Num,Brand} from './components/ui.jsx';
@@ -45,14 +45,12 @@ function App(){
   const publication=snapshot[leagueId],groups=publication?.groups||[];
   const safeGroup=Math.min(group,Math.max(0,groups.length-1));
   const rows=useMemo(()=>getRows({league,snapshot,group:safeGroup}),[league,snapshot,safeGroup]);
-  const reading=useMemo(()=>readingOf(rows),[rows]);
   const scoped=league.teamType==='national'&&groups.length>0;
   const results=useMemo(()=>scoped?matchesForTeams(publication?.results||[],rows):publication?.results||[],[publication,rows,scoped]);
   const fixtures=useMemo(()=>scoped?matchesForTeams(publication?.fixtures||[],rows):publication?.fixtures||[],[publication,rows,scoped]);
   const summary=useMemo(()=>lastRound(results),[results]);
   const impact=useMemo(()=>highImpact(rows,fixtures),[rows,fixtures]);
   const streaks=useMemo(()=>streaksOf(rows),[rows]);
-  const parityItems=useMemo(()=>competitions.map(l=>({id:l.id,name:l.name,continent:l.continent,p:parity(getRows({league:l,snapshot,group:0}))})).filter(x=>x.p),[snapshot]);
 
   const writeHash=(id,g)=>{const code=g!=null&&groups.length>1&&id===leagueId?groupLabel(groups[g]?.name,g).code:null;
     window.history.replaceState(null,'',`#liga=${id}${code?`&grupo=${encodeURIComponent(code)}`:''}`);};
@@ -84,11 +82,11 @@ function App(){
     <main id="main">
       <div className="mx-auto mt-4 max-w-[1440px] px-4 md:hidden"><LeagueSelect competitions={competitions} league={league} onSelect={selectLeague} className="w-full"/></div>
       <MatchTicker league={league} publication={publication} groups={groups} group={safeGroup} favorites={favorites} onPick={pickMatch}/>
-      <Dashboard league={league} rows={rows} reading={reading} tab={tab} publication={publication} groups={groups} group={safeGroup} onGroup={selectGroup}
+      <Dashboard league={league} rows={rows} tab={tab} publication={publication} groups={groups} group={safeGroup} onGroup={selectGroup}
         loadError={loadError} refreshing={refreshing} onRefresh={loadSnapshot} favorites={favorites} onFavorite={toggleFavorite} onDetail={setDetail} query={query} onQuery={setQuery} savedOnly={savedOnly} onClearSaved={()=>setSavedOnly(false)}
         fixtures={fixtures} results={results} summary={summary} fixtureType={fixtureType} onFixtureType={setFixtureType} focus={focus} onFocus={setFocus} highlight={highlight}/>
-      <section aria-label="Análisis" className="mx-auto mt-5 max-w-[1440px] columns-1 gap-5 px-4 md:columns-2 md:px-8 xl:columns-3 [&>*]:mb-5 [&>*]:break-inside-avoid">
-        <ReadingCard league={league} reading={reading}/><LastRoundCard summary={summary}/><ImpactCard impact={impact}/><StreaksCard streaks={streaks}/><ParityCard items={parityItems} activeId={leagueId}/>
+      <section aria-label="Análisis" className="mx-auto mt-5 grid max-w-[1440px] grid-cols-1 items-start gap-5 px-4 md:grid-cols-2 md:px-8 xl:grid-cols-3">
+        <ImpactCard impact={impact}/><LastRoundCard summary={summary}/><StreaksCard streaks={streaks}/>
       </section>
       <div className="mt-14"><Carousel competitions={competitions} leagueId={leagueId} continent={continent} onContinent={selectContinent} onSelect={id=>{selectLeague(id);jump('dashboard');}}/></div>
       <Comparator competitions={competitions} compare={compare} onCompare={setCompare} snapshot={snapshot}/>
