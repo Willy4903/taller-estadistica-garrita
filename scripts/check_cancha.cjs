@@ -9,6 +9,8 @@ const server=spawn('python3',['-m','http.server','8780','--bind','127.0.0.1','--
  p.on('pageerror',e=>errors.push(e.message));p.on('response',r=>{if(r.url().includes('127.0.0.1')&&r.status()>=400)bad.push(r.url());});
  await p.goto('http://127.0.0.1:8780/futbol/',{waitUntil:'networkidle'});
  await p.getByRole('heading',{name:'¿Dónde analizamos hoy?'}).waitFor();
+ // Carrusel de próximos partidos: aparece con datos publicados y tiene control de pausa.
+ const agenda=p.locator('#agenda');if(await agenda.count()){assert((await agenda.locator('ul').first().locator('li button').count())>0);}
  const cards=p.locator('#explorar li button');assert.equal(await cards.count(),17);
  // Por defecto se muestran datos publicados, nunca la demostración.
  const dash=p.locator('#dashboard');
@@ -19,9 +21,10 @@ const server=spawn('python3',['-m','http.server','8780','--bind','127.0.0.1','--
  assert.doesNotMatch(await dash.getByRole('status').innerText(),/demostraci/i);
  assert.equal(await p.getByText(/demostraci|ficticio|ilustrativo/i).count(),0);
  for(const name of ['Premier League','LaLiga','Brasileirão']){await p.locator('#explorar').getByRole('button',{name:new RegExp(name)}).click();assert.match(await dash.locator('h2').innerText(),new RegExp(name.slice(0,5)));assert((await dash.locator('tbody tr').count())>0);}
- await dash.getByRole('tab',{name:'Rendimiento'}).click();assert(await dash.locator('svg[role="img"]').first().isVisible());
- await dash.getByRole('tab',{name:'Partidos'}).click();assert((await dash.locator('li').count())>0);
- await dash.getByRole('tab',{name:'Tabla de posiciones'}).click();
+ await p.getByRole('tab',{name:'Estadísticas avanzadas'}).click();assert((await dash.getByRole('tabpanel').locator('tbody tr').count())>0);assert(await dash.locator('svg[role="img"]').first().isVisible());
+ await p.getByRole('tab',{name:'Equipos'}).click();assert((await dash.getByRole('tabpanel').locator('li button').count())>0);
+ await p.getByRole('tab',{name:'Partidos'}).click();assert((await dash.locator('li').count())>0);
+ await p.getByRole('tab',{name:'Tabla',exact:true}).click();
  await dash.getByPlaceholder('Filtrar club...').fill('zzzz');assert.match(await dash.innerText(),/Ningún club coincide/);await dash.getByPlaceholder('Filtrar club...').fill('');
  await dash.getByRole('button',{name:/Agregar a .* a favoritos/}).first().click();assert.match(await p.getByRole('button',{name:/Mis equipos/}).getAttribute('aria-label'),/1/);
  await p.reload({waitUntil:'networkidle'});assert.match(await p.getByRole('button',{name:/Mis equipos/}).getAttribute('aria-label'),/1/);

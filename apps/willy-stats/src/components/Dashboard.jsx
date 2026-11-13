@@ -1,48 +1,114 @@
 import React,{useState,useMemo} from 'react';
-import {Info,AlertTriangle,RefreshCw,ChevronLeft,ChevronRight} from 'lucide-react';
+import {Info,AlertTriangle,RefreshCw,ChevronLeft,ChevronRight,ArrowUp,ArrowDown} from 'lucide-react';
 import {Crest,Form,Num,LeagueMark} from './ui.jsx';
-import {Radar,ParityBars} from './Charts.jsx';
+import {Radar,ParityBars,Sparkline,Ring,GoalsChart,MetricBars} from './Charts.jsx';
 import {Standings} from './Standings.jsx';
-import {radarAxes,stamp,matchdays,matchdayLabel} from '../lib.js';
-import {number} from '../data.js';
+import {GroupPicker,GroupStepper} from './GroupPicker.jsx';
+import {radarAxes,stamp,matchdays,matchdayLabel,groupLabel} from '../lib.js';
+import {number,goalsPerMatch} from '../data.js';
 
-const TABS=[['table','Tabla de posiciones'],['performance','Rendimiento'],['both','Vista integrada'],['fixtures','Partidos']];
+const card='rounded-2xl border border-white/[.08] bg-[#162032]';
+const signed=(v,d=0)=>v>0?`+${number(v,d)}`:number(v,d);
 
-function SourceNote({publication,groupName:rawGroup,loadError,refreshing,onRefresh}){
-  const groupName=rawGroup&&publication&&!String(publication.season).includes(rawGroup)&&!rawGroup.includes(String(publication.season))?rawGroup:null;
+function SourceNote({publication,groupName,loadError,refreshing,onRefresh}){
   const stale=publication&&!publication.historical&&Date.now()-Date.parse(publication.updated_at)>36*3600*1000;
   let warn=false,text;
   if(!publication){warn=true;text='Todavía no hay una captura publicada para esta competición. No se muestran cifras.';}
   else if(publication.historical){warn=true;text=`Archivo de la temporada ${publication.season}${groupName?` (${groupName})`:''}. No es la clasificación vigente. Fuente: ${publication.provider||'proveedor'}. Captura: ${stamp(publication.updated_at)}.`;}
   else if(stale){warn=true;text=`La captura tiene más de 36 horas (${stamp(publication.updated_at)}). Puede estar desactualizada.`;}
   else text=`Temporada ${publication.season}${groupName?` · ${groupName}`:''}. Captura del ${stamp(publication.updated_at)}. Fuente: ${publication.provider||'proveedor'}. No es un marcador en vivo.`;
-  return <div role="status" className={`mt-4 flex items-start gap-2 rounded-lg border px-3 py-2.5 text-xs leading-relaxed ${warn?'border-[#EAB308]/40 bg-[#EAB308]/10 text-yellow-100':'border-[#26303D] bg-[#161C24] text-gray-300'}`}>
+  return <div role="status" className={`mt-4 flex items-start gap-2 rounded-xl border px-3 py-2.5 text-xs leading-relaxed ${warn?'border-[#EAB308]/40 bg-[#EAB308]/10 text-yellow-100':'border-white/[.06] bg-white/[.02] text-slate-400'}`}>
     {warn?<AlertTriangle size={14} className="mt-0.5 shrink-0" aria-hidden="true"/>:<Info size={14} className="mt-0.5 shrink-0" aria-hidden="true"/>}
     <span className="flex-1">{text}{publication?.warnings?.length?' Los partidos no estuvieron disponibles en esta captura.':''}{loadError&&' No se pudo recargar; se conserva la última captura.'}</span>
-    <button onClick={onRefresh} className="flex shrink-0 items-center gap-1 text-gray-300 hover:text-white" aria-label="Recargar captura publicada"><RefreshCw size={13} className={refreshing?'animate-spin':''}/></button>
+    <button onClick={onRefresh} className="flex shrink-0 items-center gap-1 text-slate-300 hover:text-white" aria-label="Recargar captura publicada"><RefreshCw size={13} className={refreshing?'animate-spin':''}/></button>
   </div>;
 }
 
-function Performance({rows,league,leader,reading}){
-  if(!leader)return <p className="rounded-xl border border-dashed border-[#26303D] p-8 text-center text-sm text-gray-400">Sin datos para calcular el rendimiento.</p>;
-  const axes=radarAxes(rows,leader);
-  const pills=[['Partidos jugados',leader.pj],['Goles a favor',leader.gf],['Rendimiento',`${number(leader.effectiveness)}%`],['Goles por partido',number(leader.gf/leader.pj,2)]];
-  return <div>
-    <div className="rounded-lg bg-[#FEF3C7] px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-[#78350F]">Modo análisis · Métricas y rendimiento de {leader.name}, líder de la tabla.</div>
-    <div className="mt-5 grid gap-6 md:grid-cols-[1fr_1.1fr] xl:grid-cols-[1fr_1.2fr_.8fr]">
-      <figure className="md:col-span-2 xl:col-span-1">
-        <div className="relative grid h-44 place-items-center overflow-hidden rounded-xl border border-[#26303D] bg-gradient-to-br from-[#10301f] via-[#12171D] to-[#0B0E11] xl:h-56">
-          <div className="absolute h-40 w-40 rounded-full bg-[#22C55E]/15 blur-3xl" aria-hidden="true"/>
-          <Crest name={leader.name} leagueId={league.id} logo={leader.logo} size={112}/>
-          <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0B0E11] to-transparent px-4 pb-3 pt-8 font-heading text-lg font-extrabold leading-tight text-white">{leader.name}</figcaption>
-        </div>
-      </figure>
-      <div><Radar axes={axes} teamName={leader.name}/><p className="mt-1 text-center text-xs text-gray-400"><i className="mr-1 inline-block h-2 w-2 rounded-sm bg-[#22C55E]"/>{leader.name} <i className="ml-3 mr-1 inline-block h-2 w-2 rounded-sm bg-[#F97316]"/>{league.teamType==='national'?'Promedio del grupo':'Promedio de la liga'}</p></div>
-      <dl className="grid grid-cols-2 gap-2 md:col-span-2 xl:col-span-1 xl:grid-cols-1">
-        {pills.map(([l,v])=><div key={l} className="flex items-center justify-between rounded-lg bg-[#1A212B] px-3 py-2.5"><dt className="text-xs text-gray-300">{l}</dt><dd><Num className="rounded bg-[#22C55E]/15 px-2 py-0.5 text-sm font-bold text-[#22C55E]">{v}</Num></dd></div>)}
-        <p className="col-span-full text-[11px] leading-relaxed text-gray-500">Ejes calculados con los puntos, goles y últimos resultados de la tabla, normalizados contra el resto de la liga. No incluyen xG, posesión ni presión porque la fuente no los entrega.</p>
-      </dl>
-    </div>
+function Kpi({label,children,foot}){
+  return <div className={`${card} flex min-w-0 flex-col justify-between gap-2 p-4`}>
+    <p className="text-xs font-medium text-slate-400">{label}</p>
+    <div className="flex min-w-0 items-end justify-between gap-2">{children}</div>
+    {foot&&<div className="text-[11px] text-slate-400">{foot}</div>}
+  </div>;
+}
+
+function Kpis({rows,results,summary,national,leagueId}){
+  const played=rows.filter(r=>r.pj>0);
+  if(!played.length)return null;
+  const matches=Math.round(rows.reduce((s,t)=>s+t.pj,0)/2),gpg=goalsPerMatch(rows);
+  const scorer=[...played].sort((a,b)=>b.gf-a.gf||b.gf/b.pj-a.gf/a.pj)[0];
+  const finished=results.filter(m=>m.hg!=null&&m.ag!=null),home=finished.filter(m=>m.hg>m.ag).length;
+  const trend=summary?.trend||[],last=trend[trend.length-1],prev=trend[trend.length-2];
+  const homePct=finished.length?home/finished.length*100:null,leader=played[0];
+  return <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="Resumen">
+    <Kpi label="Partidos jugados" foot={summary?<span className="rounded-full bg-[#10B981]/15 px-2 py-0.5 font-semibold text-[#6EE7B7]">+<Num>{summary.n}</Num> en la última fecha</span>:null}>
+      <Num className="text-3xl font-extrabold text-white">{matches}</Num>
+    </Kpi>
+    <Kpi label="Goles por partido" foot={last&&prev?<span className="flex items-center gap-1">{last.gpg>=prev.gpg?<ArrowUp size={12} className="text-[#10B981]"/>:<ArrowDown size={12} className="text-[#EF4444]"/>}Última fecha <Num className="text-slate-200">{number(last.gpg,2)}</Num></span>:null}>
+      <Num className="text-3xl font-extrabold text-white">{gpg!=null?number(gpg,2):'—'}</Num>
+      <Sparkline values={trend.map(t=>t.gpg)} className="h-9 w-20 shrink-0 sm:w-24"/>
+    </Kpi>
+    <Kpi label={national?'Selección más goleadora':'Equipo más goleador'} foot={<><Num className="text-slate-200">{number(scorer.gf/scorer.pj,2)}</Num> por partido</>}>
+      <span className="flex min-w-0 items-center gap-2.5"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/[.05]"><Crest name={scorer.name} leagueId={leagueId} logo={scorer.logo} size={28}/></span>
+        <span className="min-w-0"><span className="block truncate text-sm font-semibold text-white">{scorer.name}</span><Num className="text-xl font-extrabold text-white">{scorer.gf} <span className="text-xs font-medium text-slate-400">goles</span></Num></span></span>
+    </Kpi>
+    {homePct!=null
+      ?<Kpi label="Victorias locales" foot={<><Num className="text-slate-200">{home}</Num> de <Num className="text-slate-200">{finished.length}</Num> resultados publicados</>}>
+        <Num className="text-3xl font-extrabold text-white">{number(homePct)}%</Num><Ring value={homePct} size={52} label={`Victorias locales: ${number(homePct)}%`}/>
+      </Kpi>
+      :<Kpi label="Líder actual" foot={<>{leader.name}</>}>
+        <Num className="text-3xl font-extrabold text-white">{number(leader.effectiveness)}%</Num><Ring value={leader.effectiveness} size={52} label={`Efectividad del líder: ${number(leader.effectiveness)}%`}/>
+      </Kpi>}
+  </div>;
+}
+
+function Teams({rows,leagueId,favorites,onDetail,onFocus}){
+  if(!rows.length)return <p className="rounded-xl border border-dashed border-white/[.08] p-8 text-center text-sm text-slate-400">No hay equipos publicados para esta competición.</p>;
+  return <ul className="@container grid gap-3 sm:grid-cols-2 2xl:grid-cols-3">
+    {rows.map(t=><li key={t.name} className="min-w-0"><button onClick={()=>{onFocus(t.name);onDetail(t);}} className="flex h-full w-full flex-col gap-3 rounded-xl border border-white/[.06] bg-white/[.02] p-3.5 text-left transition hover:-translate-y-0.5 hover:border-white/20">
+      <span className="flex items-center gap-3">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white/[.05]"><Crest name={t.name} leagueId={leagueId} logo={t.logo} size={30}/></span>
+        <span className="min-w-0 flex-1"><span className="block truncate font-semibold text-white">{t.name}{favorites.includes(t.name)&&<span className="ml-1 text-[#10B981]">★</span>}</span><span className="text-xs text-slate-400"><Num>{t.rank}</Num>.º · <Num>{t.pj}</Num> PJ</span></span>
+        <span className="text-right"><Num className="block text-2xl font-extrabold leading-none text-white">{t.pts}</Num><span className="text-[10px] uppercase text-slate-500">pts</span></span>
+      </span>
+      <span className="block"><span className="mb-1 flex justify-between text-[11px] text-slate-400"><span>Efectividad</span><Num className="text-slate-200">{Number.isFinite(t.effectiveness)?`${number(t.effectiveness)}%`:'—'}</Num></span>
+        <span className="block h-1.5 rounded-full bg-white/[.06]"><span className="block h-full rounded-full bg-[#10B981]" style={{width:`${t.effectiveness||0}%`}}/></span></span>
+      <span className="flex items-center justify-between gap-2 text-xs text-slate-400"><span>GF <Num className="text-slate-200">{t.gf}</Num> · GC <Num className="text-slate-200">{t.gc}</Num> · DG <Num className={t.dg>0?'text-[#10B981]':t.dg<0?'text-[#EF4444]':'text-slate-200'}>{signed(t.dg)}</Num></span><Form values={t.form} small/></span>
+    </button></li>)}
+  </ul>;
+}
+
+const formPts=t=>t.form?.length?t.form.reduce((s,f)=>s+(f==='V'?3:f==='E'?1:0),0):null;
+const COLUMNS=[
+  ['ppg','Pts/PJ',t=>t.pts/t.pj,v=>number(v,2),''],
+  ['gfp','GF/PJ',t=>t.gf/t.pj,v=>number(v,2),''],
+  ['gcp','GC/PJ',t=>t.gc/t.pj,v=>number(v,2),'hidden @md:table-cell'],
+  ['dgp','DG/PJ',t=>t.dg/t.pj,v=>signed(v,2),'hidden @md:table-cell'],
+  ['eff','% Efect.',t=>t.effectiveness,null,'hidden @sm:table-cell'],
+  ['form','Forma',formPts,(v,t)=>v==null?'—':`${v}/${3*t.form.length}`,'hidden @lg:table-cell']
+];
+function Advanced({rows,leagueId,national,onDetail}){
+  const [sort,setSort]=useState(['ppg',-1]);
+  const played=rows.filter(r=>r.pj>0);
+  const list=useMemo(()=>{const c=COLUMNS.find(x=>x[0]===sort[0]);return [...played].sort((a,b)=>((c[2](a)??-1e9)-(c[2](b)??-1e9))*sort[1]||a.rank-b.rank);},[played,sort]);
+  if(!played.length)return <p className="rounded-xl border border-dashed border-white/[.08] p-8 text-center text-sm text-slate-400">Sin partidos jugados para calcular estadísticas.</p>;
+  const by=k=>setSort(s=>s[0]===k?[k,-s[1]]:[k,k==='gcp'?1:-1]);
+  return <div className="@container">
+    <div className="overflow-x-auto"><table className="w-full text-sm tabular-nums">
+      <caption className="sr-only">Estadísticas avanzadas por {national?'selección':'club'}, ordenables</caption>
+      <thead><tr className="border-b border-white/[.06] text-[11px] uppercase tracking-wider text-slate-500">
+        <th scope="col" className="py-2 pl-2 text-left font-medium">{national?'Selección':'Club'}</th>
+        {COLUMNS.map(([k,l,,,cls])=><th key={k} scope="col" aria-sort={sort[0]===k?(sort[1]<0?'descending':'ascending'):'none'} className={`px-1.5 py-1 text-right font-medium ${cls}`}>
+          <button onClick={()=>by(k)} className={`inline-flex min-h-9 items-center gap-1 uppercase ${sort[0]===k?'text-[#10B981]':'hover:text-slate-300'}`}>{l}{sort[0]===k&&(sort[1]<0?<ArrowDown size={11}/>:<ArrowUp size={11}/>)}</button></th>)}
+      </tr></thead>
+      <tbody>{list.map(t=><tr key={t.name} onClick={()=>onDetail(t)} className="cursor-pointer border-b border-white/[.04] transition-colors hover:bg-white/[.04]">
+        <td className="py-2.5 pl-2"><span className="flex min-w-0 items-center gap-2"><Num className="w-5 text-right text-xs text-slate-500">{t.rank}</Num><Crest name={t.name} leagueId={leagueId} logo={t.logo} size={22}/><span className="max-w-[110px] truncate font-medium text-white @md:max-w-none">{t.name}</span></span></td>
+        {COLUMNS.map(([k,,fn,fmt,cls])=>{const v=fn(t);return <td key={k} className={`px-1.5 text-right ${cls}`}>{k==='eff'
+          ?<span className="inline-flex items-center gap-2"><span className="hidden h-1.5 w-14 rounded-full bg-white/[.06] @lg:block"><span className="block h-full rounded-full bg-[#10B981]" style={{width:`${v||0}%`}}/></span><Num className="text-slate-200">{number(v)}%</Num></span>
+          :<Num className={k==='dgp'?(v>0?'text-[#10B981]':v<0?'text-[#EF4444]':'text-slate-300'):sort[0]===k?'font-semibold text-white':'text-slate-300'}>{fmt(v,t)}</Num>}</td>;})}
+      </tr>)}</tbody>
+    </table></div>
+    <p className="mt-3 text-[11px] leading-relaxed text-slate-500">Toca un encabezado para ordenar. Valores por partido calculados con la tabla publicada. Forma: puntos de los últimos cinco partidos. La fuente no entrega posesión, tiros ni xG.</p>
   </div>;
 }
 
@@ -55,60 +121,95 @@ function Fixtures({fixtures,results,favorites,savedOnly,type,onType}){
   const change=t=>{setPicked(null);onType(t);};
   return <div>
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <div role="group" aria-label="Tipo de partidos" className="inline-flex rounded-lg border border-[#1E2630] bg-[#0B0E11] p-1">
-        {[['next','Próximos'],['played','Resultados']].map(([v,l])=><button key={v} aria-pressed={type===v} onClick={()=>change(v)} className={`rounded-md px-4 py-1.5 text-sm ${type===v?'bg-[#22C55E] font-semibold text-[#04210F]':'text-gray-300'}`}>{l}</button>)}
+      <div role="group" aria-label="Tipo de partidos" className="inline-flex rounded-lg border border-white/[.08] bg-[#0B111E] p-1">
+        {[['next','Próximos'],['played','Resultados']].map(([v,l])=><button key={v} aria-pressed={type===v} onClick={()=>change(v)} className={`rounded-md px-4 py-1.5 text-sm ${type===v?'bg-[#10B981] font-semibold text-[#04210F]':'text-slate-300'}`}>{l}</button>)}
       </div>
       {days.length>0&&<div className="flex items-center gap-2 text-sm">
-        <button aria-label="Fecha anterior" disabled={idx<=0} onClick={()=>setPicked(idx-1)} className="grid h-11 w-11 place-items-center rounded-lg bg-[#1A212B] text-gray-200 disabled:opacity-30"><ChevronLeft size={16}/></button>
-        <span className="min-w-[150px] text-center text-gray-200" aria-live="polite">{type==='next'?'Próxima fecha':'Última fecha'}{idx!==(type==='next'?0:days.length-1)&&` (${idx+1} de ${days.length})`}<br/><span className="text-xs text-gray-400">{matchdayLabel(days[idx])}</span></span>
-        <button aria-label="Fecha siguiente" disabled={idx>=days.length-1} onClick={()=>setPicked(idx+1)} className="grid h-11 w-11 place-items-center rounded-lg bg-[#1A212B] text-gray-200 disabled:opacity-30"><ChevronRight size={16}/></button>
+        <button aria-label="Fecha anterior" disabled={idx<=0} onClick={()=>setPicked(idx-1)} className="grid h-11 w-11 place-items-center rounded-lg bg-[#1E293B] text-slate-200 disabled:opacity-30"><ChevronLeft size={16}/></button>
+        <span className="min-w-[150px] text-center text-slate-200" aria-live="polite">{type==='next'?'Próxima fecha':'Última fecha'}{idx!==(type==='next'?0:days.length-1)&&` (${idx+1} de ${days.length})`}<br/><span className="text-xs text-slate-400">{matchdayLabel(days[idx])}</span></span>
+        <button aria-label="Fecha siguiente" disabled={idx>=days.length-1} onClick={()=>setPicked(idx+1)} className="grid h-11 w-11 place-items-center rounded-lg bg-[#1E293B] text-slate-200 disabled:opacity-30"><ChevronRight size={16}/></button>
       </div>}
     </div>
-    {!day.length?<p className="rounded-xl border border-dashed border-[#26303D] p-8 text-center text-sm text-gray-400">{type==='next'?'No hay próximos partidos en la captura publicada.':'No hay resultados recientes en la captura publicada.'}</p>
-    :<ul className="divide-y divide-[#1E2630]">{day.map(m=><li key={m.id} className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 py-3 text-sm">
-      <span className="text-right text-white">{m.home}</span>
-      <span className="min-w-[96px] text-center">{m.hg==null?<Num className="text-xs text-gray-400">{when(m.date)}</Num>:<Num className="rounded bg-[#1A212B] px-3 py-1 font-bold text-white">{m.hg} - {m.ag}</Num>}</span>
-      <span className="text-white">{m.away}</span></li>)}</ul>}
+    {!day.length?<p className="rounded-xl border border-dashed border-white/[.08] p-8 text-center text-sm text-slate-400">{type==='next'?'No hay próximos partidos en la captura publicada.':'No hay resultados recientes en la captura publicada.'}</p>
+    :<ul className="space-y-1.5">{day.map(m=><li key={m.id} className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg bg-white/[.02] px-2 py-3 text-sm">
+      <span className="text-right font-medium text-white">{m.home}</span>
+      <span className="min-w-[96px] text-center">{m.hg==null?<Num className="text-xs text-slate-400">{when(m.date)}</Num>:<Num className="rounded-md bg-[#1E293B] px-3 py-1 font-bold text-white">{m.hg} - {m.ag}</Num>}</span>
+      <span className="font-medium text-white">{m.away}</span></li>)}</ul>}
   </div>;
 }
 
+function GoalsCard({rows,focus,onFocus,national}){
+  return <section className={`${card} p-4`} aria-label="Goles a favor y en contra">
+    <div className="flex flex-wrap items-start justify-between gap-2">
+      <div><h3 className="font-heading text-base font-bold text-white">Goles a favor vs. en contra</h3><p className="text-xs text-slate-400">Por {national?'selección':'equipo'}, en el orden de la tabla</p></div>
+      <p className="flex gap-3 text-[11px] text-slate-400"><span className="flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-sm bg-[#10B981]"/>A favor</span><span className="flex items-center gap-1"><i className="h-0.5 w-3 rounded bg-[#EF4444]"/>En contra</span></p>
+    </div>
+    <div className="mt-3"><GoalsChart rows={rows} focus={focus} onPick={t=>onFocus(t.name)}/></div>
+  </section>;
+}
+
+function MetricsCard({rows,focus,onFocus,national}){
+  const played=rows.filter(r=>r.pj>0);
+  if(!played.length)return null;
+  const team=played.find(r=>r.name===focus)||played[0],axes=radarAxes(played,team),fp=formPts(team);
+  const values=[number(team.gf/team.pj,2),number(team.gc/team.pj,2),`${number(team.effectiveness)}%`,signed(team.dg/team.pj,2),fp==null?'—':`${fp}/${3*team.form.length}`];
+  const labels=['Ataque · goles a favor por partido','Defensa · goles en contra por partido','Efectividad','Diferencia de gol por partido','Forma · puntos en los últimos 5'];
+  return <section className={`${card} @container p-4`} aria-label="Métricas de rendimiento">
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h3 className="font-heading text-base font-bold text-white">Métricas de rendimiento</h3>
+      <label className="relative"><span className="sr-only">{national?'Selección':'Equipo'} a analizar</span>
+        <select value={team.name} onChange={e=>onFocus(e.target.value)} className="min-h-11 max-w-[190px] rounded-lg border border-white/[.08] bg-[#0B111E] px-2 text-base text-white sm:text-sm">{played.map(r=><option key={r.name} value={r.name}>{r.rank}. {r.name}</option>)}</select></label>
+    </div>
+    <div className="mt-3 grid items-center gap-4 @md:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)]">
+      <div className="mx-auto w-full max-w-[260px]"><Radar axes={axes} teamName={team.name}/></div>
+      <MetricBars items={axes.map((a,i)=>({label:labels[i],value:values[i],score:a.team,avg:a.avg}))}/>
+    </div>
+    <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-500"><span className="flex items-center gap-1"><i className="h-2 w-2 rounded-sm bg-[#10B981]"/>{team.name}</span><span className="flex items-center gap-1"><i className="h-2 w-0.5 bg-[#94A3B8]"/>Promedio {national?'del grupo':'de la liga'}</span><span>Escala 0-100 frente al resto. Sin posesión ni xG: la fuente no los entrega.</span></p>
+  </section>;
+}
+
 export function Dashboard(p){
-  const {league,rows,tab,onTab,publication,groupName,groups,group,onGroup,reading}=p;
-  const leader=reading?.leader;
-  const showTable=tab==='table'||tab==='both',showPerf=tab==='performance'||tab==='both';
-  return <section id="dashboard" className="panel rounded-2xl border border-[#1E2630] bg-[#12171D] p-4 md:p-6">
-    <div className="flex flex-wrap items-start justify-between gap-3">
-      <div className="flex items-center gap-3"><LeagueMark league={league} size={40}/><div><p className="text-xs text-gray-400">{league.country} · {league.continent}</p><h2 className="font-heading text-2xl font-extrabold text-white">{league.name}</h2></div></div>
-      <div className="min-w-0 max-w-full text-xs text-gray-400">
-        {groups.length>1&&<label className="flex min-w-0 flex-wrap items-center gap-2">{league.teamType==='national'?'Liga y grupo':'Tabla'}<select value={group} onChange={e=>onGroup(+e.target.value)} className="min-h-11 min-w-0 max-w-full rounded-lg border border-[#26303D] bg-[#0B0E11] px-2 py-1.5 text-base text-gray-200">{groups.map((g,i)=><option key={i} value={i}>{g.name}</option>)}</select></label>}
-      </div>
+  const {league,rows,tab,publication,groups,group,onGroup,results,summary}=p;
+  const national=league.teamType==='national',groupName=groups.length>1?groupLabel(groups[group]?.name,group).full:null;
+  return <section id="dashboard" className="mx-auto mt-8 max-w-[1440px] px-4 md:px-8">
+    <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex min-w-0 items-center gap-3"><span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-white/[.08] bg-[#162032]"><LeagueMark league={league} size={36}/></span>
+        <div className="min-w-0"><p className="text-xs text-slate-400">{league.country} · {league.continent}{publication?.season&&<> · <span className="text-slate-300">{publication.season}</span></>}</p><h2 className="font-heading text-2xl font-extrabold tracking-tight text-white md:text-3xl">{league.name}</h2></div></div>
+      <GroupStepper groups={groups} group={group} onGroup={onGroup}/>
     </div>
     <SourceNote publication={publication} groupName={groupName} loadError={p.loadError} refreshing={p.refreshing} onRefresh={p.onRefresh}/>
-    {league.teamType==='national'&&groups.length>0&&<p className="mt-3 text-xs leading-relaxed text-gray-400">Tabla y análisis del grupo elegido. Los partidos incluyen a sus selecciones, también en cruces eliminatorios.</p>}
-    <div role="tablist" aria-label="Análisis de la liga" className="mt-4 flex gap-1 overflow-x-auto border-b border-[#1E2630]" onKeyDown={e=>{const ids=TABS.map(t=>t[0]),i=ids.indexOf(tab);if(e.key==='ArrowRight')onTab(ids[(i+1)%ids.length]);if(e.key==='ArrowLeft')onTab(ids[(i+ids.length-1)%ids.length]);}}>
-      {TABS.map(([id,label])=><button key={id} role="tab" id={`tab-${id}`} aria-selected={tab===id} aria-controls="panel-main" tabIndex={tab===id?0:-1} onClick={()=>onTab(id)} className={`-mb-px whitespace-nowrap border-b-2 px-4 py-3 text-sm transition ${tab===id?'border-[#22C55E] font-semibold text-white':'border-transparent text-gray-400 hover:text-gray-200'}`}>{label}</button>)}
-    </div>
-    <div role="tabpanel" id="panel-main" aria-labelledby={`tab-${tab}`} className="mt-5 space-y-8">
-      {showTable&&<Standings rows={rows} leagueId={league.id} national={league.teamType==='national'} favorites={p.favorites} onFavorite={p.onFavorite} onDetail={p.onDetail} query={p.query} onQuery={p.onQuery} savedOnly={p.savedOnly} onClearSaved={p.onClearSaved}/>}
-      {showPerf&&<Performance rows={rows} league={league} leader={leader} reading={reading}/>}
-      {tab==='fixtures'&&<Fixtures key={`${league.id}:${group}`} fixtures={p.fixtures} results={p.results} favorites={p.favorites} savedOnly={p.savedOnly} type={p.fixtureType} onType={p.onFixtureType}/>}
+    <GroupPicker groups={groups} group={group} onGroup={onGroup} leagueId={league.id} national={national}/>
+    {national&&groups.length>0&&<p className="mt-3 text-xs leading-relaxed text-slate-400">Tabla y análisis del grupo elegido. Los partidos incluyen a sus selecciones, también en cruces eliminatorios.</p>}
+    <Kpis rows={rows} results={results} summary={summary} national={national} leagueId={league.id}/>
+    <div className="mt-5 grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,65fr)_minmax(0,35fr)]">
+      <div role="tabpanel" id="panel-main" aria-labelledby={`tab-${tab}`} className={`${card} min-w-0 p-3 md:p-5`}>
+        <h3 className="mb-4 font-heading text-sm font-bold uppercase tracking-wider text-slate-300">{{table:national?'Tabla del grupo':'Tabla de posiciones',teams:national?'Selecciones':'Equipos',fixtures:'Partidos',advanced:'Estadísticas avanzadas'}[tab]}</h3>
+        {tab==='table'&&<Standings rows={rows} leagueId={league.id} national={national} favorites={p.favorites} onFavorite={p.onFavorite} onDetail={p.onDetail} query={p.query} onQuery={p.onQuery} savedOnly={p.savedOnly} onClearSaved={p.onClearSaved} highlight={p.highlight}/>}
+        {tab==='teams'&&<Teams rows={rows} leagueId={league.id} favorites={p.favorites} onDetail={p.onDetail} onFocus={p.onFocus}/>}
+        {tab==='fixtures'&&<Fixtures key={`${league.id}:${group}`} fixtures={p.fixtures} results={results} favorites={p.favorites} savedOnly={p.savedOnly} type={p.fixtureType} onType={p.onFixtureType}/>}
+        {tab==='advanced'&&<Advanced rows={rows} leagueId={league.id} national={national} onDetail={p.onDetail}/>}
+      </div>
+      <aside className="min-w-0 space-y-5" aria-label="Visualizaciones">
+        <GoalsCard rows={rows} focus={p.focus} onFocus={p.onFocus} national={national}/>
+        <MetricsCard rows={rows} focus={p.focus} onFocus={p.onFocus} national={national}/>
+      </aside>
     </div>
   </section>;
 }
 
 export function ReadingCard({league,reading}){
-  if(!reading)return <section className="rounded-2xl border border-[#10B981]/30 bg-gradient-to-br from-[#0F291E] via-[#11221C] to-[#0B1612] p-4">
-    <p className="font-mono text-[11px] uppercase tracking-wider text-[#22C55E]">La lectura de Willy Stats</p><h3 className="mt-1 font-heading text-xl font-extrabold text-white">Sin lectura disponible.</h3>
-    <p className="mt-2 text-xs text-gray-300">No hay una tabla con partidos jugados para {league.name}.</p></section>;
+  if(!reading)return <section className="rounded-2xl border border-[#10B981]/30 bg-gradient-to-br from-[#0F2A24] via-[#132532] to-[#0F172A] p-4">
+    <p className="font-mono text-[11px] uppercase tracking-wider text-[#10B981]">La lectura de Willy Stats</p><h3 className="mt-1 font-heading text-xl font-extrabold text-white">Sin lectura disponible.</h3>
+    <p className="mt-2 text-xs text-slate-300">No hay una tabla con partidos jugados para {league.name}.</p></section>;
   const {leader,second,gap,ppg,attackRank,defenseRank}=reading;
   const strengths=[attackRank===1&&'mejor ataque por partido',defenseRank===1&&'mejor defensa por partido'].filter(Boolean);
   const kpis=[[number(ppg,2),'Puntos por partido'],[`${number(leader.effectiveness)}%`,'% de efectividad'],[leader.dg>0?`+${leader.dg}`:`${leader.dg}`,'Diferencia de gol'],[gap==null?'—':`${gap} PTS`,'Ventaja sobre el 2.º']];
-  return <section aria-label="La lectura de Willy Stats" className="rounded-2xl border border-[#10B981]/30 bg-gradient-to-br from-[#0F291E] via-[#11221C] to-[#0B1612] p-4">
-    <p className="font-mono text-[11px] uppercase tracking-wider text-[#22C55E]">La lectura de Willy Stats</p>
+  return <section aria-label="La lectura de Willy Stats" className="rounded-2xl border border-[#10B981]/30 bg-gradient-to-br from-[#0F2A24] via-[#132532] to-[#0F172A] p-4">
+    <p className="font-mono text-[11px] uppercase tracking-wider text-[#10B981]">La lectura de Willy Stats</p>
     <h3 className="mt-1 font-heading text-xl font-extrabold leading-tight text-white">{leader.name} marca el paso.</h3>
-    <p className="mt-2 text-xs leading-relaxed text-gray-300">{second?(gap===0?`Empata en puntos con ${second.name}.`:`Tiene ${gap} ${gap===1?'punto':'puntos'} de ventaja sobre ${second.name}.`):league.teamType==='national'?'Es la única selección con partidos jugados.':'Es el único club con partidos jugados.'}{strengths.length?` Además tiene el ${strengths.join(' y el ')} de la tabla.`:''}</p>
-    <dl className="mt-3 grid grid-cols-2 gap-1.5 border-t border-[#10B981]/20 pt-3 sm:grid-cols-4 xl:grid-cols-2">
-      {kpis.map(([v,l])=><div key={l} className="rounded-lg bg-black/20 px-2 py-1.5"><dd><Num className="text-base font-bold text-[#22C55E]">{v}</Num></dd><dt className="text-[10px] leading-tight text-gray-400">{l}</dt></div>)}
+    <p className="mt-2 text-xs leading-relaxed text-slate-300">{second?(gap===0?`Empata en puntos con ${second.name}.`:`Tiene ${gap} ${gap===1?'punto':'puntos'} de ventaja sobre ${second.name}.`):league.teamType==='national'?'Es la única selección con partidos jugados.':'Es el único club con partidos jugados.'}{strengths.length?` Además tiene el ${strengths.join(' y el ')} de la tabla.`:''}</p>
+    <dl className="mt-3 grid grid-cols-2 gap-1.5 border-t border-[#10B981]/20 pt-3">
+      {kpis.map(([v,l])=><div key={l} className="rounded-lg bg-black/20 px-2 py-1.5"><dd><Num className="text-base font-bold text-[#10B981]">{v}</Num></dd><dt className="text-[10px] leading-tight text-slate-400">{l}</dt></div>)}
     </dl>
   </section>;
 }
@@ -116,9 +217,9 @@ export function ReadingCard({league,reading}){
 export function ParityCard({items,activeId}){
   if(!items.length)return null;
   const sorted=[...items].sort((a,b)=>a.p.level-b.p.level);
-  return <section className="rounded-2xl border border-[#1E2630] bg-[#12171D] p-4" aria-label="Paridad entre ligas">
+  return <section className={`${card} p-4`} aria-label="Paridad entre ligas">
     <h3 className="font-heading text-base font-bold text-white">Paridad entre ligas</h3>
-    <p className="mb-3 text-xs leading-relaxed text-gray-400">Diferencia típica de nivel entre clubes, en puntos por partido, sin el efecto del azar. Barra corta: liga pareja. La línea fina es el margen de error: si dos ligas se solapan, la diferencia no es concluyente.</p>
+    <p className="mb-3 text-xs leading-relaxed text-slate-400">Diferencia típica de nivel entre clubes, en puntos por partido, sin el efecto del azar. Barra corta: liga pareja. La línea fina es el margen de error: si dos ligas se solapan, la diferencia no es concluyente.</p>
     <ParityBars items={sorted} activeId={activeId}/>
   </section>;
 }

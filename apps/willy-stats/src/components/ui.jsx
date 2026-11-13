@@ -4,13 +4,13 @@ import {ShieldCheck,Trophy} from 'lucide-react';
 export const CrestContext=createContext({clubs:{},leagueId:'per'});
 
 export function Brand({className='h-8 w-8'}){
-  return <svg className={className} viewBox="0 0 32 32" fill="none" stroke="#22C55E" strokeWidth="2.6" strokeLinecap="round" aria-hidden="true"><path d="M16 2v28M2 16h28M6.1 6.1l19.8 19.8M25.9 6.1 6.1 25.9"/></svg>;
+  return <svg className={className} viewBox="0 0 32 32" fill="none" stroke="#10B981" strokeWidth="2.6" strokeLinecap="round" aria-hidden="true"><path d="M16 2v28M2 16h28M6.1 6.1l19.8 19.8M25.9 6.1 6.1 25.9"/></svg>;
 }
 
 export function LeagueMark({league,size=28}){
   if(league.trophyAsset)return <img src={league.trophyAsset} alt="" width={size} height={size} className="object-contain" style={{height:size,width:size}}/>;
   if(league.flagAsset)return <img src={league.flagAsset} alt="" width={size} height={size} className="rounded-full object-cover ring-1 ring-white/10" style={{height:size,width:size}}/>;
-  return <span className="grid place-items-center rounded-full bg-white/10 text-gray-300" style={{height:size,width:size}}><Trophy size={size*.55}/></span>;
+  return <span className="grid place-items-center rounded-full bg-white/10 text-slate-300" style={{height:size,width:size}}><Trophy size={size*.55}/></span>;
 }
 
 function safeLogo(value){
@@ -23,14 +23,14 @@ export function Crest({name,leagueId,logo,size=28}){
   useEffect(()=>setFailed(false),[file]);
   return file&&!failed
     ?<img src={file} alt={`Escudo de ${name}`} width={size} height={size} loading="lazy" onError={()=>setFailed(true)} className="object-contain" style={{height:size,width:size}}/>
-    :<span role="img" aria-label={`Escudo de ${name} pendiente de verificar`} title="Escudo pendiente de verificar" className="grid place-items-center text-gray-600" style={{height:size,width:size}}><ShieldCheck size={size*.7}/></span>;
+    :<span role="img" aria-label={`Escudo de ${name} pendiente de verificar`} title="Escudo pendiente de verificar" className="grid place-items-center text-slate-600" style={{height:size,width:size}}><ShieldCheck size={size*.7}/></span>;
 }
 
-const FORM={V:['bg-[#22C55E] text-[#04210F]','Victoria'],E:['bg-[#EAB308] text-[#2A2000]','Empate'],D:['bg-[#EF4444] text-white','Derrota']};
-export function Form({values=[]}){
-  if(!values.length)return <span className="text-gray-600">—</span>;
+const FORM={V:['bg-[#10B981] text-[#04210F]','Victoria'],E:['bg-[#94A3B8] text-[#0B111E]','Empate'],D:['bg-[#EF4444] text-white','Derrota']};
+export function Form({values=[],small=false}){
+  if(!values.length)return <span className="text-slate-600">—</span>;
   return <span className="inline-flex gap-1" role="img" aria-label={`Últimos resultados: ${values.join(', ')}`}>
-    {values.map((v,i)=>{const [cls,title]=FORM[v]||FORM.E;return <span key={i} title={title} className={`grid h-7 w-7 place-items-center rounded-full font-mono text-xs font-bold ${cls}`}>{v}</span>;})}
+    {values.map((v,i)=>{const [cls,title]=FORM[v]||FORM.E;return <span key={i} title={title} className={`grid place-items-center rounded-full font-mono font-bold ${small?'h-5 w-5 text-[10px]':'h-7 w-7 text-xs'} ${cls}`}>{v}</span>;})}
   </span>;
 }
 
@@ -39,6 +39,6 @@ export function Num({children,className=''}){return <span className={`font-mono 
 export function Photo({src,alt,className=''}){
   const [failed,setFailed]=useState(false);
   return failed
-    ?<div role="img" aria-label={alt} className={`bg-gradient-to-br from-[#10301f] via-[#0f1a16] to-[#0B0E11] ${className}`}/>
+    ?<div role="img" aria-label={alt} className={`bg-gradient-to-br from-[#10301f] via-[#0f1a16] to-[#0B111E] ${className}`}/>
     :<img src={src} alt={alt} loading="lazy" referrerPolicy="no-referrer" onError={()=>setFailed(true)} className={`object-cover ${className}`}/>;
 }

@@ -129,3 +129,66 @@ export function streaks(rows){
     cold:withForm.filter(t=>!t.form.includes('V')).sort((a,b)=>b.rank-a.rank).slice(0,3)
   };
 }
+
+/** Nombre legible de un grupo publicado: «Group A2» → Liga A · Grupo 2; «Group B» → Grupo B. */
+const CONFERENCES={'Eastern Conference':'Conferencia Este','Western Conference':'Conferencia Oeste'};
+export function groupLabel(name='',index=0){
+  const raw=String(name).trim();
+  let m=raw.match(/^(?:Group|Grupo)\s+([A-Z])\s*(\d+)$/i);
+  if(m){const t=m[1].toUpperCase();return {tier:`Liga ${t}`,label:`Grupo ${m[2]}`,full:`Liga ${t} · Grupo ${m[2]}`,code:`${t}${m[2]}`};}
+  m=raw.match(/^(Liga\s+\S+)\s*·\s*(Grupo\s+\S+)$/i);
+  if(m)return {tier:m[1],label:m[2],full:`${m[1]} · ${m[2]}`,code:`${m[1].split(/\s+/)[1]}${m[2].split(/\s+/)[1]}`.toUpperCase()};
+  m=raw.match(/^(?:Group|Grupo)\s+(\S+)$/i);
+  if(m)return {tier:null,label:`Grupo ${m[1]}`,full:`Grupo ${m[1]}`,code:m[1].toUpperCase()};
+  const label=CONFERENCES[raw]||raw||`Tabla ${index+1}`;
+  return {tier:null,label,full:label,code:String(index+1)};
+}
+
+/** Índice del grupo de cada equipo, por ID del proveedor y, si falta, por nombre exacto. */
+export function teamGroups(groups=[]){
+  const byId=new Map(),byName=new Map();
+  groups.forEach((g,i)=>(g.rows||[]).forEach(r=>{if(r.team_id!=null&&r.team_id!=='')byId.set(String(r.team_id),i);byName.set(r.name,i);}));
+  return (id,name)=>id!=null&&id!==''&&byId.has(String(id))?byId.get(String(id)):byName.get(name);
+}
+
+/** Grupo de un partido: el común a ambos equipos, «cross» si son de grupos distintos, null si no se conoce. */
+export function matchGroup(m,find){
+  const h=find(m.home_id,m.home),a=find(m.away_id,m.away);
+  if(h==null&&a==null)return null;
+  if(h!=null&&a!=null&&h!==a)return 'cross';
+  return h??a;
+}
+
+const LIMA='America/Lima';
+const limaDay=t=>new Date(t).toLocaleDateString('en-CA',{timeZone:LIMA});
+/** «Hoy», «Mañana» o null, según el calendario de Lima. */
+export function relativeDay(t,now=Date.now()){
+  const d=limaDay(t);
+  return d===limaDay(now)?'Hoy':d===limaDay(now+DAY)?'Mañana':d===limaDay(now-DAY)?'Ayer':null;
+}
+
+/** Estado de un partido según su horario. Sin marcador nunca se presenta como en vivo. */
+export function matchState(m,now=Date.now()){
+  if(m.hg!=null&&m.ag!=null)return {kind:'final'};
+  const t=Date.parse(m.date);
+  if(!Number.isFinite(t))return {kind:'tbd'};
+  if(t>now)return t-now<=3*HOUR?{kind:'soon',minutes:Math.max(1,Math.round((t-now)/60000))}:{kind:'scheduled'};
+  return now-t<2*HOUR?{kind:'started'}:{kind:'pending'};
+}
+
+/** Partidos en orden cronológico con un separador por día de Lima, para el carrusel. */
+export function tickerItems(list,now=Date.now()){
+  const time=m=>{const t=Date.parse(m.date);return Number.isFinite(t)?t:Infinity;};
+  const sorted=[...list].sort((a,b)=>time(a)-time(b)),items=[];
+  let last;
+  for(const m of sorted){
+    const t=time(m),key=Number.isFinite(t)?limaDay(t):'tbd';
+    if(key!==last){
+      items.push({type:'day',key:`day-${key}`,rel:Number.isFinite(t)?relativeDay(t,now):null,
+        label:Number.isFinite(t)?new Date(t).toLocaleDateString('es-PE',{weekday:'short',day:'numeric',month:'short',timeZone:LIMA}):'Por definir'});
+      last=key;
+    }
+    items.push({type:'match',key:`m-${m.id}`,match:m});
+  }
+  return items;
+}

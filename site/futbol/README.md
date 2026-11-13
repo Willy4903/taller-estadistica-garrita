@@ -43,7 +43,13 @@ Pruebas offline: `python -m unittest discover -s scripts -p test_cancha_provider
 
 ## Funciones
 
-Rediseño oscuro. 17 competiciones con filtro por continente; tabla con búsqueda, favoritos persistentes y detalle de club con radar; pestañas Tabla, Rendimiento, Vista integrada y Partidos (por fecha, con navegación entre jornadas); análisis calculado con resultados reales (última fecha en números, tendencia de goles, partidos de alto impacto, rachas); comparador de tres ligas; paridad entre ligas con margen de error; metodología. Código en `apps/willy-stats/src/`.
+Diseño «Dark Stadium Analytics»: fondo azul pizarra, tarjetas elevadas, acento esmeralda (#10B981), coral (#EF4444) para derrotas y gris (#94A3B8) para empates; cifras con `tabular-nums`. Encabezado fijo con el título «Taller Estadística Garrita», selector de competición sincronizado con `#liga=` y pestañas Tabla, Equipos, Partidos y Estadísticas avanzadas.
+
+- Carrusel de próximos partidos que avanza de derecha a izquierda, con separadores por día (hora de Lima), cuenta regresiva en las tres horas previas y etiqueta de grupo. Se detiene al pasar el puntero, al enfocar, al tocar o con el botón Pausa; con «reducir movimiento» queda fijo y se desliza a mano. Tocar un partido abre su grupo y resalta a ambos equipos en la tabla.
+- Selector de grupos por liga (A, B, C, D) con tarjetas que muestran las selecciones y el líder de cada grupo, y paso rápido anterior/siguiente. El grupo se guarda en el enlace: `#liga=unl&grupo=A2`.
+- Cuatro KPI: partidos jugados, goles por partido con línea de tendencia, equipo más goleador y porcentaje de victorias locales con indicador circular.
+- Columnas 65/35: tabla con franjas de parte alta y baja, racha de cinco partidos y columnas que se adaptan al ancho; a la derecha, goles a favor (barras) contra goles en contra (línea) y métricas de rendimiento (radar y barras) del equipo elegido.
+- Pestaña Equipos (tarjetas por equipo) y Estadísticas avanzadas (tabla ordenable por partido). Debajo: lectura del líder, última fecha en números, partidos de alto impacto, rachas, paridad entre ligas, explorador de competiciones, comparador y metodología.
 
 ## Integridad y límites
 
@@ -51,6 +57,7 @@ Rediseño oscuro. 17 competiciones con filtro por continente; tabla con búsqued
 - Una captura de otro año se rotula como archivo; una de más de 36 horas, como posiblemente desactualizada.
 - Fechas: se agrupan con los resultados publicados (corte tras más de 36 horas sin partidos o cuando un club vuelve a jugar; los partidos reprogramados se unen a su fecha si caben).
 - Análisis: goles por partido y distribución local/empate/visita de la última fecha, tendencia de goles, partidos de la próxima fecha entre los mejor ubicados y rachas de los últimos cinco partidos. Todo sale de las tablas y marcadores publicados.
+- La fuente no publica goleadores individuales, posesión ni xG: el KPI muestra el equipo más goleador y las métricas de rendimiento usan solo datos de la tabla. Las franjas de la tabla son una referencia visual de parte alta y baja, no zonas oficiales.
 - El radar usa cinco ejes calculables desde la tabla (ataque, defensa, efectividad, diferencia de gol y forma), normalizados contra la liga. No hay xG, posesión ni presión: la fuente no entrega tiros.
 - La ilustración del hero es decorativa. Las fotografías de fondo (Unsplash) no representan a ningún club.
 - Paridad entre ligas: diferencia típica de nivel entre clubes en puntos por partido, sin el azar. Se calcula como √(σ² observada − σ² del azar), con σ² del azar = varianza de los puntos de un partido (según la tasa de empates de la liga) ÷ partidos por club. El margen de error usa σ/√(2(n−1)). Solo se calcula en tablas de al menos 10 clubes y 8 partidos por club; los grupos pequeños y las fases de copa se marcan como no comparables. Reemplaza al índice anterior 10 × (1 − 0.4 × σ/μ), que dependía del número de partidos jugados y de un factor arbitrario. Mide paridad dentro de la liga, no calidad entre ligas.

@@ -80,3 +80,33 @@ test('streaks usa solo los últimos cinco resultados publicados',()=>{
  const s=streaks(rows);
  assert.deepEqual(s.hot.map(t=>t.name),['A']);assert.deepEqual(s.cold.map(t=>t.name),['B']);
 });
+
+import {groupLabel,teamGroups,matchGroup,matchState,tickerItems,relativeDay} from './lib.js';
+test('nombres de grupo legibles y con liga',()=>{
+ assert.deepEqual(groupLabel('Group A2'),{tier:'Liga A',label:'Grupo 2',full:'Liga A · Grupo 2',code:'A2'});
+ assert.equal(groupLabel('Liga B · Grupo 1').full,'Liga B · Grupo 1');assert.equal(groupLabel('Liga B · Grupo 1').code,'B1');
+ assert.deepEqual(groupLabel('Group H'),{tier:null,label:'Grupo H',full:'Grupo H',code:'H'});
+ assert.equal(groupLabel('Eastern Conference').label,'Conferencia Este');
+ assert.equal(groupLabel('2026 Clausura',0).code,'1');
+});
+test('grupo de cada partido, con cruces entre grupos',()=>{
+ const find=teamGroups([{rows:[{name:'España',team_id:'1'},{name:'Portugal',team_id:'2'}]},{rows:[{name:'Grecia',team_id:'3'}]}]);
+ assert.equal(matchGroup({home:'España',home_id:'1',away:'Portugal',away_id:'2'},find),0);
+ assert.equal(matchGroup({home:'España',home_id:'1',away:'Grecia',away_id:'3'},find),'cross');
+ assert.equal(matchGroup({home:'Italia',away:'Francia'},find),null);
+});
+test('estado del partido sin simular marcadores en vivo',()=>{
+ const now=Date.parse('2026-11-13T18:00Z');
+ assert.equal(matchState({date:'2026-11-13T19:45Z'},now).kind,'soon');
+ assert.equal(matchState({date:'2026-11-14T19:45Z'},now).kind,'scheduled');
+ assert.equal(matchState({date:'2026-11-13T17:00Z'},now).kind,'started');
+ assert.equal(matchState({date:'2026-11-13T12:00Z'},now).kind,'pending');
+ assert.equal(matchState({date:'2026-11-13T12:00Z',hg:1,ag:0},now).kind,'final');
+ assert.equal(relativeDay(Date.parse('2026-11-14T19:45Z'),now),'Mañana');
+});
+test('carrusel: orden cronológico y un separador por día de Lima',()=>{
+ const now=Date.parse('2026-11-13T18:00Z');
+ const items=tickerItems([m(2,'C','D','2026-11-14T19:45Z'),m(1,'A','B','2026-11-13T19:45Z'),m(3,'E','F','2026-11-14T03:00Z')],now);
+ // 03:00Z del 14 es el 13 por la noche en Lima.
+ assert.deepEqual(items.map(i=>i.type==='day'?i.rel:i.match.id),['Hoy',1,3,'Mañana',2]);
+});
