@@ -298,3 +298,16 @@ export function tableCsv(rows,label){
 
 /** Temporada corta: «2026-27 UEFA Nations League» → «2026-27». */
 export const shortSeason=s=>String(s||'').match(/\d{4}(?:[-/]\d{2,4})?/)?.[0]||String(s||'');
+
+/** Tarjetas por equipo. Solo si todos los partidos traen detalle de tarjetas. Orden: más rojas, luego más amarillas. */
+export function cardsByTeam(rows,results){
+  const done=finished(results);
+  if(!done.length||!done.every(m=>Array.isArray(m.cards)))return null;
+  const find=finder(rows),tally=new Map(rows.map(r=>[r.name,{name:r.name,team_id:r.team_id,logo:r.logo,yellow:0,red:0,matches:0}]));
+  for(const m of done){
+    const sides=[[m.home_id,m.home],[m.away_id,m.away]].map(([id,name])=>({id:String(id),row:find(id,name)}));
+    for(const s of sides)if(s.row)tally.get(s.row.name).matches++;
+    for(const c of m.cards){const s=sides.find(x=>x.id===String(c.team_id));if(s?.row)tally.get(s.row.name)[c.card==='R'?'red':'yellow']++;}
+  }
+  return [...tally.values()].filter(t=>t.matches>0).sort((a,b)=>b.red-a.red||b.yellow-a.yellow||a.name.localeCompare(b.name));
+}

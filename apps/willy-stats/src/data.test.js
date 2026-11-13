@@ -152,3 +152,10 @@ test('probabilidades suman 100 y favorecen al mejor equipo',()=>{
  assert(p.home>p.away);
  assert.equal(probabilities({pj:0},grp[1],grp),null);
 });
+
+import {cardsByTeam} from './lib.js';
+test('tarjetas por equipo con detalle completo',()=>{
+ const list=[res('k1','A','1','B','2','2026-09-05T19:00Z',1,0,{cards:[{team_id:'1',card:'Y'},{team_id:'2',card:'R'},{team_id:'2',card:'Y'}]})];
+ assert.deepEqual(cardsByTeam(grp,list).map(t=>[t.name,t.yellow,t.red]),[['B',1,1],['A',1,0]]);
+ assert.equal(cardsByTeam(grp,[res('k2','A','1','B','2','2026-09-05T19:00Z',1,0)]),null);
+});
