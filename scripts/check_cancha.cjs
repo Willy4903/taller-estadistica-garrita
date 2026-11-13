@@ -24,7 +24,7 @@ const server=spawn('python3',['-m','http.server','8780','--bind','127.0.0.1','--
  await p.getByRole('tab',{name:'Estadísticas avanzadas'}).click();assert((await dash.getByRole('tabpanel').locator('tbody tr').count())>0);assert(await dash.locator('svg[role="img"]').first().isVisible());
  await p.getByRole('tab',{name:'Equipos'}).click();assert((await dash.getByRole('tabpanel').locator('li button').count())>0);
  await p.getByRole('tab',{name:'Partidos'}).click();assert((await dash.locator('li').count())>0);
- await p.getByRole('tab',{name:'Tabla',exact:true}).click();
+ await p.getByRole('tab',{name:'Clasificación',exact:true}).click();
  await dash.getByPlaceholder('Filtrar club...').fill('zzzz');assert.match(await dash.innerText(),/Ningún club coincide/);await dash.getByPlaceholder('Filtrar club...').fill('');
  await dash.getByRole('button',{name:/Agregar a .* a favoritos/}).first().click();assert.match(await p.getByRole('button',{name:/Mis equipos/}).getAttribute('aria-label'),/1/);
  await p.reload({waitUntil:'networkidle'});assert.match(await p.getByRole('button',{name:/Mis equipos/}).getAttribute('aria-label'),/1/);

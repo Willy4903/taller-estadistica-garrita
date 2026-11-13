@@ -6,7 +6,7 @@
 }
 @layer base{
   html{scroll-behavior:smooth;scroll-padding-top:96px;color-scheme:dark}
-  body{margin:0;background:#0B111E;color:#e5e7eb;font-family:var(--font-sans);font-size:14px;overflow-x:clip;-webkit-text-size-adjust:100%}
+  body{margin:0;background:#080D17;color:#e5e7eb;font-family:var(--font-sans);font-size:14px;overflow-x:clip;-webkit-text-size-adjust:100%}
   button,a,select{touch-action:manipulation}
   button{cursor:pointer}
   button,input,select{font:inherit}

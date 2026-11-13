@@ -140,6 +140,33 @@ class ProviderTests(unittest.TestCase):
         self.assertEqual((games[0]['hg'], games[0]['ag']), (2, 1))
         self.assertFalse(provider.normalize_fixtures({'events': [{'competitions': [base]}]}, now, True))
 
+    def test_goal_and_card_details_are_kept_without_inference(self):
+        now = datetime(2026, 11, 13, 12, tzinfo=timezone.utc)
+        def finished(details=None):
+            match = {'id': '9', 'status': {'type': {'state': 'post', 'name': 'STATUS_FULL_TIME'}}, 'date': '2026-11-12T19:45Z',
+                     'competitors': [{'homeAway': 'home', 'score': '2', 'team': {'id': '1', 'displayName': 'Local'}},
+                                     {'homeAway': 'away', 'score': '1', 'team': {'id': '2', 'displayName': 'Visita'}}]}
+            if details is not None:
+                match['details'] = details
+            return {'events': [{'competitions': [match]}]}
+        player = lambda name, team: [{'displayName': name, 'team': {'id': team}}]
+        details = [
+            {'type': {'text': 'Goal'}, 'scoringPlay': True, 'team': {'id': '1'}, 'clock': {'displayValue': "12'"}, 'athletesInvolved': player('Ana', '1')},
+            {'type': {'text': 'Yellow Card'}, 'yellowCard': True, 'team': {'id': '2'}, 'athletesInvolved': player('Bea', '2')},
+            {'type': {'text': 'Penalty - Scored'}, 'scoringPlay': True, 'penaltyKick': True, 'team': {'id': '2'}, 'athletesInvolved': player('Cris', '2')},
+            {'type': {'text': 'Own Goal'}, 'scoringPlay': True, 'ownGoal': True, 'team': {'id': '1'}, 'athletesInvolved': player('Dani', '2')},
+            {'type': {'text': 'Red Card'}, 'redCard': True, 'team': {'id': '1'}, 'athletesInvolved': player('Eva', '1')},
+        ]
+        game = provider.normalize_fixtures(finished(details), now, upcoming=False)[0]
+        self.assertEqual([g['player'] for g in game['goals']], ['Ana', 'Cris', 'Dani'])
+        self.assertTrue(game['goals'][1]['penalty'])
+        self.assertTrue(game['goals'][2]['own_goal'])
+        self.assertEqual([(c['player'], c['card']) for c in game['cards']], [('Bea', 'Y'), ('Eva', 'R')])
+        # Sin detalle del proveedor no se publican listas vacías que parezcan «sin goles».
+        plain = provider.normalize_fixtures(finished(), now, upcoming=False)[0]
+        self.assertNotIn('goals', plain)
+        self.assertNotIn('cards', plain)
+
     def test_failed_refresh_preserves_snapshot(self):
         with tempfile.TemporaryDirectory() as d:
             path = Path(d) / 'snapshot.json'

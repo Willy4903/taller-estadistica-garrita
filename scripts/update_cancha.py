@@ -115,6 +115,34 @@ def normalize_standings(payload, preserve_hierarchy=False):
     return groups
 
 
+def match_details(match):
+    """Goles y tarjetas del detalle publicado por el proveedor.
+
+    Devuelve None si el proveedor no entrega detalle; así la interfaz distingue
+    «sin goles ni tarjetas» de «sin información». No se completa nada por inferencia.
+    """
+    details = match.get('details')
+    if not isinstance(details, list):
+        return None
+    goals, cards = [], []
+    for item in details:
+        if not isinstance(item, dict) or item.get('shootout'):
+            continue
+        athletes = item.get('athletesInvolved') or []
+        player = next((a.get('displayName') or a.get('shortName') for a in athletes if isinstance(a, dict)), None)
+        team = str((item.get('team') or {}).get('id', ''))
+        minute = (item.get('clock') or {}).get('displayValue')
+        kind = str((item.get('type') or {}).get('text', '')).casefold()
+        if item.get('scoringPlay'):
+            goals.append({'team_id': team, 'player': player, 'minute': minute,
+                          'own_goal': bool(item.get('ownGoal')), 'penalty': bool(item.get('penaltyKick'))})
+        elif item.get('redCard') or 'red card' in kind:
+            cards.append({'team_id': team, 'player': player, 'minute': minute, 'card': 'R'})
+        elif item.get('yellowCard') or 'yellow card' in kind:
+            cards.append({'team_id': team, 'player': player, 'minute': minute, 'card': 'Y'})
+    return {'goals': goals, 'cards': cards}
+
+
 def normalize_fixtures(payload, now, upcoming=True):
     games, seen = [], set()
     for event in payload.get('events', []):
@@ -148,6 +176,9 @@ def normalize_fixtures(payload, now, upcoming=True):
                         raise ValueError('Resultado terminado sin marcador')
                     return int(value)
                 game['hg'], game['ag'] = score(home), score(away)
+                details = match_details(match)
+                if details is not None:
+                    game.update(details)
             game['round'] = match.get('week', {}).get('number') or event.get('week', {}).get('number')
             games.append(game)
     return sorted(games, key=lambda g: g['date'], reverse=not upcoming)

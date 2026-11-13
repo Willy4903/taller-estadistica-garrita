@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useRef,useMemo,useCallback} from 'react';
-import {ChevronLeft,ChevronRight,Pause,Play,Star,CalendarClock} from 'lucide-react';
+import {Pause,Play,Star,CalendarClock} from 'lucide-react';
 import {Crest,Num} from './ui.jsx';
 import {tickerItems,matchState,teamGroups,matchGroup,groupLabel} from '../lib.js';
 
@@ -10,27 +10,27 @@ const reduceMotion=()=>typeof matchMedia==='function'&&matchMedia('(prefers-redu
 function Status({match,now}){
   const s=matchState(match,now);
   if(s.kind==='final')return <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-300">Final</span>;
-  if(s.kind==='tbd')return <span className="text-[11px] text-slate-400">Horario por definir</span>;
-  if(s.kind==='soon')return <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[#10B981]"><i className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#10B981]" aria-hidden="true"/>En {s.minutes<60?`${s.minutes} min`:`${Math.floor(s.minutes/60)} h ${String(s.minutes%60).padStart(2,'0')}`}</span>;
-  if(s.kind==='started')return <span className="text-[11px] text-slate-400">Comenzó <Num>{time(match.date)}</Num></span>;
-  if(s.kind==='pending')return <span className="text-[11px] text-[#EAB308]">Resultado pendiente</span>;
-  return <Num className="text-sm font-bold text-white">{time(match.date)}</Num>;
+  if(s.kind==='tbd')return <span className="text-[10px] text-slate-400">Por definir</span>;
+  if(s.kind==='soon')return <span className="flex items-center gap-1 text-[10px] font-semibold text-[#10B981]"><i className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#10B981]" aria-hidden="true"/>{s.minutes<60?`${s.minutes} min`:`${Math.floor(s.minutes/60)} h ${String(s.minutes%60).padStart(2,'0')}`}</span>;
+  if(s.kind==='started')return <span className="text-[10px] text-slate-400" title="Comenzó según el horario; sin marcador en la captura">Inició <Num>{time(match.date)}</Num></span>;
+  if(s.kind==='pending')return <span className="text-[10px] leading-tight text-[#F59E0B]">Sin resultado</span>;
+  return <Num className="text-[13px] font-bold text-white">{time(match.date)}</Num>;
 }
 
 function Team({name,id,logo,leagueId,score,win,fav}){
-  return <span className="flex min-w-0 items-center gap-2">
-    <Crest name={name} leagueId={leagueId} logo={logo(id,name)} size={22}/>
-    <span className={`min-w-0 flex-1 truncate text-[13px] ${win===false?'text-slate-400':'font-semibold text-white'}`}>{name}</span>
-    {fav&&<Star size={11} className="shrink-0 fill-[#10B981] text-[#10B981]" aria-label="Favorito"/>}
-    {score!=null&&<Num className={`text-sm font-bold ${win===false?'text-slate-400':'text-white'}`}>{score}</Num>}
+  return <span className="flex min-w-0 items-center gap-1.5">
+    <Crest name={name} leagueId={leagueId} logo={logo(id,name)} size={16}/>
+    <span className={`min-w-0 flex-1 truncate text-[12px] leading-tight ${win===false?'text-slate-400':'font-semibold text-white'}`}>{name}</span>
+    {fav&&<Star size={10} className="shrink-0 fill-[#10B981] text-[#10B981]" aria-label="Favorito"/>}
+    {score!=null&&<Num className={`text-xs font-bold ${win===false?'text-slate-400':'text-white'}`}>{score}</Num>}
   </span>;
 }
 
 function DayMark({item}){
   const today=item.rel==='Hoy';
-  return <div className={`flex h-full w-[76px] flex-col items-center justify-center rounded-xl border px-2 text-center ${today?'border-[#10B981]/50 bg-[#10B981]/10':'border-white/[.08] bg-[#0B111E]'}`}>
-    {item.rel&&<span className={`font-heading text-sm font-extrabold uppercase ${today?'text-[#10B981]':'text-white'}`}>{item.rel}</span>}
-    <span className={`text-[11px] leading-tight ${item.rel?'text-slate-400':'font-semibold text-slate-200'}`}>{item.label}</span>
+  return <div className={`flex h-full w-[62px] flex-col items-center justify-center rounded-lg px-1 text-center ${today?'bg-[#10B981]/15 ring-1 ring-[#10B981]/40':'bg-white/[.03]'}`}>
+    {item.rel&&<span className={`font-heading text-[11px] font-extrabold uppercase ${today?'text-[#10B981]':'text-white'}`}>{item.rel}</span>}
+    <span className={`text-[10px] leading-tight ${item.rel?'text-slate-500':'font-semibold text-slate-300'}`}>{item.label}</span>
   </div>;
 }
 
@@ -39,12 +39,9 @@ function MatchCard({match,now,leagueId,logo,tag,selected,favs,onPick,hidden}){
   const winH=done?match.hg>match.ag?true:match.hg<match.ag?false:null:null,winA=winH==null?null:!winH;
   return <button type="button" tabIndex={hidden?-1:undefined} onClick={()=>onPick(match)}
     aria-label={hidden?undefined:`${match.home} contra ${match.away}${tag?`, ${tag.label}`:''}. Ver en la tabla`}
-    className={`group flex h-full w-[224px] flex-col sm:w-[244px] justify-between rounded-xl border p-3 text-left transition hover:-translate-y-0.5 hover:border-white/20 ${selected?'border-[#10B981]/60 bg-gradient-to-b from-[#10B981]/[.10] to-[#162032]':'border-white/[.08] bg-[#162032]'}`}>
-    <span className="flex items-center justify-between gap-2">
-      <Status match={match} now={now}/>
-      {tag&&<span className={`truncate rounded-md px-1.5 py-0.5 text-[10px] font-semibold ${tag.cross?'bg-[#F97316]/15 text-[#FDBA74]':selected?'bg-[#10B981]/20 text-[#6EE7B7]':'bg-white/[.06] text-slate-300'}`} title={tag.title}>{tag.label}</span>}
-    </span>
-    <span className="mt-2 flex flex-col gap-1.5">
+    className={`flex h-full w-[218px] items-center gap-2.5 rounded-lg border px-2.5 text-left transition hover:border-white/25 ${selected?'border-[#10B981]/50 bg-[#10B981]/[.08]':'border-white/[.06] bg-[#111827]'}`}>
+    <span className="flex w-[50px] shrink-0 flex-col items-start gap-0.5"><Status match={match} now={now}/>{tag&&<span className={`max-w-full truncate rounded px-1 text-[9px] font-semibold ${tag.cross?'bg-[#F59E0B]/15 text-[#FCD34D]':selected?'bg-[#10B981]/20 text-[#6EE7B7]':'bg-white/[.06] text-slate-400'}`} title={tag.title}>{tag.label}</span>}</span>
+    <span className="flex min-w-0 flex-1 flex-col gap-1 border-l border-white/[.06] pl-2.5">
       <Team name={match.home} id={match.home_id} logo={logo} leagueId={leagueId} score={done?match.hg:null} win={winH} fav={favs.has(match.home)}/>
       <Team name={match.away} id={match.away_id} logo={logo} leagueId={leagueId} score={done?match.ag:null} win={winA} fav={favs.has(match.away)}/>
     </span>
@@ -54,10 +51,8 @@ function MatchCard({match,now,leagueId,logo,tag,selected,favs,onPick,hidden}){
 /** Carrusel de partidos que avanza de derecha a izquierda. Se detiene al pasar el puntero, enfocar, tocar o pulsar Pausa. */
 export function MatchTicker({league,publication,groups,group,favorites,onPick}){
   const national=league.teamType==='national',multi=groups.length>1;
-  const [scope,setScope]=useState('all');
   const [now,setNow]=useState(Date.now);
   useEffect(()=>{const t=setInterval(()=>setNow(Date.now()),60000);return()=>clearInterval(t);},[]);
-  useEffect(()=>setScope('all'),[league.id]);
 
   const find=useMemo(()=>teamGroups(groups),[groups]);
   const logos=useMemo(()=>{const byId=new Map(),byName=new Map();groups.forEach(g=>(g.rows||[]).forEach(r=>{if(r.logo){if(r.team_id)byId.set(String(r.team_id),r.logo);byName.set(r.name,r.logo);}}));
@@ -66,8 +61,7 @@ export function MatchTicker({league,publication,groups,group,favorites,onPick}){
   const source=upcoming.length?upcoming:(publication?.results||[]).slice(-24);
   const mode=upcoming.length?'next':'played';
   const withGroup=useMemo(()=>source.map(m=>({m,g:multi?matchGroup(m,find):null})),[source,find,multi]);
-  const inGroup=useMemo(()=>withGroup.filter(x=>x.g===group||(x.g==='cross'&&[find(x.m.home_id,x.m.home),find(x.m.away_id,x.m.away)].includes(group))),[withGroup,group,find]);
-  const list=scope==='group'&&multi?inGroup:withGroup;
+  const list=withGroup;
   const groupOf=useMemo(()=>new Map(withGroup.map(x=>[x.m.id,x.g])),[withGroup]);
   const items=useMemo(()=>tickerItems(list.map(x=>x.m),now),[list,now]);
   const favs=useMemo(()=>new Set(favorites),[favorites]);
@@ -117,16 +111,10 @@ export function MatchTicker({league,publication,groups,group,favorites,onPick}){
     return()=>{cancelAnimationFrame(raf);io?.disconnect();document.removeEventListener('visibilitychange',vis);};
   },[loop,manualPause,copyWidth]);
 
-  useEffect(()=>{if(scroller.current)scroller.current.scrollLeft=0;},[league.id,scope,group]);
+  useEffect(()=>{if(scroller.current)scroller.current.scrollLeft=0;},[league.id,group]);
   useEffect(()=>()=>clearTimeout(touchTimer.current),[]);
 
   const onScroll=()=>{const el=scroller.current,w=copyWidth();if(loop&&el&&w&&el.scrollLeft>=w)el.scrollLeft-=w;};
-  const step=dir=>{
-    const el=scroller.current;if(!el)return;
-    const w=copyWidth(),d=Math.max(260,Math.round(el.clientWidth*.8))*dir;
-    if(loop&&w){if(dir<0&&el.scrollLeft+d<0)el.scrollLeft+=w;else if(dir>0&&el.scrollLeft+d>=w)el.scrollLeft-=w;}
-    el.scrollBy({left:d,behavior:reduceMotion()?'auto':'smooth'});
-  };
 
   if(!publication||!source.length)return null;
   const span=items.filter(i=>i.type==='day'),total=list.length;
@@ -134,34 +122,22 @@ export function MatchTicker({league,publication,groups,group,favorites,onPick}){
     ?<li key={it.key} className="shrink-0" aria-hidden={hidden||undefined}><DayMark item={it}/></li>
     :<li key={it.key} className="shrink-0" aria-hidden={hidden||undefined}><MatchCard match={it.match} now={now} leagueId={league.id} logo={logos} tag={tagOf(it.match)} selected={multi&&groupOf.get(it.match.id)===group} favs={favs} onPick={onPick} hidden={hidden}/></li>);
 
-  return <section id="agenda" aria-labelledby="agenda-title" className="mx-auto mt-4 max-w-[1440px] px-4 md:mt-8 md:px-8">
-    <div className="rounded-2xl border border-white/[.08] bg-[#111A2B] py-3 sm:py-4">
-      <div className="flex items-center justify-between gap-3 px-4 md:px-5">
-        <div className="flex min-w-0 items-center gap-3">
-          <span className="hidden h-10 w-10 shrink-0 place-items-center rounded-xl sm:grid bg-[#10B981]/15 text-[#10B981]"><CalendarClock size={20} aria-hidden="true"/></span>
-          <div className="min-w-0">
-            <h2 id="agenda-title" className="font-heading text-lg font-extrabold leading-tight text-white">{mode==='next'?'Próximos partidos':'Resultados recientes'} <span className="hidden text-slate-400 sm:inline">· {league.name}</span></h2>
-            <p className="text-xs text-slate-400"><Num>{total}</Num> {total===1?'partido':'partidos'}{span.length>1&&` en ${span.length} días`} · Hora de Lima<span className="hidden sm:inline"> · Según la captura publicada, no es un marcador en vivo</span></p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {multi&&<div role="group" aria-label="Partidos a mostrar" className="hidden min-w-0 flex-1 rounded-lg border border-white/[.08] bg-[#0B111E] p-1 text-xs sm:flex sm:flex-none">
-            {[['all','Todos'],['group',current?.full]].map(([v,l])=><button key={v} aria-pressed={scope===v} onClick={()=>setScope(v)} className={`min-h-9 min-w-0 flex-1 truncate rounded-md px-2 sm:max-w-[200px] sm:flex-none sm:px-3 ${scope===v?'bg-[#10B981] font-semibold text-[#04210F]':'text-slate-300 hover:text-white'}`}>{l}<span className="ml-1 opacity-70">({v==='all'?withGroup.length:inGroup.length})</span></button>)}
-          </div>}
-          {loop&&<button onClick={()=>setManualPause(v=>!v)} aria-pressed={manualPause} aria-label={manualPause?'Reanudar desplazamiento':'Pausar desplazamiento'} className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-white/[.08] bg-[#0B111E] text-slate-200 hover:text-white">{manualPause?<Play size={15}/>:<Pause size={15}/>}</button>}
-          <button onClick={()=>step(-1)} aria-label="Partidos anteriores" className="hidden h-11 w-11 place-items-center rounded-lg border border-white/[.08] bg-[#0B111E] text-slate-200 hover:text-white sm:grid"><ChevronLeft size={16}/></button>
-          <button onClick={()=>step(1)} aria-label="Partidos siguientes" className="hidden h-11 w-11 place-items-center rounded-lg border border-white/[.08] bg-[#0B111E] text-slate-200 hover:text-white sm:grid"><ChevronRight size={16}/></button>
-        </div>
+  return <section id="agenda" aria-label={mode==='next'?'Próximos partidos':'Resultados recientes'} className="mx-auto mt-4 max-w-[1440px] px-4 md:px-8">
+    <div className="flex h-[64px] items-stretch overflow-hidden rounded-2xl border border-white/[.08] bg-[#0D1422]">
+      <div className="flex shrink-0 items-center gap-2 border-r border-white/[.06] bg-[#111827] pl-3 pr-2 sm:pl-4">
+        <span className="hidden flex-col sm:flex"><span className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-[#10B981]"><i className="h-1.5 w-1.5 rounded-full bg-[#10B981] shadow-[0_0_8px_#10B981]" aria-hidden="true"/>{mode==='next'?'Próximos':'Recientes'}</span><span className="text-[10px] text-slate-500"><Num>{total}</Num> partidos · Lima</span></span>
+        <CalendarClock size={18} className="text-[#10B981] sm:hidden" aria-hidden="true"/>
+        {loop&&<button onClick={()=>setManualPause(v=>!v)} aria-pressed={manualPause} aria-label={manualPause?'Reanudar desplazamiento':'Pausar desplazamiento'} className="grid h-9 w-9 place-items-center rounded-lg text-slate-300 hover:bg-white/[.06] hover:text-white">{manualPause?<Play size={14}/>:<Pause size={14}/>}</button>}
       </div>
-      {!items.length?<p className="mx-4 mt-4 rounded-xl border border-dashed border-white/[.08] p-6 text-center text-sm text-slate-400 md:mx-5">{`No hay partidos de ${current?.full||'este grupo'} en la captura publicada.`}</p>
+      {!items.length?<p className="flex items-center px-4 text-sm text-slate-400">Sin partidos en la captura publicada.</p>
       :<div ref={scroller} onScroll={onScroll} tabIndex={0} aria-label={`Carrusel de ${total} partidos`}
         onPointerEnter={e=>{if(e.pointerType==='mouse')pause.current.hover=true;}} onPointerLeave={e=>{if(e.pointerType==='mouse')pause.current.hover=false;}}
         onTouchStart={()=>{clearTimeout(touchTimer.current);pause.current.touch=true;}} onTouchEnd={()=>{clearTimeout(touchTimer.current);touchTimer.current=setTimeout(()=>{pause.current.touch=false;},4000);}}
         onFocus={()=>{pause.current.focus=true;}} onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget))pause.current.focus=false;}}
-        className="ticker-mask mt-3 overflow-x-auto sm:mt-4 overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div ref={track} className="flex w-max pl-4 md:pl-5">
-          <ul className="flex gap-2.5 py-1 pr-2.5" aria-label={mode==='next'?'Próximos partidos':'Resultados recientes'}>{renderItems(false)}</ul>
-          {loop&&<ul className="flex gap-2.5 py-1 pr-2.5" aria-hidden="true">{renderItems(true)}</ul>}
+        className="ticker-mask min-w-0 flex-1 overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div ref={track} className="flex h-full w-max pl-2">
+          <ul className="flex h-full gap-2 py-1.5 pr-2" aria-label={mode==='next'?'Próximos partidos':'Resultados recientes'}>{renderItems(false)}</ul>
+          {loop&&<ul className="flex h-full gap-2 py-1.5 pr-2" aria-hidden="true">{renderItems(true)}</ul>}
         </div>
       </div>}
     </div>

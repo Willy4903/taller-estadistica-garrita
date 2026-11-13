@@ -110,3 +110,45 @@ test('carrusel: orden cronológico y un separador por día de Lima',()=>{
  // 03:00Z del 14 es el 13 por la noche en Lima.
  assert.deepEqual(items.map(i=>i.type==='day'?i.rel:i.match.id),['Hoy',1,3,'Mañana',2]);
 });
+
+import {splitTables,movement,scorers,cardTotals,goalsByMatchday,totalMatches,probabilities,coverage,shortSeason} from './lib.js';
+const row=(name,id,pj,g,e,p,gf,gc,rank)=>({name,team_id:id,rank,pj,g,e,p,gf,gc,dg:gf-gc,pts:3*g+e,form:[]});
+const res=(id,h,hid,a,aid,date,hg,ag,extra={})=>({id,home:h,home_id:hid,away:a,away_id:aid,date,hg,ag,...extra});
+const grp=[row('A','1',2,2,0,0,4,1,1),row('B','2',2,1,0,1,3,2,2),row('C','3',2,0,0,2,0,4,3)];
+const played=[res('m1','A','1','B','2','2026-09-05T19:00Z',2,1,{goals:[{team_id:'1',player:'Ana'},{team_id:'1',player:'Ana',penalty:true},{team_id:'2',player:'Bea'}],cards:[{card:'Y'}]}),
+ res('m2','C','3','A','1','2026-10-10T19:00Z',0,2,{goals:[{team_id:'1',player:'Ana'},{team_id:'1',player:'Leo',own_goal:false}],cards:[{card:'Y'},{card:'R'}]}),
+ res('m3','B','2','C','3','2026-10-03T19:00Z',2,0,{goals:[{team_id:'2',player:'Bea'},{team_id:'3',player:'Cid',own_goal:true}],cards:[]})];
+test('local y visitante solo con cobertura completa',()=>{
+ const s=splitTables(grp,played);
+ assert.deepEqual(s.home.map(r=>[r.name,r.pts]),[['B',3],['A',3],['C',0]]);
+ assert.equal(s.away.find(r=>r.name==='A').pts,3);
+ assert.equal(splitTables(grp,played.slice(1)),null,'faltan partidos: no se calcula');
+ assert.equal(coverage(grp,played),true);
+});
+test('movimiento respecto a la fecha anterior',()=>{
+ const mv=movement(grp,played);
+ assert.equal(mv.get('A'),1);assert.equal(mv.get('B'),-1);assert.equal(mv.get('C'),0);
+});
+test('goleadores exigen detalle que cuadre con el marcador y excluyen autogoles',()=>{
+ const s=scorers(grp,played);
+ assert.deepEqual(s.map(x=>[x.player,x.goals]),[['Ana',3],['Bea',2],['Leo',1]]);
+ assert.equal(scorers(grp,[res('x','A','1','B','2','2026-09-05T19:00Z',1,0,{goals:[]})]),null);
+ assert.equal(scorers(grp,[res('x','A','1','B','2','2026-09-05T19:00Z',1,0)]),null);
+});
+test('tarjetas solo con detalle en todos los partidos',()=>{
+ assert.deepEqual(cardTotals(played),{yellow:2,red:1,matches:3});
+ assert.equal(cardTotals([...played,res('y','A','1','C','3','2026-11-01T19:00Z',1,1)]),null);
+});
+test('goles por fecha, total de partidos y temporada corta',()=>{
+ assert.deepEqual(goalsByMatchday(played).map(d=>d.goals),[3,2,2]);
+ assert.equal(totalMatches({teamType:'national'},4),12);
+ assert.equal(totalMatches({format:'league'},20),380);
+ assert.equal(totalMatches({format:'playoffs'},20),null);
+ assert.equal(shortSeason('2026-27 UEFA Nations League'),'2026-27');
+});
+test('probabilidades suman 100 y favorecen al mejor equipo',()=>{
+ const p=probabilities(grp[0],grp[2],grp);
+ assert(Math.abs(p.home+p.draw+p.away-100)<1e-9);
+ assert(p.home>p.away);
+ assert.equal(probabilities({pj:0},grp[1],grp),null);
+});

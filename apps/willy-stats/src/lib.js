@@ -192,3 +192,109 @@ export function tickerItems(list,now=Date.now()){
   }
   return items;
 }
+
+/* ---------- Analítica derivada de la captura (sin datos inventados) ---------- */
+const keyOf=(id,name)=>id!=null&&id!==''?`id:${id}`:`n:${name}`;
+const finished=list=>list.filter(m=>m.hg!=null&&m.ag!=null);
+function finder(rows){
+  const byId=new Map(rows.filter(r=>r.team_id).map(r=>[String(r.team_id),r])),byName=new Map(rows.map(r=>[r.name,r]));
+  return (id,name)=>(id!=null&&id!==''&&byId.get(String(id)))||(!rows.some(r=>r.team_id&&String(r.team_id)===String(id))&&byName.get(name))||null;
+}
+const rankRows=list=>[...list].sort((a,b)=>b.pts-a.pts||b.dg-a.dg||b.gf-a.gf||a.name.localeCompare(b.name)).map((r,i)=>({...r,rank:i+1,effectiveness:r.pj?r.pts/(3*r.pj)*100:null}));
+
+/** ¿Los resultados publicados cubren todos los partidos de la tabla? */
+export function coverage(rows,results){
+  const find=finder(rows),count=new Map();
+  for(const m of finished(results))for(const [id,name] of [[m.home_id,m.home],[m.away_id,m.away]]){const r=find(id,name);if(r)count.set(r.name,(count.get(r.name)||0)+1);}
+  return rows.length>0&&rows.every(r=>(count.get(r.name)||0)===r.pj);
+}
+
+/** Tablas de local y de visitante calculadas con los resultados. Solo si cubren toda la tabla. */
+export function splitTables(rows,results){
+  if(!coverage(rows,results))return null;
+  const find=finder(rows),blank=r=>({name:r.name,team_id:r.team_id,logo:r.logo,pj:0,g:0,e:0,p:0,gf:0,gc:0,dg:0,pts:0,form:[]});
+  const home=new Map(rows.map(r=>[r.name,blank(r)])),away=new Map(rows.map(r=>[r.name,blank(r)]));
+  const chrono=[...finished(results)].sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
+  const add=(t,gf,gc)=>{t.pj++;t.gf+=gf;t.gc+=gc;t.dg=t.gf-t.gc;const f=gf>gc?'V':gf===gc?'E':'D';t[f==='V'?'g':f==='E'?'e':'p']++;t.pts+=f==='V'?3:f==='E'?1:0;t.form.push(f);};
+  for(const m of chrono){const h=find(m.home_id,m.home),a=find(m.away_id,m.away);if(h)add(home.get(h.name),m.hg,m.ag);if(a)add(away.get(a.name),m.ag,m.hg);}
+  const fin=map=>rankRows([...map.values()].map(t=>({...t,form:t.form.slice(-5)})));
+  return {home:fin(home),away:fin(away)};
+}
+
+/** Cambio de posición respecto a la fecha anterior: se descuenta la última fecha y se reordena por puntos, DG y GF. */
+export function movement(rows,results){
+  const days=matchdays(finished(results));
+  if(!days.length||rows.length<2)return null;
+  const find=finder(rows),prev=new Map(rows.map(r=>[r.name,{...r}]));
+  for(const m of days[days.length-1]){
+    for(const [id,name,gf,gc] of [[m.home_id,m.home,m.hg,m.ag],[m.away_id,m.away,m.ag,m.hg]]){
+      const r=find(id,name);if(!r)continue;const t=prev.get(r.name);
+      t.pj--;t.gf-=gf;t.gc-=gc;t.dg=t.gf-t.gc;t.pts-=gf>gc?3:gf===gc?1:0;
+    }
+  }
+  const before=new Map(rankRows([...prev.values()]).map(r=>[r.name,r.rank]));
+  return new Map(rows.map(r=>[r.name,before.get(r.name)-r.rank]));
+}
+
+/** Goleadores. Solo si cada partido trae detalle y sus goles cuadran con el marcador. Excluye autogoles. */
+export function scorers(rows,results,limit=5){
+  const done=finished(results);
+  if(!done.length||!done.every(m=>Array.isArray(m.goals)&&m.goals.length===m.hg+m.ag))return null;
+  const find=finder(rows),tally=new Map();
+  for(const m of done)for(const g of m.goals){
+    if(g.own_goal||!g.player)continue;
+    const team=g.team_id===String(m.home_id)?{id:m.home_id,name:m.home}:g.team_id===String(m.away_id)?{id:m.away_id,name:m.away}:null;
+    if(!team||!find(team.id,team.name))continue;
+    const k=`${g.player}|${team.name}`,t=tally.get(k)||{player:g.player,team:team.name,team_id:team.id,goals:0,penalties:0};
+    t.goals++;if(g.penalty)t.penalties++;tally.set(k,t);
+  }
+  return [...tally.values()].sort((a,b)=>b.goals-a.goals||a.penalties-b.penalties||a.player.localeCompare(b.player)).slice(0,limit);
+}
+
+/** Tarjetas de los partidos publicados. Solo si todos traen detalle. */
+export function cardTotals(results){
+  const done=finished(results);
+  if(!done.length||!done.every(m=>Array.isArray(m.cards)))return null;
+  return done.reduce((s,m)=>{for(const c of m.cards)s[c.card==='R'?'red':'yellow']++;return s;},{yellow:0,red:0,matches:done.length});
+}
+
+/** Goles por fecha, en orden cronológico. */
+export function goalsByMatchday(results){
+  return matchdays(finished(results)).map((d,i)=>({index:i+1,label:matchdayLabel(d),n:d.length,goals:d.reduce((s,m)=>s+m.hg+m.ag,0),gpg:d.reduce((s,m)=>s+m.hg+m.ag,0)/d.length}));
+}
+
+/** Partidos totales del torneo cuando el formato lo permite saber (todos contra todos o fase suiza). */
+export function totalMatches(league,n){
+  if(!n)return null;
+  if(league.teamType==='national'||['league','libertadores','sudamericana'].includes(league.format))return n*(n-1);
+  if(league.format==='apertura')return n*(n-1)/2;
+  if(league.format==='swiss')return n*4;
+  return null;
+}
+
+/** Probabilidad local/empate/visita con un modelo de Poisson sobre goles por partido de la tabla.
+ *  Se suavizan las tasas con 3 partidos de la media para no sobrerreaccionar a muestras pequeñas. */
+export function probabilities(home,away,rows,results=[]){
+  const played=rows.filter(r=>r.pj>0);
+  if(!home?.pj||!away?.pj||played.length<2)return null;
+  const games=played.reduce((s,r)=>s+r.pj,0),mu=played.reduce((s,r)=>s+r.gf,0)/games;
+  if(!(mu>0))return null;
+  const K=3,att=t=>(t.gf+K*mu)/((t.pj+K)*mu),def=t=>(t.gc+K*mu)/((t.pj+K)*mu);
+  const done=finished(results);let hfa=1;
+  if(done.length>=10){const hg=done.reduce((s,m)=>s+m.hg,0),ag=done.reduce((s,m)=>s+m.ag,0);if(hg>0&&ag>0)hfa=Math.min(1.3,Math.max(.8,Math.sqrt(hg/ag)));}
+  const lh=mu*att(home)*def(away)*hfa,la=mu*att(away)*def(home)/hfa;
+  const pois=(l,k)=>{let p=Math.exp(-l);for(let i=1;i<=k;i++)p*=l/i;return p;};
+  let H=0,D=0,A=0;
+  for(let i=0;i<=10;i++)for(let j=0;j<=10;j++){const p=pois(lh,i)*pois(la,j);if(i>j)H+=p;else if(i===j)D+=p;else A+=p;}
+  const t=H+D+A;return {home:H/t*100,draw:D/t*100,away:A/t*100,xh:lh,xa:la};
+}
+
+/** Tabla en CSV para exportar. */
+export function tableCsv(rows,label){
+  const head=['Pos','Equipo','PJ','PG','PE','PP','GF','GC','DG','Pts','Racha'];
+  const esc=v=>/[",;\n]/.test(String(v))?`"${String(v).replace(/"/g,'""')}"`:String(v);
+  return [`# ${label}`,head.join(','),...rows.map(r=>[r.rank,r.name,r.pj,r.g,r.e,r.p,r.gf,r.gc,r.dg,r.pts,(r.form||[]).join('')].map(esc).join(','))].join('\n');
+}
+
+/** Temporada corta: «2026-27 UEFA Nations League» → «2026-27». */
+export const shortSeason=s=>String(s||'').match(/\d{4}(?:[-/]\d{2,4})?/)?.[0]||String(s||'');

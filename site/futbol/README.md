@@ -43,13 +43,14 @@ Pruebas offline: `python -m unittest discover -s scripts -p test_cancha_provider
 
 ## Funciones
 
-Diseño «Dark Stadium Analytics»: fondo azul pizarra, tarjetas elevadas, acento esmeralda (#10B981), coral (#EF4444) para derrotas y gris (#94A3B8) para empates; cifras con `tabular-nums`. Encabezado fijo con la marca Willy Stats., selector de competición sincronizado con `#liga=` y pestañas Tabla, Equipos, Partidos y Estadísticas avanzadas.
+Diseño «Dark Stadium Pro»: fondo `#080D17`, superficies `#111827`/`#162032`, verde `#10B981` (líder, parte alta, positivos), cian `#06B6D4` (progreso y comparativas), ámbar `#F59E0B` (tarjetas amarillas y alertas) y coral `#EF4444` (derrotas, tarjetas rojas, parte baja). Plus Jakarta Sans en títulos, Inter en tablas y `tabular-nums` en todas las cifras.
 
-- Carrusel de próximos partidos que avanza de derecha a izquierda, con separadores por día (hora de Lima), cuenta regresiva en las tres horas previas y etiqueta de grupo. Se detiene al pasar el puntero, al enfocar, al tocar o con el botón Pausa; con «reducir movimiento» queda fijo y se desliza a mano. Tocar un partido abre su grupo y resalta a ambos equipos en la tabla.
-- Franja compacta de grupos (A1 … D2) sobre la tabla; el grupo se guarda en el enlace: `#liga=unl&grupo=A2`.
-- Tras el encabezado de la competición se muestra directamente la tabla de posiciones, en todas las competiciones.
-- Columnas 65/35: tabla con franjas de parte alta y baja, racha de cinco partidos y columnas que se adaptan al ancho; a la derecha, goles a favor (barras) contra goles en contra (línea) y métricas de rendimiento (radar y barras) del equipo elegido.
-- Pestaña Equipos (tarjetas por equipo) y Estadísticas avanzadas (tabla ordenable por partido). Debajo: partidos de alto impacto, última fecha en números, rachas, explorador de competiciones, comparador (con paridad) y metodología.
+- Encabezado fijo con la marca Willy Stats, pestañas Clasificación, Histórico, Equipos, Partidos y Estadísticas avanzadas, interruptor «Modo análisis» (agrega Pts/PJ y % de efectividad a la tabla; se recuerda en el navegador) y exportación de la tabla en CSV con fuente y fecha de captura.
+- Franja de próximos partidos que avanza de derecha a izquierda (pausa, deslizamiento táctil, separadores por día, hora de Lima). Tocar un partido abre su grupo y resalta a ambos equipos.
+- Barra de contexto con píldoras LIGA y GRUPO (menús por continente y por liga A–D), ruta, temporada y recarga, sincronizadas con `#liga=…&grupo=…`.
+- Cuatro indicadores: líder y ventaja, partidos jugados sobre el total del formato (con barra), goles por partido frente al resto de grupos o de ligas, y tarjetas amarillas y rojas (o victorias locales si la captura no trae detalle de tarjetas).
+- Tabla 65 %: vistas General, Local, Visitante y Rendimiento, movimiento respecto a la fecha anterior, franjas luminosas de parte alta y baja, PJ, PG, PE, PP, GF, GC, DG, Pts y racha.
+- Columna 35 %: goleadores, historial y partido clave con probabilidad Local/Empate/Visita, y goles por jornada (barras interactivas con promedio).
 
 ## Integridad y límites
 
@@ -57,7 +58,11 @@ Diseño «Dark Stadium Analytics»: fondo azul pizarra, tarjetas elevadas, acent
 - Una captura de otro año se rotula como archivo; una de más de 36 horas, como posiblemente desactualizada.
 - Fechas: se agrupan con los resultados publicados (corte tras más de 36 horas sin partidos o cuando un club vuelve a jugar; los partidos reprogramados se unen a su fecha si caben).
 - Análisis: goles por partido y distribución local/empate/visita de la última fecha, tendencia de goles, partidos de la próxima fecha entre los mejor ubicados y rachas de los últimos cinco partidos. Todo sale de las tablas y marcadores publicados.
-- La fuente no publica goleadores individuales, posesión ni xG: las métricas de rendimiento usan solo datos de la tabla. Las franjas de la tabla son una referencia visual de parte alta y baja, no zonas oficiales.
+- Goleadores y tarjetas salen del detalle de cada partido publicado por ESPN. Solo se muestran si todos los partidos del ámbito traen detalle y los goles cuadran con el marcador; si no, se ocultan. Fuera de la Nations League la captura cubre los últimos 35 días y así se indica.
+- Local y Visitante se calculan con los resultados solo cuando cubren todos los partidos de la tabla (hoy, la Nations League); en las demás ligas se muestran bloqueadas con el motivo.
+- Movimiento de posición: se descuenta la última fecha y se reordena por puntos, DG y GF; puede diferir del desempate oficial.
+- Probabilidades: modelo de Poisson con goles por partido de la tabla, suavizado con 3 partidos de la media y ventaja local estimada con los resultados. Es una estimación, no una cuota ni un pronóstico oficial.
+- La fuente no publica posesión ni xG: las métricas de rendimiento usan solo datos de la tabla. Las franjas de la tabla son una referencia visual de parte alta y baja, no zonas oficiales.
 - El radar usa cinco ejes calculables desde la tabla (ataque, defensa, efectividad, diferencia de gol y forma), normalizados contra la liga. No hay xG, posesión ni presión: la fuente no entrega tiros.
 - La ilustración del hero es decorativa. Las fotografías de fondo (Unsplash) no representan a ningún club.
 - Paridad entre ligas: diferencia típica de nivel entre clubes en puntos por partido, sin el azar. Se calcula como √(σ² observada − σ² del azar), con σ² del azar = varianza de los puntos de un partido (según la tasa de empates de la liga) ÷ partidos por club. El margen de error usa σ/√(2(n−1)). Solo se calcula en tablas de al menos 10 clubes y 8 partidos por club; los grupos pequeños y las fases de copa se marcan como no comparables. Reemplaza al índice anterior 10 × (1 − 0.4 × σ/μ), que dependía del número de partidos jugados y de un factor arbitrario. Mide paridad dentro de la liga, no calidad entre ligas.
