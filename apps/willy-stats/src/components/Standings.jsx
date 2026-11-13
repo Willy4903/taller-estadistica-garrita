@@ -7,7 +7,7 @@ const PREVIEW=10;
 /** Franjas visuales de parte alta y baja. No equivalen a zonas oficiales: la fuente no las publica. */
 export const bands=n=>({top:n>=10?Math.max(1,Math.round(n/5)):1,bottom:n>=10?3:n>=4?1:0});
 
-export function Standings({rows,leagueId,national=false,favorites,onFavorite,onDetail,query,onQuery,savedOnly,onClearSaved,highlight=[]}){
+export function Standings({title,rows,leagueId,national=false,favorites,onFavorite,onDetail,query,onQuery,savedOnly,onClearSaved,highlight=[]}){
   const [all,setAll]=useState(false);
   const filtered=rows.filter(t=>normalized(t.name).includes(normalized(query))&&(!savedOnly||favorites.includes(t.name)));
   const expanded=all||query||savedOnly||highlight.some(h=>filtered.findIndex(t=>t.name===h)>=PREVIEW);
@@ -15,8 +15,9 @@ export function Standings({rows,leagueId,national=false,favorites,onFavorite,onD
   const {top,bottom}=bands(rows.length),n=rows.length;
   const stripe=r=>r<=top?'before:bg-[#10B981]':bottom&&r>n-bottom?'before:bg-[#EF4444]':'before:bg-transparent';
   return <div className="@container">
-    <div className="mb-3 flex flex-wrap items-center gap-3">
-      <label className="flex h-11 flex-1 items-center gap-2 rounded-lg border border-white/[.08] bg-[#0B111E] px-3 text-slate-400 focus-within:border-[#10B981] sm:max-w-xs">
+    <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+      {title&&<h3 className="mr-auto font-heading text-sm font-bold uppercase tracking-wider text-slate-300">{title}</h3>}
+      <label className="flex h-11 w-full items-center gap-2 rounded-lg border border-white/[.08] bg-[#0B111E] px-3 text-slate-400 focus-within:border-[#10B981] sm:w-64">
         <Search size={15} aria-hidden="true"/><span className="sr-only">{national?'Filtrar selección':'Filtrar club'}</span>
         <input value={query} onChange={e=>onQuery(e.target.value)} placeholder={national?'Filtrar selección...':'Filtrar club...'} className="min-w-0 flex-1 bg-transparent text-base text-white outline-none placeholder:text-slate-500"/>
       </label>
@@ -28,7 +29,7 @@ export function Standings({rows,leagueId,national=false,favorites,onFavorite,onD
       <table className="w-full border-separate border-spacing-y-1 text-sm tabular-nums" id="league-standings">
         <caption className="sr-only">Tabla de posiciones</caption>
         <thead><tr className="text-left text-[11px] uppercase tracking-wider text-slate-500">
-          <th scope="col" className="w-8 py-2 pl-2.5 font-medium sm:w-10 sm:pl-3">Pos</th><th scope="col" className="py-2 font-medium">{national?'Selección':'Club'}</th>
+          <th scope="col" className="w-8 py-2 pl-2.5 font-medium sm:w-10 sm:pl-3"><span aria-hidden="true">#</span><span className="sr-only">Posición</span></th><th scope="col" className="py-2 font-medium">{national?'Selección':'Club'}</th>
           <th scope="col" className="px-1.5 py-2 text-center font-medium">PJ</th>
           {['G','E','P'].map(h=><th key={h} scope="col" className="hidden px-1.5 py-2 text-center font-medium @md:table-cell">{h}</th>)}
           <th scope="col" className="hidden px-1.5 py-2 text-center font-medium @sm:table-cell">DG</th>

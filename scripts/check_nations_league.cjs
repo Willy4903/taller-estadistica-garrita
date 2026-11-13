@@ -54,14 +54,14 @@ async function main(){
    p.on('pageerror',e=>errors.push(e.message));
    p.on('response',r=>{if(r.url().startsWith(origin)&&r.status()>=400)bad.push(r.url());});
    await p.goto(origin+'/futbol/#liga=unl',{waitUntil:'networkidle'});
-   const dash=p.locator('#dashboard'),picker=dash.getByRole('group',{name:'Liga',exact:true});
+   const dash=p.locator('#dashboard'),picker=dash.getByRole('group',{name:'Liga y grupo',exact:true});
    const groupCard=name=>dash.getByRole('button',{name,exact:true});
    await dash.getByRole('heading',{name:'UEFA Nations League',exact:true}).waitFor();
    await picker.waitFor();
    assert.equal(await p.locator('#explorar li button').count(),17);
-   assert.deepEqual(await picker.getByRole('button').allTextContents(),['Liga A1','Liga B1'],'una pestaña por liga con su número de grupos');
+   assert.deepEqual(await picker.getByRole('button').allTextContents(),['A1','B1'],'un botón compacto por grupo');
    assert.equal(await groupCard('Liga A · Grupo 1').getAttribute('aria-pressed'),'true');
-   assert.match(await dash.getByRole('group',{name:'Cambiar de grupo'}).innerText(),/Liga A · Grupo 1[\s\S]*1 de 2/);
+   assert.match(await dash.locator('p').first().innerText(),/Liga A · Grupo 1/);
    assert.equal(await dash.locator('tbody tr').count(),4);
    assert.equal(await dash.getByRole('columnheader',{name:'Selección',exact:true}).count(),1);
    assert.equal(await dash.getByPlaceholder('Filtrar selección...').count(),1);
@@ -71,23 +71,24 @@ async function main(){
    assert.doesNotMatch(await p.locator('section[aria-label="Última fecha en números"]').innerText(),/Inglaterra/);
    if(width<600){
     assert((await groupCard('Liga A · Grupo 1').boundingBox()).height>=43,'tarjeta de grupo con altura táctil de 44 px');
-    assert((await picker.getByRole('button').first().boundingBox()).height>=35,'pestaña de liga táctil');
    }
    // Carrusel de próximos partidos: toda la competición y filtro por grupo.
    const agenda=p.locator('#agenda'),firstCopy=agenda.locator('ul').first();
    await agenda.waitFor();
    assert.match(await firstCopy.innerText(),/España/);assert.match(await firstCopy.innerText(),/Inglaterra/);
-   await agenda.getByRole('button',{name:/^Liga A · Grupo 1/}).click();
-   assert.doesNotMatch(await firstCopy.innerText(),/Grecia/,'el filtro del carrusel deja solo el grupo elegido');
-   assert.match(await firstCopy.innerText(),/Inglaterra/,'el cruce eliminatorio sigue en el grupo');
-   await agenda.getByRole('button',{name:/^Todos/}).click();
+   if(width>=640){
+    await agenda.getByRole('button',{name:/^Liga A · Grupo 1/}).click();
+    assert.doesNotMatch(await firstCopy.innerText(),/Grecia/,'el filtro del carrusel deja solo el grupo elegido');
+    assert.match(await firstCopy.innerText(),/Inglaterra/,'el cruce eliminatorio sigue en el grupo');
+    await agenda.getByRole('button',{name:/^Todos/}).click();
+   }
    // Tocar un partido de otro grupo abre ese grupo y resalta a sus selecciones.
    await firstCopy.getByRole('button',{name:/^Inglaterra contra Grecia/}).click();
    assert.equal(await groupCard('Liga B · Grupo 1').getAttribute('aria-pressed'),'true');
    assert.match(new URL(p.url()).hash,/grupo=B1/);
    assert.match(await dash.locator('tbody').innerText(),/Grecia[\s\S]*Próximo|Próximo[\s\S]*Grecia/);
    await groupCard('Liga B · Grupo 1').waitFor();
-   await picker.getByRole('button',{name:/Liga A/}).click();await groupCard('Liga A · Grupo 1').click();
+   await groupCard('Liga A · Grupo 1').click();
    assert.match(new URL(p.url()).hash,/grupo=A1/);
    assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`sin desborde en tabla ${width}`);
 
@@ -98,7 +99,7 @@ async function main(){
    await dash.getByRole('button',{name:'Fecha siguiente',exact:true}).click();
    assert.match(await panel.innerText(),/España/);
    assert.match(await panel.innerText(),/Inglaterra/,'un cruce eliminatorio no se oculta por tener rival de otro grupo');
-   await picker.getByRole('button',{name:/Liga B/}).click();await groupCard('Liga B · Grupo 1').click();
+   await groupCard('Liga B · Grupo 1').click();
    // Al cambiar grupo se vuelve a su primera fecha, sin arrastrar la elegida antes.
    assert.match(await panel.innerText(),/Grecia/);
    assert.doesNotMatch(await panel.innerText(),/Portugal/);

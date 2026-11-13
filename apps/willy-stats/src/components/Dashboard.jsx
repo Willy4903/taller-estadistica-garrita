@@ -1,11 +1,11 @@
 import React,{useState,useMemo} from 'react';
 import {Info,AlertTriangle,RefreshCw,ChevronLeft,ChevronRight,ArrowUp,ArrowDown} from 'lucide-react';
 import {Crest,Form,Num,LeagueMark} from './ui.jsx';
-import {Radar,ParityBars,Sparkline,Ring,GoalsChart,MetricBars} from './Charts.jsx';
+import {Radar,GoalsChart,MetricBars} from './Charts.jsx';
 import {Standings} from './Standings.jsx';
-import {GroupPicker,GroupStepper} from './GroupPicker.jsx';
+import {GroupChips} from './GroupPicker.jsx';
 import {radarAxes,stamp,matchdays,matchdayLabel,groupLabel} from '../lib.js';
-import {number,goalsPerMatch} from '../data.js';
+import {number} from '../data.js';
 
 const card='rounded-2xl border border-white/[.08] bg-[#162032]';
 const signed=(v,d=0)=>v>0?`+${number(v,d)}`:number(v,d);
@@ -16,49 +16,11 @@ function SourceNote({publication,groupName,loadError,refreshing,onRefresh}){
   if(!publication){warn=true;text='Todavía no hay una captura publicada para esta competición. No se muestran cifras.';}
   else if(publication.historical){warn=true;text=`Archivo de la temporada ${publication.season}${groupName?` (${groupName})`:''}. No es la clasificación vigente. Fuente: ${publication.provider||'proveedor'}. Captura: ${stamp(publication.updated_at)}.`;}
   else if(stale){warn=true;text=`La captura tiene más de 36 horas (${stamp(publication.updated_at)}). Puede estar desactualizada.`;}
-  else text=`Temporada ${publication.season}${groupName?` · ${groupName}`:''}. Captura del ${stamp(publication.updated_at)}. Fuente: ${publication.provider||'proveedor'}. No es un marcador en vivo.`;
-  return <div role="status" className={`mt-4 flex items-start gap-2 rounded-xl border px-3 py-2.5 text-xs leading-relaxed ${warn?'border-[#EAB308]/40 bg-[#EAB308]/10 text-yellow-100':'border-white/[.06] bg-white/[.02] text-slate-400'}`}>
+  else text=`Temporada ${publication.season} · Fuente: ${publication.provider||'proveedor'} · Captura: ${stamp(publication.updated_at)}. No es un marcador en vivo.`;
+  return <div role="status" className={`mt-3 flex items-start gap-2 text-[11px] leading-relaxed ${warn?'rounded-xl border border-[#EAB308]/40 bg-[#EAB308]/10 px-3 py-2 text-yellow-100':'text-slate-500'}`}>
     {warn?<AlertTriangle size={14} className="mt-0.5 shrink-0" aria-hidden="true"/>:<Info size={14} className="mt-0.5 shrink-0" aria-hidden="true"/>}
     <span className="flex-1">{text}{publication?.warnings?.length?' Los partidos no estuvieron disponibles en esta captura.':''}{loadError&&' No se pudo recargar; se conserva la última captura.'}</span>
-    <button onClick={onRefresh} className="flex shrink-0 items-center gap-1 text-slate-300 hover:text-white" aria-label="Recargar captura publicada"><RefreshCw size={13} className={refreshing?'animate-spin':''}/></button>
-  </div>;
-}
-
-function Kpi({label,children,foot}){
-  return <div className={`${card} flex min-w-0 flex-col justify-between gap-2 p-4`}>
-    <p className="text-xs font-medium text-slate-400">{label}</p>
-    <div className="flex min-w-0 items-end justify-between gap-2">{children}</div>
-    {foot&&<div className="text-[11px] text-slate-400">{foot}</div>}
-  </div>;
-}
-
-function Kpis({rows,results,summary,national,leagueId}){
-  const played=rows.filter(r=>r.pj>0);
-  if(!played.length)return null;
-  const matches=Math.round(rows.reduce((s,t)=>s+t.pj,0)/2),gpg=goalsPerMatch(rows);
-  const scorer=[...played].sort((a,b)=>b.gf-a.gf||b.gf/b.pj-a.gf/a.pj)[0];
-  const finished=results.filter(m=>m.hg!=null&&m.ag!=null),home=finished.filter(m=>m.hg>m.ag).length;
-  const trend=summary?.trend||[],last=trend[trend.length-1],prev=trend[trend.length-2];
-  const homePct=finished.length?home/finished.length*100:null,leader=played[0];
-  return <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="Resumen">
-    <Kpi label="Partidos jugados" foot={summary?<span className="rounded-full bg-[#10B981]/15 px-2 py-0.5 font-semibold text-[#6EE7B7]">+<Num>{summary.n}</Num> en la última fecha</span>:null}>
-      <Num className="text-3xl font-extrabold text-white">{matches}</Num>
-    </Kpi>
-    <Kpi label="Goles por partido" foot={last&&prev?<span className="flex items-center gap-1">{last.gpg>=prev.gpg?<ArrowUp size={12} className="text-[#10B981]"/>:<ArrowDown size={12} className="text-[#EF4444]"/>}Última fecha <Num className="text-slate-200">{number(last.gpg,2)}</Num></span>:null}>
-      <Num className="text-3xl font-extrabold text-white">{gpg!=null?number(gpg,2):'—'}</Num>
-      <Sparkline values={trend.map(t=>t.gpg)} className="h-9 w-20 shrink-0 sm:w-24"/>
-    </Kpi>
-    <Kpi label={national?'Selección más goleadora':'Equipo más goleador'} foot={<><Num className="text-slate-200">{number(scorer.gf/scorer.pj,2)}</Num> por partido</>}>
-      <span className="flex min-w-0 items-center gap-2.5"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/[.05]"><Crest name={scorer.name} leagueId={leagueId} logo={scorer.logo} size={28}/></span>
-        <span className="min-w-0"><span className="block truncate text-sm font-semibold text-white">{scorer.name}</span><Num className="text-xl font-extrabold text-white">{scorer.gf} <span className="text-xs font-medium text-slate-400">goles</span></Num></span></span>
-    </Kpi>
-    {homePct!=null
-      ?<Kpi label="Victorias locales" foot={<><Num className="text-slate-200">{home}</Num> de <Num className="text-slate-200">{finished.length}</Num> resultados publicados</>}>
-        <Num className="text-3xl font-extrabold text-white">{number(homePct)}%</Num><Ring value={homePct} size={52} label={`Victorias locales: ${number(homePct)}%`}/>
-      </Kpi>
-      :<Kpi label="Líder actual" foot={<>{leader.name}</>}>
-        <Num className="text-3xl font-extrabold text-white">{number(leader.effectiveness)}%</Num><Ring value={leader.effectiveness} size={52} label={`Efectividad del líder: ${number(leader.effectiveness)}%`}/>
-      </Kpi>}
+    <button onClick={onRefresh} className="-my-1.5 grid h-7 w-7 shrink-0 place-items-center rounded-md text-slate-400 hover:text-white" aria-label="Recargar captura publicada"><RefreshCw size={13} className={refreshing?'animate-spin':''}/></button>
   </div>;
 }
 
@@ -169,22 +131,17 @@ function MetricsCard({rows,focus,onFocus,national}){
 }
 
 export function Dashboard(p){
-  const {league,rows,tab,publication,groups,group,onGroup,results,summary}=p;
+  const {league,rows,tab,publication,groups,group,onGroup,results}=p;
   const national=league.teamType==='national',groupName=groups.length>1?groupLabel(groups[group]?.name,group).full:null;
-  return <section id="dashboard" className="mx-auto mt-8 max-w-[1440px] px-4 md:px-8">
-    <div className="flex flex-wrap items-center justify-between gap-4">
-      <div className="flex min-w-0 items-center gap-3"><span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-white/[.08] bg-[#162032]"><LeagueMark league={league} size={36}/></span>
-        <div className="min-w-0"><p className="text-xs text-slate-400">{league.country} · {league.continent}{publication?.season&&<> · <span className="text-slate-300">{publication.season}</span></>}</p><h2 className="font-heading text-2xl font-extrabold tracking-tight text-white md:text-3xl">{league.name}</h2></div></div>
-      <GroupStepper groups={groups} group={group} onGroup={onGroup}/>
-    </div>
+  return <section id="dashboard" className="mx-auto mt-6 max-w-[1440px] px-4 md:px-8">
+    <div className="flex min-w-0 items-center gap-3"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-white/[.08] bg-[#162032]"><LeagueMark league={league} size={32}/></span>
+      <div className="min-w-0"><p className="text-xs text-slate-400">{league.country} · {league.continent}{groupName&&<> · <span className="font-semibold text-[#10B981]">{groupName}</span></>}</p><h2 className="font-heading text-2xl font-extrabold tracking-tight text-white md:text-3xl">{league.name}</h2></div></div>
     <SourceNote publication={publication} groupName={groupName} loadError={p.loadError} refreshing={p.refreshing} onRefresh={p.onRefresh}/>
-    <GroupPicker groups={groups} group={group} onGroup={onGroup} leagueId={league.id} national={national}/>
-    {national&&groups.length>0&&<p className="mt-3 text-xs leading-relaxed text-slate-400">Tabla y análisis del grupo elegido. Los partidos incluyen a sus selecciones, también en cruces eliminatorios.</p>}
-    <Kpis rows={rows} results={results} summary={summary} national={national} leagueId={league.id}/>
-    <div className="mt-5 grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,65fr)_minmax(0,35fr)]">
+    <div className="mt-4 grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,65fr)_minmax(0,35fr)]">
       <div role="tabpanel" id="panel-main" aria-labelledby={`tab-${tab}`} className={`${card} min-w-0 p-3 md:p-5`}>
-        <h3 className="mb-4 font-heading text-sm font-bold uppercase tracking-wider text-slate-300">{{table:national?'Tabla del grupo':'Tabla de posiciones',teams:national?'Selecciones':'Equipos',fixtures:'Partidos',advanced:'Estadísticas avanzadas'}[tab]}</h3>
-        {tab==='table'&&<Standings rows={rows} leagueId={league.id} national={national} favorites={p.favorites} onFavorite={p.onFavorite} onDetail={p.onDetail} query={p.query} onQuery={p.onQuery} savedOnly={p.savedOnly} onClearSaved={p.onClearSaved} highlight={p.highlight}/>}
+        <GroupChips groups={groups} group={group} onGroup={onGroup}/>
+        {tab!=='table'&&<h3 className="mb-3 font-heading text-sm font-bold uppercase tracking-wider text-slate-300">{{table:national?'Tabla del grupo':'Tabla de posiciones',teams:national?'Selecciones':'Equipos',fixtures:'Partidos',advanced:'Estadísticas avanzadas'}[tab]}</h3>}
+        {tab==='table'&&<Standings title={national?'Tabla del grupo':'Tabla de posiciones'} rows={rows} leagueId={league.id} national={national} favorites={p.favorites} onFavorite={p.onFavorite} onDetail={p.onDetail} query={p.query} onQuery={p.onQuery} savedOnly={p.savedOnly} onClearSaved={p.onClearSaved} highlight={p.highlight}/>}
         {tab==='teams'&&<Teams rows={rows} leagueId={league.id} favorites={p.favorites} onDetail={p.onDetail} onFocus={p.onFocus}/>}
         {tab==='fixtures'&&<Fixtures key={`${league.id}:${group}`} fixtures={p.fixtures} results={results} favorites={p.favorites} savedOnly={p.savedOnly} type={p.fixtureType} onType={p.onFixtureType}/>}
         {tab==='advanced'&&<Advanced rows={rows} leagueId={league.id} national={national} onDetail={p.onDetail}/>}
@@ -194,32 +151,5 @@ export function Dashboard(p){
         <MetricsCard rows={rows} focus={p.focus} onFocus={p.onFocus} national={national}/>
       </aside>
     </div>
-  </section>;
-}
-
-export function ReadingCard({league,reading}){
-  if(!reading)return <section className="rounded-2xl border border-[#10B981]/30 bg-gradient-to-br from-[#0F2A24] via-[#132532] to-[#0F172A] p-4">
-    <p className="font-mono text-[11px] uppercase tracking-wider text-[#10B981]">La lectura de Willy Stats</p><h3 className="mt-1 font-heading text-xl font-extrabold text-white">Sin lectura disponible.</h3>
-    <p className="mt-2 text-xs text-slate-300">No hay una tabla con partidos jugados para {league.name}.</p></section>;
-  const {leader,second,gap,ppg,attackRank,defenseRank}=reading;
-  const strengths=[attackRank===1&&'mejor ataque por partido',defenseRank===1&&'mejor defensa por partido'].filter(Boolean);
-  const kpis=[[number(ppg,2),'Puntos por partido'],[`${number(leader.effectiveness)}%`,'% de efectividad'],[leader.dg>0?`+${leader.dg}`:`${leader.dg}`,'Diferencia de gol'],[gap==null?'—':`${gap} PTS`,'Ventaja sobre el 2.º']];
-  return <section aria-label="La lectura de Willy Stats" className="rounded-2xl border border-[#10B981]/30 bg-gradient-to-br from-[#0F2A24] via-[#132532] to-[#0F172A] p-4">
-    <p className="font-mono text-[11px] uppercase tracking-wider text-[#10B981]">La lectura de Willy Stats</p>
-    <h3 className="mt-1 font-heading text-xl font-extrabold leading-tight text-white">{leader.name} marca el paso.</h3>
-    <p className="mt-2 text-xs leading-relaxed text-slate-300">{second?(gap===0?`Empata en puntos con ${second.name}.`:`Tiene ${gap} ${gap===1?'punto':'puntos'} de ventaja sobre ${second.name}.`):league.teamType==='national'?'Es la única selección con partidos jugados.':'Es el único club con partidos jugados.'}{strengths.length?` Además tiene el ${strengths.join(' y el ')} de la tabla.`:''}</p>
-    <dl className="mt-3 grid grid-cols-2 gap-1.5 border-t border-[#10B981]/20 pt-3">
-      {kpis.map(([v,l])=><div key={l} className="rounded-lg bg-black/20 px-2 py-1.5"><dd><Num className="text-base font-bold text-[#10B981]">{v}</Num></dd><dt className="text-[10px] leading-tight text-slate-400">{l}</dt></div>)}
-    </dl>
-  </section>;
-}
-
-export function ParityCard({items,activeId}){
-  if(!items.length)return null;
-  const sorted=[...items].sort((a,b)=>a.p.level-b.p.level);
-  return <section className={`${card} p-4`} aria-label="Paridad entre ligas">
-    <h3 className="font-heading text-base font-bold text-white">Paridad entre ligas</h3>
-    <p className="mb-3 text-xs leading-relaxed text-slate-400">Diferencia típica de nivel entre clubes, en puntos por partido, sin el efecto del azar. Barra corta: liga pareja. La línea fina es el margen de error: si dos ligas se solapan, la diferencia no es concluyente.</p>
-    <ParityBars items={sorted} activeId={activeId}/>
   </section>;
 }
