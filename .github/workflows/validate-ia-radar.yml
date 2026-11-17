@@ -41,3 +41,4 @@ jobs:
           node --check site/js/ruta.js
           node --check site/js/hero.js
           node --check site/js/fuentes.js
+          node --check site/js/region.js

@@ -1,0 +1,563 @@
+{
+  "reviewed": "17 nov 2026",
+  "lead": "El Perú es un adoptante con buena gobernanza y una base frágil: es segundo de la región en gobernanza de la IA, pero queda por debajo del promedio en infraestructura, talento e investigación, y el uso de IA entre su población todavía está bajo el promedio mundial. Aquí se compara con el resto de América Latina usando el Índice Latinoamericano de Inteligencia Artificial (ILIA) y otras fuentes, cada una por separado.",
+  "kpis": [
+    {
+      "label": "Puesto ILIA 2026",
+      "value": "7.º de 20",
+      "detail": "Adoptante, con 52,7 puntos sobre 100. Chile lidera con 71,4.",
+      "tone": "acc"
+    },
+    {
+      "label": "Gobernanza ILIA",
+      "value": "83,2",
+      "detail": "Segundo de la región (promedio 72,2). En 2025 era sexto con 74,4.",
+      "tone": "acc"
+    },
+    {
+      "label": "Preparación del Estado",
+      "value": "Puesto 60",
+      "detail": "De 195 países, con 56,52 puntos (Oxford Insights 2025)."
+    },
+    {
+      "label": "Uso de IA generativa",
+      "value": "17,3 %",
+      "detail": "De la población de 15 a 64 años (Microsoft, junio 2026). Promedio mundial: 18,8 %."
+    },
+    {
+      "label": "Peruanos que usan IA",
+      "value": "16,3 %",
+      "detail": "23 % en Lima Metropolitana y cerca de 6 % en zonas rurales (OSIPTEL, ERESTEL 2025)."
+    },
+    {
+      "label": "Pequeñas empresas con IA",
+      "value": "8,2 %",
+      "detail": "Frente al 33,6 % de las grandes empresas tractoras (ILIA 2026)."
+    }
+  ],
+  "ilia": {
+    "meta": {
+      "edition": "2026",
+      "what": "Mide la madurez del ecosistema de IA de cada país con 126 subindicadores en tres dimensiones: factores habilitantes; investigación, desarrollo y adopción; y gobernanza. Pioneros: más de 60 puntos. Adoptantes: de 35 a 60. Exploradores: menos de 35.",
+      "mide": "Madurez del ecosistema nacional de IA (infraestructura, datos, talento, investigación, adopción y gobernanza) en una escala de 0 a 100.",
+      "nomide": "No mide cuántas personas usan IA ni la calidad de cada política. Por cambios de metodología y la incorporación de un país nuevo (Trinidad y Tobago), la edición 2026 no es del todo comparable con la de 2025.",
+      "source": "CENIA y CEPAL, Índice Latinoamericano de Inteligencia Artificial 2026",
+      "url": "https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026",
+      "fecha": "publicado el 20 oct 2026"
+    },
+    "countries": [
+      {
+        "name": "Chile",
+        "score": 71.4,
+        "cat": "pionero"
+      },
+      {
+        "name": "Brasil",
+        "score": 68.4,
+        "cat": "pionero"
+      },
+      {
+        "name": "Uruguay",
+        "score": 67.0,
+        "cat": "pionero"
+      },
+      {
+        "name": "Colombia",
+        "score": 56.8,
+        "cat": "adoptante"
+      },
+      {
+        "name": "Costa Rica",
+        "score": 56.0,
+        "cat": "adoptante"
+      },
+      {
+        "name": "Argentina",
+        "score": 55.6,
+        "cat": "adoptante"
+      },
+      {
+        "name": "Perú",
+        "score": 52.7,
+        "cat": "adoptante"
+      },
+      {
+        "name": "México",
+        "score": 52.0,
+        "cat": "adoptante"
+      },
+      {
+        "name": "Ecuador",
+        "score": 51.8,
+        "cat": "adoptante"
+      },
+      {
+        "name": "República Dominicana",
+        "score": 45.1,
+        "cat": "adoptante"
+      },
+      {
+        "name": "Panamá",
+        "score": 39.3,
+        "cat": "adoptante"
+      },
+      {
+        "name": "El Salvador",
+        "score": 37.9,
+        "cat": "adoptante"
+      },
+      {
+        "name": "Trinidad y Tobago",
+        "score": 35.5,
+        "cat": "adoptante"
+      },
+      {
+        "name": "Paraguay",
+        "score": 32.6,
+        "cat": "explorador"
+      },
+      {
+        "name": "Jamaica",
+        "score": 32.4,
+        "cat": "explorador"
+      },
+      {
+        "name": "Cuba",
+        "score": 30.9,
+        "cat": "explorador"
+      },
+      {
+        "name": "Guatemala",
+        "score": 29.0,
+        "cat": "explorador"
+      },
+      {
+        "name": "Bolivia",
+        "score": 26.4,
+        "cat": "explorador"
+      },
+      {
+        "name": "Honduras",
+        "score": 26.2,
+        "cat": "explorador"
+      },
+      {
+        "name": "Venezuela",
+        "score": 23.2,
+        "cat": "explorador"
+      }
+    ],
+    "peru": {
+      "dims_note": "La gobernanza sostiene el puntaje del Perú; las otras dos dimensiones quedan por debajo del promedio de la región.",
+      "dims": [
+        {
+          "name": "Factores habilitantes",
+          "pe": 45.5,
+          "avg": null,
+          "what": "infraestructura y cómputo, datos y talento humano"
+        },
+        {
+          "name": "Investigación, desarrollo y adopción",
+          "pe": 39.4,
+          "avg": null,
+          "what": "producción científica, innovación y uso en empresas, Estado y sociedad"
+        },
+        {
+          "name": "Gobernanza",
+          "pe": 83.2,
+          "avg": 72.2,
+          "what": "visión estratégica, institucionalidad, vínculo internacional y regulación"
+        }
+      ],
+      "dims_meta": {
+        "mide": "Puntaje del Perú en cada dimensión del ILIA 2026 (0 a 100). La barra gris es el promedio regional, publicado solo para gobernanza.",
+        "nomide": "El promedio regional de factores habilitantes y de investigación, desarrollo y adopción no se publicó en las notas consultadas; solo se informa que el Perú está por debajo. Un buen puntaje en gobernanza no garantiza que las políticas tengan presupuesto o se ejecuten.",
+        "fuente": "ILIA 2026 (cuadro de resultados por dimensión, CEPAL) y Tecnología 21",
+        "url": "https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026",
+        "fecha": "oct 2026"
+      }
+    }
+  },
+  "firms": {
+    "title": "Adopción de IA en las empresas",
+    "q": "¿Qué parte de las empresas usa IA según su tamaño? En el Perú, las grandes se refieren a las empresas tractoras.",
+    "labels": [
+      "Grandes",
+      "Medianas",
+      "Pequeñas"
+    ],
+    "series": [
+      {
+        "name": "Perú",
+        "data": [
+          33.6,
+          null,
+          8.2
+        ]
+      },
+      {
+        "name": "América Latina y el Caribe",
+        "data": [
+          27.6,
+          12.8,
+          6.8
+        ]
+      }
+    ],
+    "meta": {
+      "mide": "Porcentaje de empresas que declaran usar IA, por tamaño de empresa.",
+      "nomide": "No mide la intensidad del uso ni su efecto en productividad. Para el Perú no se publicó el dato de medianas empresas y la categoría de grandes (tractoras) no es idéntica a la regional.",
+      "fuente": "ILIA 2026 (CENIA y CEPAL); cifras del Perú citadas en El Comercio",
+      "url": "https://elcomercio.pe/opinion/columnistas/ilia-2026-y-el-peru-por-maite-vizcarra-noticia/",
+      "fecha": "oct 2026"
+    }
+  },
+  "indices": [
+    {
+      "kind": "hbar",
+      "unit": "%",
+      "title": "Uso de IA generativa en la población",
+      "q": "¿Qué parte de las personas de 15 a 64 años usa herramientas de IA generativa?",
+      "headline": "El Perú (17,3 %) queda bajo el promedio mundial y último entre los ocho países comparados; ocupa el puesto 68 de 147 economías.",
+      "items": [
+        {
+          "name": "Costa Rica",
+          "value": 29.7
+        },
+        {
+          "name": "Colombia",
+          "value": 25.9
+        },
+        {
+          "name": "Uruguay",
+          "value": 25.7
+        },
+        {
+          "name": "Chile",
+          "value": 24.0
+        },
+        {
+          "name": "Argentina",
+          "value": 23.4
+        },
+        {
+          "name": "México",
+          "value": 21.4
+        },
+        {
+          "name": "Brasil",
+          "value": 20.2
+        },
+        {
+          "name": "Promedio mundial",
+          "value": 18.8,
+          "ref": true
+        },
+        {
+          "name": "Perú",
+          "value": 17.3
+        }
+      ],
+      "meta": {
+        "mide": "Porcentaje de personas de 15 a 64 años que usaron un producto de IA generativa en el periodo, estimado con telemetría de Microsoft ajustada por cuota de dispositivos, penetración de internet y población.",
+        "nomide": "No es una encuesta ni mide la frecuencia o la calidad del uso. Es una estimación del proveedor y puede subestimar usos fuera de su telemetría. Los puestos se derivan del orden del apéndice del informe.",
+        "fuente": "Microsoft AI Economy Institute, Global AI Diffusion Q2 2026",
+        "url": "https://www.microsoft.com/en-us/research/wp-content/uploads/2026/09/Microsoft-AI-Diffusion-Report-2026-Q2.pdf",
+        "fecha": "publicado en set 2026, datos a junio 2026"
+      }
+    },
+    {
+      "kind": "line",
+      "unit": "%",
+      "title": "Evolución del uso de IA generativa",
+      "q": "¿Crece el uso en el Perú al mismo ritmo que en la región y el mundo?",
+      "headline": "El Perú sumó 3,9 puntos en un año; la distancia con el promedio mundial se mantiene en torno a 1,5 puntos.",
+      "labels": [
+        "1.er sem. 2025",
+        "2.º sem. 2025",
+        "1.er trim. 2026",
+        "2.º trim. 2026"
+      ],
+      "series": [
+        {
+          "name": "Perú",
+          "data": [
+            13.4,
+            14.7,
+            16.4,
+            17.3
+          ]
+        },
+        {
+          "name": "Promedio mundial",
+          "data": [
+            15.1,
+            16.3,
+            17.8,
+            18.8
+          ]
+        },
+        {
+          "name": "Chile",
+          "data": [
+            19.6,
+            20.8,
+            22.7,
+            24.0
+          ]
+        },
+        {
+          "name": "Costa Rica",
+          "data": [
+            25.1,
+            26.5,
+            28.5,
+            29.7
+          ]
+        }
+      ],
+      "meta": {
+        "mide": "Porcentaje de la población de 15 a 64 años que usa IA generativa en cada informe de Microsoft.",
+        "nomide": "Los periodos no son de igual duración (semestres y trimestres). No mide intensidad de uso.",
+        "fuente": "Microsoft AI Economy Institute (informes H2 2025, Q1 2026 y Q2 2026)",
+        "url": "https://www.microsoft.com/en-us/research/wp-content/uploads/2026/09/Microsoft-AI-Diffusion-Report-2026-Q2.pdf",
+        "fecha": "ene 2026 a set 2026"
+      }
+    },
+    {
+      "kind": "hbar",
+      "unit": "%",
+      "title": "Quiénes usan IA en el Perú",
+      "q": "Porcentaje de personas que usan herramientas de IA, según grupo.",
+      "headline": "La brecha es territorial y generacional: el uso en Lima Metropolitana casi cuadruplica al de las zonas rurales.",
+      "items": [
+        {
+          "name": "De 18 a 29 años",
+          "value": 28.4
+        },
+        {
+          "name": "Nivel socioeconómico AB",
+          "value": 26.4
+        },
+        {
+          "name": "Lima Metropolitana",
+          "value": 23.0
+        },
+        {
+          "name": "Perú (total)",
+          "value": 16.3,
+          "ref": true
+        },
+        {
+          "name": "Zona rural",
+          "value": 6.0,
+          "note": "cifra aproximada"
+        }
+      ],
+      "meta": {
+        "mide": "Personas que declaran usar herramientas de IA (encuesta de hogares). Entre los usuarios, ChatGPT alcanza 87,5 % y Gemini 35,5 %; los usos principales son estudiar (40,8 %) e informarse (32,8 %).",
+        "nomide": "No es comparable con la cifra de Microsoft, que usa otra población y otro método. El dato rural se publicó como aproximado.",
+        "fuente": "OSIPTEL, Encuesta Residencial de Servicios de Telecomunicaciones (ERESTEL) 2025",
+        "url": "https://dplnews.com/16-peruanos-usa-herramientas-inteligencia-artificial-erestel/",
+        "fecha": "presentada en may 2026"
+      }
+    },
+    {
+      "kind": "hbar",
+      "unit": "pts",
+      "title": "Preparación del gobierno para la IA",
+      "q": "¿Qué tan preparado está cada Estado para usar IA en servicios públicos? Puntaje de 0 a 100 y puesto entre 195 países.",
+      "headline": "El Perú ocupa el puesto 60 del mundo y el cuarto entre estos cinco países; el informe destaca que actualizó su estrategia de IA en 2025.",
+      "items": [
+        {
+          "name": "Brasil",
+          "value": 69.55,
+          "note": "puesto 22"
+        },
+        {
+          "name": "Chile",
+          "value": 59.3,
+          "note": "puesto 50"
+        },
+        {
+          "name": "Uruguay",
+          "value": 58.47,
+          "note": "puesto 55"
+        },
+        {
+          "name": "Perú",
+          "value": 56.52,
+          "note": "puesto 60"
+        },
+        {
+          "name": "Colombia",
+          "value": 56.02,
+          "note": "puesto 64, fuente secundaria"
+        }
+      ],
+      "meta": {
+        "mide": "Government AI Readiness Index: capacidad del Estado para adoptar IA (visión y gobernanza, sector tecnológico, datos e infraestructura), con 69 indicadores en 195 países.",
+        "nomide": "No mide el uso de IA por las personas ni por las empresas. Hay una versión de diciembre de 2025 y otra revisada en enero de 2026 con cifras levemente distintas; se usa la revisada. El dato de Colombia proviene de una fuente secundaria.",
+        "fuente": "Oxford Insights, Government AI Readiness Index 2025",
+        "url": "https://oxfordinsights.com/ai-readiness/government-ai-readiness-index-2025/",
+        "fecha": "ene 2026 (versión revisada)"
+      }
+    }
+  ],
+  "gov": {
+    "q": "Del marco legal a las capacidades del Estado: normas e hitos que explican el salto del Perú en gobernanza.",
+    "timeline": [
+      {
+        "date": "5 jul 2023",
+        "t": "Ley N.º 31814",
+        "d": "Promueve el uso de la IA para el desarrollo económico y social, con un estándar de seguridad basado en riesgos. La autoridad es la PCM, a través de la Secretaría de Gobierno y Transformación Digital (SGTD).",
+        "url": "https://busquedas.elperuano.pe/dispositivo/NL/2192926-1"
+      },
+      {
+        "date": "9 set 2025",
+        "t": "Reglamento: D. S. N.º 115-2025-PCM",
+        "d": "36 artículos que clasifican los usos de IA por nivel de riesgo y fijan obligaciones de transparencia, registro y supervisión humana. Entró en vigencia el 22 de enero de 2026; las pequeñas y microempresas tienen plazos de adecuación más largos.",
+        "url": "https://www.gob.pe/institucion/pcm/normas-legales/7133522-115-2025-pcm"
+      },
+      {
+        "date": "1 may 2026",
+        "t": "Estrategia Nacional de IA 2026-2030",
+        "d": "Aprobada por R. M. N.º 152-2026-PCM y obligatoria para las entidades públicas. Cuatro ejes: talento; innovación y emprendimiento; marco ético y regulatorio; y participación ciudadana. Crea el Catálogo IA Perú.",
+        "url": "https://www.gob.pe/institucion/pcm/normas-legales/8081563-152-2026-pcm"
+      },
+      {
+        "date": "13 jun 2026",
+        "t": "Primer laboratorio de IA del sector público",
+        "d": "El LabIA del Ministerio de la Mujer, con un asistente virtual en español, quechua, aimara y shipibo-konibo para atender a poblaciones vulnerables.",
+        "url": "https://andina.pe/agencia/noticia-mimp-lanza-primer-laboratorio-ia-para-mejorar-atencion-poblaciones-vulnerables-1079275.aspx"
+      },
+      {
+        "date": "2026",
+        "t": "Catálogo IA Perú",
+        "d": "Registro público de soluciones de IA del Estado, como CURIA del Poder Judicial.",
+        "url": "https://catalogoia.servicios.gob.pe/"
+      },
+      {
+        "date": "Oct 2026",
+        "t": "Oficial de Inteligencia Artificial",
+        "d": "La Directiva N.º 002-2026-PCM/SGTD define el perfil y las responsabilidades del oficial de IA en cada entidad pública; el perfil será exigible en 12 meses.",
+        "url": "https://www.gob.pe/institucion/pcm/normas-legales/8743135-002-2026-pcm-sgtd"
+      },
+      {
+        "date": "20 oct 2026",
+        "t": "ILIA 2026",
+        "d": "El Perú sube a 83,2 puntos en gobernanza y queda segundo de la región, aunque el índice no identifica un presupuesto explícito para ejecutar sus políticas de IA.",
+        "url": "https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026"
+      }
+    ],
+    "risk_title": "Cómo clasifica el reglamento los usos de IA",
+    "risk": [
+      {
+        "level": "Uso indebido",
+        "tone": "risk",
+        "d": "Prohibido. Por ejemplo, manipular decisiones con técnicas subliminales o explotando vulnerabilidades, la vigilancia masiva sin base legal y las armas letales autónomas sin supervisión humana."
+      },
+      {
+        "level": "Riesgo alto",
+        "tone": "warn",
+        "d": "Permitido con obligaciones de transparencia, registro y supervisión humana. Incluye activos críticos (energía, salud, banca), selección y cese de trabajadores, educación, crédito y programas sociales."
+      },
+      {
+        "level": "Riesgo aceptable",
+        "tone": "ok",
+        "d": "Categoría residual: el resto de usos, que se promueven con buenas prácticas y principios éticos."
+      }
+    ]
+  },
+  "insights": [
+    {
+      "t": "Gobernanza de primera, base por construir",
+      "d": "El Perú pasó de 74,4 (sexto) a 83,2 puntos (segundo) en gobernanza entre 2025 y 2026 (con metodología ajustada), impulsado por el reglamento y la Estrategia Nacional. Pero en factores habilitantes y en investigación, desarrollo y adopción sigue bajo el promedio regional."
+    },
+    {
+      "t": "La norma va más rápido que el uso",
+      "d": "Solo el 17,3 % de la población de 15 a 64 años usa IA generativa, bajo el promedio mundial (18,8 %) y detrás de Ecuador (20,3 %) y Panamá (24,2 %). Costa Rica, con 29,7 %, casi duplica al Perú."
+    },
+    {
+      "t": "Pelotón medio muy apretado",
+      "d": "Entre Colombia (56,8) y Ecuador (51,8) hay apenas 5 puntos para seis países. Con mejoras pequeñas el Perú (52,7) puede ganar o perder varios puestos; llegar a pionero exige superar los 60."
+    },
+    {
+      "t": "Brecha territorial y de empresas",
+      "d": "El uso de IA llega al 23 % en Lima Metropolitana y a cerca del 6 % en zonas rurales. En las empresas pasa algo parecido: 33,6 % de las grandes tractoras frente a 8,2 % de las pequeñas."
+    },
+    {
+      "t": "El cómputo está en Brasil",
+      "d": "Brasil concentra el 87,7 % de las GPU y el 92 % de la capacidad de procesamiento identificada en la región. El ILIA señala el cómputo como una de las mayores brechas regionales, y el Perú no tiene infraestructura significativa de alto rendimiento."
+    },
+    {
+      "t": "Confianza alta, preparación baja",
+      "d": "El 28 % de los peruanos considera confiables a los chatbots, más que a la policía (17 %) o a los políticos (11 %), según Ipsos. Sin embargo, solo el 10 % de las empresas peruanas tiene políticas de IA aprobadas, según EY."
+    }
+  ],
+  "swot": {
+    "strengths": [
+      "Marco completo: ley (2023), reglamento con enfoque de riesgos (vigente desde enero de 2026) y Estrategia Nacional 2026-2030.",
+      "Segundo puntaje regional en gobernanza (83,2) en el ILIA 2026, con un salto de casi 9 puntos en un año.",
+      "En el ILIA 2025 fue segundo en la subdimensión de adopción (67,47), solo detrás de Brasil.",
+      "Primeros casos en el Estado: laboratorio de IA del MIMP con lenguas originarias, Catálogo IA Perú y la figura del oficial de IA."
+    ],
+    "gaps": [
+      "Factores habilitantes (45,5) e investigación, desarrollo y adopción (39,4) por debajo del promedio regional.",
+      "Uso de IA generativa (17,3 %) por debajo del promedio mundial y último entre los países comparados.",
+      "Brecha digital: 64,5 % de hogares con internet y solo 27,1 % en zonas rurales (INEI, II trim. 2026).",
+      "Políticas sin presupuesto explícito identificado y adopción muy baja en pequeñas empresas (8,2 %)."
+    ]
+  },
+  "caveat": "Los índices miden capacidades del ecosistema, no el uso diario de la IA por las personas. Cada fuente usa su propia metodología, por eso sus cifras se muestran por separado y no se promedian. Las cifras se revisan a mano con la fecha indicada; confirma en la fuente original antes de citarlas.",
+  "sources": [
+    {
+      "name": "CEPAL: ILIA 2026",
+      "url": "https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026"
+    },
+    {
+      "name": "CENIA: presentación del ILIA 2026",
+      "url": "https://cenia.cl/2026/10/20/ilia-2026-4ta-edicion-revela-que-america-latina-y-el-caribe-se-juegan-su-futuro-en-ia-en-la-colaboracion-regional-para-datos-talento-y-computo/"
+    },
+    {
+      "name": "IPS: tabla de países ILIA 2026",
+      "url": "https://ipsnoticias.net/2026/10/chile-brasil-y-uruguay-lideran-la-region-en-inteligencia-artificial/"
+    },
+    {
+      "name": "Tecnología 21: el Perú en el ILIA 2026",
+      "url": "https://tecnologia21.com/peru-acelerar-adopcion-ia-reforzar-ciberseguridad"
+    },
+    {
+      "name": "El Comercio: ILIA 2026 y el Perú",
+      "url": "https://elcomercio.pe/opinion/columnistas/ilia-2026-y-el-peru-por-maite-vizcarra-noticia/"
+    },
+    {
+      "name": "ComexPerú: el Perú en el ILIA 2025",
+      "url": "https://www.comexperu.org.pe/articulo/indice-latinoamericano-de-inteligencia-artificial-que-implica-que-el-peru-ocupe-el-septimo-puesto"
+    },
+    {
+      "name": "Microsoft: AI Diffusion Q2 2026",
+      "url": "https://www.microsoft.com/en-us/research/wp-content/uploads/2026/09/Microsoft-AI-Diffusion-Report-2026-Q2.pdf"
+    },
+    {
+      "name": "Oxford Insights: Government AI Readiness Index 2025",
+      "url": "https://oxfordinsights.com/ai-readiness/government-ai-readiness-index-2025/"
+    },
+    {
+      "name": "OSIPTEL ERESTEL 2025 (DPL News)",
+      "url": "https://dplnews.com/16-peruanos-usa-herramientas-inteligencia-artificial-erestel/"
+    },
+    {
+      "name": "Infobae: confianza en chatbots (Ipsos)",
+      "url": "https://www.infobae.com/peru/2026/10/27/los-peruanos-confian-mas-en-el-chatgpt-o-influencers-que-en-sus-politicos-policias-y-jueces-segun-ipsos/"
+    },
+    {
+      "name": "Infobae: políticas de IA en empresas (EY)",
+      "url": "https://www.infobae.com/peru/2026/10/08/haces-empresa-cuidado-con-las-alucinaciones-de-la-ia-generativa-solo-el-10-de-firmas-en-peru-esta-preparada/"
+    },
+    {
+      "name": "INEI: hogares con internet II trim. 2026 (nota de prensa)",
+      "url": "https://enteratemagazine.digital/2026/09/29/el-645-de-los-hogares-del-pais-tiene-conexion-a-internet-durante-el-segundo-trimestre-de-2026/"
+    }
+  ]
+}

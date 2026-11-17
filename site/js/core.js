@@ -178,6 +178,7 @@
       ["#cambios", "Cambios en los modelos", "refresh-cw", "Actualizaciones del catálogo"],
       ["#uso", "Estadísticas de uso", "chart-column", "Indicadores y tendencias"],
       ["#peru", "IA en Perú", "map-pin", "Normativa y contexto nacional"],
+      ["#region", "Perú en la región", "globe", "Ranking ILIA, gobernanza y adopción"],
       ["#agentes", "Agentes de IA", "bot", "Automatización avanzada"],
       ["#nivel", "Evaluar mi nivel", "target", "Diagnóstico breve"],
       ["#fuentes", "Fuentes y metodología", "database", "Origen y fecha de los datos"],

@@ -103,3 +103,43 @@ code{font:.85em var(--mono);background:var(--surface2);padding:2px 6px;border-ra
 .top5-k{font-weight:600;color:var(--ink)}
 .top5-b a{display:inline-block;margin-top:4px;font-size:.9rem}
 .top5-src{margin:12px 0 0;font-size:.82rem}
+
+/* 09B Perú frente a la región */
+.rg-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:8px 0 24px}
+.rg-kpi{padding:18px 20px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);display:flex;flex-direction:column;gap:4px}
+.rg-kpi b{font:700 2rem/1.1 var(--serif);color:var(--ink)}
+.rg-kpi.acc{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.rg-kpi.acc b{color:var(--accent)}
+.rg-k-l{font:600 .7rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.rg-k-d{font-size:.86rem;color:var(--muted);line-height:1.4}
+.rg-ilia{margin-bottom:8px}
+.rg-ilia-h{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:12px}
+.rg-ilia-h>div:first-child{flex:1 1 320px}
+.rg-ilia-h .kicker{margin:0 0 4px}
+.rg-ctl{display:flex;flex-wrap:wrap;gap:8px}
+.rg-legend{list-style:none;display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 10px;padding:0;font-size:.85rem;color:var(--muted)}
+.rg-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}
+.rg-me td{font-weight:700;color:var(--accent)}
+.rg-ins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:24px}
+.rg-in{padding:18px 20px;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--r);background:var(--surface)}
+.rg-in h4{margin:6px 0;font-size:1.02rem;line-height:1.35}
+.rg-in p{margin:0;font-size:.92rem;color:var(--muted);line-height:1.5}
+.rg-in-n{font:700 .75rem var(--mono);color:var(--accent)}
+.rg-dl{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:6px;font-size:.9rem}
+.rg-dl li{padding-top:6px;border-top:1px solid var(--line)}
+.rg-gov{margin-bottom:20px}
+.rg-tl{list-style:none;margin:16px 0 0;padding:0 0 0 18px;border-left:2px solid var(--line2);display:grid;gap:16px}
+.rg-tl li{position:relative;display:grid;grid-template-columns:120px 1fr;gap:14px}
+.rg-tl li::before{content:"";position:absolute;left:-25px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--surface)}
+.rg-tl-d{font:600 .8rem var(--mono);color:var(--muted);padding-top:2px}
+.rg-tl p{margin:4px 0 0;font-size:.92rem;color:var(--muted)}
+.rg-rk-t{margin:26px 0 0;font-size:1.05rem}
+.rg-risk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.rg-rk{padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface2)}
+.rg-rk p{margin:8px 0 0;font-size:.9rem}
+.rg-sw{margin:10px 0 0;padding-left:20px;display:grid;gap:8px;font-size:.95rem}
+.rg-sw.ok li::marker{color:var(--ok)}
+.rg-sw.risk li::marker{color:var(--risk)}
+.rg-src{font-size:.85rem;margin-top:18px}
+@media(max-width:900px){.rg-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.rg-ins{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.rg-kpis,.rg-ins,.rg-risk{grid-template-columns:1fr}.rg-tl li{grid-template-columns:1fr;gap:2px}.rg-kpi b{font-size:1.7rem}}

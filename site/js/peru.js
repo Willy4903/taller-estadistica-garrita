@@ -73,7 +73,7 @@
         <li><span class="tag warn">En construcción</span> Noticias y políticas nacionales de IA: aún no hay una fuente automática verificada.</li>
         <li><span class="tag warn">En construcción</span> Casos de uso en entidades públicas, iniciativas de universidades y empresas peruanas, y efectos en el empleo.</li></ul>
         <p class="muted">Lo que no se puede verificar con una fuente no se publica. Las secciones en construcción se irán añadiendo cuando exista una fuente confiable.</p></div>
-      <p class="muted">Marco normativo peruano: <a href="responsable.html#regulacion" data-track="clic_normativa_peru">Ley N.º 31814 y su reglamento</a>.</p>`;
+      <p class="muted">Marco normativo peruano: <a href="responsable.html#regulacion" data-track="clic_normativa_peru">Ley N.º 31814 y su reglamento</a>. Posición del Perú en el ranking regional, gobernanza y adopción: <a href="#region" data-track="clic_peru_region">Perú frente a la región</a>.</p>`;
     root.addEventListener("change", (e) => { if (e.target.id === "pe-dept") { st.dept = e.target.value; I.track("peru_departamento"); I.journey.mark("peru"); paint(D); } });
     root.addEventListener("click", (e) => {
       const s = e.target.closest("[data-set]"), t = e.target.closest("[data-term]");
