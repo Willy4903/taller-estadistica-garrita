@@ -34,7 +34,7 @@ La temporada que devuelve la fuente debe coincidir con la solicitada. Las ligas
 domésticas europeas cambian de edición en julio; la UEFA Nations League utiliza
 ediciones bienales, con inicio en año par y finalización al año siguiente.
 
-`daily-update.yml` compila el frontend y publica el sitio dos veces al día;
+`daily-update.yml` compila el frontend y publica el sitio tres veces al día (06:05, 10:05 y 15:05 de Lima);
 el flujo deportivo también publica las nuevas capturas. El colector alternativo
 `update_willy_stats.py` usa API-Football y requiere `API_FOOTBALL_KEY`; se conserva
 para consultas manuales, pero no participa en el flujo activo de actualización.
