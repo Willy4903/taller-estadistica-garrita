@@ -51,6 +51,14 @@
 
   function render(R) {
     const P = R.ilia.peru, M = R.ilia.meta;
+    const news = (R.news || []).slice(0, 3).map((item) => `
+      <article class="rg-news-item">
+        <h4>${esc(item.title)}</h4>
+        <p>${esc(item.summary)}</p>
+        <p>${esc(item.peru)}</p>
+        <p class="muted"><time datetime="${esc(item.date)}">${esc(item.dateLabel)}</time> ·
+          <a href="${esc(item.url)}" target="_blank" rel="noopener">${esc(item.source)}</a></p>
+      </article>`).join("");
     const extra = (R.indices || []).map((b, i) => `<div class="card"><h3>${esc(b.title)}</h3><p class="muted">${esc(b.q)}</p>
         ${b.headline ? `<p class="pe-big">${b.headline}</p>` : ""}<div class="chart" style="height:${b.kind === "line" ? 280 : Math.max(240, b.items.length * 34 + 40)}px"><canvas id="c-rg-x${i}"></canvas></div>${chartMeta(b.meta)}</div>`).join("");
     root.innerHTML = `
@@ -58,6 +66,8 @@
         <p class="lead">${esc(R.lead)}</p><p class="muted mono">Datos revisados el ${esc(R.reviewed)} · edición más reciente de cada fuente</p></div>
 
       <div class="rg-kpis">${R.kpis.map((k) => `<div class="rg-kpi${k.tone ? " " + k.tone : ""}"><span class="rg-k-l">${esc(k.label)}</span><b>${esc(k.value)}</b><span class="rg-k-d">${esc(k.detail)}</span></div>`).join("")}</div>
+
+      ${news ? `<section class="card rg-news" aria-labelledby="t-rg-news"><h3 id="t-rg-news">IA en América Latina</h3>${news}</section>` : ""}
 
       <div class="card rg-ilia">
         <div class="rg-ilia-h"><div><p class="kicker">Índice Latinoamericano de Inteligencia Artificial · ${esc(M.edition)}</p><h3>Ranking regional de madurez en IA</h3>

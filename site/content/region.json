@@ -1,5 +1,16 @@
 {
   "reviewed": "17 nov 2026",
+  "news": [
+    {
+      "title": "OpenAI y el Gobierno de Chile anuncian OpenAI para Chile",
+      "summary": "La alianza busca promover la adopción responsable de la IA, capacitar al personal del sector público y ayudar a las startups chilenas a desarrollar aplicaciones de IA.",
+      "peru": "Para el Perú, la iniciativa ofrece una referencia regional para combinar la capacitación de funcionarios con el apoyo a emprendimientos locales de IA.",
+      "date": "2026-11-17",
+      "dateLabel": "17 de noviembre de 2026",
+      "url": "https://openai.com/es-419/index/introducing-openai-for-chile/",
+      "source": "Anuncio oficial de OpenAI"
+    }
+  ],
   "lead": "El Perú es un adoptante con buena gobernanza y una base frágil: es segundo de la región en gobernanza de la IA, pero queda por debajo del promedio en infraestructura, talento e investigación, y el uso de IA entre su población todavía está bajo el promedio mundial. Aquí se compara con el resto de América Latina usando el Índice Latinoamericano de Inteligencia Artificial (ILIA) y otras fuentes, cada una por separado.",
   "kpis": [
     {

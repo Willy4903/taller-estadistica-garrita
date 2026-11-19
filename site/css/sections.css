@@ -112,6 +112,9 @@ code{font:.85em var(--mono);background:var(--surface2);padding:2px 6px;border-ra
 .rg-kpi.acc b{color:var(--accent)}
 .rg-k-l{font:600 .7rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .rg-k-d{font-size:.86rem;color:var(--muted);line-height:1.4}
+.rg-news{margin-bottom:24px}
+.rg-news-item + .rg-news-item{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}
+.rg-news-item h4,.rg-news-item p{margin:4px 0}
 .rg-ilia{margin-bottom:8px}
 .rg-ilia-h{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:12px}
 .rg-ilia-h>div:first-child{flex:1 1 320px}
