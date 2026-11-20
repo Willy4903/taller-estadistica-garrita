@@ -1,5 +1,5 @@
 {
-  "reviewed": "17 nov 2026",
+  "reviewed": "20 nov 2026",
   "lead": "El Perú es un adoptante con buena gobernanza y una base frágil: es segundo de la región en gobernanza de la IA, pero queda por debajo del promedio en infraestructura, talento e investigación, y el uso de IA entre su población todavía está bajo el promedio mundial. Aquí se compara con el resto de América Latina usando el Índice Latinoamericano de Inteligencia Artificial (ILIA) y otras fuentes, cada una por separado.",
   "kpis": [
     {
@@ -15,9 +15,9 @@
       "tone": "acc"
     },
     {
-      "label": "Preparación del Estado",
-      "value": "Puesto 60",
-      "detail": "De 195 países, con 56,52 puntos (Oxford Insights 2025)."
+      "label": "Habilidades de IA",
+      "value": "3.º de 18",
+      "detail": "En América Latina y el Caribe; puesto 49 de 98 en el mundo (Coursera, nov 2026)."
     },
     {
       "label": "Uso de IA generativa",
@@ -327,6 +327,52 @@
     {
       "kind": "hbar",
       "unit": "%",
+      "title": "Qué está aprendiendo el Perú",
+      "q": "Crecimiento anual de inscripciones en cursos de Coursera por tema, en el Perú y en la región.",
+      "headline": "Las inscripciones en IA crecieron 107 % en el Perú, frente a 68 % en la región; los cursos sobre agentes de IA se multiplicaron por más de cinco.",
+      "items": [
+        {
+          "name": "Agentes de IA (Perú)",
+          "value": 437
+        },
+        {
+          "name": "Seguridad de IA (Perú)",
+          "value": 249
+        },
+        {
+          "name": "IA generativa (Perú)",
+          "value": 222
+        },
+        {
+          "name": "Pensamiento crítico (Perú)",
+          "value": 123
+        },
+        {
+          "name": "Cursos de IA (Perú)",
+          "value": 107
+        },
+        {
+          "name": "Cursos de IA (región)",
+          "value": 68,
+          "ref": true
+        },
+        {
+          "name": "Pensamiento crítico (región)",
+          "value": 32,
+          "ref": true
+        }
+      ],
+      "meta": {
+        "mide": "Variación interanual de inscripciones en cursos de Coursera por tema. El mismo informe ubica al Perú 3.º de 18 economías de la región y 49.º de 98 países en su índice de sinergia entre habilidades de IA y humanas, detrás de Brasil (45.º) y delante de Colombia (51.º), Uruguay (54.º) y Chile (59.º).",
+        "nomide": "Solo refleja a quienes estudian en Coursera; no mide cuántas personas tienen esas habilidades. Un crecimiento alto puede partir de una base pequeña. Las cifras provienen del comunicado del informe citado por la prensa.",
+        "fuente": "Coursera, Global Skills Report 2026",
+        "url": "https://www.revistaeconomia.com/global-skills-report-2026-coursera-ubica-al-peru-en-el-tercer-lugar-de-america-latina-y-el-caribe-y-en-la-mitad-superior-en-habilidades-de-ia-y-humanas/",
+        "fecha": "publicado el 3 nov 2026"
+      }
+    },
+    {
+      "kind": "hbar",
+      "unit": "%",
       "title": "Quiénes usan IA en el Perú",
       "q": "Porcentaje de personas que usan herramientas de IA, según grupo.",
       "headline": "La brecha es territorial y generacional: el uso en Lima Metropolitana casi cuadruplica al de las zonas rurales.",
@@ -438,15 +484,15 @@
         "url": "https://catalogoia.servicios.gob.pe/"
       },
       {
-        "date": "Oct 2026",
+        "date": "21 oct 2026",
         "t": "Oficial de Inteligencia Artificial",
-        "d": "La Directiva N.º 002-2026-PCM/SGTD define el perfil y las responsabilidades del oficial de IA en cada entidad pública; el perfil será exigible en 12 meses.",
+        "d": "La Directiva N.º 002-2026-PCM/SGTD define el perfil y las responsabilidades del oficial de IA en cada entidad pública: como mínimo, grado de bachiller y 40 horas de especialización en IA. El perfil será exigible en 12 meses.",
         "url": "https://www.gob.pe/institucion/pcm/normas-legales/8743135-002-2026-pcm-sgtd"
       },
       {
         "date": "20 oct 2026",
         "t": "ILIA 2026",
-        "d": "El Perú sube a 83,2 puntos en gobernanza y queda segundo de la región, aunque el índice no identifica un presupuesto explícito para ejecutar sus políticas de IA.",
+        "d": "El Perú sube a 83,2 puntos en gobernanza y queda segundo de la región. Según el índice, solo el Perú y El Salvador tienen una ley de IA aprobada, aunque no se identifica un presupuesto explícito para ejecutar sus políticas.",
         "url": "https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026"
       }
     ],
@@ -479,8 +525,8 @@
       "d": "Solo el 17,3 % de la población de 15 a 64 años usa IA generativa, bajo el promedio mundial (18,8 %) y detrás de Ecuador (20,3 %) y Panamá (24,2 %). Costa Rica, con 29,7 %, casi duplica al Perú."
     },
     {
-      "t": "Pelotón medio muy apretado",
-      "d": "Entre Colombia (56,8) y Ecuador (51,8) hay apenas 5 puntos para seis países. Con mejoras pequeñas el Perú (52,7) puede ganar o perder varios puestos; llegar a pionero exige superar los 60."
+      "t": "Los peruanos se están formando rápido",
+      "d": "El Perú es 3.º de 18 economías de la región en habilidades de IA y humanas (Coursera 2026), por delante de Colombia, Uruguay y Chile. Sus inscripciones en cursos de IA crecieron 107 %, frente a 68 % en la región."
     },
     {
       "t": "Brecha territorial y de empresas",
@@ -497,8 +543,9 @@
   ],
   "swot": {
     "strengths": [
-      "Marco completo: ley (2023), reglamento con enfoque de riesgos (vigente desde enero de 2026) y Estrategia Nacional 2026-2030.",
+      "Una de solo dos leyes de IA aprobadas en la región (con El Salvador), reglamento con enfoque de riesgos vigente desde enero de 2026 y Estrategia Nacional 2026-2030.",
       "Segundo puntaje regional en gobernanza (83,2) en el ILIA 2026, con un salto de casi 9 puntos en un año.",
+      "3.º de la región en el índice de habilidades de IA y humanas de Coursera 2026, con inscripciones en IA creciendo 107 % al año.",
       "En el ILIA 2025 fue segundo en la subdimensión de adopción (67,47), solo detrás de Brasil.",
       "Primeros casos en el Estado: laboratorio de IA del MIMP con lenguas originarias, Catálogo IA Perú y la figura del oficial de IA."
     ],
@@ -542,6 +589,14 @@
     {
       "name": "Oxford Insights: Government AI Readiness Index 2025",
       "url": "https://oxfordinsights.com/ai-readiness/government-ai-readiness-index-2025/"
+    },
+    {
+      "name": "Coursera: Global Skills Report 2026 (Revista Economía)",
+      "url": "https://www.revistaeconomia.com/global-skills-report-2026-coursera-ubica-al-peru-en-el-tercer-lugar-de-america-latina-y-el-caribe-y-en-la-mitad-superior-en-habilidades-de-ia-y-humanas/"
+    },
+    {
+      "name": "Portal Educa: ranking regional de Coursera",
+      "url": "https://portaleduca.cl/global-skills-report-2026-de-coursera-ubica-a-chile-en-el-6-lugar-de-america-latina-y-el-caribe-con-un-alza-de-232-en-inscripciones-en-ia-agentica/"
     },
     {
       "name": "OSIPTEL ERESTEL 2025 (DPL News)",

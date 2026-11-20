@@ -39,7 +39,7 @@
 
   function hbar(id, block, fmt) {
     const rows = block.items;
-    draw(id, { type: "bar", data: { labels: rows.map((r) => r.name), datasets: [{ data: rows.map((r) => r.value), backgroundColor: rows.map((r) => (isPE(r.name) ? css("--accent") : r.ref ? css("--line2") : css("--muted"))), borderRadius: 4 }] },
+    draw(id, { type: "bar", data: { labels: rows.map((r) => r.name), datasets: [{ data: rows.map((r) => r.value), backgroundColor: rows.map((r) => (isPE(r.name) || /\(Perú\)/.test(r.name) ? css("--accent") : r.ref ? css("--line2") : css("--muted"))), borderRadius: 4 }] },
       options: { indexAxis: "y", plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => fmt(c.raw) + (rows[c.dataIndex].note ? " · " + rows[c.dataIndex].note : "") } } }, scales: { x: { beginAtZero: true, ticks: { callback: (v) => tick(v) + (block.unit === "%" ? " %" : "") } }, y: { grid: { display: false } } } } });
   }
 
