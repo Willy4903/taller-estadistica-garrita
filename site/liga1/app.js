@@ -409,12 +409,7 @@
       : (other.pts - mine.pts) + " pts del líder (" + BY[other.id].short + ")";
     var N = nacional();
     if (N) {
-      var inS = N.semi.indexOf(FOCUS) >= 0, nuK = semiNext(), rvK = inS ? BY[N.semi[0] === FOCUS ? N.semi[1] : N.semi[0]] : null;
-      $("#kpis").innerHTML =
-        '<div class="kpi main"><small>Puesto en el Clausura</small><div class="v">' + cpos + '<i>º de ' + TEAMS.length + '</i></div><div class="d">' + mine.pts + " pts · " + dMain + "</div></div>" +
-        '<div class="kpi"><small>Clausura</small><div class="v">Cerrado</div><div class="d">Campeón: ' + esc(BY[N.cl].short) + " · " + ptsOf(S.C, N.cl) + " pts</div></div>" +
-        '<div class="kpi"><small>Camino al título</small><div class="v">' + (inS ? "Semifinal" : N.direct.indexOf(FOCUS) >= 0 ? "Final" : "—") + '</div><div class="d">' + (inS ? "vs " + esc(rvK.short) + (nuK ? " · ida " + fmtWhen(nuK.startsAt) : "") : N.direct.indexOf(FOCUS) >= 0 ? "Pasa directo a la final" : "Sin opción de título") + "</div></div>" +
-        '<button type="button" class="kpi kpi-fin"><small>Final del campeonato nacional</small><div class="v">' + (N.semi.length ? '8<i> dic</i>' : '28<i> nov</i>') + '</div><div class="d">' + (N.semi.length ? "Ida · vuelta el 13 dic" : "Ida · vuelta el 6 dic") + " (fechas tentativas)</div></button>";
+      $("#kpis").innerHTML = kpisNacional(N);
     } else
     $("#kpis").innerHTML =
       '<div class="kpi main"><small>Puesto en el Clausura</small><div class="v">' + cpos + '<i>º de ' + TEAMS.length + '</i></div><div class="d">' + mine.pts + " pts · " + dMain + "</div></div>" +
@@ -497,6 +492,53 @@
     return out;
   }
 
+
+
+  var ALTITUDE = { "Huancayo": { m: 3259, txt: "Estadio IPD de Huancayo, a unos 3,259 m s. n. m. (otras notas hablan de unos 3,200 m). Es una altura exigente para quien llega desde Lima." } };
+  function bajasDe(id) { return INJ && INJ.items ? INJ.items.filter(function (x) { return x.team === id; }) : null; }
+  function bajasTxt(id) {
+    var b = bajasDe(id);
+    if (!b) return "sin datos";
+    return b.length ? b.map(function (x) { return x.player.split(" ").slice(-1)[0]; }).join(", ") : "sin reportes";
+  }
+  function bajasLista(id) {
+    var b = bajasDe(id), nm = esc(BY[id].short);
+    if (!b) return '<li><b>' + nm + '</b><span>Sin datos de bajas todavía.</span></li>';
+    if (!b.length) return '<li><b>' + nm + '</b><span>Sin bajas confirmadas en las fuentes consultadas.</span></li>';
+    return b.map(function (x) {
+      return "<li><b>" + esc(x.player) + " · " + esc(BY[id].short) + "</b><span>" + esc(SQ_STATUS[x.status] || "Lesionado") + " · " + esc(x.injury || "") + (x.return ? " · " + esc(x.return) : "") + (x.note ? ". " + esc(x.note) : "") + "</span></li>";
+    }).join("");
+  }
+  function shortTxt(t, n) { t = String(t || ""); return t.length > n ? t.slice(0, n - 1).replace(/\s+\S*$/, "") + "…" : t; }
+  /* Tarjetas del encabezado una vez cerrado el Clausura: solo lo que viene en la definición del título. */
+  function kpisNacional(N) {
+    var me = BY[FOCUS], inS = N.semi.indexOf(FOCUS) >= 0, isDir = N.direct.indexOf(FOCUS) >= 0, nu = semiNext();
+    var rv = inS ? BY[N.semi[0] === FOCUS ? N.semi[1] : N.semi[0]] : null, cards = [];
+    var news = (UNI && UNI.news || []).filter(function (n) { return n.category === "Fútbol masculino"; })[0] || (UNI && UNI.news && UNI.news[0]);
+    function k(cls, label, v, d, btn) {
+      return "<" + (btn ? 'button type="button"' : "div") + ' class="kpi' + cls + '"><small>' + label + '</small><div class="v">' + v + '</div><div class="d">' + d + "</div></" + (btn ? "button" : "div") + ">";
+    }
+    if (inS) {
+      var home = nu ? nu.homeId === FOCUS : false, dt = nu ? new Date(nu.startsAt) : null;
+      var alt = nu && ALTITUDE[nu.city];
+      cards.push(k(" main", "Semifinal · ida", nu ? limaDay(nu.startsAt) : "28-29<i> nov</i>", esc(rv.short) + (nu ? (home ? " (local)" : " (visita)") + " · " + limaHour(nu.startsAt) : " · fecha por confirmar")));
+      cards.push(k(alt ? "" : "", "Altura del estadio", alt ? alt.m.toLocaleString("en-US") + "<i> m</i>" : "—", alt ? esc(nu.city) + " · s. n. m." : "La vuelta es en Lima"));
+      var bu = bajasDe(FOCUS);
+      cards.push(k(" kpi-fin", "Bajas para la semifinal", bu ? bu.length + "<i> en la U</i>" : "—", esc(shortTxt(bajasTxt(FOCUS), 26)) + " · " + esc(rv.short) + ": " + esc(shortTxt(bajasTxt(rv.id), 18)), true));
+      var h2h = D.fixtures.filter(function (f) { return f.hg != null && ((f.h === FOCUS && f.a === rv.id) || (f.a === FOCUS && f.h === rv.id)); }).sort(byWhen);
+      var w = 0, e = 0, l = 0;
+      h2h.forEach(function (f) { var gf = f.h === FOCUS ? f.hg : f.ag, gc = f.h === FOCUS ? f.ag : f.hg; if (gf > gc) w++; else if (gf === gc) e++; else l++; });
+      var lf = h2h[h2h.length - 1];
+      cards.push(k("", "Duelos 2026", w + "G " + e + "E " + l + "P", lf ? "Último: " + esc(BY[lf.h].short) + " " + lf.hg + "-" + lf.ag + " " + esc(BY[lf.a].short) : "Sin duelos previos"));
+    } else {
+      cards.push(k(" main", "Final · ida", N.semi.length ? "8<i> dic</i>" : "28<i> nov</i>", "Fecha tentativa"));
+      cards.push(k(" kpi-fin", "Final · vuelta", N.semi.length ? "13<i> dic</i>" : "6<i> dic</i>", "Fecha tentativa · local: " + esc(BY[S.T[0].id].short), true));
+      cards.push(k("", "Acumulado", S.pos.T[FOCUS] + "<i>º</i>", ptsOf(S.T, FOCUS) + " pts de la temporada regular"));
+    }
+    return cards.join("");
+  }
+  function limaDay(iso) { var p = limaParts(iso); return p.day + "<i> " + MONTHS[p.mo - 1] + "</i>"; }
+  function limaHour(iso) { var p = limaParts(iso); return p.hh + ":" + p.mm; }
   function camNote() {
     return '<p class="note">Las fechas de los play-offs y la final son tentativas y varían según el medio (por ejemplo, la ida de la final directa aparece el 28 o el 29 de noviembre en algunos medios); se confirman al cierre del Clausura. En la final, el primero del acumulado es local en la vuelta. Fuentes: ' +
       '<a href="https://depor.com/futbol-peruano/descentralizado/liga-1-2026-fechas-confirmadas-definicion-como-se-jugarian-play-offs-semifinales-y-finales-tras-torneo-clausura-noticia/" target="_blank" rel="noopener noreferrer">Depor</a>, ' +
@@ -529,7 +571,7 @@
   function renderCaminoNacional(box, N) {
     var me = BY[FOCUS], inSemi = N.semi.indexOf(FOCUS) >= 0, isDir = N.direct.indexOf(FOCUS) >= 0, nu = semiNext();
     var rival = inSemi ? BY[N.semi[0] === FOCUS ? N.semi[1] : N.semi[0]] : null;
-    var localVuelta = BY[S.T[0].id].short, steps = [];
+    var localVuelta = BY[S.T[0].id].short, steps = [], home0 = nu ? nu.homeId === FOCUS : false;
     if (inSemi) {
       var home = nu ? nu.homeId === FOCUS : false;
       steps.push(["Semifinal, ida: " + me.short + " vs " + rival.short + (nu ? (home ? " (local)" : " (visita)") : ""), nu ? fmtWhen(nu.startsAt) + (nu.venue ? " · " + nu.venue : "") : "28 o 29 de noviembre"]);
@@ -556,8 +598,19 @@
       '<p class="cam-hl">' + esc(need) + "</p></div>" +
       '<table class="std compact"><thead><tr><th class="club">Fase</th><th class="club">Fechas tentativas</th></tr></thead><tbody>' +
       rows.map(function (x) { return '<tr><td class="club">' + x[0] + '</td><td class="club">' + x[1] + "</td></tr>"; }).join("") + "</tbody></table></div>";
+    var alt = nu && ALTITUDE[nu.city], noticias = (UNI && UNI.news || []).filter(function (n) { return n.category === "Fútbol masculino"; }).slice(0, 3);
+    var f1 = '<article class="cam-card"><h3>Altura y viaje</h3><ul class="cam-list">' +
+      (nu ? "<li><b>" + esc(nu.venue || "Estadio") + (nu.city ? ", " + esc(nu.city) : "") + "</b><span>" + fmtWhen(nu.startsAt) + (home0 ? " · la U juega de local" : " · la U juega de visita") + "</span></li>" : "") +
+      (alt ? "<li><b>" + alt.m.toLocaleString("en-US") + " m s. n. m.</b><span>" + esc(alt.txt) + "</span></li>" : "<li><b>Sin dato de altura</b><span>El estadio de la ida no tiene un dato de altura cargado.</span></li>") +
+      "</ul></article>";
+    var f2 = '<article class="cam-card"><h3>Bajas y ausencias</h3><ul class="cam-list">' + bajasLista(FOCUS) + (rival ? bajasLista(rival.id) : "") + '</ul><p class="note">' +
+      (INJ && INJ.source ? "Fuente: " + esc(INJ.source) + ". " : "") + (INJ && INJ.updated_at ? "Actualizado " + esc(fmtStamp(INJ.updated_at)) + "." : "") + " Suspensiones: ninguna reportada en las fuentes consultadas.</p></article>";
+    var f3 = '<article class="cam-card"><h3>Noticias de la U</h3><ul class="cam-list">' + (noticias.length ? noticias.map(function (n) {
+      return '<li><b><a href="' + esc(n.url) + '" target="_blank" rel="noopener noreferrer">' + esc(n.title) + "</a></b><span>" + esc(fmtDay(n.date)) + " · " + esc(shortTxt(n.summary, 110)) + "</span></li>";
+    }).join("") : "<li><b>Sin novedades recientes</b><span></span></li>") + "</ul></article>";
+    var hinchas = inSemi ? '<div class="cam-grid">' + f1 + f2 + f3 + "</div>" : "";
     box.innerHTML = '<div class="cam-head"><h2>Camino al título nacional</h2><p class="sub">El Clausura ya terminó. Esto es lo que falta para definir al campeón de la Liga 1 2026, con resultados oficiales.</p></div>' +
-      '<div class="cam-grid">' + c1 + c2 + c3 + "</div>" + fin + camNote();
+      '<div class="cam-grid">' + c1 + c2 + c3 + "</div>" + hinchas + fin + camNote();
   }
   var campTimer = null;
   function scheduleCamino() { clearTimeout(campTimer); campTimer = setTimeout(renderCamino, 120); }
@@ -1493,6 +1546,7 @@
     var ms = $('#moreList button[data-v="squad"]'); if (ms) ms.hidden = false;
     if (!(sqTab === "inj" ? INJ : CARDS)) sqTab = INJ ? "inj" : "cards";
     if (view === "squad") { renderSquad(); centerTab(); }
+    if (typeof renderHero === "function" && S) renderHero();
   }
   var SQ_STATUS = { lesionado: "Lesionado", duda: "En duda", sancionado: "Sancionado" };
   function renderSquad() {

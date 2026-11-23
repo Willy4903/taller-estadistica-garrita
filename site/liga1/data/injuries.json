@@ -1,0 +1,10 @@
+{
+  "updated_at": "2026-11-23T12:00-05:00",
+  "source": "Prensa deportiva (Bolavip, DSN, Ahora, Líbero) y parte médico del club; confirma con el parte oficial antes del partido",
+  "items": [
+    { "team": "UNI", "player": "Lisandro Alzugaray", "injury": "Lesión muscular en el muslo posterior izquierdo", "status": "duda", "since": "2026-11-04", "return": "Proyectado para el 28 o 29 de noviembre", "note": "Reservado ante Huancayo por precaución para jugar los playoffs." },
+    { "team": "UNI", "player": "Gianluca Lapadula", "injury": "Lesión muscular", "status": "duda", "note": "Se hizo una resonancia y su evolución es positiva, según el DT." },
+    { "team": "UNI", "player": "Calcaterra", "injury": "En recuperación", "status": "duda", "note": "El cuerpo médico trabaja para tenerlo en la semifinal; sin fecha confirmada." },
+    { "team": "UNI", "player": "Inga", "injury": "En recuperación", "status": "duda", "note": "El cuerpo médico trabaja para tenerlo en la semifinal; sin fecha confirmada." }
+  ]
+}
