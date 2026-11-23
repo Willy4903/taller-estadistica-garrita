@@ -407,6 +407,15 @@
     var G = guarantee(mine, cr);
     var dMain = cpos === 1 ? (mine.pts - other.pts ? "Ventaja de " + (mine.pts - other.pts) + " pts sobre " + BY[other.id].short : "Igualado en puntos con " + BY[other.id].short)
       : (other.pts - mine.pts) + " pts del líder (" + BY[other.id].short + ")";
+    var N = nacional();
+    if (N) {
+      var inS = N.semi.indexOf(FOCUS) >= 0, nuK = semiNext(), rvK = inS ? BY[N.semi[0] === FOCUS ? N.semi[1] : N.semi[0]] : null;
+      $("#kpis").innerHTML =
+        '<div class="kpi main"><small>Puesto en el Clausura</small><div class="v">' + cpos + '<i>º de ' + TEAMS.length + '</i></div><div class="d">' + mine.pts + " pts · " + dMain + "</div></div>" +
+        '<div class="kpi"><small>Clausura</small><div class="v">Cerrado</div><div class="d">Campeón: ' + esc(BY[N.cl].short) + " · " + ptsOf(S.C, N.cl) + " pts</div></div>" +
+        '<div class="kpi"><small>Camino al título</small><div class="v">' + (inS ? "Semifinal" : N.direct.indexOf(FOCUS) >= 0 ? "Final" : "—") + '</div><div class="d">' + (inS ? "vs " + esc(rvK.short) + (nuK ? " · ida " + fmtWhen(nuK.startsAt) : "") : N.direct.indexOf(FOCUS) >= 0 ? "Pasa directo a la final" : "Sin opción de título") + "</div></div>" +
+        '<button type="button" class="kpi kpi-fin"><small>Final del campeonato nacional</small><div class="v">' + (N.semi.length ? '8<i> dic</i>' : '28<i> nov</i>') + '</div><div class="d">' + (N.semi.length ? "Ida · vuelta el 13 dic" : "Ida · vuelta el 6 dic") + " (fechas tentativas)</div></button>";
+    } else
     $("#kpis").innerHTML =
       '<div class="kpi main"><small>Puesto en el Clausura</small><div class="v">' + cpos + '<i>º de ' + TEAMS.length + '</i></div><div class="d">' + mine.pts + " pts · " + dMain + "</div></div>" +
       '<div class="kpi"><small>Probabilidad de campeonar</small><div class="v" id="kProb">…<i>%</i></div><div class="d">Clausura · ' + SIMS.toLocaleString("es-PE") + " escenarios</div></div>" +
@@ -487,11 +496,75 @@
     }
     return out;
   }
+
+  function camNote() {
+    return '<p class="note">Las fechas de los play-offs y la final son tentativas y varían según el medio (por ejemplo, la ida de la final directa aparece el 28 o el 29 de noviembre en algunos medios); se confirman al cierre del Clausura. En la final, el primero del acumulado es local en la vuelta. Fuentes: ' +
+      '<a href="https://depor.com/futbol-peruano/descentralizado/liga-1-2026-fechas-confirmadas-definicion-como-se-jugarian-play-offs-semifinales-y-finales-tras-torneo-clausura-noticia/" target="_blank" rel="noopener noreferrer">Depor</a>, ' +
+      '<a href="https://www.eldiez.com.pe/liga-1/liga-1-confirman-las-fechas-de-los-play-offs-y-las-finales-por-el-titulo-nacional-noticia/" target="_blank" rel="noopener noreferrer">El Diez</a>, ' +
+      '<a href="https://rpp.pe/futbol/descentralizado/cuando-se-disputara-el-titulo-de-la-liga-1-2026-revisa-las-fechas-programadas-de-los-play-offs-y-las-finales-noticia-1714677" target="_blank" rel="noopener noreferrer">RPP</a> y ' +
+      '<a href="https://libero.pe/futbol-peruano/liga-1/2026/10/26/liga-1-2026-fechas-de-semifinales-finales-definir-campeon-nacional-2414854" target="_blank" rel="noopener noreferrer">Líbero</a>.</p>';
+  }
+  function ptsOf(rows, id) { var r = rows.filter(function (x) { return x.id === id; })[0]; return r ? r.pts : 0; }
+  /* Con el Clausura cerrado: quién va directo a la final y quién juega semifinal. */
+  function nacional() {
+    if (!S.A[0] || !S.C[0] || !S.T[1]) return null;
+    if (!D.fixtures.filter(function (f) { return f.t === "C"; }).every(function (f) { return eff(f); })) return null;
+    var ap = S.A[0].id, cl = S.C[0].id, top = [S.T[0].id, S.T[1].id], direct = [], semi = [];
+    (ap === cl ? [ap] : [ap, cl]).forEach(function (id) { (top.indexOf(id) >= 0 ? direct : semi).push(id); });
+    top.forEach(function (id) { if (id !== ap && id !== cl) semi.push(id); });
+    if (direct.length === 2 || (direct.length === 1 && semi.length === 2)) return { ap: ap, cl: cl, direct: direct, semi: semi };
+    return null;
+  }
+  function semiNext() {
+    var nu = UNI && UNI.next;
+    return nu && /semifinal/i.test(nu.stage || "") && (nu.homeId === FOCUS || nu.awayId === FOCUS) ? nu : null;
+  }
+  function roleTxt(id, N) {
+    var r = [];
+    if (id === N.ap) r.push("campeón del Apertura");
+    if (id === N.cl) r.push("campeón del Clausura");
+    r.push(S.pos.T[id] + "º del acumulado · " + ptsOf(S.T, id) + " pts");
+    return r.join(" · ");
+  }
+  function renderCaminoNacional(box, N) {
+    var me = BY[FOCUS], inSemi = N.semi.indexOf(FOCUS) >= 0, isDir = N.direct.indexOf(FOCUS) >= 0, nu = semiNext();
+    var rival = inSemi ? BY[N.semi[0] === FOCUS ? N.semi[1] : N.semi[0]] : null;
+    var localVuelta = BY[S.T[0].id].short, steps = [];
+    if (inSemi) {
+      var home = nu ? nu.homeId === FOCUS : false;
+      steps.push(["Semifinal, ida: " + me.short + " vs " + rival.short + (nu ? (home ? " (local)" : " (visita)") : ""), nu ? fmtWhen(nu.startsAt) + (nu.venue ? " · " + nu.venue : "") : "28 o 29 de noviembre"]);
+      steps.push(["Semifinal, vuelta" + (nu ? (home ? " (visita)" : " (local)") : ""), "3 o 4 de diciembre (fecha tentativa)"]);
+      steps.push(["Final vs " + BY[N.direct[0]].name, "8 y 13 de diciembre (fechas tentativas) · local en la vuelta: " + localVuelta]);
+    } else if (isDir) {
+      steps.push(["Final, ida", N.semi.length ? "8 de diciembre (fecha tentativa)" : "28 de noviembre (fecha tentativa)"]);
+      steps.push(["Final, vuelta", N.semi.length ? "13 de diciembre (fecha tentativa) · local: " + localVuelta : "6 de diciembre (fecha tentativa) · local: " + localVuelta]);
+    }
+    var need = inSemi ? "Para campeonar la U debe ganar la semifinal y la final." : isDir ? "Para campeonar la U debe ganar la final." : "La U no está en la definición del título nacional.";
+    var c1 = '<article class="cam-card"><h3>Lo que falta</h3>' + (steps.length ? '<ul class="cam-list">' + steps.map(function (x) { return "<li><b>" + esc(x[0]) + "</b><span>" + esc(x[1]) + "</span></li>"; }).join("") + "</ul>" : "") + '<p class="note">El Clausura terminó con la fecha 17. ' + need + "</p></article>";
+    var c2 = '<article class="cam-card"><h3>Quién define el título</h3><ul class="cam-list">' +
+      N.direct.map(function (id) { return "<li><b>" + esc(BY[id].name) + "</b><span>Final directa · " + roleTxt(id, N) + "</span></li>"; }).join("") +
+      (N.semi.length === 2 ? "<li><b>Semifinal: " + esc(BY[N.semi[0]].short) + " vs " + esc(BY[N.semi[1]].short) + "</b><span>" + esc(BY[N.semi[0]].short) + ": " + roleTxt(N.semi[0], N) + " · " + esc(BY[N.semi[1]].short) + ": " + roleTxt(N.semi[1], N) + "</span></li>" : "") +
+      '</ul><p class="note">El ganador de la semifinal enfrenta en la final a quien pasó directo.</p></article>';
+    var c3 = '<article class="cam-card"><h3>Acumulado: los cuatro primeros</h3><ul class="cam-list">' + S.T.slice(0, 4).map(function (r, i) {
+      return "<li><b>" + (i + 1) + ". " + esc(BY[r.id].name) + "</b><span>" + r.pts + " pts · Apertura " + ptsOf(S.A, r.id) + " + Clausura " + ptsOf(S.C, r.id) + "</span></li>";
+    }).join("") + '</ul><p class="note">Resultados oficiales de la temporada regular.</p></article>';
+    var rows = N.semi.length
+      ? [["Semifinal, ida", nu ? fmtDay(nu.startsAt.slice(0, 10), "") : "28 o 29 de noviembre"], ["Semifinal, vuelta", "3 o 4 de diciembre"], ["Final, ida", "8 de diciembre"], ["Final, vuelta", "13 de diciembre"]]
+      : [["Final, ida", "28 de noviembre"], ["Final, vuelta", "6 de diciembre"]];
+    var fin = '<div class="cam-final"><div><h3>¿Y la final del campeonato nacional?</h3>' +
+      "<p>El Clausura terminó el 22 de noviembre. " + (N.semi.length ? esc(BY[N.direct[0]].name) + " pasó directo a la final por ser " + roleTxt(N.direct[0], N).replace(/ · .*$/, "") + " y estar entre los dos primeros del acumulado. " + esc(BY[N.semi[0]].short) + " y " + esc(BY[N.semi[1]].short) + " juegan la semifinal por el otro lugar." : "Los dos finalistas pasaron directo a la final.") + "</p>" +
+      '<p class="cam-hl">' + esc(need) + "</p></div>" +
+      '<table class="std compact"><thead><tr><th class="club">Fase</th><th class="club">Fechas tentativas</th></tr></thead><tbody>' +
+      rows.map(function (x) { return '<tr><td class="club">' + x[0] + '</td><td class="club">' + x[1] + "</td></tr>"; }).join("") + "</tbody></table></div>";
+    box.innerHTML = '<div class="cam-head"><h2>Camino al título nacional</h2><p class="sub">El Clausura ya terminó. Esto es lo que falta para definir al campeón de la Liga 1 2026, con resultados oficiales.</p></div>' +
+      '<div class="cam-grid">' + c1 + c2 + c3 + "</div>" + fin + camNote();
+  }
   var campTimer = null;
   function scheduleCamino() { clearTimeout(campTimer); campTimer = setTimeout(renderCamino, 120); }
   function simPct(v) { var p = v / SIMS * 100; return p === 0 ? "0%" : p < 1 ? "<1%" : p > 99 ? ">99%" : Math.round(p) + "%"; }
   function renderCamino() {
     var box = $("#camino"); if (!box) return;
+    var N = nacional(); if (N) { renderCaminoNacional(box, N); return; }
     var R = simCamino(), me = BY[FOCUS], mine = S.C.filter(function (r) { return r.id === FOCUS; })[0];
     var kp = $("#kProb"); if (kp) kp.innerHTML = (R.champ === 0 ? "0" : R.champ / SIMS * 100 < 1 ? "<1" : Math.round(R.champ / SIMS * 100)) + "<i>%</i>";
     var pend = D.fixtures.filter(function (f) { return f.t === "C" && (f.h === FOCUS || f.a === FOCUS) && !eff(f); }).sort(byWhen);
@@ -525,11 +598,7 @@
       '<tr><td class="club">Final directa, ida</td><td class="club">28 de noviembre</td></tr><tr><td class="club">Final directa, vuelta</td><td class="club">6 de diciembre</td></tr>' +
       '<tr><td class="club">Semifinales, ida</td><td class="club">28 o 29 de noviembre</td></tr><tr><td class="club">Semifinales, vuelta</td><td class="club">3 o 4 de diciembre</td></tr>' +
       '<tr><td class="club">Final tras semifinales</td><td class="club">8 y 13 de diciembre</td></tr></tbody></table></div>' +
-      '<p class="note">Las fechas de los play-offs y la final son tentativas y varían según el medio (por ejemplo, la ida de la final directa aparece el 28 o el 29 de noviembre en algunos medios); se confirman al cierre del Clausura. En la final, el primero del acumulado es local en la vuelta. Fuentes: ' +
-      '<a href="https://depor.com/futbol-peruano/descentralizado/liga-1-2026-fechas-confirmadas-definicion-como-se-jugarian-play-offs-semifinales-y-finales-tras-torneo-clausura-noticia/" target="_blank" rel="noopener noreferrer">Depor</a>, ' +
-      '<a href="https://www.eldiez.com.pe/liga-1/liga-1-confirman-las-fechas-de-los-play-offs-y-las-finales-por-el-titulo-nacional-noticia/" target="_blank" rel="noopener noreferrer">El Diez</a>, ' +
-      '<a href="https://rpp.pe/futbol/descentralizado/cuando-se-disputara-el-titulo-de-la-liga-1-2026-revisa-las-fechas-programadas-de-los-play-offs-y-las-finales-noticia-1714677" target="_blank" rel="noopener noreferrer">RPP</a> y ' +
-      '<a href="https://libero.pe/futbol-peruano/liga-1/2026/10/26/liga-1-2026-fechas-de-semifinales-finales-definir-campeon-nacional-2414854" target="_blank" rel="noopener noreferrer">Líbero</a>.</p>';
+      camNote();
     box.innerHTML = h;
   }
 
