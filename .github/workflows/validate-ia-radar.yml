@@ -32,7 +32,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Descargar y verificar las cuatro fotografías reales
         run: python scripts/fetch_ai_photos.py
-      - name: Comprobar estructura, enlaces y dos ejecuciones diarias
+      - name: Comprobar estructura, enlaces y cinco ejecuciones diarias
         run: python scripts/check_home.py
       - name: Verificar sintaxis de JavaScript
         run: |

@@ -141,12 +141,12 @@ def main():
 
 
     crons = re.findall(r'^\s*- cron:\s*["\']([^"\']+)["\']', workflow, re.M)
-    if crons != ["5 13 * * *", "5 1 * * *"]:
+    if crons != ["5 11 * * *", "5 15 * * *", "5 19 * * *", "5 23 * * *", "5 3 * * *"]:
         raise AssertionError(f"Frecuencia incorrecta: {crons}")
     for command in ("scripts/update_data.py", "scripts/fetch_liga1.py", "scripts/build_site.py"):
         if command not in workflow:
             raise AssertionError(f"Se perdió una tarea del flujo: {command}")
-    print("OK: portada, enlaces, navegación, filtros y dos actualizaciones diarias")
+    print("OK: portada, enlaces, navegación, filtros y cinco actualizaciones diarias")
 
 
 if __name__ == "__main__":
