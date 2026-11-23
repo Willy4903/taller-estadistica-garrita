@@ -2,11 +2,14 @@ name: Actualización diaria y despliegue
 
 on:
   schedule:
-    # Dos consultas programadas: 08:05 y 20:05, hora de Lima (UTC-5).
-    # 13:05 UTC = 08:05 Lima; 01:05 UTC = 20:05 Lima del día previo.
+    # Cinco consultas programadas, hora de Lima (UTC-5): 06:05, 10:05, 14:05, 18:05 y 22:05.
+    # 11:05, 15:05, 19:05, 23:05 y 03:05 UTC.
     # GitHub Actions puede retrasar las ejecuciones programadas.
-    - cron: "5 13 * * *"
-    - cron: "5 1 * * *"
+    - cron: "5 11 * * *"
+    - cron: "5 15 * * *"
+    - cron: "5 19 * * *"
+    - cron: "5 23 * * *"
+    - cron: "5 3 * * *"
   workflow_dispatch:
   push:
     branches: [main]
