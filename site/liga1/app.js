@@ -519,13 +519,13 @@
         return "<li><b>" + esc(BY[x.r.id].name) + "</b><span>" + x.r.pts + " pts hoy · máximo " + x.max + " · campeón en " + simPct(x.w) + "</span></li>";
       }).join("") + '</ul><p class="note">Probabilidades de simulación a partir de la fuerza de cada club; no son una predicción oficial.</p></article></div>' +
       '<div class="cam-final"><div><h3>¿Y la final del campeonato nacional?</h3>' +
-      '<p>Al terminar el Clausura (hacia el 22 de noviembre) se define el campeón nacional. Juegan los campeones del Apertura (' + (apCh ? esc(apCh.name) : "Apertura") + ") y del Clausura, más los dos mejores del acumulado. Si un campeón de torneo corto está entre los dos primeros del acumulado, pasa directo a la final.</p>" +
+      '<p>Al terminar el Clausura (el 22 de noviembre) se define el campeón nacional. Juegan los campeones del Apertura (' + (apCh ? esc(apCh.name) : "Apertura") + ") y del Clausura, más los dos mejores del acumulado. Si un campeón de torneo corto está entre los dos primeros del acumulado, pasa directo a la final.</p>" +
       '<p class="cam-hl">Si la U gana el Clausura y termina entre los dos primeros del acumulado, pasa directo a la final: probabilidad actual <b>' + simPct(R.direct) + "</b>.</p></div>" +
       '<table class="std compact"><thead><tr><th class="club">Fase</th><th class="club">Fechas tentativas</th></tr></thead><tbody>' +
-      '<tr><td class="club">Final directa, ida</td><td class="club">29 de noviembre</td></tr><tr><td class="club">Final directa, vuelta</td><td class="club">6 de diciembre</td></tr>' +
+      '<tr><td class="club">Final directa, ida</td><td class="club">28 de noviembre</td></tr><tr><td class="club">Final directa, vuelta</td><td class="club">6 de diciembre</td></tr>' +
       '<tr><td class="club">Semifinales, ida</td><td class="club">28 o 29 de noviembre</td></tr><tr><td class="club">Semifinales, vuelta</td><td class="club">3 o 4 de diciembre</td></tr>' +
       '<tr><td class="club">Final tras semifinales</td><td class="club">8 y 13 de diciembre</td></tr></tbody></table></div>' +
-      '<p class="note">Las fechas de los play-offs y la final son tentativas y varían según el medio (por ejemplo, la ida de la final directa aparece el 28 o el 29 de noviembre); se confirman al cierre del Clausura. En la final, el primero del acumulado es local en la vuelta. Fuentes: ' +
+      '<p class="note">Las fechas de los play-offs y la final son tentativas y varían según el medio (por ejemplo, la ida de la final directa aparece el 28 o el 29 de noviembre en algunos medios); se confirman al cierre del Clausura. En la final, el primero del acumulado es local en la vuelta. Fuentes: ' +
       '<a href="https://depor.com/futbol-peruano/descentralizado/liga-1-2026-fechas-confirmadas-definicion-como-se-jugarian-play-offs-semifinales-y-finales-tras-torneo-clausura-noticia/" target="_blank" rel="noopener noreferrer">Depor</a>, ' +
       '<a href="https://www.eldiez.com.pe/liga-1/liga-1-confirman-las-fechas-de-los-play-offs-y-las-finales-por-el-titulo-nacional-noticia/" target="_blank" rel="noopener noreferrer">El Diez</a>, ' +
       '<a href="https://rpp.pe/futbol/descentralizado/cuando-se-disputara-el-titulo-de-la-liga-1-2026-revisa-las-fechas-programadas-de-los-play-offs-y-las-finales-noticia-1714677" target="_blank" rel="noopener noreferrer">RPP</a> y ' +
