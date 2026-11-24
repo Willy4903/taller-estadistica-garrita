@@ -47,7 +47,7 @@ button{font:inherit;cursor:pointer}
 .brand span{color:var(--accent)}
 .nav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:2px 4px;min-width:0;flex:1}
 .nav ul::-webkit-scrollbar{display:none}
-.nav a{display:block;padding:5px 9px;border-radius:6px;text-decoration:none;color:var(--muted);font-size:.88rem;white-space:nowrap}
+.nav a{display:block;padding:5px 7px;border-radius:6px;text-decoration:none;color:var(--muted);font-size:.84rem;white-space:nowrap}
 .nav a[href="#noticias"]{color:var(--accent);border:1px solid rgba(79,209,197,.45)}
 .menu-btn,.nav .nav-quick{display:none}
 
@@ -109,6 +109,16 @@ button{font:inherit;cursor:pointer}
  .law:hover{background:linear-gradient(160deg,rgba(79,209,197,.32),rgba(124,156,245,.18)),var(--surface)!important}
 }
 .flip .face{transition:background .3s,border-color .3s,box-shadow .25s}
+
+.sub-step{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;font-size:1.05rem;margin:28px 0 12px}
+.sub-step span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#06231F;font-size:.85rem}
+.diag-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.diag-kpi div{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--glass),rgba(18,34,58,.55);display:grid;gap:4px}
+.diag-kpi b{font-family:var(--f-display);font-size:1.6rem;color:var(--accent);font-variant-numeric:tabular-nums}
+.diag-kpi span{font-size:.85rem;color:var(--muted)}
+.pe-hitos{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.lawlinks{display:flex;flex-wrap:wrap;gap:6px}
+@media (max-width:860px){.diag-kpi{grid-template-columns:1fr 1fr}}
 @media (max-width:860px){
  .nav .wrap{flex-wrap:wrap;gap:8px}
  .brand{display:block!important}
@@ -586,15 +596,16 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
       <li><a href="#principios">Principios</a></li>
       <li><a href="#dilema">Dilemas</a></li>
       <li><a href="#riesgo">Riesgo</a></li>
-      <li><a href="#casos">Casos</a></li>
       <li><a href="#leyes">Leyes</a></li>
       <li><a href="#peru">Perú</a></li>
       <li><a href="#oia">Oficial IA</a></li>
       <li><a href="#latam">Latam</a></li>
       <li><a href="#marcos">Marcos</a></li>
-      <li><a href="#noticias">Lo último</a></li>
+      <li><a href="#casos">Casos</a></li>
       <li><a href="#protocolo">Protocolo</a></li>
       <li><a href="#quiz">Quiz</a></li>
+      <li><a href="#noticias">Lo último</a></li>
+      <li><a href="#fuentes">Fuentes</a></li>
     </ul>
   </div>
 </nav>
@@ -639,7 +650,7 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 <section id="curso">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">El recorrido</div>
+      <div class="eyebrow">Inicio · El recorrido</div>
       <h2>De los valores a la gobernanza en cuatro pasos</h2>
       <p class="lead">Cada paso es un capítulo de esta página. Elige uno para ver su contenido y saltar a él.</p>
     </div>
@@ -651,7 +662,7 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 <section id="principios" class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Capítulo 1 · Valores</div>
+      <div class="eyebrow">Paso 1 · Fundamentos éticos</div>
       <h2>Nueve principios convertidos en preguntas</h2>
       <p class="lead">Toca una tarjeta: al frente la pregunta de gerencia, atrás el concepto y cómo aplicarlo.</p>
     </div>
@@ -662,7 +673,7 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 <section id="dilema">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Capítulo 2 · Decidir</div>
+      <div class="eyebrow">Paso 1 · Fundamentos éticos</div>
       <h2>Un dilema, cuatro lentes éticas</h2>
       <p class="lead">Elige un caso y una lente. Compara qué decisión sugiere cada enfoque.</p>
     </div>
@@ -678,9 +689,9 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 <section id="riesgo" class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Capítulo 3 · Riesgos</div>
+      <div class="eyebrow">Paso 2 · Riesgos y derechos</div>
       <h2>¿Cuánto riesgo tiene tu caso de uso?</h2>
-      <p class="lead">Toca un nivel de la pirámide o un caso. Es orientativo y no reemplaza una opinión legal.</p>
+      <p class="lead">Toca un nivel o un caso. Verás el nivel de riesgo y un acceso directo a las normas que aplican. Es orientativo y no reemplaza una opinión legal.</p>
     </div>
     <div class="pyramid" aria-label="Pirámide de riesgo" style="margin-bottom:26px">
         <button class="pyr ban" style="--w:42%" type="button">Prohibido<small>Vigilancia masiva sin base legal, manipulación. Perú: uso indebido</small></button>
@@ -695,22 +706,10 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
   </div>
 </section>
 
-<section id="casos">
+<section id="leyes">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Capítulo 4 · Lo que ya pasó</div>
-      <h2>Aciertos y errores reales</h2>
-      <p class="lead">Cada caso deja una lección de gobernanza. Toca una tarjeta para verla.</p>
-    </div>
-    <div class="filters" id="caseFilters"></div>
-    <div class="cases" id="cases"></div>
-  </div>
-</section>
-
-<section id="leyes" class="band">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Capítulo 5 · Las reglas</div>
+      <div class="eyebrow">Paso 3 · Normativa y estándares</div>
       <h2>Las normas que tienes que conocer</h2>
       <p class="lead">Toca una ficha: objetivo, a quién aplica, ejemplo, impacto y enlace al texto oficial.</p>
     </div>
@@ -719,25 +718,34 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
   <dialog class="lawd" id="lawDlg" aria-labelledby="ldTitle"></dialog>
 </section>
 
-<section id="peru">
+<section id="peru" class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Capítulo 6 · Perú</div>
-      <h2>Del discurso a la obligación</h2>
-      <p class="lead">El Perú y la Unión Europea regulan la IA con relojes distintos. Así se comparan.</p>
+      <div class="eyebrow">Paso 3 · Normativa · Perú</div>
+      <h2>Perú: diagnóstico, normas y plazos</h2>
+      <p class="lead">Primero dónde está el país, luego cómo se construyeron sus reglas y al final qué plazos corren y quién responde.</p>
     </div>
-    <div class="chart-card">
-      <div class="ch-head"><h3>Dos relojes: Perú y Unión Europea</h3><div class="legend"><span><i style="background:var(--s1)"></i>Perú</span><span><i style="background:var(--s2)"></i>Unión Europea</span><span><i class="hollow"></i>Próximo</span></div></div>
-      <div class="clocks" id="clocks"></div>
-      <div class="clocks-m" id="clocksM"></div>
-    </div>
-    <div class="chart-card">
-      <div class="ch-head"><h3>Plazos del Estado para cumplir el reglamento de IA</h3><p class="note">Plazos máximos contados desde la publicación del DS 115-2025-PCM (set. 2025). La línea vertical marca hoy.</p></div>
-      <div class="gantt" id="gantt"></div>
+    
+    <div class="sub-step"><span>1</span>Diagnóstico del país</div>
+    <div class="diag-kpi">
+      <div><b>65.º de 70</b><span>Ranking Mundial Digital y de IA 2026 (IMD y Centrum PUCP)</span></div>
+      <div><b>56,3</b><span>puntos de 100; en la región solo supera a Venezuela</span></div>
+      <div><b>70.º</b><span>en talento: el último lugar del mundo</span></div>
+      <div><b>68.º</b><span>en adopción de IA en empresas</span></div>
     </div>
     <div class="chart-card">
       <div class="ch-head"><h3>Dónde el Perú es fuerte y dónde es débil en IA</h3><p class="note">Puesto entre 70 economías en subfactores del Ranking Mundial Digital y de IA 2026 (IMD y Centrum PUCP). Más a la izquierda es mejor.</p><div class="legend"><span><i style="background:var(--s1)"></i>Mitad superior</span><span><i style="background:#F38BA8"></i>Entre los 10 últimos</span><span><i style="background:var(--mute)"></i>Resto</span></div></div>
       <div class="dots" id="peDots"></div>
+    </div>
+    <div class="sub-step"><span>2</span>Hitos normativos</div>
+    <div class="chart-card">
+      <div class="ch-head"><h3>Cómo llegó el Perú a tener reglas de IA</h3><div class="xhint">Toca un hito: se voltea y te explica de qué trata</div></div>
+      <div class="pe-hitos" id="peHitos"></div>
+    </div>
+    <div class="sub-step"><span>3</span>Plazos y Oficial de IA</div>
+    <div class="chart-card">
+      <div class="ch-head"><h3>Plazos del Estado para cumplir el reglamento de IA</h3><p class="note">Plazos máximos contados desde la publicación del DS 115-2025-PCM (set. 2025). La línea vertical marca hoy.</p></div>
+      <div class="gantt" id="gantt"></div>
     </div>
     
     <div class="oia" id="oia">
@@ -758,12 +766,12 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
   </div>
 </section>
 
-<section id="latam" class="band">
+<section id="latam">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Capítulo 7 · La región</div>
+      <div class="eyebrow">Paso 3 · Normativa · América Latina</div>
       <h2>¿Quién está más preparado y quién regula más rápido?</h2>
-      <p class="lead">Dos miradas que no siempre coinciden: la capacidad en IA (ILIA 2026) y el avance de la regulación.</p>
+      <p class="lead">Comparación entre países: capacidad en IA (ILIA 2026), avance de la regulación y ranking IMD. El detalle del Perú está en la sección anterior.</p>
     </div>
     <div class="chart-grid">
       <div class="chart-card">
@@ -785,21 +793,72 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
   </div>
 </section>
 
-<section id="marcos">
+<section id="marcos" class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Capítulo 8 · Estándares</div>
+      <div class="eyebrow">Paso 3 · Marcos internacionales</div>
       <h2>Los principios orientan, las leyes obligan y los estándares lo demuestran</h2>
-      <p class="lead">Compara de un vistazo qué es obligatorio, qué es certificable y dónde aplica cada marco.</p>
+      <p class="lead">Qué es obligatorio, qué es certificable y dónde aplica cada marco. Al final, los plazos del Perú frente a los de la Unión Europea.</p>
     </div>
     <div class="tbl-wrap"><div class="matrix" id="matrix"></div></div>
+    <div class="chart-card">
+      <div class="ch-head"><h3>Dos relojes: los plazos del Perú frente a los de la Unión Europea</h3><div class="legend"><span><i style="background:var(--s1)"></i>Perú</span><span><i style="background:var(--s2)"></i>Unión Europea</span><span><i class="hollow"></i>Próximo</span></div></div>
+      <div class="clocks" id="clocks"></div>
+      <div class="clocks-m" id="clocksM"></div>
+    </div>
+
+  </div>
+</section>
+
+<section id="casos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Paso 4 · Gobernanza aplicada</div>
+      <h2>Aciertos y errores reales</h2>
+      <p class="lead">Cada caso deja una lección de gobernanza. Toca una tarjeta para verla.</p>
+    </div>
+    <div class="filters" id="caseFilters"></div>
+    <div class="cases" id="cases"></div>
+  </div>
+</section>
+
+<section id="protocolo" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Paso 4 · Gobernanza aplicada</div>
+      <h2>¿Qué tan lista está tu organización?</h2>
+      <p class="lead">Marca lo que ya existe. Verás tu nivel general y por dimensión. Solo se guarda en este navegador.</p>
+    </div>
+    <div class="tool">
+      <div class="checks" id="checks"></div>
+      <div class="score" aria-live="polite">
+        <div class="eyebrow">Nivel de madurez</div>
+        <div class="big" id="pct">0%</div>
+        <div class="bar"><i id="barFill"></i></div>
+        <h3 id="lvlName"></h3>
+        <p id="lvlText" class="lead"></p>
+        <div class="dims" id="dims"></div>
+        <div><div class="eyebrow" style="margin-bottom:6px">Siguiente paso sugerido</div><p id="nextStep"></p></div>
+        <button class="btn ghost" id="resetChecks" type="button">Reiniciar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Paso 4 · Cierre</div>
+      <h2>Pon a prueba lo aprendido</h2>
+    </div>
+    <div class="quiz" id="quizBox"></div>
   </div>
 </section>
 
 <section id="noticias" class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Capítulo 9 · Lo último</div>
+      <div class="eyebrow">Consulta · Lo último</div>
       <h2>Lo que se está moviendo</h2>
       <p class="lead">Arriba, las noticias que se actualizan solas cuatro veces al día. Abajo, las notas clave analizadas: tócalas para ver objetivo, público, impacto y ejemplo.</p>
     </div>
@@ -822,42 +881,9 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
   </div>
 </section>
 
-<section id="protocolo">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Capítulo 10 · Tu organización</div>
-      <h2>¿Qué tan lista está tu organización?</h2>
-      <p class="lead">Marca lo que ya existe. Verás tu nivel general y por dimensión. Solo se guarda en este navegador.</p>
-    </div>
-    <div class="tool">
-      <div class="checks" id="checks"></div>
-      <div class="score" aria-live="polite">
-        <div class="eyebrow">Nivel de madurez</div>
-        <div class="big" id="pct">0%</div>
-        <div class="bar"><i id="barFill"></i></div>
-        <h3 id="lvlName"></h3>
-        <p id="lvlText" class="lead"></p>
-        <div class="dims" id="dims"></div>
-        <div><div class="eyebrow" style="margin-bottom:6px">Siguiente paso sugerido</div><p id="nextStep"></p></div>
-        <button class="btn ghost" id="resetChecks" type="button">Reiniciar</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="quiz" class="band">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Cierre</div>
-      <h2>Pon a prueba lo aprendido</h2>
-    </div>
-    <div class="quiz" id="quizBox"></div>
-  </div>
-</section>
-
 <section id="fuentes">
   <div class="wrap">
-    <div class="sec-head"><div class="eyebrow">Fuentes</div><h2>Referencias confiables</h2></div>
+    <div class="sec-head"><div class="eyebrow">Consulta · Fuentes</div><h2>Referencias confiables</h2></div>
     <ul class="srcs">
       <li><a href="#fuentes-vivo">Fuentes automáticas de la sección Lo último</a>: Gestión, El Comercio, Andina, El Peruano, Gob.pe, Infobae Perú, CEPAL y UNESCO.</li>
       <li><a href="https://gestion.pe">Gestión, edición del 24 nov. 2026</a>: Ranking Mundial Digital y de IA 2026 (IMD y Centrum PUCP), cooperación China-Perú en IA, Millicom y Entel Perú, minería autónoma, informe del MIT sobre IA en educación y Financial Times sobre regulación de IA en EE. UU.</li>
@@ -940,7 +966,7 @@ const cifras=[
  {n:"+700",c:700,pre:"+",t:"Alertas de desinformación detectadas por el JNE en las Elecciones Generales 2026",ic:"jne",h:"La IA ya influye en cómo nos informamos para votar.",p:"El JNE rastreó más de 700 casos de contenido falso en redes, incluidos videos y audios manipulados con IA, y publicó una guía para detectar deepfakes.",w:"Verificar antes de compartir también es usar la IA con responsabilidad.",u:"https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx",f:"Andina"}];
 (()=>{const g=$("#cifrasGrid");cifras.forEach(x=>g.append(flipCard(
  `<span class="bigic">${BIG[x.ic]}</span><b class="cnum"${x.c?` data-count="${x.c}" data-dec="${x.d||0}" data-pre="${x.pre||""}" data-suf="${x.suf||""}"`:""}>${x.n}</b><span class="t">${x.t}</span>`,
- `<span class="bt">Qué significa</span><span class="big1">${x.h}</span><p>${x.p}</p><span class="why">${x.w}</span><a class="src" href="${x.u}" target="_blank" rel="noopener">Fuente: ${x.f}</a>`,"cifra-f")))})();
+ `<span class="bt">Qué significa</span><span class="big1">${x.h}</span><p>${x.p}</p><span class="why">${x.w}</span><a class="src" href="${x.u}" target="_blank" rel="noopener">Fuente: ${x.f}</a><a class="src" href="${({reg:"#leyes",ilia:"#latam",imd:"#peru",emp:"#peru",jne:"#noticias"})[x.ic]}">${({reg:"Ver la norma",ilia:"Ver la comparación regional",imd:"Ver el diagnóstico del Perú",emp:"Ver el diagnóstico del Perú",jne:"Ver lo último"})[x.ic]} →</a>`,"cifra-f")))})();
 
 /* ---------- ROLES DEL OIA ---------- */
 (()=>{const roles=[["Oficial de IA","Política, plan y cumplimiento de IA","Es el dueño de la IA en la entidad.","Aprueba la política de uso, dirige el plan de IA y vigila que cada sistema cumpla la norma."],
@@ -951,14 +977,14 @@ const cifras=[
  const box=$("#roles");if(!box)return;roles.forEach((r,i)=>box.append(flipCard(`<b>${r[0]}</b><span>${r[1]}</span>`,`<span class="bt">Qué hace</span><b>${r[2]}</b><p>${r[3]}</p>`,i===0?"role-core":"")))})();
 /* ---------- UNIDADES ---------- */
 const units=[
- {t:"I. Fundamentos éticos",w:"Paso 1 · Valores",d:"Qué es la IA generativa y con qué lentes éticas evaluarla.",c:["Diferencias entre IA, aprendizaje automático, modelos fundacionales y LLM","Capacidades, alucinaciones y límites","Enfoques deontológico, utilitarista, de la virtud y del cuidado","Principios: equidad, transparencia, explicabilidad, privacidad, supervisión humana"],e:"Distinguir qué es la IA generativa y razonar un dilema con distintas teorías éticas.",r:["UNESCO 2021","OCDE 2024","Floridi 2023","Coeckelbergh 2020"]},
- {t:"II. Riesgos y derechos",w:"Paso 2 · Riesgos",d:"Dónde la IA generativa puede dañar personas o a la organización.",c:["Sesgos, estereotipos, deepfakes y desinformación","Datos personales, consentimiento, anonimización, ataques por prompt","Derechos de autor, licencias, atribución y plagio","Declaración transparente del uso de IA"],e:"Detectar sesgos, alucinaciones y riesgos de privacidad y propiedad intelectual.",r:["NIST AI 600-1","OMPI 2024","Comisión Europea: protección de datos"]},
- {t:"III. Normativa y estándares",w:"Paso 3 · Reglas",d:"Qué es obligatorio, qué es recomendable y quién responde.",c:["Ética, ley, regulación, política y estándar; hard law y soft law","Responsabilidades de proveedor, desarrollador, implementador y usuario","UNESCO, OCDE, NIST AI RMF, ISO/IEC 42001","EU AI Act y legislación nacional"],e:"Saber qué norma o estándar aplica y quién responde en cada caso.",r:["Reglamento (UE) 2024/1689","ISO/IEC 42001","NIST AI 100-1"]},
- {t:"IV. Gobernanza aplicada",w:"Paso 4 · Gobernanza",d:"Llevar todo a un protocolo que funcione en la institución.",c:["Evaluación de impacto: partes interesadas, daños, probabilidad y severidad","Controles preventivos, detectivos y correctivos; riesgo residual","Usos permitidos, condicionados y prohibidos","Indicadores, auditoría, reclamos, incidentes y rendición de cuentas"],e:"Diseñar un protocolo de uso responsable y medir si funciona.",r:["NIST AI RMF Playbook","OCDE: catálogo de herramientas","ISO/IEC 42001"]}
+ {t:"I. Fundamentos éticos",w:"Principios · Dilemas",d:"Qué es la IA generativa y con qué lentes éticas evaluarla.",c:["Diferencias entre IA, aprendizaje automático, modelos fundacionales y LLM","Capacidades, alucinaciones y límites","Enfoques deontológico, utilitarista, de la virtud y del cuidado","Principios: equidad, transparencia, explicabilidad, privacidad, supervisión humana"],e:"Distinguir qué es la IA generativa y razonar un dilema con distintas teorías éticas.",r:["UNESCO 2021","OCDE 2024","Floridi 2023","Coeckelbergh 2020"]},
+ {t:"II. Riesgos y derechos",w:"Clasificador de riesgo",d:"Dónde la IA generativa puede dañar personas o a la organización.",c:["Sesgos, estereotipos, deepfakes y desinformación","Datos personales, consentimiento, anonimización, ataques por prompt","Derechos de autor, licencias, atribución y plagio","Declaración transparente del uso de IA"],e:"Detectar sesgos, alucinaciones y riesgos de privacidad y propiedad intelectual.",r:["NIST AI 600-1","OMPI 2024","Comisión Europea: protección de datos"]},
+ {t:"III. Normativa y estándares",w:"Leyes · Perú · Latam · Marcos",d:"Qué es obligatorio, qué es recomendable y quién responde.",c:["Ética, ley, regulación, política y estándar; hard law y soft law","Responsabilidades de proveedor, desarrollador, implementador y usuario","UNESCO, OCDE, NIST AI RMF, ISO/IEC 42001","EU AI Act y legislación nacional"],e:"Saber qué norma o estándar aplica y quién responde en cada caso.",r:["Reglamento (UE) 2024/1689","ISO/IEC 42001","NIST AI 100-1"]},
+ {t:"IV. Gobernanza aplicada",w:"Casos · Protocolo · Quiz",d:"Llevar todo a un protocolo que funcione en la institución.",c:["Evaluación de impacto: partes interesadas, daños, probabilidad y severidad","Controles preventivos, detectivos y correctivos; riesgo residual","Usos permitidos, condicionados y prohibidos","Indicadores, auditoría, reclamos, incidentes y rendición de cuentas"],e:"Diseñar un protocolo de uso responsable y medir si funciona.",r:["NIST AI RMF Playbook","OCDE: catálogo de herramientas","ISO/IEC 42001"]}
 ];
 const ut=$("#unitTabs"),up=$("#unitPanel");
 function showUnit(i){[...ut.querySelectorAll(".step")].forEach((b,j)=>b.setAttribute("aria-selected",i===j));const u=units[i];
- up.innerHTML=`<div><div class="weeks">${u.w}</div><h3 style="font-size:1.4rem;margin-top:6px">${u.t}</h3><p class="lead" style="margin-top:8px">${u.d}</p><div class="deliv"><b>Lo que podrás hacer:</b> ${u.e}</div><a class="go" href="${["#principios","#riesgo","#leyes","#oia"][i]}">Ir al capítulo →</a></div>
+ up.innerHTML=`<div><div class="weeks">${u.w}</div><h3 style="font-size:1.4rem;margin-top:6px">${u.t}</h3><p class="lead" style="margin-top:8px">${u.d}</p><div class="deliv"><b>Lo que podrás hacer:</b> ${u.e}</div><a class="go" href="${["#principios","#riesgo","#leyes","#casos"][i]}">Ir al paso →</a></div>
  <div><div class="eyebrow">Contenidos</div><ul>${u.c.map(x=>`<li>${x}</li>`).join("")}</ul><div class="eyebrow" style="margin-top:16px">Lecturas clave</div><div class="hero-meta" style="margin-top:8px">${u.r.map(x=>`<span class="chip">${x}</span>`).join("")}</div></div>`;}
 const UI=['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l9 17H3z"/><path d="M8.3 11h7.4M6.2 15h11.6"/></svg>',IC.shield,IC.net];
 units.forEach((u,i)=>{const b=el("button",{class:"step",role:"tab",type:"button"},`${UI[i]}<span>${i+1}. ${u.t.replace(/^[IV]+\. /,"")}</span><small>${u.w}</small>`);b.onclick=()=>showUnit(i);ut.append(b)});showUnit(0);
@@ -1023,9 +1049,11 @@ const uses=[
  {n:"Filtro de spam o clasificación de tickets",s:"Operaciones",l:"ok",pe:"Riesgo bajo.",eu:"Riesgo mínimo.",c:["Monitoreo básico de desempeño"]}
 ];
 const ul=$("#uses"),rr=$("#riskResult");
+rr.addEventListener("click",e=>{const b=e.target.closest("[data-lw]");if(b)openLaw(+b.dataset.lw)});
 function showUse(i){[...ul.children].forEach((b,j)=>b.classList.toggle("on",j===i));const u=uses[i],L=lv[u.l];
  rr.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level ${L[1]}">Perú: ${LVJ[u.l][0]}</span><span class="level ${L[1]}">UE: ${LVJ[u.l][1]}</span></div><h3 style="font-size:1.25rem">${u.n}</h3>
  <dl><div><dt>Perú · Ley 31814 y reglamento</dt><dd>${u.pe}</dd></div><div><dt>Unión Europea · AI Act</dt><dd>${u.eu}</dd></div>
+ <div><dt>Normas que aplican</dt><dd class="lawlinks"><button type="button" class="chip" data-lw="1">Reglamento DS 115-2025-PCM</button>${u.l==="high"||u.l==="ban"?`<button type="button" class="chip" data-lw="4">Ley 29733 de datos personales</button>`:""}<button type="button" class="chip" data-lw="6">EU AI Act</button></dd></div>
  <div><dt>Controles mínimos</dt><dd><ul style="margin:4px 0 0;padding-left:18px">${u.c.map(x=>`<li>${x}</li>`).join("")}</ul></dd></div></dl>`;}
 uses.forEach((u,i)=>{const L=lv[u.l];const b=el("button",{class:"use",type:"button"},`<span>${u.n}<br><span class="s">${u.s}</span></span><span class="level ${L[1]}">${L[0]}</span>`);b.onclick=()=>showUse(i);ul.append(b)});
 showUse(2);
@@ -1086,7 +1114,7 @@ cSec.forEach(s=>{const b=el("button",{class:"tab",type:"button"},s);b.onclick=()
 const news=[
  {d:"24 nov. 2026",r:"Perú",t:"El Perú solo supera a Venezuela en adopción digital y uso de IA en la región",u:"https://gestion.pe",f:"Gestión",
   s:"En el Ranking Mundial Digital y de IA 2026 de IMD y Centrum PUCP, el Perú ocupa el puesto 65 de 70 con 56,3 puntos. Subió un lugar, pero es último en talento y 68.º en adopción de IA en empresas.",
-  o:"Medir qué tan preparados están los países para adoptar tecnología digital e IA.",p:"Gobierno, empresas, universidades e inversionistas.",i:"El 56,7% de ejecutivos peruanos señala infraestructura digital insuficiente; la falta de talento es la barrera más citada.",e:"Un banco que quiere escalar IA no encuentra suficientes especialistas en el país.",ic:"globe"},
+  o:"Medir qué tan preparados están los países para adoptar tecnología digital e IA.",p:"Gobierno, empresas, universidades e inversionistas.",i:"El 56,7% de ejecutivos peruanos señala infraestructura digital insuficiente; la falta de talento es la barrera más citada.",e:"Un banco que quiere escalar IA no encuentra suficientes especialistas en el país.",a:"Es la fuente del diagnóstico por subfactor que se analiza en la sección Perú.",ic:"globe"},
  {d:"24 nov. 2026",r:"Perú",t:"China propone cooperar con el Perú en IA para agricultura, minería, salud, educación y desastres",u:"https://gestion.pe",f:"Gestión",
   s:"La embajada china plantea compartir modelos de IA de código abierto y el sistema de alerta temprana Mazu para El Niño, además de comandos de monitoreo inteligente para seguridad urbana.",
   o:"Ampliar la cooperación tecnológica bajo el Plan de Acción Conjunta 2024-2029.",p:"Ministerios, gobiernos regionales y municipios.",i:"Abre oportunidades, pero los sistemas de monitoreo de seguridad deben evaluarse frente al reglamento peruano, que prohíbe la vigilancia masiva sin base legal.",e:"Usar IA para alertar huaicos a comunidades con horas de anticipación.",ic:"alert"},
@@ -1140,7 +1168,7 @@ const nf=$("#newsFilters"),ng=$("#news");let nk="Todas";const nTags=["Todas","Pe
 const shot=u=>"https://s.wordpress.com/mshots/v1/"+encodeURIComponent(u)+"?w=640&h=360";
 function drawNews(){[...nf.children].forEach((b,i)=>b.setAttribute("aria-selected",nTags[i]===nk));ng.innerHTML="";
  news.filter(n=>nk==="Todas"||n.r===nk).forEach(n=>{const c=flipCard(`<div class="nimg"><span class="ntag">${n.r}</span><img src="${shot(n.u)}" alt="Captura de la nota en ${n.f}" loading="lazy" onerror="this.remove()"><div class="fb">${IC[n.ic]}</div></div><div class="nbody"><div class="d">${n.d} · ${n.f}</div><h3>${n.t}</h3><p class="nsum">${n.s}</p></div>`,
- `<div class="nbody"><span class="bt">${n.d} · ${n.r}</span><h3>${n.t}</h3><dl class="nfacts"><div><dt>Objetivo</dt><dd>${n.o}</dd></div><div><dt>Dirigido a</dt><dd>${n.p}</dd></div><div><dt>Impacto</dt><dd>${n.i}</dd></div><div><dt>Ejemplo</dt><dd>${n.e}</dd></div></dl><a href="${n.u}" target="_blank" rel="noopener" style="font-weight:600">Leer nota en ${n.f} →</a></div>`,"ncard2");
+ `<div class="nbody"><span class="bt">${n.d} · ${n.r}</span><h3>${n.t}</h3><dl class="nfacts"><div><dt>Objetivo</dt><dd>${n.o}</dd></div><div><dt>Dirigido a</dt><dd>${n.p}</dd></div><div><dt>Impacto</dt><dd>${n.i}</dd></div><div><dt>Ejemplo</dt><dd>${n.e}</dd></div>${n.a?`<div><dt>Qué añade</dt><dd>${n.a}</dd></div>`:""}</dl><a href="${n.u}" target="_blank" rel="noopener" style="font-weight:600">Leer nota en ${n.f} →</a></div>`,"ncard2");
  c.querySelectorAll(".face").forEach(f=>f.classList.add("nopad"));c.querySelectorAll(".hint").forEach(h=>h.style.padding="0 18px 16px");ng.append(c)});}
 nTags.forEach(t=>{const b=el("button",{class:"tab",type:"button"},t);b.onclick=()=>{nk=t;drawNews()};nf.append(b)});drawNews();
 
@@ -1333,6 +1361,8 @@ const clk=[
   const back=`<span class="bt">${e[5]>TODAY?"Lo que viene":"Qué significa"}</span><p>${XP[e[3]]}</p><span class="when">${e[5]>TODAY?"Todavía no llega: hay tiempo para prepararse.":"Ya ocurrió: es parte de las reglas vigentes."}</span>`;
   const f=flipCard(front,back,`ck-flip ${side}${e[5]>TODAY?" fut":""}`);n.replaceWith(f)});
  hint(card,"Toca un hito: se voltea y te explica de qué trata");
+ /* hitos normativos del Perú en su propia sección */
+ const ph=$("#peHitos");if(ph)[...clk].filter(e=>e[1]==="pe"&&e[5]<=TODAY).sort((a,b)=>a[5]-b[5]).forEach(e=>ph.append(flipCard(`<span class="dt">${e[2]}</span><b>${e[3]}</b><span>${e[4]}</span>`,`<span class="bt">Qué significa</span><p>${XP[e[3]]}</p>`,"ck-flip ckm pe")));
  /* versión de una columna para celular */
  const m=$("#clocksM");let last=0,now=false;
  [...clk].sort((a,b)=>a[5]-b[5]).forEach(e=>{
