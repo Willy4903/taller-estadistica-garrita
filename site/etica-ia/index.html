@@ -744,6 +744,7 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
     </div>
     <div class="live" id="live">
       <div class="live-head"><span class="pulse-dot" aria-hidden="true"></span><b>En vivo</b><span id="liveStamp" class="note">Cargando noticias automáticas…</span></div>
+      <div class="tabs" id="liveTabs" style="margin:0"></div>
       <div class="live-list" id="liveList"></div>
       <button class="btn ghost" id="liveMore" type="button" hidden>Ver más noticias</button>
     </div>
@@ -753,7 +754,7 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
     <div class="srcbox" id="fuentes-vivo">
       <div class="eyebrow">Fuentes que alimentan esta sección</div>
       <h3 style="margin-top:6px">Cómo se construye "Lo último"</h3>
-      <p class="note" style="margin-top:6px">Un proceso automático revisa estas fuentes todos los días a las 6:00, 12:00, 16:00 y 20:00 (hora de Lima), conserva solo lo que trata de inteligencia artificial, ética, datos personales o deepfakes, elimina duplicados y publica las noticias de los últimos 21 días. Si una fuente falla, se mantienen sus noticias anteriores. Los horarios dependen de GitHub Actions y pueden retrasarse unos minutos.</p>
+      <p class="note" style="margin-top:6px">Un proceso automático revisa estas fuentes todos los días a las 6:00, 12:00, 16:00 y 20:00 (hora de Lima), conserva solo lo que trata de inteligencia artificial, la separa en "Ética y regulación" (leyes, derechos, datos, sesgos, deepfakes, empleo) y "Miscelánea IA" (productos, empresas, ciencia y usos), elimina duplicados y publica las noticias de los últimos 21 días. Si una fuente falla, se mantienen sus noticias anteriores. Los horarios dependen de GitHub Actions y pueden retrasarse unos minutos.</p>
       <div class="srclist" id="srcList"></div>
       <p class="note" id="srcFoot" style="margin-top:10px"></p>
     </div>
@@ -1360,15 +1361,18 @@ document.querySelectorAll(".cifras b[data-count]").forEach(b=>{const T=+b.datase
   foot.textContent=`${okN} de ${d.sources.length} fuentes respondieron en la última revisión. Cada noticia enlaza a la nota original del medio.`;
   const items=d.items||[];
   if(!items.length){list.innerHTML=`<p class="note">No hubo noticias nuevas sobre IA en la última revisión.</p>`;return}
-  let shown=8;
-  const draw=()=>{list.innerHTML="";items.slice(0,shown).forEach(n=>{
-   const c=el("article",{class:"lv",tabindex:"0",role:"button"},`<div class="m"><span class="ntag">${n.r}</span><span>${fmt(n.d)}</span><span>${n.f}</span></div><b>${n.t}</b><div class="more">${n.s?`<p>${n.s}</p>`:""}<a href="${n.u}" target="_blank" rel="noopener">Leer la nota en ${n.f} →</a></div>`);
+  const CAT=[["todas","Todas"],["etica","Ética y regulación"],["misc","Miscelánea IA"]];let cat="todas",shown=8;
+  const tabs=$("#liveTabs");
+  const cnt=k=>k==="todas"?items.length:items.filter(i=>(i.c||"etica")===k).length;
+  const drawTabs=()=>{tabs.innerHTML="";CAT.forEach(([k,l])=>{const b=el("button",{class:"tab",type:"button","aria-selected":String(k===cat)},`${l} · ${cnt(k)}`);b.onclick=()=>{cat=k;shown=8;drawTabs();draw()};tabs.append(b)})};
+  const draw=()=>{list.innerHTML="";const pool=cat==="todas"?items:items.filter(i=>(i.c||"etica")===cat);pool.slice(0,shown).forEach(n=>{
+   const c=el("article",{class:"lv",tabindex:"0",role:"button"},`<div class="m"><span class="ntag">${n.r}</span><span class="ntag" style="background:${(n.c||"etica")==="etica"?"rgba(243,139,168,.16);color:#F38BA8":"rgba(124,156,245,.18);color:#9DB6FF"}">${(n.c||"etica")==="etica"?"Ética y regulación":"Miscelánea IA"}</span><span>${fmt(n.d)}</span><span>${n.f}</span></div><b>${n.t}</b><div class="more">${n.s?`<p>${n.s}</p>`:""}<a href="${n.u}" target="_blank" rel="noopener">Leer la nota en ${n.f} →</a></div>`);
    const t=()=>c.classList.toggle("open");
    c.addEventListener("click",e=>{if(e.target.closest("a"))return;t()});
    c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();t()}});
    list.append(c)});
-   more.hidden=shown>=items.length};
-  more.onclick=()=>{shown+=8;draw()};draw();
+   more.hidden=shown>=pool.length};
+  more.onclick=()=>{shown+=8;draw()};drawTabs();draw();
   const tk=$("#tkTrack");if(tk)tk.insertAdjacentHTML("afterbegin",items.slice(0,8).map(n=>`<a href="${n.u}" target="_blank" rel="noopener"><b>${fmt(n.d)} · ${n.f}</b>${n.t}</a>`).join(""));
  }).catch(()=>{stamp.textContent="Las noticias automáticas aparecen en el sitio publicado y se renuevan a las 6:00, 12:00, 16:00 y 20:00 (hora de Lima).";list.innerHTML="";foot.textContent=""});})();
 

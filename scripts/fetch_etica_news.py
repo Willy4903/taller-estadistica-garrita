@@ -19,7 +19,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "site" / "etica-ia" / "data" / "news.json"
 KEEP_DAYS = 21
-MAX_ITEMS = 60
 LIMA = timezone(timedelta(hours=-5))
 SCHEDULE = ["06:00", "12:00", "16:00", "20:00"]
 
@@ -49,6 +48,16 @@ AI = re.compile(
     r"aprendizaje autom|machine learning|\bLLM|modelos? de lenguaje|ley 31814|datos personales|automatizaci",
     re.I,
 )
+# Noticias de ética, regulación y gobernanza; el resto va a "Miscelánea IA".
+ETHICS = re.compile(
+    r"ética|etic|regula|reglament|\bley\b|leyes|norma|decreto|congreso|pcm|sgtd|oficial de (ia|inteligencia)|"
+    r"gobernanza|derechos|privacidad|datos personales|protección de datos|sesgo|discrimina|deepfake|bulo|"
+    r"desinformaci|fraude|estafa|ciberseg|seguridad digital|transparencia|responsab|sanci|multa|prohib|"
+    r"supervisi|riesgo|AI Act|unesco|ocde|derechos de autor|propiedad intelectual|empleo|trabajadores|"
+    r"oposici|limit|control|vigilancia|polític|elecci|soberan|confianza|tribunal|juez",
+    re.I,
+)
+MAX_PER_CAT = 50
 REGION_HINTS = [
     ("Europa", re.compile(r"\bUE\b|Unión Europea|europe|AI Act|Bruselas", re.I)),
     ("Latam", re.compile(r"Chile|Brasil|Colombia|México|Argentina|Uruguay|Ecuador|América Latina|Latinoamérica|CEPAL", re.I)),
@@ -121,7 +130,8 @@ def parse(raw, src):
             if rx.search(title):
                 reg = label
                 break
-        out.append({"t": title, "u": link, "d": dt.isoformat(), "f": outlet, "r": reg, "s": summary, "src": sid})
+        cat = "etica" if ETHICS.search(f"{title} {summary}") else "misc"
+        out.append({"t": title, "u": link, "d": dt.isoformat(), "f": outlet, "r": reg, "s": summary, "src": sid, "c": cat})
     return out
 
 
@@ -161,7 +171,10 @@ def main():
             continue
         seen.add(key)
         final.append(it)
-    final = final[:MAX_ITEMS]
+    for it in final:
+        it.setdefault("c", "etica" if ETHICS.search(f"{it['t']} {it.get('s', '')}") else "misc")
+    final = [i for i in final if i["c"] == "etica"][:MAX_PER_CAT] + [i for i in final if i["c"] == "misc"][:MAX_PER_CAT]
+    final.sort(key=lambda x: x["d"], reverse=True)
 
     if not any(s["ok"] for s in status) and old.get("items"):
         print("Todas las fuentes fallaron: se conservan los datos anteriores.", file=sys.stderr)
