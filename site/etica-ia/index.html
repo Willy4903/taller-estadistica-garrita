@@ -277,6 +277,16 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
 .sec-ic svg{width:24px;height:24px}
 .p-ic{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:rgba(79,209,197,.12);border:1px solid rgba(79,209,197,.35);color:var(--accent)}
 .p-ic svg{width:22px;height:22px}
+
+.oia{margin-top:36px;border:1px solid rgba(79,209,197,.45);border-radius:18px;padding:26px;background:var(--glass),rgba(18,34,58,.6);box-shadow:0 0 40px rgba(79,209,197,.12)}
+.oia-head{display:flex;gap:18px;align-items:flex-start}
+.oia-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+.oia-ul{margin:6px 0 0;padding-left:18px;font-size:.93rem}.oia-ul li{margin-bottom:4px}
+.roles{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px}
+.role{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:4px;background:rgba(255,255,255,.03)}
+.role b{font-family:var(--f-display);font-size:.9rem}.role span{font-size:.8rem;color:var(--muted)}
+.role.core{border-color:var(--accent);box-shadow:var(--glow)}
+@media (max-width:860px){.oia-grid{grid-template-columns:1fr}.roles{grid-template-columns:1fr 1fr}.oia-head{flex-direction:column}}
 @media (max-width:860px){.steps{grid-template-columns:1fr 1fr}.step:nth-child(n){transform:none}.hero-art svg{max-width:280px}}
 @media (max-width:860px){
   .hero-grid,.panel,.risk,.tool{grid-template-columns:1fr}
@@ -299,6 +309,7 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
     <ul id="navlist">
       <li><a href="#curso">Curso</a></li>
       <li><a href="#leyes">Leyes</a></li>
+      <li><a href="#oia">Oficial IA</a></li>
       <li><a href="#principios">Principios</a></li>
       <li><a href="#dilema">Dilemas</a></li>
       <li><a href="#riesgo">Riesgo</a></li>
@@ -324,7 +335,7 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
       <p class="sub">De los valores a la gobernanza, en el Perú y la región</p>
       <p class="lead" style="margin-top:16px">Guía interactiva para directivos: principios, ley peruana vigente desde 2026, regulación en América Latina y casos reales de banca, telecomunicaciones, energía y Estado.</p>
       <div class="hero-meta">
-        <span class="chip">Ley 31814</span><span class="chip">DS 115-2025-PCM</span><span class="chip">ENIA 2026-2030</span><span class="chip">Ley 29733</span><span class="chip">EU AI Act</span><span class="chip">ISO/IEC 42001</span>
+        <span class="chip">Ley 31814</span><span class="chip">DS 115-2025-PCM</span><span class="chip">ENIA 2026-2030</span><span class="chip">Ley 29733</span><span class="chip">EU AI Act</span><span class="chip">Directiva OIA</span><span class="chip">ISO/IEC 42001</span>
       </div>
     </div>
     <div class="hero-art"><svg viewBox="0 0 420 420" fill="none" aria-hidden="true">
@@ -410,13 +421,34 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
     <div class="sec-head">
       <div class="eyebrow">Perú</div>
       <h2>Qué pasa en el Perú: de la promoción a las obligaciones</h2>
-      <p class="lead">El Perú fue de los primeros países de la región con una ley específica de IA (2023). Con el reglamento vigente desde enero de 2026 y la Estrategia Nacional 2026-2030, el tema pasó del discurso a la exigencia, empezando por el sector público.</p>
+      <p class="lead">El Perú fue de los primeros países de la región con una ley específica de IA (2023). Con el reglamento vigente desde el 22 de enero de 2026, la Estrategia Nacional 2026-2030 y el nuevo Oficial de IA (octubre de 2026), el tema pasó del discurso a la exigencia, empezando por el sector público.</p>
     </div>
     <div class="tl" id="peruTl"></div>
     <div class="stats">
       <div class="stat"><b>5%</b><span>de empresas peruanas integra IA en procesos clave, la menor proporción entre los mercados evaluados.</span><br><a href="https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit">Forbes Perú / Tivit, nov. 2026</a></div>
-      <div class="stat"><b>7.º</b><span>puesto del Perú en el Índice Latinoamericano de IA 2026, con una de las notas de gobernanza más altas de la región.</span><br><a href="https://advise.ec/latinoamerica/peru/">Reporte sobre ILIA 2026 (CENIA/CEPAL)</a></div>
+      <div class="stat"><b>52,7</b><span>puntos del Perú en el Índice Latinoamericano de IA 2026 (7.º lugar). Lidera Chile con 71,4, seguido de Brasil (68,4) y Uruguay (67,0).</span><br><a href="https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026">CEPAL y CENIA, oct. 2026</a></div>
       <div class="stat"><b>700+</b><span>alertas de desinformación detectadas por el JNE en las Elecciones Generales 2026, incluidas piezas manipuladas con IA.</span><br><a href="https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx">Andina, mar. 2026</a></div>
+    </div>
+    <div class="oia" id="oia">
+      <div class="oia-head">
+        <div class="sec-ic" style="width:56px;height:56px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/><path d="M17 3l1.5 1.5L21 2"/></svg></div>
+        <div><div class="eyebrow">Nuevo rol obligatorio · Directiva 002-2026-PCM/SGTD</div><h3 style="font-size:1.6rem;margin-top:4px">El Oficial de Inteligencia Artificial (OIA)</h3>
+        <p class="lead" style="margin-top:6px">Desde octubre de 2026, las entidades públicas deben designar a una persona responsable de la IA. Es la figura que conecta la estrategia, la ley y el día a día de los sistemas.</p></div>
+      </div>
+      <div class="oia-grid">
+        <div class="ld-box"><div class="eyebrow">Qué hace</div><ul class="oia-ul"><li>Formula la política institucional de uso de IA.</li><li>Dirige el Plan de Acción de IA de la entidad.</li><li>Supervisa que los sistemas cumplan la normativa.</li><li>Integra el Comité de Gobierno y Transformación Digital.</li></ul></div>
+        <div class="ld-box"><div class="eyebrow">Quién debe designarlo</div><ul class="oia-ul"><li>Ministerios y sus adscritas, Poder Judicial, Congreso y organismos autónomos.</li><li>Universidades públicas e IPRESS públicas II-2 o superior.</li><li>Gobiernos regionales y municipalidades tipo A y C.</li><li>Empresas públicas regionales y locales.</li></ul></div>
+        <div class="ld-box"><div class="eyebrow">Plazos</div><ul class="oia-ul"><li>Designación en 6 a 12 meses según el tipo de entidad.</li><li>El perfil profesional es exigible a los 12 meses de vigencia de la directiva.</li><li>Lo designa la máxima autoridad administrativa.</li></ul></div>
+      </div>
+      <div class="eyebrow" style="margin-top:22px">Con quién trabaja</div>
+      <div class="roles">
+        <div class="role core"><b>Oficial de IA</b><span>Política, plan y cumplimiento de IA</span></div>
+        <div class="role"><b>Oficial de Datos Personales</b><span>Ley 29733 y DS 016-2024-JUS</span></div>
+        <div class="role"><b>Oficial de Seguridad y Confianza Digital</b><span>Ciberseguridad e incidentes</span></div>
+        <div class="role"><b>Comité de Gobierno y Transformación Digital</b><span>Aprueba y supervisa proyectos de IA</span></div>
+        <div class="role"><b>SGTD de la PCM</b><span>Autoridad nacional de IA</span></div>
+      </div>
+      <p class="note" style="margin-top:12px">Para el sector privado no existe aún un cargo obligatorio equivalente, pero designar un responsable de IA es una buena práctica alineada con ISO/IEC 42001. Fuentes: <a href="https://www.gob.pe/institucion/pcm/normas-legales/8743150-004-2026-pcm-sgtd">Resolución 004-2026-PCM/SGTD</a>, <a href="https://elperuano.pe/noticia/307286-inteligencia-artificial-en-el-estado-establecen-perfil-y-responsabilidades-de-un-nuevo-oficial">El Peruano</a>, <a href="https://lpderecho.pe/oficial-inteligencia-artificial-oia-perfil-funciones-plazos-directiva-002-2026-pcm-sgtd/">LP Derecho</a>.</p>
     </div>
   </div>
 </section>
@@ -449,8 +481,8 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
           <tr><td><b>Principios OCDE</b><br><span class="src">2019, actualizados 2024</span></td><td>Soft law</td><td>Cinco principios de IA confiable y recomendaciones a gobiernos. Perú los suscribe como adherente.</td><td>Alinear el lenguaje con estándares de países OCDE.</td></tr>
           <tr><td><b>NIST AI RMF + AI 600-1</b><br><span class="src">EE. UU., 2023 y 2024</span></td><td>Marco voluntario</td><td>Cuatro funciones: Gobernar, Mapear, Medir, Gestionar. El perfil 600-1 lista 12 riesgos propios de IA generativa (confabulación, privacidad, propiedad intelectual, contenido dañino, entre otros).</td><td>Armar el proceso de gestión de riesgos paso a paso.</td></tr>
           <tr><td><b>ISO/IEC 42001</b><br><span class="src">2023</span></td><td>Estándar certificable</td><td>Sistema de gestión de IA (AIMS) con ciclo planificar-hacer-verificar-actuar, controles del Anexo A y evaluación de impacto.</td><td>Demostrar ante clientes y reguladores que la gobernanza funciona.</td></tr>
-          <tr><td><b>EU AI Act</b><br><span class="src">Reglamento (UE) 2024/1689</span></td><td>Hard law</td><td>Cuatro niveles de riesgo, prácticas prohibidas desde feb. 2025, reglas para modelos de propósito general desde ago. 2025. Las obligaciones de alto riesgo se postergan a dic. 2027 y ago. 2028 por el acuerdo provisional del Digital Omnibus (mayo 2026).</td><td>Referencia de diseño; obligatorio si se ofrece IA en la UE.</td></tr>
-          <tr><td><b>Ley 31814 y DS 115-2025-PCM</b><br><span class="src">Perú</span></td><td>Hard law</td><td>Enfoque de riesgo (inaceptable, alto, aceptable), supervisión humana, transparencia y evaluación de impacto obligatoria en el sector público. SGTD de la PCM como autoridad técnica.</td><td>Cumplimiento local, con implementación escalonada por sector.</td></tr>
+          <tr><td><b>EU AI Act</b><br><span class="src">Reglamento (UE) 2024/1689</span></td><td>Hard law</td><td>Cuatro niveles de riesgo, prácticas prohibidas desde feb. 2025, reglas para modelos de propósito general desde ago. 2025. El Digital Omnibus, Reglamento (UE) 2026/1744 vigente desde el 27 de julio de 2026, posterga las obligaciones de alto riesgo a dic. 2027 y ago. 2028.</td><td>Referencia de diseño; obligatorio si se ofrece IA en la UE.</td></tr>
+          <tr><td><b>Ley 31814 y DS 115-2025-PCM</b><br><span class="src">Perú</span></td><td>Hard law</td><td>Tres categorías: uso indebido (prohibido), riesgo alto (permitido con controles) y riesgo aceptable. Supervisión humana, registro del funcionamiento de sistemas de riesgo alto y evaluación de impacto en el sector público. La SGTD de la PCM es la autoridad, y la Directiva 002-2026-PCM/SGTD crea el Oficial de IA en las entidades.</td><td>Cumplimiento local, con implementación escalonada por sector.</td></tr>
         </tbody>
       </table>
     </div>
@@ -530,7 +562,10 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
       <li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI RMF</a> y <a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI 600-1</a></li>
       <li><a href="https://www.iso.org/standard/42001">ISO/IEC 42001:2023</a></li>
       <li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">Reglamento (UE) 2024/1689</a></li>
-      <li><a href="https://www.pinsentmasons.com/out-law/news/rules-high-risk-ai-delayed-under-eu-omnibus-deal">Pinsent Masons: acuerdo Digital Omnibus</a></li>
+      <li><a href="https://www.whitecase.com/insight-alert/eu-ai-omnibus-enters-force-amending-ai-act">White &amp; Case: entra en vigor el Digital Omnibus</a></li>
+      <li><a href="https://www.gob.pe/institucion/pcm/normas-legales/8743150-004-2026-pcm-sgtd">Resolución 004-2026-PCM/SGTD: Directiva del Oficial de IA</a></li>
+      <li><a href="https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026">CEPAL: ILIA 2026</a></li>
+      <li><a href="https://www.garrigues.com/es_ES/noticia/peru-aprueba-reglamento-ley-promueve-uso-inteligencia-artificial-favor-desarrollo-economico">Garrigues: vigencia del reglamento de IA</a></li>
       <li><a href="https://www.wipo.int/publications/en/details.jsp?id=4713">OMPI: IA generativa y propiedad intelectual</a></li>
       <li><a href="https://unesdoc.unesco.org/ark:/48223/pf0000386693">UNESCO: IA generativa en educación e investigación</a></li>
       <li><a href="https://oecd.ai/en/catalogue/tools">OCDE: catálogo de herramientas de IA confiable</a></li>
@@ -633,17 +668,17 @@ dils.forEach((d,i)=>{const b=el("button",{class:"tab",type:"button"},d.t);b.oncl
 lK="Deontológico";drawDil();
 
 /* ---------- RIESGO ---------- */
-const lv={ban:["Inaceptable","lv-ban"],high:["Alto","lv-high"],warn:["Limitado","lv-warn"],ok:["Mínimo","lv-ok"]};
+const lv={ban:["Prohibido","lv-ban"],high:["Alto","lv-high"],warn:["Limitado","lv-warn"],ok:["Mínimo","lv-ok"]};
 const uses=[
- {n:"Puntaje social de ciudadanos para dar o quitar beneficios",s:"Sector público",l:"ban",pe:"Riesgo inaceptable: uso prohibido por afectar derechos fundamentales.",eu:"Práctica prohibida (art. 5) desde febrero de 2025.",c:["No implementar","Revisar sistemas existentes que se parezcan a esta práctica"]},
- {n:"IA que manipula decisiones explotando vulnerabilidades (edad, discapacidad)",s:"Comercial",l:"ban",pe:"Riesgo inaceptable: manipulación que vulnera la autonomía.",eu:"Práctica prohibida (art. 5).",c:["No implementar","Auditar campañas de marketing automatizadas"]},
- {n:"Evaluación crediticia de personas",s:"Banca",l:"high",pe:"Riesgo alto: decisiones con impacto en derechos económicos (art. 24 del reglamento).",eu:"Alto riesgo (Anexo III).",c:["Evaluación de impacto y pruebas de sesgo","Explicación al cliente y revisión humana","Registros y trazabilidad","Gestión de datos de calidad"]},
- {n:"Selección, ascenso o despido de personal",s:"RR. HH.",l:"high",pe:"Riesgo alto: afecta el acceso al empleo y puede discriminar.",eu:"Alto riesgo (Anexo III, empleo).",c:["Informar a postulantes y trabajadores","Pruebas de equidad por género y edad","Decisión final humana"]},
+ {n:"Puntaje social de ciudadanos para dar o quitar beneficios",s:"Sector público",l:"ban",pe:"Probable uso indebido (prohibido): el reglamento prohíbe los sistemas que afectan de forma irreversible y significativa los derechos fundamentales, como la vigilancia masiva sin base legal.",eu:"Práctica prohibida (art. 5) desde febrero de 2025.",c:["No implementar","Revisar sistemas existentes que se parezcan a esta práctica"]},
+ {n:"IA que manipula decisiones explotando vulnerabilidades (edad, discapacidad)",s:"Comercial",l:"ban",pe:"Uso indebido (prohibido): la manipulación engañosa está entre los usos prohibidos por el reglamento.",eu:"Práctica prohibida (art. 5).",c:["No implementar","Auditar campañas de marketing automatizadas"]},
+ {n:"Evaluación crediticia de personas",s:"Banca",l:"high",pe:"Riesgo alto: el reglamento incluye decisiones sobre acceso al crédito. Exige registro del funcionamiento, supervisión humana y evaluación previa.",eu:"Alto riesgo (Anexo III).",c:["Evaluación de impacto y pruebas de sesgo","Explicación al cliente y revisión humana","Registros y trazabilidad","Gestión de datos de calidad"]},
+ {n:"Selección, ascenso o despido de personal",s:"RR. HH.",l:"high",pe:"Riesgo alto: el reglamento incluye la selección, evaluación, contratación y cese de trabajadores.",eu:"Alto riesgo (Anexo III, empleo).",c:["Informar a postulantes y trabajadores","Pruebas de equidad por género y edad","Decisión final humana"]},
  {n:"Triaje o apoyo al diagnóstico en salud",s:"Salud",l:"high",pe:"Riesgo alto: compromete la vida y la integridad.",eu:"Alto riesgo como dispositivo médico.",c:["Validación clínica","Supervisión del profesional de salud","Monitoreo de errores en producción"]},
  {n:"Gestión de red eléctrica o de agua",s:"Energía",l:"high",pe:"Riesgo alto: infraestructura crítica y seguridad física.",eu:"Alto riesgo (infraestructura crítica).",c:["Pruebas de robustez y ciberseguridad","Plan de contingencia manual","Registro de incidentes"]},
  {n:"Asignación de programas sociales",s:"Sector público",l:"high",pe:"Riesgo alto y evaluación de impacto obligatoria para entidades públicas.",eu:"Alto riesgo (acceso a servicios públicos esenciales).",c:["Evaluación de impacto algorítmico","Mecanismo de reclamo y reparación","Publicar el uso del sistema"]},
- {n:"Chatbot de atención al cliente",s:"Telecom / banca",l:"warn",pe:"Riesgo aceptable con deber de transparencia: avisar que es IA.",eu:"Riesgo limitado (art. 50): informar que se interactúa con IA.",c:["Aviso visible de IA","Derivación a humano","Revisar lo que promete el bot"]},
- {n:"Generación de imágenes o videos de marketing",s:"Comercial",l:"warn",pe:"Transparencia: etiquetar contenido generado.",eu:"Riesgo limitado: marcar contenido sintético y deepfakes.",c:["Etiquetado de contenido sintético","Revisión de derechos de autor e imagen"]},
+ {n:"Chatbot de atención al cliente",s:"Telecom / banca",l:"warn",pe:"Riesgo aceptable. El principio de transparencia recomienda avisar que el usuario interactúa con IA.",eu:"Riesgo limitado (art. 50): informar que se interactúa con IA.",c:["Aviso visible de IA","Derivación a humano","Revisar lo que promete el bot"]},
+ {n:"Generación de imágenes o videos de marketing",s:"Comercial",l:"warn",pe:"Riesgo aceptable. Etiquetar el contenido sintético es buena práctica; el riesgo sube si se usa para engañar.",eu:"Riesgo limitado: marcar contenido sintético y deepfakes.",c:["Etiquetado de contenido sintético","Revisión de derechos de autor e imagen"]},
  {n:"Resumen de documentos internos o correo",s:"Productividad",l:"ok",pe:"Riesgo bajo; aplican buenas prácticas y protección de datos.",eu:"Riesgo mínimo.",c:["No ingresar datos sensibles en herramientas públicas","Verificación humana de lo generado","Política interna de uso"]},
  {n:"Filtro de spam o clasificación de tickets",s:"Operaciones",l:"ok",pe:"Riesgo bajo.",eu:"Riesgo mínimo.",c:["Monitoreo básico de desempeño"]}
 ];
@@ -658,13 +693,15 @@ document.querySelectorAll(".pyr").forEach((a,i)=>a.addEventListener("click",()=>
 
 /* ---------- PERU TIMELINE ---------- */
 const peru=[
- ["Jul. 2011","Ley 29733 de Protección de Datos Personales","Base para todo uso de datos en IA. Su nuevo reglamento, DS 016-2024-JUS, rige desde marzo de 2025 e incluye reglas sobre tratamiento automatizado."],
- ["Jul. 2023","Ley 31814","Promueve el uso de la IA para el desarrollo económico y social, con principios de seguridad basada en riesgos, ética y privacidad. Encarga a la PCM la rectoría."],
- ["Set. 2025","DS 115-2025-PCM, reglamento de la Ley 31814","Clasifica usos en riesgo inaceptable, alto y aceptable; exige supervisión humana, transparencia y evaluación de impacto obligatoria para entidades públicas. Vigente desde enero de 2026 con plazos escalonados por sector."],
- ["2025-2026","SUNAT y Poder Judicial","SUNAT aprueba una política de uso responsable con 12 compromisos y usa IA en fiscalización y en su asistente SOFIA. El Poder Judicial registra Curia, asistente de IA generativa para jueces."],
+ ["Jul. 2011","Ley 29733 de Protección de Datos Personales","Base para todo uso de datos en IA. Su nuevo reglamento, DS 016-2024-JUS, rige desde fines de marzo de 2025 y crea el Oficial de Datos Personales."],
+ ["Jul. 2023","Ley 31814","Promueve el uso de la IA para el desarrollo económico y social, con principios como la seguridad basada en riesgos, la ética y la privacidad. Designa a la SGTD de la PCM como autoridad (art. 4)."],
+ ["9 set. 2025","DS 115-2025-PCM, reglamento de la Ley 31814","Distingue uso indebido (prohibido), riesgo alto y riesgo aceptable. Exige supervisión humana, registro de sistemas de riesgo alto y política institucional de IA en el Estado."],
+ ["22 ene. 2026","Entra en vigor el reglamento","Rige a los 90 días hábiles de su publicación. La implementación en el Estado es gradual: 1 año para los tres poderes y organismos autónomos, 2 años para gobiernos regionales, EsSalud y universidades públicas, y 3 años para gobiernos locales."],
  ["Mar. 2026","Elecciones Generales y desinformación","El JNE publica la Guía contra la desinformación (con detección de deepfakes), incluye la IA en el Pacto Ético Electoral y reporta más de 700 alertas."],
- ["May. 2026","ENIA 2026-2030 (RM 152-2026-PCM)","Estrategia Nacional de IA para toda la administración pública, con cuatro pilares que incluyen un marco ético y regulatorio. Busca pasar de Estado digital a Estado inteligente."],
- ["Nov. 2026","Debate público","Especialistas advierten sobre dependencia tecnológica y proponen un Consejo Nacional Científico y Ciudadano de IA. El Minsa avanza con un lineamiento de uso ético de IA en salud."]
+ ["May. 2026","ENIA 2026-2030 (RM 152-2026-PCM)","Estrategia Nacional de IA para toda la administración pública, con cuatro ejes: talento, innovación, marco ético y regulatorio, y participación ciudadana. Encarga a la SGTD definir el perfil del Oficial de IA."],
+ ["10 set. 2026","Vence el primer plazo sectorial","Primer año del reglamento para el uso de IA en salud, educación, justicia, seguridad, economía y finanzas."],
+ ["21 oct. 2026","Directiva 002-2026-PCM/SGTD: Oficial de IA","Aprobada por la Resolución 004-2026-PCM/SGTD. Las entidades públicas deben designar un Oficial de Inteligencia Artificial con perfil, funciones y plazos definidos."],
+ ["Nov. 2026","Debate público","Especialistas proponen un Consejo Nacional Científico y Ciudadano de IA. El Minsa avanza con un lineamiento de uso ético de IA en salud. SUNAT y el Poder Judicial (asistente Curia) ya usan IA con políticas propias."]
 ];
 const pt=$("#peruTl");peru.forEach(e=>pt.append(el("div",{class:"ev"},`<div class="d">${e[0]}</div><div><h3>${e[1]}</h3><p>${e[2]}</p></div>`)));
 
@@ -673,10 +710,10 @@ const lat=[
  {c:"Perú",k:"law",s:"Ley vigente",t:"Ley 31814 (2023) y reglamento DS 115-2025-PCM vigente desde 2026. ENIA 2026-2030 para el sector público."},
  {c:"El Salvador",k:"law",s:"Ley vigente",t:"Ley de Fomento de la IA y Tecnologías (2025), orientada a promover inversión e innovación."},
  {c:"Brasil",k:"bill",s:"Proyecto avanzado",t:"PL 2338/2023 aprobado por el Senado en dic. 2024, inspirado en el enfoque de riesgo europeo. En revisión en la Cámara de Diputados. Tiene la LGPD y una autoridad de datos (ANPD) activa."},
- {c:"Chile",k:"bill",s:"Proyecto avanzado",t:"Proyecto de ley de IA basado en riesgo (Boletín 16821-19) aprobado en la Cámara y en trámite en el Senado. Nueva ley de datos personales 21.719 entra en vigor en dic. 2026. Lidera el ILIA 2026."},
+ {c:"Chile",k:"bill",s:"Proyecto avanzado",t:"Proyecto de ley de IA basado en riesgo (Boletín 16821-19) aprobado en la Cámara y en trámite en el Senado. Nueva ley de datos personales 21.719 entra en vigor en dic. 2026. Lidera el ILIA 2026 con 71,4 puntos."},
  {c:"Colombia",k:"pol",s:"Política + proyectos",t:"Política Nacional de IA (CONPES 4144, feb. 2025) y proyectos de ley en trámite. La SIC aplica la Ley 1581 de datos. Su Corte Constitucional fijó criterios sobre jueces que usan IA (T-323 de 2024)."},
  {c:"México",k:"bill",s:"Proyectos",t:"Varias iniciativas en el Congreso sin ley general aprobada. Protección de datos bajo la nueva ley federal de 2025."},
- {c:"Uruguay",k:"pol",s:"Estrategia",t:"Estrategia Nacional de IA actualizada y alto puntaje en el ILIA. Ley de datos con nivel adecuado reconocido por la UE."},
+ {c:"Uruguay",k:"pol",s:"Estrategia",t:"Estrategia Nacional de IA actualizada y tercer lugar en el ILIA 2026 (67,0 puntos). Ley de datos con nivel adecuado reconocido por la UE."},
  {c:"Argentina",k:"pol",s:"Lineamientos",t:"Recomendaciones para una IA fiable en el sector público y proyectos de ley en discusión. Caso de Salta (2018) es referencia de riesgo en programas sociales."}
 ];
 const lf=$("#latFilters"),lg=$("#latam");let lk="all";
@@ -690,16 +727,16 @@ const cases=[
  {s:"Banca",t:"BBVA: ocho principios e inventario de modelos",r:"ok",p:"El grupo, con fuerte presencia en Perú, Colombia y México, gobierna su IA con ocho principios, normas internas alineadas al AI Act y un inventario centralizado de modelos.",l:"Saber qué modelos tienes en producción es el primer control. Sin inventario no hay gobernanza.",u:"https://www.bbva.com/es/innovacion/ocho-principios-para-una-ia-responsable-en-bbva/",f:"BBVA"},
  {s:"Banca",t:"Apple Card: límites de crédito distintos para parejas",r:"bad",p:"En 2019 clientes denunciaron que el algoritmo daba límites menores a mujeres. El regulador de Nueva York (2021) no halló discriminación ilegal, pero criticó la falta de transparencia con los clientes.",l:"Aunque el modelo no use el género, el banco debe poder explicar cada decisión y medir resultados por grupo.",u:"https://www.dfs.ny.gov/reports_and_publications/press_releases/pr202103231",f:"NYDFS"},
  {s:"Banca",t:"Nubank y Bancolombia lideran madurez de IA",r:"ok",p:"El ranking regional de Evident ubica a Nubank primero y a Bancolombia entre los diez bancos más avanzados de América Latina, evaluando talento, innovación, liderazgo y transparencia.",l:"La transparencia sobre el uso de IA ya es un factor de reputación que se mide públicamente.",u:"https://www.enter.co/?p=585487",f:"Enter.co"},
- {s:"Telecom",t:"Telefónica: principios de IA desde 2018",r:"ok",p:"Fue una de las primeras empresas de la región en publicar principios de IA: justa, transparente y explicable, centrada en las personas, con privacidad y seguridad desde el diseño, extendida a sus proveedores.",l:"Los principios deben alcanzar a la cadena de proveedores, no solo a los desarrollos propios.",u:"https://www.telefonica.com/es/sostenibilidad-innovacion/como-trabajamos/negocio-responsable/inteligencia-artificial/",f:"Telefónica"},
+ {s:"Telecom",t:"Telefónica: principios de IA desde 2018",r:"ok",p:"Fue una de las primeras empresas de la región en publicar principios de IA: justa, transparente y explicable, centrada en las personas, con privacidad y seguridad desde el diseño, extendida a sus proveedores. En 2024 los actualizó y sumó un principio sobre medio ambiente.",l:"Los principios deben alcanzar a la cadena de proveedores, no solo a los desarrollos propios.",u:"https://www.telefonica.com/es/centro-global-de-transparencia/inteligencia-artificial-y-nuevas-tecnologias/principios-de-inteligencia-artificial/",f:"Telefónica"},
  {s:"Telecom",t:"Samsung: código confidencial filtrado en un chatbot",r:"bad",p:"En 2023 ingenieros pegaron código fuente y notas internas en ChatGPT. La empresa restringió el uso de IA generativa pública.",l:"Política de uso clara: qué datos nunca se ingresan y qué herramientas están aprobadas.",u:"https://www.bloomberg.com/news/articles/2023-05-02/samsung-bans-chatgpt-and-other-generative-ai-use-by-staff-after-leak",f:"Bloomberg"},
  {s:"Energía",t:"Infraestructura crítica: alto riesgo por diseño",r:"mix",p:"Las eléctricas usan IA para pronóstico de demanda, mantenimiento predictivo e integración de renovables. Tanto el reglamento peruano como el AI Act tratan la gestión de redes como uso de riesgo alto.",l:"Plan manual de contingencia, pruebas de robustez y ciberseguridad antes de automatizar decisiones sobre la red.",u:"https://eur-lex.europa.eu/eli/reg/2024/1689/oj",f:"Reglamento (UE) 2024/1689, Anexo III"},
  {s:"Servicios",t:"Air Canada: responsable por lo que dijo su chatbot",r:"bad",p:"En 2024 un tribunal canadiense obligó a la aerolínea a respetar una política de reembolso falsa que inventó su chatbot. La empresa alegó que el bot era una entidad separada y perdió.",l:"La organización responde por lo que dice su IA frente al consumidor.",u:"https://www.canlii.org/en/bc/bccrt/doc/2024/2024bccrt149/2024bccrt149.html",f:"CanLII"},
- {s:"RR. HH.",t:"Amazon: reclutamiento que penalizaba a mujeres",r:"bad",p:"Un modelo entrenado con diez años de CV, mayormente de hombres, aprendió a bajar el puntaje de candidatas. Amazon lo abandonó en 2018.",l:"Los datos históricos traen los sesgos del pasado. Hay que probar equidad antes de usarlos.",u:"https://www.reuters.com/article/idUSKCN1MK0AG/",f:"Reuters"},
+ {s:"RR. HH.",t:"Amazon: reclutamiento que penalizaba a mujeres",r:"bad",p:"Un modelo entrenado con diez años de CV, mayormente de hombres, aprendió a bajar el puntaje de candidatas. Amazon lo abandonó en 2018.",l:"Los datos históricos traen los sesgos del pasado. Hay que probar equidad antes de usarlos.",u:"https://www.euronews.com/2018/10/10/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women",f:"Reuters vía Euronews"},
  {s:"Sector público",t:"SUNAT: IA en fiscalización con 12 compromisos",r:"ok",p:"Usa IA y análisis masivo de datos para fiscalización y su asistente SOFIA, y aprobó una política de uso responsable en cumplimiento de la Ley 31814.",l:"Publicar compromisos da legitimidad, pero hace falta auditoría y vías de reclamo para el contribuyente.",u:"https://observatorioblockchain.com/ia/la-administracion-tributaria-de-peru-fija-12-reglas-para-utilizar-la-ia/",f:"Observatorio Blockchain"},
  {s:"Sector público",t:"Poder Judicial: asistente Curia para jueces",r:"mix",p:"Asistente de IA generativa registrado ante Indecopi para analizar expedientes y proyectar resoluciones, presentado con compromisos de uso ético y transparente.",l:"El juez debe seguir siendo autor de la decisión; la IA solo propone y todo debe ser verificable.",u:"https://www.swissinfo.ch/spa/la-justicia-de-per%C3%BA-emplear%C3%A1-la-ia-para-analizar-expedientes-y-proyectar-resoluciones/89775025",f:"Swissinfo / EFE"},
  {s:"Sector público",t:"JNE: IA contra la desinformación electoral",r:"ok",p:"Para 2026 usó herramientas de IA para rastrear contenido en redes, publicó una guía para detectar deepfakes y desarrolló Elexia, probada en elecciones complementarias de 2025.",l:"La IA también sirve para defender la integridad de la información.",u:"https://andina.pe/agencia/noticia-elecciones-2026-jne-presento-guia-contra-desinformacion-1060767.aspx",f:"Andina"},
  {s:"Sector público",t:"Países Bajos: escándalo de subsidios infantiles",r:"bad",p:"Un sistema de riesgo marcó como fraudulentas a miles de familias, con peso de la doble nacionalidad. El gobierno renunció en enero de 2021.",l:"Evaluación de impacto obligatoria y derecho a reclamo en programas sociales.",u:"https://www.amnesty.org/en/documents/eur35/4686/2021/en/",f:"Amnistía Internacional"},
- {s:"Sector público",t:"Salta, Argentina: predecir embarazo adolescente",r:"bad",p:"En 2018 el gobierno provincial anunció un sistema para predecir qué adolescentes quedarían embarazadas. Fue criticado por errores metodológicos y estigmatización.",l:"Predecir no es intervenir bien. Los grupos vulnerables necesitan protección extra.",u:"https://www.wired.com/story/argentina-algorithms-pregnancy-prediction/",f:"Wired"},
+ {s:"Sector público",t:"Salta, Argentina: predecir embarazo adolescente",r:"bad",p:"En 2018 Salta y Microsoft anunciaron una plataforma para predecir qué adolescentes quedarían embarazadas, usando datos como etnia, discapacidad o acceso a agua caliente. No se evaluó su impacto en niñas y mujeres.",l:"Predecir no es intervenir bien. Los grupos vulnerables necesitan protección extra.",u:"https://futurism.com/microsoft-algorithm-teens-pregnant",f:"Futurism, con base en Wired"},
  {s:"Justicia",t:"Colombia: juez usa ChatGPT en una sentencia",r:"mix",p:"En 2023 un juez de Cartagena consultó ChatGPT en un fallo de tutela. La Corte Constitucional (T-323 de 2024) aceptó el uso de IA con transparencia, verificación y sin sustituir al juez.",l:"Declarar el uso de IA y verificar cada dato es la regla mínima.",u:"https://www.corteconstitucional.gov.co/relatoria/2024/T-323-24.htm",f:"Corte Constitucional"}
 ];
 const rTag={ok:["Buena práctica","lv-ok"],bad:["Falla","lv-ban"],mix:["Con reservas","lv-warn"]};
@@ -711,6 +748,12 @@ cSec.forEach(s=>{const b=el("button",{class:"tab",type:"button"},s);b.onclick=()
 
 /* ---------- NOTICIAS ---------- */
 const news=[
+ {d:"21 oct. 2026",r:"Perú",t:"El Estado define el perfil y las funciones del Oficial de Inteligencia Artificial",u:"https://elperuano.pe/noticia/307286-inteligencia-artificial-en-el-estado-establecen-perfil-y-responsabilidades-de-un-nuevo-oficial",f:"El Peruano",
+  s:"La PCM aprobó la Directiva 002-2026-PCM/SGTD, que obliga a las entidades públicas a designar un Oficial de IA y fija su perfil, responsabilidades y coordinación institucional.",
+  o:"Que cada entidad tenga un responsable visible de la IA.",p:"Ministerios, gobiernos regionales y locales, universidades, hospitales y empresas públicas.",i:"La gobernanza de IA deja de ser difusa: hay un cargo que rinde cuentas.",e:"Una universidad pública designa a su OIA para aprobar la política de uso de IA generativa.",ic:"user"},
+ {d:"20 oct. 2026",r:"Latam",t:"ILIA 2026: Chile lidera y el Perú se ubica en el séptimo lugar",u:"https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026",f:"CEPAL",
+  s:"La cuarta edición del Índice Latinoamericano de IA de CEPAL y CENIA ubica a Chile (71,4), Brasil (68,4) y Uruguay (67,0) como pioneros. El Perú obtiene 52,7 puntos.",
+  o:"Medir la preparación de 19 países en talento, infraestructura, investigación y gobernanza de IA.",p:"Gobiernos, academia, inversionistas y empresas.",i:"Muestra que el Perú avanza poco (+0,8 puntos) frente a los líderes.",e:"Un ministerio usa el índice para priorizar inversión en talento de IA.",ic:"globe"},
  {d:"19 nov. 2026",r:"Perú",t:"Solo el 5% de empresas peruanas integra IA a procesos clave",u:"https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit",f:"Forbes Perú",
   s:"Un estudio de la tecnológica Tivit ubica al Perú con la menor proporción de empresas que usan IA a escala entre los mercados evaluados, aunque la mitad de ejecutivos ya reporta algún gobierno formal de IA generativa.",
   o:"Medir la madurez real de adopción de IA y de soberanía de datos en empresas.",p:"Gerentes generales, CIO y directorios.",i:"La brecha entre pilotos y uso en procesos clave limita productividad; la gobernanza aparece antes que la escala.",e:"Un retail que tiene un chatbot en pruebas pero no usa IA en inventarios ni precios.",ic:"chip"},
@@ -726,8 +769,8 @@ const news=[
  {d:"May. 2026",r:"Perú",t:"Gobierno aprueba la Estrategia Nacional de IA 2026-2030",u:"https://andina.pe/ingles/noticia-peru-government-approves-national-artificial-intelligence-strategy-2026–2030-1073446.aspx",f:"Andina",
   s:"La RM 152-2026-PCM aprueba la ENIA para toda la administración pública, con cuatro pilares que incluyen un marco ético y regulatorio.",
   o:"Pasar de un Estado digital a un Estado inteligente con IA segura e inclusiva.",p:"Ministerios, gobiernos regionales y locales, y empresas públicas.",i:"Obliga a las entidades a planificar su uso de IA con metas al 2030.",e:"Una municipalidad que automatiza licencias alineada a la ENIA.",ic:"map"},
- {d:"7 may. 2026",r:"Europa",t:"UE pacta postergar las obligaciones de alto riesgo del AI Act",u:"https://www.pinsentmasons.com/out-law/news/rules-high-risk-ai-delayed-under-eu-omnibus-deal",f:"Pinsent Masons",
-  s:"El Parlamento y el Consejo de la UE alcanzaron un acuerdo provisional del Digital Omnibus que mueve las reglas de alto riesgo a diciembre de 2027 y agosto de 2028.",
+ {d:"27 jul. 2026",r:"Europa",t:"Entra en vigor el Digital Omnibus que posterga el alto riesgo del AI Act",u:"https://www.whitecase.com/insight-alert/eu-ai-omnibus-enters-force-amending-ai-act",f:"White & Case",
+  s:"El Reglamento (UE) 2026/1744, publicado el 24 de julio de 2026, mueve las obligaciones de alto riesgo del 2 de agosto de 2026 al 2 de diciembre de 2027, y al 2 de agosto de 2028 para la IA integrada en productos.",
   o:"Dar más tiempo para estándares técnicos y reducir la carga de cumplimiento.",p:"Empresas que ofrecen IA en Europa, incluidas latinoamericanas.",i:"Más plazo, pero las prohibiciones y reglas de modelos generales siguen vigentes.",e:"Una fintech peruana con clientes en España gana tiempo para adecuar su scoring.",ic:"scale"},
  {d:"Mar. 2026",r:"Perú",t:"JNE detecta más de 700 alertas de desinformación en la campaña",u:"https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx",f:"Andina",
   s:"El comité de verificación del JNE reforzó con herramientas de IA el rastreo de contenido falso en TikTok, X, Facebook y plataformas de streaming durante las Elecciones Generales 2026.",
@@ -749,7 +792,7 @@ nTags.forEach(t=>{const b=el("button",{class:"tab",type:"button"},t);b.onclick=(
 
 /* ---------- PROTOCOLO ---------- */
 const checks=[
- ["Gobernar",["Existe un responsable o comité de IA con autoridad para aprobar y detener sistemas","Tenemos una política de uso de IA generativa aprobada por la dirección","Definimos usos permitidos, condicionados y prohibidos"]],
+ ["Gobernar",["Designamos un Oficial de IA o responsable con autoridad para aprobar y detener sistemas","Existe un comité que supervisa los proyectos de IA","Tenemos una política de uso de IA generativa aprobada por la dirección","Definimos usos permitidos, condicionados y prohibidos"]],
  ["Mapear",["Tenemos un inventario de todos los sistemas y herramientas de IA en uso","Clasificamos cada sistema por nivel de riesgo","Identificamos partes interesadas y grupos vulnerables afectados"]],
  ["Medir",["Hacemos evaluación de impacto antes de lanzar sistemas de riesgo alto","Probamos sesgos y alucinaciones con casos reales","Medimos el desempeño de los modelos en producción"]],
  ["Gestionar",["Hay supervisión humana con poder de revertir decisiones","Avisamos a usuarios cuando interactúan con IA o ven contenido sintético","Tenemos un procedimiento de reporte y respuesta a incidentes","Ofrecemos un canal de reclamo y reparación a los afectados","Capacitamos al personal y revisamos la política al menos una vez al año"]]
@@ -768,14 +811,15 @@ cb.addEventListener("change",score);$("#resetChecks").onclick=()=>{cb.querySelec
 /* ---------- QUIZ ---------- */
 const qs=[
  ["¿Qué norma reglamenta la Ley 31814 de IA en el Perú?",["DS 016-2024-JUS","DS 115-2025-PCM","RM 152-2026-PCM","Ley 29733"],1,"El DS 115-2025-PCM es el reglamento. El DS 016-2024-JUS reglamenta la ley de datos personales y la RM 152-2026-PCM aprueba la ENIA."],
- ["Un banco usa IA para aprobar créditos. ¿Qué nivel de riesgo tiene?",["Mínimo","Limitado","Alto","Inaceptable"],2,"La evaluación crediticia afecta derechos económicos: es riesgo alto en el Perú y en la UE."],
+ ["Un banco usa IA para aprobar créditos. ¿Qué nivel de riesgo tiene?",["Aceptable","Limitado","Alto","Prohibido"],2,"La evaluación crediticia afecta derechos económicos: es riesgo alto en el Perú y en la UE."],
  ["¿Cuáles son las cuatro funciones del NIST AI RMF?",["Planificar, hacer, verificar, actuar","Gobernar, mapear, medir, gestionar","Identificar, proteger, detectar, responder","Diseñar, entrenar, desplegar, retirar"],1,"Gobernar, Mapear, Medir y Gestionar. El ciclo PHVA corresponde a ISO/IEC 42001."],
  ["¿Qué enseña el caso Air Canada (2024)?",["Los chatbots no tienen responsabilidad legal","La empresa responde por lo que dice su IA","Hay que prohibir los chatbots","Solo aplica en Europa"],1,"El tribunal rechazó que el bot fuera una entidad separada: la empresa respondió por la información falsa."],
  ["¿Qué tipo de instrumento es ISO/IEC 42001?",["Una ley internacional","Un tratado de la ONU","Un estándar certificable de sistema de gestión","Un código de ética voluntario sin requisitos"],2,"Es un estándar de sistema de gestión de IA que puede auditarse y certificarse."],
+ ["¿Qué norma crea el Oficial de Inteligencia Artificial en las entidades públicas peruanas?",["Ley 29733","Directiva 002-2026-PCM/SGTD","EU AI Act","ISO/IEC 42001"],1,"La Directiva 002-2026-PCM/SGTD, de octubre de 2026, fija su perfil, funciones y plazos."],
  ["En el Perú, ¿para quién es obligatoria la evaluación de impacto según el reglamento?",["Solo para startups","Para entidades públicas","Para nadie","Solo para bancos"],1,"Es obligatoria para entidades públicas; para el sector privado es voluntaria, aunque recomendable en usos de riesgo alto."]
 ];
 let qi=0,good=0,answered=false;const qb=$("#quizBox");
-function drawQ(){answered=false;if(qi>=qs.length){qb.innerHTML=`<div class="eyebrow">Resultado</div><div class="big">${good} / ${qs.length}</div><p class="lead">${good>=5?"Dominas los conceptos clave del curso.":good>=3?"Buen avance. Repasa las secciones de marcos y riesgo.":"Vuelve a recorrer la página y prueba otra vez."}</p><div><button class="btn" id="qRe" type="button">Reintentar</button></div>`;$("#qRe").onclick=()=>{qi=0;good=0;drawQ()};return}
+function drawQ(){answered=false;if(qi>=qs.length){qb.innerHTML=`<div class="eyebrow">Resultado</div><div class="big">${good} / ${qs.length}</div><p class="lead">${good>=6?"Dominas los conceptos clave del curso.":good>=3?"Buen avance. Repasa las secciones de marcos y riesgo.":"Vuelve a recorrer la página y prueba otra vez."}</p><div><button class="btn" id="qRe" type="button">Reintentar</button></div>`;$("#qRe").onclick=()=>{qi=0;good=0;drawQ()};return}
  const q=qs[qi];qb.innerHTML=`<div class="eyebrow">Pregunta ${qi+1} de ${qs.length}</div><h3 style="font-size:1.2rem">${q[0]}</h3><div class="opts">${q[1].map((o,i)=>`<button class="opt" data-i="${i}" type="button">${o}</button>`).join("")}</div><p id="qExp" class="lead" aria-live="polite"></p><div class="qfoot"><span class="note">Aciertos: ${good}</span><button class="btn" id="qNext" type="button" hidden>Siguiente</button></div>`;
  qb.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(answered)return;answered=true;const i=+b.dataset.i;if(i===q[2])good++;else b.classList.add("wrong");qb.querySelectorAll(".opt")[q[2]].classList.add("right");$("#qExp").textContent=q[3];$("#qNext").hidden=false;});
  $("#qNext").onclick=()=>{qi++;drawQ()};}
@@ -794,25 +838,32 @@ const laws=[
   imp:"Designa a la Secretaría de Gobierno y Transformación Digital de la PCM como autoridad técnico-normativa (art. 4) y fija principios como estándares de seguridad basados en riesgos, ética, privacidad y colaboración nacional e internacional.",
   d:[["Jul. 2023","publicación"],["SGTD-PCM","autoridad (art. 4)"],["Riesgos","enfoque central"]],
   u:"https://busquedas.elperuano.pe/dispositivo/NL/2192926-1"},
- {i:"shield",c:"DS 115-2025-PCM · 2025",t:"Reglamento de la Ley 31814",one:"Pasa de los principios a obligaciones concretas por nivel de riesgo.",k:"Ene. 2026",ks:"inicio de vigencia",
-  obj:"Establecer cómo se clasifica y supervisa la IA según su riesgo: inaceptable (prohibido), alto y aceptable.",
+ {i:"shield",c:"DS 115-2025-PCM · 2025",t:"Reglamento de la Ley 31814",one:"Pasa de los principios a obligaciones concretas por nivel de riesgo.",k:"22 ene. 2026",ks:"entrada en vigor",
+  obj:"Establecer cómo se clasifica y supervisa la IA: uso indebido (prohibido), riesgo alto (con controles) y riesgo aceptable.",
   dir:"Todo desarrollador e implementador de IA en el país. Obligaciones más estrictas para entidades públicas.",
   ej:"Un banco que usa IA para evaluar créditos está en riesgo alto: necesita supervisión humana, trazabilidad y transparencia con el cliente.",
-  imp:"Exige evaluación de impacto obligatoria al sector público, supervisión humana en decisiones de alto impacto y etiquetado de contenido generado, con plazos escalonados por sector.",
-  d:[["3","niveles de riesgo"],["Set. 2025","publicación"],["Art. 24","define riesgo alto"]],
+  imp:"Prohíbe usos como la vigilancia masiva sin base legal o los sistemas letales autónomos. Para riesgo alto exige registro de cómo funciona el sistema, sus datos y su lógica, evaluación de impacto previa y supervisión humana. Las entidades públicas deben aprobar una política institucional de IA.",
+  d:[["22 ene. 2026","entrada en vigor"],["1 a 3 años","implementación en el Estado"],["10 set. 2026","primer plazo sectorial"]],
   u:"https://busquedas.elperuano.pe/dispositivo/NL/2436426-1"},
  {i:"map",c:"RM 152-2026-PCM · 2026",t:"Estrategia Nacional de IA 2026-2030",one:"La hoja de ruta del Estado para pasar de digital a inteligente.",k:"2026-2030",ks:"horizonte",
   obj:"Orientar y coordinar las acciones del Estado para desarrollar y gestionar la IA de forma segura, ética e inclusiva.",
   dir:"Todas las entidades de la administración pública, incluidas empresas públicas regionales y locales.",
   ej:"Una municipalidad que quiera usar IA para trámites debe alinearse a los pilares y metas de la ENIA.",
-  imp:"Organiza la acción del Estado en cuatro pilares, uno de ellos dedicado al marco ético y regulatorio, con metas al 2030.",
+  imp:"Cuatro ejes: talento y capacidades; innovación y emprendimiento (con el Centro Nacional de Innovación Digital e IA); marco ético y regulatorio; y participación ciudadana y colaboración. La conduce la SGTD y encarga definir el perfil del Oficial de IA.",
   d:[["4","pilares"],["2 may. 2026","entrada en vigor"],["5 años","de ejecución"]],
   u:"https://elperuano.pe/noticia/294852-estrategia-2026-2030-promovera-uso-seguro-etico-e-inclusivo-de-ia"},
+ {i:"user",c:"Directiva 002-2026-PCM/SGTD · 2026",t:"Oficial de Inteligencia Artificial",one:"Cada entidad pública debe tener un responsable de IA.",k:"6 a 12 meses",ks:"para designarlo según la entidad",
+  obj:"Fijar el perfil, las funciones y los plazos del Oficial de IA en las entidades públicas.",
+  dir:"Ministerios, organismos autónomos, Poder Judicial, Congreso, universidades públicas, IPRESS II-2 o más, gobiernos regionales, municipalidades tipo A y C, y empresas públicas.",
+  ej:"Un hospital regional nombra a su Oficial de IA, que aprueba la política de uso, lidera el plan de IA y revisa que el sistema de triaje tenga supervisión médica.",
+  imp:"Da un rostro y una responsabilidad concreta a la gobernanza de la IA en el Estado. Coordina con el Oficial de Datos Personales y el de Seguridad y Confianza Digital.",
+  d:[["21 oct. 2026","publicación"],["RSGTD 004-2026","norma que la aprueba"],["12 meses","para cumplir el perfil"]],
+  u:"https://www.gob.pe/institucion/pcm/normas-legales/8743150-004-2026-pcm-sgtd"},
  {i:"lock",c:"Ley N.º 29733 · 2011",t:"Ley de Protección de Datos Personales",one:"Todo sistema de IA que use datos de personas debe cumplirla.",k:"Mar. 2025",ks:"rige su nuevo reglamento",
   obj:"Garantizar el derecho fundamental a la protección de los datos personales.",
   dir:"Empresas y entidades públicas que recopilan, almacenan o procesan datos personales en el Perú.",
   ej:"Una teleco que entrena un modelo con grabaciones de llamadas necesita consentimiento, finalidad clara y medidas de seguridad.",
-  imp:"Su reglamento (DS 016-2024-JUS) incorpora reglas sobre tratamiento automatizado, oficial de datos y notificación de incidentes. La autoridad es la ANPD del Minjusdh.",
+  imp:"Su reglamento (DS 016-2024-JUS, vigente desde fines de marzo de 2025) obliga a las entidades públicas, y a empresas de forma escalonada desde nov. 2025, a designar un Oficial de Datos Personales, que debe coordinar con el Oficial de IA. También regula el tratamiento automatizado y la notificación de incidentes.",
   d:[["2011","año de la ley"],["ANPD","autoridad"],["ARCO","derechos del titular"]],
   u:"https://www.congreso.gob.pe/Docs/DGP/DIDP/files/ley_29733.pdf"},
  {i:"alert",c:"Ley N.º 30096 · 2013",t:"Ley de Delitos Informáticos",one:"Sanciona fraudes y suplantaciones, también cuando se hacen con IA.",k:"3 reformas",ks:"Ley 30171, DL 1614 y DL 1700",
@@ -826,7 +877,7 @@ const laws=[
   obj:"Asegurar que la IA en el mercado europeo sea segura y respete los derechos fundamentales.",
   dir:"Proveedores e implementadores de IA en la UE, incluidas empresas peruanas que ofrezcan IA a clientes europeos.",
   ej:"Una fintech peruana que ofrece scoring de crédito a usuarios en España debe cumplir las reglas de alto riesgo.",
-  imp:"Prohibiciones vigentes desde feb. 2025 y reglas para modelos de propósito general desde ago. 2025. Las obligaciones de alto riesgo se postergan a dic. 2027 por el acuerdo Digital Omnibus.",
+  imp:"Prohibiciones vigentes desde feb. 2025 y reglas para modelos de propósito general desde ago. 2025. El Digital Omnibus (Reglamento (UE) 2026/1744, vigente desde el 27 jul. 2026) posterga las obligaciones de alto riesgo a dic. 2027 y ago. 2028.",
   d:[["4","niveles de riesgo"],["35 M€","multa máxima"],["Dic. 2027","alto riesgo (nuevo plazo)"]],
   u:"https://eur-lex.europa.eu/eli/reg/2024/1689/oj"},
  {i:"globe",c:"UNESCO · 2021",t:"Recomendación sobre la Ética de la IA",one:"El primer acuerdo mundial sobre ética de la IA.",k:"193",ks:"Estados miembros la adoptaron",
