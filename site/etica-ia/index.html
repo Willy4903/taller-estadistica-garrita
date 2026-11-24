@@ -144,12 +144,27 @@ td b{font-family:var(--f-display);font-weight:600}
 .src{font-size:.8rem;color:var(--muted)}
 
 /* news */
-.news{display:grid;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.nitem{display:grid;grid-template-columns:110px 1fr auto;gap:18px;padding:16px 20px;border-bottom:1px solid var(--line);align-items:start}
-.nitem:last-child{border-bottom:0}
-.nitem .d{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.nitem h3{font-size:1rem;font-family:var(--f-body);font-weight:700}
-.nitem p{font-size:.92rem;color:var(--muted);margin-top:2px}
+.news{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+.ncard{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:linear-gradient(160deg,rgba(168,85,247,.12),rgba(34,211,238,.04)),var(--surface);display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s}
+.ncard:hover{box-shadow:var(--glow);transform:translateY(-2px)}
+.nimg{position:relative;aspect-ratio:16/9;max-width:100%;background:linear-gradient(135deg,rgba(168,85,247,.45),rgba(34,211,238,.3)),var(--band);overflow:hidden}
+.nimg img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.nimg .fb{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink);opacity:.85}
+.nimg .fb svg{width:56px;height:56px}
+.nimg img+.fb{z-index:-1}
+.nimg .ntag{position:absolute;top:10px;left:10px;background:rgba(7,11,31,.8);color:var(--accent);z-index:2}
+.nbody{padding:16px 18px;display:grid;gap:10px;flex:1;align-content:start}
+.nbody .d{font-family:var(--f-mono);font-size:.78rem;color:var(--accent2)}
+.nbody h3{font-size:1.02rem;line-height:1.3}
+.nbody h3 a{color:var(--ink);text-decoration:none}
+.nbody h3 a:hover{color:var(--accent)}
+.nsum{font-size:.93rem;color:var(--muted)}
+.nfacts{display:grid;gap:8px;margin:0}
+.nfacts div{display:grid;grid-template-columns:92px 1fr;gap:8px;font-size:.88rem}
+.nfacts dt{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding-top:2px}
+.nfacts dd{margin:0}
+.nfoot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 18px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+.nfoot a{font-weight:600}
 .ntag{font-family:var(--f-mono);font-size:.7rem;padding:3px 8px;border-radius:5px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
 
 /* tool */
@@ -218,13 +233,28 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
 .ld-foot{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding:16px 24px;border-top:1px solid var(--line)}
 .ld-foot a{text-decoration:none}
 @media (max-width:620px){.ld-grid,.ld-data{grid-template-columns:1fr}}
+
+/* flip */
+.flip{perspective:1400px;cursor:pointer;outline:none;border-radius:14px}
+.flip:focus-visible{box-shadow:0 0 0 3px var(--accent)}
+.flip-in{position:relative;display:grid;height:100%;transition:transform .7s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:10px;align-content:start;background:linear-gradient(160deg,rgba(168,85,247,.14),rgba(34,211,238,.05)),var(--surface);color:var(--ink);transition:box-shadow .25s}
+.flip:hover .face{box-shadow:var(--glow)}
+.face.back{transform:rotateY(180deg);background:linear-gradient(160deg,rgba(34,211,238,.16),rgba(168,85,247,.10)),var(--surface)}
+.face.nopad{padding:0;overflow:hidden}
+.hint{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;color:var(--accent);margin-top:auto;padding-top:6px}
+.hint::before{content:"";width:14px;height:14px;border:2px solid currentColor;border-radius:50%;border-right-color:transparent;transition:transform .5s}
+.flip:hover .hint::before{transform:rotate(200deg)}
+.back .bt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2)}
+.face p{font-size:.95rem}
+@media (prefers-reduced-motion:reduce){.flip-in{transition:none}}
 @media (max-width:860px){
   .hero-grid,.panel,.risk,.tool{grid-template-columns:1fr}
   .grid3{grid-template-columns:1fr 1fr}
   .stats{grid-template-columns:1fr}
   .result,.score{position:static}
   .srcs{columns:1}
-  .nitem{grid-template-columns:1fr;gap:6px}
   .ev{grid-template-columns:1fr;gap:2px}
   .brand{display:none}
 }
@@ -308,7 +338,7 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
     <div class="sec-head">
       <div class="eyebrow">Unidad I · UNESCO 2021 y OCDE 2024</div>
       <h2>Nueve principios, explicados con una pregunta de gerencia</h2>
-      <p class="lead">Cada principio se vuelve práctico cuando lo convertimos en una pregunta que alguien en la organización debe poder responder. Toca una tarjeta.</p>
+      <p class="lead">Cada principio se vuelve práctico cuando lo convertimos en una pregunta que alguien en la organización debe poder responder. Toca una tarjeta para voltearla.</p>
     </div>
     <div class="grid3" id="principles"></div>
   </div>
@@ -401,7 +431,7 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
     <div class="sec-head">
       <div class="eyebrow">Casos reales</div>
       <h2>Lo que salió bien, lo que salió mal y qué aprender</h2>
-      <p class="lead">Casos documentados en sector privado y público. Cada uno termina con la lección de gobernanza que deja.</p>
+      <p class="lead">Casos documentados en sector privado y público. Toca un caso para ver qué pasó y la lección que deja.</p>
     </div>
     <div class="filters" id="caseFilters"></div>
     <div class="cases" id="cases"></div>
@@ -413,7 +443,7 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
     <div class="sec-head">
       <div class="eyebrow">Noticias asociadas · actualizado al 24 nov. 2026</div>
       <h2>Lo que se está moviendo</h2>
-      <p class="lead">Selección de noticias de 2026 sobre regulación, gobernanza y uso de IA en el Perú, la región y Europa. Cada nota enlaza a su fuente.</p>
+      <p class="lead">Selección de noticias de 2026 sobre regulación, gobernanza y uso de IA en el Perú, la región y Europa. Toca una nota para ver objetivo, público, impacto y ejemplo.</p>
     </div>
     <div class="filters" id="newsFilters"></div>
     <div class="news" id="news"></div>
@@ -490,6 +520,19 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
 const $=s=>document.querySelector(s);
 const el=(t,a={},h="")=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);e.innerHTML=h;return e};
 
+const flipCard=(front,back,cls="")=>{const c=el("div",{class:"flip "+cls,role:"button",tabindex:"0","aria-pressed":"false"},`<div class="flip-in"><div class="face front">${front}<span class="hint">Toca para voltear</span></div><div class="face back">${back}<span class="hint">Volver</span></div></div>`);
+ const t=()=>{c.classList.toggle("on");c.setAttribute("aria-pressed",c.classList.contains("on"))};
+ c.addEventListener("click",e=>{if(e.target.closest("a"))return;t()});c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();t()}});return c};
+const IC={
+ shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>',
+ chip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/><path d="M10 10h4v4h-4z"/></svg>',
+ doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>',
+ lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/><circle cx="12" cy="15" r="1.4"/></svg>',
+ map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2z"/><path d="M9 4v14M15 6v14"/></svg>',
+ alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>',
+ globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>',
+ scale:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M5 21h14M5 7h14"/><path d="M5 7l-3 6a3 3 0 006 0zM19 7l-3 6a3 3 0 006 0z"/></svg>'
+};
 /* ---------- UNIDADES ---------- */
 const units=[
  {t:"I. Fundamentos éticos",w:"Semanas 1 a 4",d:"Qué es la IA generativa y con qué lentes éticas evaluarla.",c:["Diferencias entre IA, aprendizaje automático, modelos fundacionales y LLM","Capacidades, alucinaciones y límites","Enfoques deontológico, utilitarista, de la virtud y del cuidado","Principios: equidad, transparencia, explicabilidad, privacidad, supervisión humana"],e:"Mapa conceptual del ciclo de vida de la IA, deliberación ética de un caso y primer ensayo (semana 4).",r:["UNESCO 2021","OCDE 2024","Floridi 2023","Coeckelbergh 2020"]},
@@ -505,19 +548,19 @@ units.forEach((u,i)=>{const b=el("button",{class:"tab",role:"tab",type:"button"}
 
 /* ---------- PRINCIPIOS ---------- */
 const prin=[
- ["Equidad","¿Probamos si el modelo trata distinto a mujeres, adultos mayores o personas de regiones?","Medir tasas de error y aprobación por grupo antes de lanzar, y repetir la medición cada trimestre.","UNESCO · OCDE"],
- ["Transparencia","¿El cliente sabe que habla con una IA?","Avisar siempre que el interlocutor es un sistema automatizado y etiquetar contenido sintético.","Ley 31814 · EU AI Act art. 50"],
- ["Explicabilidad","¿Podemos explicarle a alguien por qué le negamos un crédito?","Documentar las variables que pesan en la decisión y dar una razón comprensible al afectado.","OCDE · NIST"],
- ["Privacidad","¿Qué datos personales entran al prompt y a dónde viajan?","Minimizar datos, anonimizar y no subir información de clientes a herramientas públicas sin contrato.","Ley 29733 · DS 016-2024-JUS"],
- ["Seguridad","¿Resistimos un ataque por inyección de prompt?","Pruebas de red team, filtros de entrada y salida, y monitoreo de fugas.","NIST AI 600-1"],
- ["Supervisión humana","¿Quién puede revisar y revertir lo que decide el sistema?","Definir un responsable con autoridad real para intervenir en decisiones de alto impacto.","DS 115-2025-PCM · EU AI Act art. 14"],
- ["Responsabilidad","Si el chatbot promete algo falso, ¿quién responde?","La organización responde por lo que dice su IA. Asignar dueños por cada sistema.","Caso Air Canada 2024"],
- ["Inclusión","¿Funciona en quechua, para personas con discapacidad o con baja conectividad?","Diseñar y probar con usuarios diversos; ofrecer siempre un canal humano alternativo.","UNESCO · ENIA"],
- ["Sostenibilidad","¿Cuánta energía y agua consume nuestro uso de IA?","Elegir el modelo más pequeño que resuelva la tarea y medir su huella.","UNESCO"]
+ ["Equidad","¿Probamos si el modelo trata distinto a mujeres, adultos mayores o personas de regiones?","Que el sistema no produzca resultados injustos o discriminatorios para ningún grupo de personas.","Medir tasas de error y de aprobación por grupo antes de lanzar, y repetir la medición cada trimestre.","UNESCO · OCDE"],
+ ["Transparencia","¿El cliente sabe que habla con una IA?","Que las personas sepan cuándo interactúan con una IA o ven contenido generado por ella, y para qué se usa.","Aviso visible de IA en chatbots y etiqueta en imágenes, audios y videos sintéticos.","Ley 31814 · EU AI Act art. 50"],
+ ["Explicabilidad","¿Podemos explicarle a alguien por qué le negamos un crédito?","Poder dar una razón comprensible de por qué el sistema llegó a una decisión concreta.","Documentar las variables que más pesan y entregar una explicación sencilla al afectado.","OCDE · NIST"],
+ ["Privacidad","¿Qué datos personales entran al prompt y a dónde viajan?","Usar solo los datos personales necesarios, con consentimiento y protegidos durante todo el ciclo de vida.","Minimizar y anonimizar datos; no subir información de clientes a herramientas públicas sin contrato.","Ley 29733 · DS 016-2024-JUS"],
+ ["Seguridad","¿Resistimos un ataque por inyección de prompt?","Que el sistema funcione de forma robusta y resista errores, fallas y ataques maliciosos.","Pruebas de red team, filtros de entrada y salida, y monitoreo de fugas de información.","NIST AI 600-1"],
+ ["Supervisión humana","¿Quién puede revisar y revertir lo que decide el sistema?","Que una persona competente pueda vigilar, intervenir y anular las decisiones de la IA.","Nombrar un responsable con autoridad real en cada decisión de alto impacto.","DS 115-2025-PCM · EU AI Act art. 14"],
+ ["Responsabilidad","Si el chatbot promete algo falso, ¿quién responde?","Que siempre haya una persona u organización identificable que rinda cuentas por la IA.","Asignar un dueño a cada sistema y registrar sus decisiones e incidentes.","Caso Air Canada 2024"],
+ ["Inclusión","¿Funciona en quechua, para personas con discapacidad o con baja conectividad?","Que los beneficios de la IA lleguen a todos y no amplíen las brechas existentes.","Probar con usuarios diversos y mantener siempre un canal humano alternativo.","UNESCO · ENIA"],
+ ["Sostenibilidad","¿Cuánta energía y agua consume nuestro uso de IA?","Que el uso de la IA considere su impacto ambiental y social a largo plazo.","Elegir el modelo más pequeño que resuelva la tarea y medir su huella.","UNESCO"]
 ];
 const pg=$("#principles");
-prin.forEach(p=>{const b=el("button",{class:"pcard",type:"button","aria-expanded":"false"},`<span class="tag">${p[3]}</span><h3>${p[0]}</h3><span class="q">${p[1]}</span><span class="a">${p[2]}</span>`);
- b.onclick=()=>{b.classList.toggle("open");b.setAttribute("aria-expanded",b.classList.contains("open"))};pg.append(b)});
+prin.forEach(p=>pg.append(flipCard(`<span class="tag" style="font-family:var(--f-mono);font-size:.72rem;color:var(--accent)">${p[4]}</span><h3>${p[0]}</h3><p style="color:var(--muted)">${p[1]}</p>`,
+ `<span class="bt">Qué significa</span><h3>${p[0]}</h3><p>${p[2]}</p><span class="bt">Cómo aplicarlo</span><p>${p[3]}</p>`)));
 
 /* ---------- DILEMAS ---------- */
 const dils=[
@@ -595,7 +638,7 @@ const lat=[
 const lf=$("#latFilters"),lg=$("#latam");let lk="all";
 const latF=[["all","Todos"],["law","Ley vigente"],["bill","Proyecto de ley"],["pol","Política o estrategia"]];
 function drawLat(){[...lf.children].forEach((b,i)=>b.setAttribute("aria-selected",latF[i][0]===lk));lg.innerHTML="";
- lat.filter(x=>lk==="all"||x.k===lk).forEach(x=>lg.append(el("article",{class:"ctry"},`<header><h3>${x.c}</h3><span class="st st-${x.k}">${x.s}</span></header><p>${x.t}</p>`)));}
+ lat.filter(x=>lk==="all"||x.k===lk).forEach(x=>lg.append(flipCard(`<header style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3 style="font-size:1.4rem">${x.c}</h3><span class="st st-${x.k}">${x.s}</span></header><p style="color:var(--muted)">¿Cómo regula la IA ${x.c}?</p>`,`<span class="bt">${x.c} · ${x.s}</span><p>${x.t}</p>`)));}
 latF.forEach(f=>{const b=el("button",{class:"tab",type:"button"},f[1]);b.onclick=()=>{lk=f[0];drawLat()};lf.append(b)});drawLat();
 
 /* ---------- CASOS ---------- */
@@ -619,24 +662,45 @@ const rTag={ok:["Buena práctica","lv-ok"],bad:["Falla","lv-ban"],mix:["Con rese
 const cf=$("#caseFilters"),cg=$("#cases");let ck="Todos";
 const cSec=["Todos",...new Set(cases.map(c=>c.s))];
 function drawCases(){[...cf.children].forEach((b,i)=>b.setAttribute("aria-selected",cSec[i]===ck));cg.innerHTML="";
- cases.filter(c=>ck==="Todos"||c.s===ck).forEach(c=>{const R=rTag[c.r];cg.append(el("article",{class:"case"},`<div class="meta"><span class="sector">${c.s}</span><span class="level ${R[1]}">${R[0]}</span></div><h3>${c.t}</h3><p>${c.p}</p><div class="lesson"><b>Lección:</b> ${c.l}</div><a class="src" href="${c.u}">Fuente: ${c.f}</a>`))});}
+ cases.filter(c=>ck==="Todos"||c.s===ck).forEach(c=>{const R=rTag[c.r];cg.append(flipCard(`<div class="meta"><span class="sector">${c.s}</span><span class="level ${R[1]}">${R[0]}</span></div><h3>${c.t}</h3><p style="color:var(--muted)">¿Qué pasó y qué aprendimos?</p>`,`<span class="bt">Qué pasó</span><p>${c.p}</p><span class="bt">Lección de gobernanza</span><p>${c.l}</p><a class="src" href="${c.u}" target="_blank" rel="noopener">Fuente: ${c.f}</a>`))});}
 cSec.forEach(s=>{const b=el("button",{class:"tab",type:"button"},s);b.onclick=()=>{ck=s;drawCases()};cf.append(b)});drawCases();
 
 /* ---------- NOTICIAS ---------- */
 const news=[
- ["19 nov. 2026","Perú","Solo el 5% de empresas peruanas integra IA a procesos clave","Encuesta de Tivit: la mitad de ejecutivos reporta algún gobierno formal para IA generativa.","https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit","Forbes Perú"],
- ["Nov. 2026","Perú","Especialistas piden un Consejo Nacional Científico y Ciudadano de IA","Advierten sobre la dependencia tecnológica del país y reclaman participación ciudadana en la estrategia.","https://altavoz.pe/politica/peru-esta-expuesto-a-la-dependencia-tecnologica-intelectuales-reclaman-una-estrategia-nacional-de-inteligencia-artificial/","Altavoz"],
- ["2026","Perú","UNESCO Perú lleva a la FIL 2026 el debate sobre los horizontes éticos de la IA","Diálogo público sobre la Recomendación de UNESCO y su aplicación en el país.","https://www.unesco.org/es/articles/unesco-peru-impulsa-en-la-fil2026-dialogo-sobre-los-horizontes-eticos-de-la-inteligencia-artificial","UNESCO"],
- ["2026","Perú","Minsa prepara una política de IA en salud","Lineamientos para el uso seguro y ético de IA en sistemas de salud.","https://consultorsalud.com/inteligencia-artificial-salud-peru-politica/","ConsultorSalud"],
- ["May. 2026","Perú","Gobierno aprueba la Estrategia Nacional de IA 2026-2030","RM 152-2026-PCM, aplicable a toda la administración pública, con un pilar de marco ético y regulatorio.","https://andina.pe/ingles/noticia-peru-government-approves-national-artificial-intelligence-strategy-2026–2030-1073446.aspx","Andina"],
- ["7 may. 2026","Europa","UE pacta postergar las obligaciones de alto riesgo del AI Act","Acuerdo provisional del Digital Omnibus: dic. 2027 para sistemas autónomos y ago. 2028 para los integrados en productos.","https://www.pinsentmasons.com/out-law/news/rules-high-risk-ai-delayed-under-eu-omnibus-deal","Pinsent Masons"],
- ["Mar. 2026","Perú","JNE detecta más de 700 alertas de desinformación en la campaña","El comité de verificación reforzó el rastreo con IA en TikTok, X, Facebook y streaming.","https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx","Andina"],
- ["2026","Latam","¿Quién avanza y quién frena en la regulación de IA en la región?","Brasil y Chile con proyectos avanzados; Perú y El Salvador con leyes vigentes.","https://acento.com.do/radar-innovador/regulacion-de-la-ia-en-america-latina-quien-avanza-quien-frena-y-que-esta-en-juego-en-2026-9641659.html","Acento"],
- ["2026","Perú","SUNAT, comercio y banca: los avances en IA para 2026","El 45,6% de empresas locales ya había implementado IA en 2025, según Sonda.","https://gestion.pe/g-de-gestion/reportaje/sunat-comercio-y-banca-los-avances-en-ia-y-nube-para-el-2026-segun-sonda-peru-noticia/","Gestión"]
+ {d:"19 nov. 2026",r:"Perú",t:"Solo el 5% de empresas peruanas integra IA a procesos clave",u:"https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit",f:"Forbes Perú",
+  s:"Un estudio de la tecnológica Tivit ubica al Perú con la menor proporción de empresas que usan IA a escala entre los mercados evaluados, aunque la mitad de ejecutivos ya reporta algún gobierno formal de IA generativa.",
+  o:"Medir la madurez real de adopción de IA y de soberanía de datos en empresas.",p:"Gerentes generales, CIO y directorios.",i:"La brecha entre pilotos y uso en procesos clave limita productividad; la gobernanza aparece antes que la escala.",e:"Un retail que tiene un chatbot en pruebas pero no usa IA en inventarios ni precios.",ic:"chip"},
+ {d:"Nov. 2026",r:"Perú",t:"Especialistas piden un Consejo Nacional Científico y Ciudadano de IA",u:"https://altavoz.pe/politica/peru-esta-expuesto-a-la-dependencia-tecnologica-intelectuales-reclaman-una-estrategia-nacional-de-inteligencia-artificial/",f:"Altavoz",
+  s:"Tres colectivos de académicos advierten que el país depende de tecnologías extranjeras y proponen crear un consejo con participación científica y ciudadana para orientar la política de IA.",
+  o:"Sumar a la ciencia y la ciudadanía en las decisiones públicas sobre IA.",p:"Congreso, PCM, universidades y sociedad civil.",i:"Presiona por mayor soberanía tecnológica y control social de la ENIA.",e:"Un consejo que revise antes de su compra los sistemas de IA que adquiere el Estado.",ic:"globe"},
+ {d:"2026",r:"Perú",t:"UNESCO Perú lleva a la FIL 2026 el debate sobre los horizontes éticos de la IA",u:"https://www.unesco.org/es/articles/unesco-peru-impulsa-en-la-fil2026-dialogo-sobre-los-horizontes-eticos-de-la-inteligencia-artificial",f:"UNESCO",
+  s:"La oficina de UNESCO en el Perú organizó en la Feria Internacional del Libro un diálogo público sobre la ética de la IA a partir de su Recomendación de 2021.",
+  o:"Acercar la ética de la IA al público general y al sector cultural.",p:"Ciudadanía, docentes, estudiantes y creadores.",i:"Difunde estándares internacionales y alfabetización en IA.",e:"Debate sobre autoría de libros escritos con ayuda de IA.",ic:"globe"},
+ {d:"2026",r:"Perú",t:"Minsa prepara una política de IA en salud",u:"https://consultorsalud.com/inteligencia-artificial-salud-peru-politica/",f:"ConsultorSalud",
+  s:"El Ministerio de Salud avanza en lineamientos para el uso seguro y ético de la IA en los sistemas de salud del país.",
+  o:"Ordenar el uso de IA en diagnóstico, gestión hospitalaria y telesalud.",p:"Hospitales, EsSalud, clínicas y proveedores de tecnología médica.",i:"Los usos clínicos son de riesgo alto: exigirán validación y supervisión del profesional.",e:"Un software de lectura de radiografías que solo sugiere y el médico decide.",ic:"shield"},
+ {d:"May. 2026",r:"Perú",t:"Gobierno aprueba la Estrategia Nacional de IA 2026-2030",u:"https://andina.pe/ingles/noticia-peru-government-approves-national-artificial-intelligence-strategy-2026–2030-1073446.aspx",f:"Andina",
+  s:"La RM 152-2026-PCM aprueba la ENIA para toda la administración pública, con cuatro pilares que incluyen un marco ético y regulatorio.",
+  o:"Pasar de un Estado digital a un Estado inteligente con IA segura e inclusiva.",p:"Ministerios, gobiernos regionales y locales, y empresas públicas.",i:"Obliga a las entidades a planificar su uso de IA con metas al 2030.",e:"Una municipalidad que automatiza licencias alineada a la ENIA.",ic:"map"},
+ {d:"7 may. 2026",r:"Europa",t:"UE pacta postergar las obligaciones de alto riesgo del AI Act",u:"https://www.pinsentmasons.com/out-law/news/rules-high-risk-ai-delayed-under-eu-omnibus-deal",f:"Pinsent Masons",
+  s:"El Parlamento y el Consejo de la UE alcanzaron un acuerdo provisional del Digital Omnibus que mueve las reglas de alto riesgo a diciembre de 2027 y agosto de 2028.",
+  o:"Dar más tiempo para estándares técnicos y reducir la carga de cumplimiento.",p:"Empresas que ofrecen IA en Europa, incluidas latinoamericanas.",i:"Más plazo, pero las prohibiciones y reglas de modelos generales siguen vigentes.",e:"Una fintech peruana con clientes en España gana tiempo para adecuar su scoring.",ic:"scale"},
+ {d:"Mar. 2026",r:"Perú",t:"JNE detecta más de 700 alertas de desinformación en la campaña",u:"https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx",f:"Andina",
+  s:"El comité de verificación del JNE reforzó con herramientas de IA el rastreo de contenido falso en TikTok, X, Facebook y plataformas de streaming durante las Elecciones Generales 2026.",
+  o:"Proteger la integridad del proceso electoral frente a desinformación y deepfakes.",p:"Electores, partidos, medios y plataformas digitales.",i:"La IA se usa tanto para crear desinformación como para detectarla.",e:"Un video manipulado de un candidato desmentido por los canales oficiales del JNE.",ic:"alert"},
+ {d:"2026",r:"Latam",t:"¿Quién avanza y quién frena en la regulación de IA en la región?",u:"https://acento.com.do/radar-innovador/regulacion-de-la-ia-en-america-latina-quien-avanza-quien-frena-y-que-esta-en-juego-en-2026-9641659.html",f:"Acento",
+  s:"Brasil y Chile tienen proyectos de ley avanzados, mientras el Perú y El Salvador ya cuentan con leyes de IA vigentes.",
+  o:"Comparar el estado regulatorio de la IA en América Latina.",p:"Empresas regionales, reguladores y abogados.",i:"Las multinacionales deberán cumplir reglas distintas por país.",e:"Un banco con operaciones en Perú, Chile y Colombia que adapta su gobernanza a cada marco.",ic:"globe"},
+ {d:"2026",r:"Perú",t:"SUNAT, comercio y banca: los avances en IA para 2026",u:"https://gestion.pe/g-de-gestion/reportaje/sunat-comercio-y-banca-los-avances-en-ia-y-nube-para-el-2026-segun-sonda-peru-noticia/",f:"Gestión",
+  s:"Según Sonda Perú, el 45,6% de empresas locales ya había implementado alguna solución de IA en 2025, con la SUNAT, la banca y el comercio a la cabeza.",
+  o:"Mostrar dónde se concentra la inversión en IA y nube en el país.",p:"Empresas privadas y entidades públicas en transformación digital.",i:"Más adopción exige más gobernanza de datos y ciberseguridad.",e:"La SUNAT cruzando datos con IA para priorizar fiscalizaciones.",ic:"chip"}
 ];
 const nf=$("#newsFilters"),ng=$("#news");let nk="Todas";const nTags=["Todas","Perú","Latam","Europa"];
+const shot=u=>"https://s.wordpress.com/mshots/v1/"+encodeURIComponent(u)+"?w=640&h=360";
 function drawNews(){[...nf.children].forEach((b,i)=>b.setAttribute("aria-selected",nTags[i]===nk));ng.innerHTML="";
- news.filter(n=>nk==="Todas"||n[1]===nk).forEach(n=>ng.append(el("article",{class:"nitem"},`<div class="d">${n[0]}</div><div><h3><a href="${n[4]}" style="color:inherit">${n[2]}</a></h3><p>${n[3]} <span class="src">· ${n[5]}</span></p></div><span class="ntag">${n[1]}</span>`)));}
+ news.filter(n=>nk==="Todas"||n.r===nk).forEach(n=>{const c=flipCard(`<div class="nimg"><span class="ntag">${n.r}</span><img src="${shot(n.u)}" alt="Captura de la nota en ${n.f}" loading="lazy" onerror="this.remove()"><div class="fb">${IC[n.ic]}</div></div><div class="nbody"><div class="d">${n.d} · ${n.f}</div><h3>${n.t}</h3><p class="nsum">${n.s}</p></div>`,
+ `<div class="nbody"><span class="bt">${n.d} · ${n.r}</span><h3>${n.t}</h3><dl class="nfacts"><div><dt>Objetivo</dt><dd>${n.o}</dd></div><div><dt>Dirigido a</dt><dd>${n.p}</dd></div><div><dt>Impacto</dt><dd>${n.i}</dd></div><div><dt>Ejemplo</dt><dd>${n.e}</dd></div></dl><a href="${n.u}" target="_blank" rel="noopener" style="font-weight:600">Leer nota en ${n.f} →</a></div>`,"ncard2");
+ c.querySelectorAll(".face").forEach(f=>f.classList.add("nopad"));c.querySelectorAll(".hint").forEach(h=>h.style.padding="0 18px 16px");ng.append(c)});}
 nTags.forEach(t=>{const b=el("button",{class:"tab",type:"button"},t);b.onclick=()=>{nk=t;drawNews()};nf.append(b)});drawNews();
 
 /* ---------- PROTOCOLO ---------- */
@@ -674,19 +738,10 @@ function drawQ(){answered=false;if(qi>=qs.length){qb.innerHTML=`<div class="eyeb
 drawQ();
 
 /* ---------- TICKER ---------- */
-$("#tkTrack").innerHTML=news.map(n=>`<a href="${n[4]}" target="_blank" rel="noopener"><b>${n[0]} · ${n[1]}</b>${n[2]}</a>`).join("");
+$("#tkTrack").innerHTML=news.map(n=>`<a href="${n.u}" target="_blank" rel="noopener"><b>${n.d} · ${n.r}</b>${n.t}</a>`).join("");
 
 /* ---------- LEYES ---------- */
-const IC={
- shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>',
- chip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/><path d="M10 10h4v4h-4z"/></svg>',
- doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>',
- lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/><circle cx="12" cy="15" r="1.4"/></svg>',
- map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2z"/><path d="M9 4v14M15 6v14"/></svg>',
- alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>',
- globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>',
- scale:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M5 21h14M5 7h14"/><path d="M5 7l-3 6a3 3 0 006 0zM19 7l-3 6a3 3 0 006 0z"/></svg>'
-};
+
 const laws=[
  {i:"chip",c:"Ley N.º 31814 · 2023",t:"Ley que promueve el uso de la IA",one:"La primera ley peruana dedicada a la IA.",k:"Jul. 2023",ks:"publicada en El Peruano",
   obj:"Promover el desarrollo y uso de la IA para el desarrollo económico y social, con respeto a los derechos humanos.",
