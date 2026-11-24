@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>IA Responsable Perú</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: columna editorial de 1120px; bandas a todo el ancho por sección; nav fija con anclas */
+:root{
+  --bg:#F3F6F5; --surface:#FFFFFF; --ink:#13212A; --muted:#55666F; --line:#D5DEDC;
+  --accent:#0E6B66; --accent-soft:#DCEEEC; --band:#E6EEEC;
+  --ok:#2E7D4F; --warn:#B7791F; --high:#C2410C; --ban:#9F1239;
+  --ok-bg:#E3F2E8; --warn-bg:#FBF1DE; --high-bg:#FDE8DC; --ban-bg:#FBE3EA;
+  --f-display:"Sora",system-ui,sans-serif; --f-body:"Source Sans 3",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1619; --surface:#152126; --ink:#E4ECEA; --muted:#9AAAA8; --line:#26363B;
+  --accent:#4FC1B8; --accent-soft:#163A38; --band:#121D21;
+  --ok:#6FCF97; --warn:#E9B45A; --high:#F2915E; --ban:#F17C9A;
+  --ok-bg:#16301F; --warn-bg:#33280F; --high-bg:#3A2013; --ban-bg:#3A1622; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1619; --surface:#152126; --ink:#E4ECEA; --muted:#9AAAA8; --line:#26363B;
+  --accent:#4FC1B8; --accent-soft:#163A38; --band:#121D21;
+  --ok:#6FCF97; --warn:#E9B45A; --high:#F2915E; --ban:#F17C9A;
+  --ok-bg:#16301F; --warn-bg:#33280F; --high-bg:#3A2013; --ban-bg:#3A1622; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h2{font-size:clamp(1.6rem,3.2vw,2.3rem);font-weight:700}
+h3{font-size:1.12rem;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.lead{color:var(--muted);max-width:65ch}
+section{padding-block:72px}
+section.band{background:var(--band)}
+.sec-head{display:grid;gap:10px;margin-bottom:32px}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:20px;height:58px}
+.brand{font-family:var(--f-display);font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+.brand span{color:var(--accent)}
+.nav ul{list-style:none;margin:0;padding:0;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a{display:block;padding:6px 10px;border-radius:6px;text-decoration:none;color:var(--muted);font-size:.92rem;white-space:nowrap}
+.nav a:hover,.nav a.on{color:var(--ink);background:var(--accent-soft)}
+
+/* hero */
+.hero{padding-block:72px 56px;border-bottom:1px solid var(--line);background:var(--surface)}
+.hero-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(2.2rem,5.4vw,3.9rem);font-weight:800;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lead{font-size:1.15rem;margin-top:18px}
+.hero-meta{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px}
+.chip{font-family:var(--f-mono);font-size:.78rem;padding:5px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--bg)}
+.pyramid{display:grid;gap:6px;justify-items:center}
+.pyr{width:var(--w);padding:12px 14px;text-align:center;border-radius:6px;font-family:var(--f-display);font-weight:600;font-size:.95rem;border:0;color:var(--ink);transition:transform .15s}
+.pyr small{display:block;font-family:var(--f-body);font-weight:400;font-size:.8rem;color:var(--muted)}
+.pyr:hover{transform:scale(1.03)}
+.pyr.ban{background:var(--ban-bg)} .pyr.high{background:var(--high-bg)} .pyr.warn{background:var(--warn-bg)} .pyr.ok{background:var(--ok-bg)}
+.pyr-cap{font-size:.82rem;color:var(--muted);text-align:center;margin-top:10px}
+
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.tab{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 16px;border-radius:8px;font-weight:600;font-size:.95rem}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.panel ul{margin:8px 0 0;padding-left:18px}
+.panel li{margin-bottom:4px}
+.weeks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.deliv{margin-top:14px;padding:12px 14px;background:var(--accent-soft);border-radius:8px;font-size:.95rem}
+
+/* principles */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;text-align:left;color:var(--ink);display:grid;gap:6px;align-content:start}
+.pcard .q{font-size:.92rem;color:var(--muted)}
+.pcard .a{display:none;font-size:.95rem;border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}
+.pcard.open .a{display:block}
+.pcard .tag{font-family:var(--f-mono);font-size:.72rem;color:var(--accent)}
+
+/* dilemma */
+.dilemma{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;display:grid;gap:18px}
+.case-box{border-left:4px solid var(--accent);padding:4px 0 4px 16px}
+.lens-row{display:flex;flex-wrap:wrap;gap:8px}
+.lens{border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:8px 14px;border-radius:999px;font-weight:600;font-size:.92rem}
+.lens.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.lens-out{min-height:120px;background:var(--bg);border-radius:8px;padding:18px;display:grid;gap:8px}
+.verdict{font-family:var(--f-mono);font-size:.82rem;color:var(--accent)}
+
+/* risk classifier */
+.risk{display:grid;grid-template-columns:1fr 1.1fr;gap:22px}
+.uses{display:grid;gap:8px}
+.use{text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:12px 14px;border-radius:8px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.use.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.use .s{font-size:.8rem;color:var(--muted)}
+.result{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px;display:grid;gap:14px;align-content:start;position:sticky;top:76px}
+.level{display:inline-block;font-family:var(--f-mono);font-size:.8rem;font-weight:500;padding:5px 10px;border-radius:6px}
+.lv-ban{background:var(--ban-bg);color:var(--ban)} .lv-high{background:var(--high-bg);color:var(--high)} .lv-warn{background:var(--warn-bg);color:var(--warn)} .lv-ok{background:var(--ok-bg);color:var(--ok)}
+.result dl{margin:0;display:grid;gap:10px}
+.result dt{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.result dd{margin:0}
+
+/* timeline */
+.tl{position:relative;display:grid;gap:0;margin-left:8px}
+.tl::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:2px;background:var(--line)}
+.ev{position:relative;padding:0 0 26px 28px;display:grid;grid-template-columns:120px 1fr;gap:16px}
+.ev::before{content:"";position:absolute;left:-5px;top:7px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:3px solid var(--accent)}
+.ev .d{font-family:var(--f-mono);font-size:.85rem;color:var(--accent);font-variant-numeric:tabular-nums}
+.ev h3{font-size:1.02rem}
+.ev p{color:var(--muted);font-size:.95rem;margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.stat b{display:block;font-family:var(--f-display);font-size:2rem;color:var(--accent);font-variant-numeric:tabular-nums}
+.stat span{font-size:.9rem;color:var(--muted)}
+.stat a{font-size:.8rem}
+
+/* latam */
+.latam{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.ctry{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:8px;align-content:start}
+.ctry header{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.st{font-family:var(--f-mono);font-size:.7rem;padding:3px 8px;border-radius:5px;white-space:nowrap}
+.st-law{background:var(--ok-bg);color:var(--ok)} .st-bill{background:var(--warn-bg);color:var(--warn)} .st-pol{background:var(--accent-soft);color:var(--accent)}
+.ctry p{font-size:.94rem;color:var(--muted)}
+
+/* compare table */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:.93rem}
+th,td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td b{font-family:var(--f-display);font-weight:600}
+
+/* cases */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.case{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:10px;align-content:start}
+.case .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.sector{font-family:var(--f-mono);font-size:.72rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em}
+.case p{font-size:.95rem}
+.lesson{font-size:.92rem;background:var(--bg);border-radius:6px;padding:10px 12px}
+.lesson b{font-family:var(--f-display);font-weight:600}
+.src{font-size:.8rem;color:var(--muted)}
+
+/* news */
+.news{display:grid;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.nitem{display:grid;grid-template-columns:110px 1fr auto;gap:18px;padding:16px 20px;border-bottom:1px solid var(--line);align-items:start}
+.nitem:last-child{border-bottom:0}
+.nitem .d{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.nitem h3{font-size:1rem;font-family:var(--f-body);font-weight:700}
+.nitem p{font-size:.92rem;color:var(--muted);margin-top:2px}
+.ntag{font-family:var(--f-mono);font-size:.7rem;padding:3px 8px;border-radius:5px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+
+/* tool */
+.tool{display:grid;grid-template-columns:1.2fr 1fr;gap:22px}
+.checks{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:grid;gap:4px}
+.checks label{display:flex;gap:12px;align-items:flex-start;padding:9px 6px;border-radius:6px;cursor:pointer}
+.checks label:hover{background:var(--bg)}
+.checks input{margin-top:5px;accent-color:var(--accent);width:18px;height:18px;flex:none}
+.checks .grp{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:12px 0 2px}
+.score{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:grid;gap:14px;align-content:start;position:sticky;top:76px}
+.bar{height:12px;background:var(--bg);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.big{font-family:var(--f-display);font-size:2.6rem;font-weight:800;font-variant-numeric:tabular-nums}
+
+/* quiz */
+.quiz{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:26px;display:grid;gap:16px;max-width:760px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:12px 14px;border-radius:8px}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--ban);background:var(--ban-bg)}
+.qfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.btn{border:0;background:var(--accent);color:var(--surface);padding:10px 18px;border-radius:8px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+
+/* sources */
+.srcs{columns:2;column-gap:32px;font-size:.92rem}
+.srcs li{break-inside:avoid;margin-bottom:6px}
+footer{padding-block:32px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+.note{font-size:.85rem;color:var(--muted)}
+
+@media (max-width:860px){
+  .hero-grid,.panel,.risk,.tool{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr}
+  .result,.score{position:static}
+  .srcs{columns:1}
+  .nitem{grid-template-columns:1fr;gap:6px}
+  .ev{grid-template-columns:1fr;gap:2px}
+  .brand{display:none}
+}
+@media (max-width:520px){.grid3,.grid2{grid-template-columns:1fr} section{padding-block:52px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Secciones">
+  <div class="wrap">
+    <div class="brand">IA<span>·</span>Responsable</div>
+    <ul id="navlist">
+      <li><a href="#curso">Curso</a></li>
+      <li><a href="#principios">Principios</a></li>
+      <li><a href="#dilema">Dilemas</a></li>
+      <li><a href="#riesgo">Riesgo</a></li>
+      <li><a href="#peru">Perú</a></li>
+      <li><a href="#latam">Latam</a></li>
+      <li><a href="#marcos">Marcos</a></li>
+      <li><a href="#casos">Casos</a></li>
+      <li><a href="#noticias">Noticias</a></li>
+      <li><a href="#protocolo">Protocolo</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Ética y Normatividad en el uso de IAG · UNMSM 2026-II</div>
+      <h1 style="margin-top:14px">Usar IA generativa <em>con reglas claras</em> en el Perú y la región</h1>
+      <p class="lead">Una guía interactiva para directivos: qué principios aplican, qué exige la ley peruana desde 2026, cómo se regula en América Latina y qué aprendieron bancos, telecos, energía y el Estado al poner IA en producción.</p>
+      <div class="hero-meta">
+        <span class="chip">Ley 31814</span><span class="chip">DS 115-2025-PCM</span><span class="chip">ENIA 2026-2030</span><span class="chip">Ley 29733</span><span class="chip">EU AI Act</span><span class="chip">ISO/IEC 42001</span>
+      </div>
+    </div>
+    <div>
+      <div class="pyramid" aria-label="Pirámide de riesgo">
+        <a class="pyr ban" style="--w:46%" href="#riesgo">Inaceptable<small>Prohibido</small></a>
+        <a class="pyr high" style="--w:66%" href="#riesgo">Alto<small>Evaluación, supervisión humana, registros</small></a>
+        <a class="pyr warn" style="--w:84%" href="#riesgo">Limitado<small>Transparencia: avisar que es IA</small></a>
+        <a class="pyr ok" style="--w:100%" href="#riesgo">Mínimo<small>Buenas prácticas voluntarias</small></a>
+      </div>
+      <p class="pyr-cap">El enfoque basado en riesgo que comparten la UE y el reglamento peruano. Toca un nivel para probar el clasificador.</p>
+    </div>
+  </div>
+</header>
+
+<section id="curso">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Ruta del sílabo · 16 semanas</div>
+      <h2>Cuatro unidades, de los valores a la gobernanza</h2>
+      <p class="lead">El curso avanza desde qué es la IA generativa hasta diseñar un protocolo institucional. Elige una unidad.</p>
+    </div>
+    <div class="tabs" role="tablist" id="unitTabs"></div>
+    <div class="panel" id="unitPanel" role="tabpanel"></div>
+  </div>
+</section>
+
+<section id="principios" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Unidad I · UNESCO 2021 y OCDE 2024</div>
+      <h2>Nueve principios, explicados con una pregunta de gerencia</h2>
+      <p class="lead">Cada principio se vuelve práctico cuando lo convertimos en una pregunta que alguien en la organización debe poder responder. Toca una tarjeta.</p>
+    </div>
+    <div class="grid3" id="principles"></div>
+  </div>
+</section>
+
+<section id="dilema">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Unidad I · Teorías éticas</div>
+      <h2>Un mismo dilema, cuatro lentes</h2>
+      <p class="lead">El sílabo pide analizar un dilema con el enfoque deontológico, utilitarista, de la virtud y del cuidado. Elige un caso y una lente.</p>
+    </div>
+    <div class="dilemma">
+      <div class="tabs" id="dilTabs" style="margin:0"></div>
+      <div class="case-box"><h3 id="dilTitle"></h3><p id="dilText" class="lead" style="margin-top:6px"></p></div>
+      <div class="lens-row" id="lensRow"></div>
+      <div class="lens-out" id="lensOut" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section id="riesgo" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Unidad III · Regulación basada en riesgo</div>
+      <h2>Clasificador de riesgo: ¿dónde cae tu caso de uso?</h2>
+      <p class="lead">Selecciona un uso típico en empresas o el Estado. Verás el nivel según el Reglamento de la Ley 31814 y el EU AI Act, y qué controles mínimos aplicar. Es orientativo; no reemplaza una opinión legal.</p>
+    </div>
+    <div class="risk">
+      <div class="uses" id="uses"></div>
+      <div class="result" id="riskResult" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section id="peru">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Perú</div>
+      <h2>Qué pasa en el Perú: de la promoción a las obligaciones</h2>
+      <p class="lead">El Perú fue de los primeros países de la región con una ley específica de IA (2023). Con el reglamento vigente desde enero de 2026 y la Estrategia Nacional 2026-2030, el tema pasó del discurso a la exigencia, empezando por el sector público.</p>
+    </div>
+    <div class="tl" id="peruTl"></div>
+    <div class="stats">
+      <div class="stat"><b>5%</b><span>de empresas peruanas integra IA en procesos clave, la menor proporción entre los mercados evaluados.</span><br><a href="https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit">Forbes Perú / Tivit, nov. 2026</a></div>
+      <div class="stat"><b>7.º</b><span>puesto del Perú en el Índice Latinoamericano de IA 2026, con una de las notas de gobernanza más altas de la región.</span><br><a href="https://advise.ec/latinoamerica/peru/">Reporte sobre ILIA 2026 (CENIA/CEPAL)</a></div>
+      <div class="stat"><b>700+</b><span>alertas de desinformación detectadas por el JNE en las Elecciones Generales 2026, incluidas piezas manipuladas con IA.</span><br><a href="https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx">Andina, mar. 2026</a></div>
+    </div>
+  </div>
+</section>
+
+<section id="latam" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">América Latina</div>
+      <h2>La región regula a distintas velocidades</h2>
+      <p class="lead">Pocos países tienen una ley de IA vigente; la mayoría avanza con proyectos de ley, políticas nacionales y su ley de datos personales. Filtra por estado.</p>
+    </div>
+    <div class="filters" id="latFilters"></div>
+    <div class="latam" id="latam"></div>
+    <p class="note" style="margin-top:14px">El estado legislativo cambia rápido. Verifica en los portales oficiales de cada congreso antes de usar estos datos en un informe.</p>
+  </div>
+</section>
+
+<section id="marcos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Unidad III · Marcos internacionales</div>
+      <h2>Soft law, hard law y estándares: cómo se complementan</h2>
+      <p class="lead">Los principios orientan, la ley obliga y los estándares dicen cómo demostrarlo. Una empresa peruana con clientes en Europa puede tener que mirar los cinco.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Marco</th><th>Tipo</th><th>Qué aporta</th><th>Úsalo para</th></tr></thead>
+        <tbody>
+          <tr><td><b>Recomendación UNESCO</b><br><span class="src">2021, 193 Estados</span></td><td>Soft law</td><td>Valores (dignidad, derechos humanos, diversidad, medio ambiente) y 11 áreas de política pública. Incluye la metodología RAM de evaluación de preparación país.</td><td>Fundamentar la política ética institucional.</td></tr>
+          <tr><td><b>Principios OCDE</b><br><span class="src">2019, actualizados 2024</span></td><td>Soft law</td><td>Cinco principios de IA confiable y recomendaciones a gobiernos. Perú los suscribe como adherente.</td><td>Alinear el lenguaje con estándares de países OCDE.</td></tr>
+          <tr><td><b>NIST AI RMF + AI 600-1</b><br><span class="src">EE. UU., 2023 y 2024</span></td><td>Marco voluntario</td><td>Cuatro funciones: Gobernar, Mapear, Medir, Gestionar. El perfil 600-1 lista 12 riesgos propios de IA generativa (confabulación, privacidad, propiedad intelectual, contenido dañino, entre otros).</td><td>Armar el proceso de gestión de riesgos paso a paso.</td></tr>
+          <tr><td><b>ISO/IEC 42001</b><br><span class="src">2023</span></td><td>Estándar certificable</td><td>Sistema de gestión de IA (AIMS) con ciclo planificar-hacer-verificar-actuar, controles del Anexo A y evaluación de impacto.</td><td>Demostrar ante clientes y reguladores que la gobernanza funciona.</td></tr>
+          <tr><td><b>EU AI Act</b><br><span class="src">Reglamento (UE) 2024/1689</span></td><td>Hard law</td><td>Cuatro niveles de riesgo, prácticas prohibidas desde feb. 2025, reglas para modelos de propósito general desde ago. 2025. Las obligaciones de alto riesgo se postergan a dic. 2027 y ago. 2028 por el acuerdo provisional del Digital Omnibus (mayo 2026).</td><td>Referencia de diseño; obligatorio si se ofrece IA en la UE.</td></tr>
+          <tr><td><b>Ley 31814 y DS 115-2025-PCM</b><br><span class="src">Perú</span></td><td>Hard law</td><td>Enfoque de riesgo (inaceptable, alto, aceptable), supervisión humana, transparencia y evaluación de impacto obligatoria en el sector público. SGTD de la PCM como autoridad técnica.</td><td>Cumplimiento local, con implementación escalonada por sector.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="casos" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Casos reales</div>
+      <h2>Lo que salió bien, lo que salió mal y qué aprender</h2>
+      <p class="lead">Casos documentados en sector privado y público. Cada uno termina con la lección de gobernanza que deja.</p>
+    </div>
+    <div class="filters" id="caseFilters"></div>
+    <div class="cases" id="cases"></div>
+  </div>
+</section>
+
+<section id="noticias">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Noticias asociadas · actualizado al 24 nov. 2026</div>
+      <h2>Lo que se está moviendo</h2>
+      <p class="lead">Selección de noticias de 2026 sobre regulación, gobernanza y uso de IA en el Perú, la región y Europa. Cada nota enlaza a su fuente.</p>
+    </div>
+    <div class="filters" id="newsFilters"></div>
+    <div class="news" id="news"></div>
+  </div>
+</section>
+
+<section id="protocolo" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Unidad IV · Gobernanza aplicada</div>
+      <h2>Autodiagnóstico: ¿tu organización está lista?</h2>
+      <p class="lead">Basado en los componentes del protocolo institucional del sílabo, NIST AI RMF e ISO/IEC 42001. Marca lo que ya existe en tu organización. Tus respuestas se guardan solo en este navegador.</p>
+    </div>
+    <div class="tool">
+      <div class="checks" id="checks"></div>
+      <div class="score" aria-live="polite">
+        <div class="eyebrow">Nivel de madurez</div>
+        <div class="big" id="pct">0%</div>
+        <div class="bar"><i id="barFill"></i></div>
+        <h3 id="lvlName"></h3>
+        <p id="lvlText" class="lead"></p>
+        <div><div class="eyebrow" style="margin-bottom:6px">Siguiente paso sugerido</div><p id="nextStep"></p></div>
+        <button class="btn ghost" id="resetChecks" type="button">Reiniciar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Repaso</div>
+      <h2>Pon a prueba lo aprendido</h2>
+    </div>
+    <div class="quiz" id="quizBox"></div>
+  </div>
+</section>
+
+<section id="fuentes" class="band">
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Fuentes</div><h2>Referencias confiables</h2></div>
+    <ul class="srcs">
+      <li><a href="https://busquedas.elperuano.pe/dispositivo/NL/2436426-1">DS 115-2025-PCM, Reglamento de la Ley 31814 (El Peruano)</a></li>
+      <li><a href="https://elperuano.pe/noticia/294852-estrategia-2026-2030-promovera-uso-seguro-etico-e-inclusivo-de-ia">ENIA 2026-2030 (El Peruano)</a></li>
+      <li><a href="https://www.garrigues.com/es_ES/noticia/peru-aprueba-estrategia-nacional-inteligencia-artificial-enia-establece-obligaciones">Garrigues: Perú aprueba la ENIA</a></li>
+      <li><a href="https://www.gob.pe/institucion/pcm/noticias/1387571-gobierno-presenta-la-estrategia-nacional-de-inteligencia-artificial-enia-para-fortalecer-la-gestion-segura-inclusiva-y-etica-de-la-ia">PCM: presentación de la ENIA</a></li>
+      <li><a href="https://www.unesco.org/en/artificial-intelligence/recommendation-ethics">UNESCO: Recomendación sobre la Ética de la IA</a></li>
+      <li><a href="https://oecd.ai/en/ai-principles">OCDE: Principios de IA</a></li>
+      <li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI RMF</a> y <a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI 600-1</a></li>
+      <li><a href="https://www.iso.org/standard/42001">ISO/IEC 42001:2023</a></li>
+      <li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">Reglamento (UE) 2024/1689</a></li>
+      <li><a href="https://www.pinsentmasons.com/out-law/news/rules-high-risk-ai-delayed-under-eu-omnibus-deal">Pinsent Masons: acuerdo Digital Omnibus</a></li>
+      <li><a href="https://www.wipo.int/publications/en/details.jsp?id=4713">OMPI: IA generativa y propiedad intelectual</a></li>
+      <li><a href="https://unesdoc.unesco.org/ark:/48223/pf0000386693">UNESCO: IA generativa en educación e investigación</a></li>
+      <li><a href="https://oecd.ai/en/catalogue/tools">OCDE: catálogo de herramientas de IA confiable</a></li>
+      <li><a href="https://www.swissinfo.ch/spa/la-justicia-de-per%C3%BA-emplear%C3%A1-la-ia-para-analizar-expedientes-y-proyectar-resoluciones/89775025">Poder Judicial: asistente Curia (Swissinfo/EFE)</a></li>
+      <li><a href="https://observatorioblockchain.com/ia/la-administracion-tributaria-de-peru-fija-12-reglas-para-utilizar-la-ia/">SUNAT: 12 compromisos de uso de IA</a></li>
+      <li><a href="https://www.bbva.com/es/innovacion/ocho-principios-para-una-ia-responsable-en-bbva/">BBVA: ocho principios de IA responsable</a></li>
+      <li><a href="https://acento.com.do/radar-innovador/regulacion-de-la-ia-en-america-latina-quien-avanza-quien-frena-y-que-esta-en-juego-en-2026-9641659.html">Regulación de la IA en América Latina 2026</a></li>
+      <li><a href="https://andina.pe/agencia/noticia-elecciones-2026-jne-presento-guia-contra-desinformacion-1060767.aspx">JNE: Guía contra la desinformación</a></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Material de apoyo para el curso Ética y Normatividad en el uso de IAG, Maestría en IA para la Administración, UNMSM. Contenido informativo; no constituye asesoría legal. Datos revisados al 24 de noviembre de 2026.</div>
+</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const el=(t,a={},h="")=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);e.innerHTML=h;return e};
+
+/* ---------- UNIDADES ---------- */
+const units=[
+ {t:"I. Fundamentos éticos",w:"Semanas 1 a 4",d:"Qué es la IA generativa y con qué lentes éticas evaluarla.",c:["Diferencias entre IA, aprendizaje automático, modelos fundacionales y LLM","Capacidades, alucinaciones y límites","Enfoques deontológico, utilitarista, de la virtud y del cuidado","Principios: equidad, transparencia, explicabilidad, privacidad, supervisión humana"],e:"Mapa conceptual del ciclo de vida de la IA, deliberación ética de un caso y primer ensayo (semana 4).",r:["UNESCO 2021","OCDE 2024","Floridi 2023","Coeckelbergh 2020"]},
+ {t:"II. Riesgos y derechos",w:"Semanas 5 a 8",d:"Dónde la IA generativa puede dañar personas o a la organización.",c:["Sesgos, estereotipos, deepfakes y desinformación","Datos personales, consentimiento, anonimización, ataques por prompt","Derechos de autor, licencias, atribución y plagio","Declaración transparente del uso de IA"],e:"Auditoría básica de respuestas, matriz de riesgos de datos y examen parcial (semana 8).",r:["NIST AI 600-1","OMPI 2024","Comisión Europea: protección de datos"]},
+ {t:"III. Normativa y estándares",w:"Semanas 9 a 12",d:"Qué es obligatorio, qué es recomendable y quién responde.",c:["Ética, ley, regulación, política y estándar; hard law y soft law","Responsabilidades de proveedor, desarrollador, implementador y usuario","UNESCO, OCDE, NIST AI RMF, ISO/IEC 42001","EU AI Act y legislación nacional"],e:"Mapa de actores y normas, caso de cumplimiento con matriz normativa y exposición (semana 12).",r:["Reglamento (UE) 2024/1689","ISO/IEC 42001","NIST AI 100-1"]},
+ {t:"IV. Gobernanza aplicada",w:"Semanas 13 a 16",d:"Llevar todo a un protocolo que funcione en la institución.",c:["Evaluación de impacto: partes interesadas, daños, probabilidad y severidad","Controles preventivos, detectivos y correctivos; riesgo residual","Usos permitidos, condicionados y prohibidos","Indicadores, auditoría, reclamos, incidentes y rendición de cuentas"],e:"Protocolo institucional de uso responsable de IAG, sustentado ante comisión, y examen final (semana 16).",r:["NIST AI RMF Playbook","OCDE: catálogo de herramientas","ISO/IEC 42001"]}
+];
+const ut=$("#unitTabs"),up=$("#unitPanel");
+function showUnit(i){[...ut.children].forEach((b,j)=>b.setAttribute("aria-selected",i===j));const u=units[i];
+ up.innerHTML=`<div><div class="weeks">${u.w}</div><h3 style="font-size:1.4rem;margin-top:6px">${u.t}</h3><p class="lead" style="margin-top:8px">${u.d}</p><div class="deliv"><b>Entregables:</b> ${u.e}</div></div>
+ <div><div class="eyebrow">Contenidos</div><ul>${u.c.map(x=>`<li>${x}</li>`).join("")}</ul><div class="eyebrow" style="margin-top:16px">Lecturas clave</div><div class="hero-meta" style="margin-top:8px">${u.r.map(x=>`<span class="chip">${x}</span>`).join("")}</div></div>`;}
+units.forEach((u,i)=>{const b=el("button",{class:"tab",role:"tab",type:"button"},u.t);b.onclick=()=>showUnit(i);ut.append(b)});showUnit(0);
+
+/* ---------- PRINCIPIOS ---------- */
+const prin=[
+ ["Equidad","¿Probamos si el modelo trata distinto a mujeres, adultos mayores o personas de regiones?","Medir tasas de error y aprobación por grupo antes de lanzar, y repetir la medición cada trimestre.","UNESCO · OCDE"],
+ ["Transparencia","¿El cliente sabe que habla con una IA?","Avisar siempre que el interlocutor es un sistema automatizado y etiquetar contenido sintético.","Ley 31814 · EU AI Act art. 50"],
+ ["Explicabilidad","¿Podemos explicarle a alguien por qué le negamos un crédito?","Documentar las variables que pesan en la decisión y dar una razón comprensible al afectado.","OCDE · NIST"],
+ ["Privacidad","¿Qué datos personales entran al prompt y a dónde viajan?","Minimizar datos, anonimizar y no subir información de clientes a herramientas públicas sin contrato.","Ley 29733 · DS 016-2024-JUS"],
+ ["Seguridad","¿Resistimos un ataque por inyección de prompt?","Pruebas de red team, filtros de entrada y salida, y monitoreo de fugas.","NIST AI 600-1"],
+ ["Supervisión humana","¿Quién puede revisar y revertir lo que decide el sistema?","Definir un responsable con autoridad real para intervenir en decisiones de alto impacto.","DS 115-2025-PCM · EU AI Act art. 14"],
+ ["Responsabilidad","Si el chatbot promete algo falso, ¿quién responde?","La organización responde por lo que dice su IA. Asignar dueños por cada sistema.","Caso Air Canada 2024"],
+ ["Inclusión","¿Funciona en quechua, para personas con discapacidad o con baja conectividad?","Diseñar y probar con usuarios diversos; ofrecer siempre un canal humano alternativo.","UNESCO · ENIA"],
+ ["Sostenibilidad","¿Cuánta energía y agua consume nuestro uso de IA?","Elegir el modelo más pequeño que resuelva la tarea y medir su huella.","UNESCO"]
+];
+const pg=$("#principles");
+prin.forEach(p=>{const b=el("button",{class:"pcard",type:"button","aria-expanded":"false"},`<span class="tag">${p[3]}</span><h3>${p[0]}</h3><span class="q">${p[1]}</span><span class="a">${p[2]}</span>`);
+ b.onclick=()=>{b.classList.toggle("open");b.setAttribute("aria-expanded",b.classList.contains("open"))};pg.append(b)});
+
+/* ---------- DILEMAS ---------- */
+const dils=[
+ {t:"Scoring de crédito con IA",x:"Un banco puede aprobar créditos en segundos con un modelo que reduce la morosidad 15%, pero rechaza más a trabajadores informales de regiones, que tienen menos historial.",
+  l:{"Deontológico":["Hay un deber de no discriminar y de explicar la decisión al cliente, sin importar la ganancia.","Exige explicación individual y revisión humana de cada rechazo."],
+     "Utilitarista":["Suma el beneficio de más créditos y menor mora frente al daño de excluir a miles de informales.","Aceptable solo si se corrige el sesgo y el beneficio neto alcanza también a los excluidos."],
+     "Ética de la virtud":["¿Qué haría un banquero prudente y justo? No escondería un sesgo detrás de un número.","Publicar criterios y aceptar un poco menos de eficiencia a cambio de justicia."],
+     "Ética del cuidado":["Pone el foco en la relación con el cliente más vulnerable y en su contexto.","Crear una ruta alternativa con datos no tradicionales y acompañamiento humano."]}},
+ {t:"Chatbot del Estado en salud",x:"Un hospital público usa un asistente de IA generativa para orientar a pacientes. Reduce colas, pero a veces inventa información (alucina) sobre medicamentos.",
+  l:{"Deontológico":["El Estado tiene el deber de no dañar y de informar con verdad.","No debe dar indicaciones clínicas; solo orientar trámites, con aviso claro de que es IA."],
+     "Utilitarista":["Miles de consultas resueltas frente a pocos errores graves de alto costo.","Viable si se limitan los temas y se mide la tasa de error con umbrales de retiro."],
+     "Ética de la virtud":["Un servidor público íntegro no lanza algo que no entiende.","Piloto controlado y transparencia sobre sus límites."],
+     "Ética del cuidado":["El paciente mayor o con poca alfabetización digital es el más expuesto.","Derivación inmediata a una persona y diseño en lenguaje sencillo y en quechua."]}},
+ {t:"Monitoreo de empleados con IA",x:"Una empresa de telecomunicaciones quiere analizar llamadas de su call center con IA para evaluar el desempeño y decidir bonos y despidos.",
+  l:{"Deontológico":["Las personas no son medios: deben saberlo y consentir, y tener derecho a impugnar.","Informar, limitar la finalidad y prohibir despidos decididos solo por la IA."],
+     "Utilitarista":["Mejor calidad de servicio frente a estrés, vigilancia y posibles errores.","Usar la IA para capacitar, no para sancionar automáticamente."],
+     "Ética de la virtud":["Un buen líder busca confianza, no control total.","Construir el sistema con los trabajadores y sus representantes."],
+     "Ética del cuidado":["Considera el impacto emocional y la desigualdad de poder.","Canal de reclamo, revisión humana y datos que no salgan del propósito."]}}
+];
+let dI=0,lK=null;
+const dt=$("#dilTabs"),lr=$("#lensRow"),lo=$("#lensOut");
+function drawDil(){[...dt.children].forEach((b,j)=>b.setAttribute("aria-selected",j===dI));const d=dils[dI];$("#dilTitle").textContent=d.t;$("#dilText").textContent=d.x;
+ lr.innerHTML="";Object.keys(d.l).forEach(k=>{const b=el("button",{class:"lens"+(k===lK?" on":""),type:"button"},k);b.onclick=()=>{lK=k;drawDil()};lr.append(b)});
+ lo.innerHTML=lK?`<div class="verdict">Lente: ${lK}</div><p>${d.l[lK][0]}</p><p><b>Decisión que sugiere:</b> ${d.l[lK][1]}</p>`:`<p class="lead">Elige una lente para ver cómo cambia la respuesta. Compara al menos dos: ahí está el aprendizaje.</p>`;}
+dils.forEach((d,i)=>{const b=el("button",{class:"tab",type:"button"},d.t);b.onclick=()=>{dI=i;drawDil()};dt.append(b)});
+lK="Deontológico";drawDil();
+
+/* ---------- RIESGO ---------- */
+const lv={ban:["Inaceptable","lv-ban"],high:["Alto","lv-high"],warn:["Limitado","lv-warn"],ok:["Mínimo","lv-ok"]};
+const uses=[
+ {n:"Puntaje social de ciudadanos para dar o quitar beneficios",s:"Sector público",l:"ban",pe:"Riesgo inaceptable: uso prohibido por afectar derechos fundamentales.",eu:"Práctica prohibida (art. 5) desde febrero de 2025.",c:["No implementar","Revisar sistemas existentes que se parezcan a esta práctica"]},
+ {n:"IA que manipula decisiones explotando vulnerabilidades (edad, discapacidad)",s:"Comercial",l:"ban",pe:"Riesgo inaceptable: manipulación que vulnera la autonomía.",eu:"Práctica prohibida (art. 5).",c:["No implementar","Auditar campañas de marketing automatizadas"]},
+ {n:"Evaluación crediticia de personas",s:"Banca",l:"high",pe:"Riesgo alto: decisiones con impacto en derechos económicos (art. 24 del reglamento).",eu:"Alto riesgo (Anexo III).",c:["Evaluación de impacto y pruebas de sesgo","Explicación al cliente y revisión humana","Registros y trazabilidad","Gestión de datos de calidad"]},
+ {n:"Selección, ascenso o despido de personal",s:"RR. HH.",l:"high",pe:"Riesgo alto: afecta el acceso al empleo y puede discriminar.",eu:"Alto riesgo (Anexo III, empleo).",c:["Informar a postulantes y trabajadores","Pruebas de equidad por género y edad","Decisión final humana"]},
+ {n:"Triaje o apoyo al diagnóstico en salud",s:"Salud",l:"high",pe:"Riesgo alto: compromete la vida y la integridad.",eu:"Alto riesgo como dispositivo médico.",c:["Validación clínica","Supervisión del profesional de salud","Monitoreo de errores en producción"]},
+ {n:"Gestión de red eléctrica o de agua",s:"Energía",l:"high",pe:"Riesgo alto: infraestructura crítica y seguridad física.",eu:"Alto riesgo (infraestructura crítica).",c:["Pruebas de robustez y ciberseguridad","Plan de contingencia manual","Registro de incidentes"]},
+ {n:"Asignación de programas sociales",s:"Sector público",l:"high",pe:"Riesgo alto y evaluación de impacto obligatoria para entidades públicas.",eu:"Alto riesgo (acceso a servicios públicos esenciales).",c:["Evaluación de impacto algorítmico","Mecanismo de reclamo y reparación","Publicar el uso del sistema"]},
+ {n:"Chatbot de atención al cliente",s:"Telecom / banca",l:"warn",pe:"Riesgo aceptable con deber de transparencia: avisar que es IA.",eu:"Riesgo limitado (art. 50): informar que se interactúa con IA.",c:["Aviso visible de IA","Derivación a humano","Revisar lo que promete el bot"]},
+ {n:"Generación de imágenes o videos de marketing",s:"Comercial",l:"warn",pe:"Transparencia: etiquetar contenido generado.",eu:"Riesgo limitado: marcar contenido sintético y deepfakes.",c:["Etiquetado de contenido sintético","Revisión de derechos de autor e imagen"]},
+ {n:"Resumen de documentos internos o correo",s:"Productividad",l:"ok",pe:"Riesgo bajo; aplican buenas prácticas y protección de datos.",eu:"Riesgo mínimo.",c:["No ingresar datos sensibles en herramientas públicas","Verificación humana de lo generado","Política interna de uso"]},
+ {n:"Filtro de spam o clasificación de tickets",s:"Operaciones",l:"ok",pe:"Riesgo bajo.",eu:"Riesgo mínimo.",c:["Monitoreo básico de desempeño"]}
+];
+const ul=$("#uses"),rr=$("#riskResult");
+function showUse(i){[...ul.children].forEach((b,j)=>b.classList.toggle("on",j===i));const u=uses[i],L=lv[u.l];
+ rr.innerHTML=`<div><span class="level ${L[1]}">Riesgo ${L[0]}</span></div><h3 style="font-size:1.25rem">${u.n}</h3>
+ <dl><div><dt>Perú · Ley 31814 y reglamento</dt><dd>${u.pe}</dd></div><div><dt>Unión Europea · AI Act</dt><dd>${u.eu}</dd></div>
+ <div><dt>Controles mínimos</dt><dd><ul style="margin:4px 0 0;padding-left:18px">${u.c.map(x=>`<li>${x}</li>`).join("")}</ul></dd></div></dl>`;}
+uses.forEach((u,i)=>{const L=lv[u.l];const b=el("button",{class:"use",type:"button"},`<span>${u.n}<br><span class="s">${u.s}</span></span><span class="level ${L[1]}">${L[0]}</span>`);b.onclick=()=>showUse(i);ul.append(b)});
+showUse(2);
+document.querySelectorAll(".pyr").forEach((a,i)=>a.addEventListener("click",()=>{const k=["ban","high","warn","ok"][i];showUse(uses.findIndex(u=>u.l===k))}));
+
+/* ---------- PERU TIMELINE ---------- */
+const peru=[
+ ["Jul. 2011","Ley 29733 de Protección de Datos Personales","Base para todo uso de datos en IA. Su nuevo reglamento, DS 016-2024-JUS, rige desde marzo de 2025 e incluye reglas sobre tratamiento automatizado."],
+ ["Jul. 2023","Ley 31814","Promueve el uso de la IA para el desarrollo económico y social, con principios de seguridad basada en riesgos, ética y privacidad. Encarga a la PCM la rectoría."],
+ ["Set. 2025","DS 115-2025-PCM, reglamento de la Ley 31814","Clasifica usos en riesgo inaceptable, alto y aceptable; exige supervisión humana, transparencia y evaluación de impacto obligatoria para entidades públicas. Vigente desde enero de 2026 con plazos escalonados por sector."],
+ ["2025-2026","SUNAT y Poder Judicial","SUNAT aprueba una política de uso responsable con 12 compromisos y usa IA en fiscalización y en su asistente SOFIA. El Poder Judicial registra Curia, asistente de IA generativa para jueces."],
+ ["Mar. 2026","Elecciones Generales y desinformación","El JNE publica la Guía contra la desinformación (con detección de deepfakes), incluye la IA en el Pacto Ético Electoral y reporta más de 700 alertas."],
+ ["May. 2026","ENIA 2026-2030 (RM 152-2026-PCM)","Estrategia Nacional de IA para toda la administración pública, con cuatro pilares que incluyen un marco ético y regulatorio. Busca pasar de Estado digital a Estado inteligente."],
+ ["Nov. 2026","Debate público","Especialistas advierten sobre dependencia tecnológica y proponen un Consejo Nacional Científico y Ciudadano de IA. El Minsa avanza con un lineamiento de uso ético de IA en salud."]
+];
+const pt=$("#peruTl");peru.forEach(e=>pt.append(el("div",{class:"ev"},`<div class="d">${e[0]}</div><div><h3>${e[1]}</h3><p>${e[2]}</p></div>`)));
+
+/* ---------- LATAM ---------- */
+const lat=[
+ {c:"Perú",k:"law",s:"Ley vigente",t:"Ley 31814 (2023) y reglamento DS 115-2025-PCM vigente desde 2026. ENIA 2026-2030 para el sector público."},
+ {c:"El Salvador",k:"law",s:"Ley vigente",t:"Ley de Fomento de la IA y Tecnologías (2025), orientada a promover inversión e innovación."},
+ {c:"Brasil",k:"bill",s:"Proyecto avanzado",t:"PL 2338/2023 aprobado por el Senado en dic. 2024, inspirado en el enfoque de riesgo europeo. En revisión en la Cámara de Diputados. Tiene la LGPD y una autoridad de datos (ANPD) activa."},
+ {c:"Chile",k:"bill",s:"Proyecto avanzado",t:"Proyecto de ley de IA basado en riesgo (Boletín 16821-19) aprobado en la Cámara y en trámite en el Senado. Nueva ley de datos personales 21.719 entra en vigor en dic. 2026. Lidera el ILIA 2026."},
+ {c:"Colombia",k:"pol",s:"Política + proyectos",t:"Política Nacional de IA (CONPES 4144, feb. 2025) y proyectos de ley en trámite. La SIC aplica la Ley 1581 de datos. Su Corte Constitucional fijó criterios sobre jueces que usan IA (T-323 de 2024)."},
+ {c:"México",k:"bill",s:"Proyectos",t:"Varias iniciativas en el Congreso sin ley general aprobada. Protección de datos bajo la nueva ley federal de 2025."},
+ {c:"Uruguay",k:"pol",s:"Estrategia",t:"Estrategia Nacional de IA actualizada y alto puntaje en el ILIA. Ley de datos con nivel adecuado reconocido por la UE."},
+ {c:"Argentina",k:"pol",s:"Lineamientos",t:"Recomendaciones para una IA fiable en el sector público y proyectos de ley en discusión. Caso de Salta (2018) es referencia de riesgo en programas sociales."}
+];
+const lf=$("#latFilters"),lg=$("#latam");let lk="all";
+const latF=[["all","Todos"],["law","Ley vigente"],["bill","Proyecto de ley"],["pol","Política o estrategia"]];
+function drawLat(){[...lf.children].forEach((b,i)=>b.setAttribute("aria-selected",latF[i][0]===lk));lg.innerHTML="";
+ lat.filter(x=>lk==="all"||x.k===lk).forEach(x=>lg.append(el("article",{class:"ctry"},`<header><h3>${x.c}</h3><span class="st st-${x.k}">${x.s}</span></header><p>${x.t}</p>`)));}
+latF.forEach(f=>{const b=el("button",{class:"tab",type:"button"},f[1]);b.onclick=()=>{lk=f[0];drawLat()};lf.append(b)});drawLat();
+
+/* ---------- CASOS ---------- */
+const cases=[
+ {s:"Banca",t:"BBVA: ocho principios e inventario de modelos",r:"ok",p:"El grupo, con fuerte presencia en Perú, Colombia y México, gobierna su IA con ocho principios, normas internas alineadas al AI Act y un inventario centralizado de modelos.",l:"Saber qué modelos tienes en producción es el primer control. Sin inventario no hay gobernanza.",u:"https://www.bbva.com/es/innovacion/ocho-principios-para-una-ia-responsable-en-bbva/",f:"BBVA"},
+ {s:"Banca",t:"Apple Card: límites de crédito distintos para parejas",r:"bad",p:"En 2019 clientes denunciaron que el algoritmo daba límites menores a mujeres. El regulador de Nueva York (2021) no halló discriminación ilegal, pero criticó la falta de transparencia con los clientes.",l:"Aunque el modelo no use el género, el banco debe poder explicar cada decisión y medir resultados por grupo.",u:"https://www.dfs.ny.gov/reports_and_publications/press_releases/pr202103231",f:"NYDFS"},
+ {s:"Banca",t:"Nubank y Bancolombia lideran madurez de IA",r:"ok",p:"El ranking regional de Evident ubica a Nubank primero y a Bancolombia entre los diez bancos más avanzados de América Latina, evaluando talento, innovación, liderazgo y transparencia.",l:"La transparencia sobre el uso de IA ya es un factor de reputación que se mide públicamente.",u:"https://www.enter.co/?p=585487",f:"Enter.co"},
+ {s:"Telecom",t:"Telefónica: principios de IA desde 2018",r:"ok",p:"Fue una de las primeras empresas de la región en publicar principios de IA: justa, transparente y explicable, centrada en las personas, con privacidad y seguridad desde el diseño, extendida a sus proveedores.",l:"Los principios deben alcanzar a la cadena de proveedores, no solo a los desarrollos propios.",u:"https://www.telefonica.com/es/sostenibilidad-innovacion/como-trabajamos/negocio-responsable/inteligencia-artificial/",f:"Telefónica"},
+ {s:"Telecom",t:"Samsung: código confidencial filtrado en un chatbot",r:"bad",p:"En 2023 ingenieros pegaron código fuente y notas internas en ChatGPT. La empresa restringió el uso de IA generativa pública.",l:"Política de uso clara: qué datos nunca se ingresan y qué herramientas están aprobadas.",u:"https://www.bloomberg.com/news/articles/2023-05-02/samsung-bans-chatgpt-and-other-generative-ai-use-by-staff-after-leak",f:"Bloomberg"},
+ {s:"Energía",t:"Infraestructura crítica: alto riesgo por diseño",r:"mix",p:"Las eléctricas usan IA para pronóstico de demanda, mantenimiento predictivo e integración de renovables. Tanto el reglamento peruano como el AI Act tratan la gestión de redes como uso de riesgo alto.",l:"Plan manual de contingencia, pruebas de robustez y ciberseguridad antes de automatizar decisiones sobre la red.",u:"https://eur-lex.europa.eu/eli/reg/2024/1689/oj",f:"Reglamento (UE) 2024/1689, Anexo III"},
+ {s:"Servicios",t:"Air Canada: responsable por lo que dijo su chatbot",r:"bad",p:"En 2024 un tribunal canadiense obligó a la aerolínea a respetar una política de reembolso falsa que inventó su chatbot. La empresa alegó que el bot era una entidad separada y perdió.",l:"La organización responde por lo que dice su IA frente al consumidor.",u:"https://www.canlii.org/en/bc/bccrt/doc/2024/2024bccrt149/2024bccrt149.html",f:"CanLII"},
+ {s:"RR. HH.",t:"Amazon: reclutamiento que penalizaba a mujeres",r:"bad",p:"Un modelo entrenado con diez años de CV, mayormente de hombres, aprendió a bajar el puntaje de candidatas. Amazon lo abandonó en 2018.",l:"Los datos históricos traen los sesgos del pasado. Hay que probar equidad antes de usarlos.",u:"https://www.reuters.com/article/idUSKCN1MK0AG/",f:"Reuters"},
+ {s:"Sector público",t:"SUNAT: IA en fiscalización con 12 compromisos",r:"ok",p:"Usa IA y análisis masivo de datos para fiscalización y su asistente SOFIA, y aprobó una política de uso responsable en cumplimiento de la Ley 31814.",l:"Publicar compromisos da legitimidad, pero hace falta auditoría y vías de reclamo para el contribuyente.",u:"https://observatorioblockchain.com/ia/la-administracion-tributaria-de-peru-fija-12-reglas-para-utilizar-la-ia/",f:"Observatorio Blockchain"},
+ {s:"Sector público",t:"Poder Judicial: asistente Curia para jueces",r:"mix",p:"Asistente de IA generativa registrado ante Indecopi para analizar expedientes y proyectar resoluciones, presentado con compromisos de uso ético y transparente.",l:"El juez debe seguir siendo autor de la decisión; la IA solo propone y todo debe ser verificable.",u:"https://www.swissinfo.ch/spa/la-justicia-de-per%C3%BA-emplear%C3%A1-la-ia-para-analizar-expedientes-y-proyectar-resoluciones/89775025",f:"Swissinfo / EFE"},
+ {s:"Sector público",t:"JNE: IA contra la desinformación electoral",r:"ok",p:"Para 2026 usó herramientas de IA para rastrear contenido en redes, publicó una guía para detectar deepfakes y desarrolló Elexia, probada en elecciones complementarias de 2025.",l:"La IA también sirve para defender la integridad de la información.",u:"https://andina.pe/agencia/noticia-elecciones-2026-jne-presento-guia-contra-desinformacion-1060767.aspx",f:"Andina"},
+ {s:"Sector público",t:"Países Bajos: escándalo de subsidios infantiles",r:"bad",p:"Un sistema de riesgo marcó como fraudulentas a miles de familias, con peso de la doble nacionalidad. El gobierno renunció en enero de 2021.",l:"Evaluación de impacto obligatoria y derecho a reclamo en programas sociales.",u:"https://www.amnesty.org/en/documents/eur35/4686/2021/en/",f:"Amnistía Internacional"},
+ {s:"Sector público",t:"Salta, Argentina: predecir embarazo adolescente",r:"bad",p:"En 2018 el gobierno provincial anunció un sistema para predecir qué adolescentes quedarían embarazadas. Fue criticado por errores metodológicos y estigmatización.",l:"Predecir no es intervenir bien. Los grupos vulnerables necesitan protección extra.",u:"https://www.wired.com/story/argentina-algorithms-pregnancy-prediction/",f:"Wired"},
+ {s:"Justicia",t:"Colombia: juez usa ChatGPT en una sentencia",r:"mix",p:"En 2023 un juez de Cartagena consultó ChatGPT en un fallo de tutela. La Corte Constitucional (T-323 de 2024) aceptó el uso de IA con transparencia, verificación y sin sustituir al juez.",l:"Declarar el uso de IA y verificar cada dato es la regla mínima.",u:"https://www.corteconstitucional.gov.co/relatoria/2024/T-323-24.htm",f:"Corte Constitucional"}
+];
+const rTag={ok:["Buena práctica","lv-ok"],bad:["Falla","lv-ban"],mix:["Con reservas","lv-warn"]};
+const cf=$("#caseFilters"),cg=$("#cases");let ck="Todos";
+const cSec=["Todos",...new Set(cases.map(c=>c.s))];
+function drawCases(){[...cf.children].forEach((b,i)=>b.setAttribute("aria-selected",cSec[i]===ck));cg.innerHTML="";
+ cases.filter(c=>ck==="Todos"||c.s===ck).forEach(c=>{const R=rTag[c.r];cg.append(el("article",{class:"case"},`<div class="meta"><span class="sector">${c.s}</span><span class="level ${R[1]}">${R[0]}</span></div><h3>${c.t}</h3><p>${c.p}</p><div class="lesson"><b>Lección:</b> ${c.l}</div><a class="src" href="${c.u}">Fuente: ${c.f}</a>`))});}
+cSec.forEach(s=>{const b=el("button",{class:"tab",type:"button"},s);b.onclick=()=>{ck=s;drawCases()};cf.append(b)});drawCases();
+
+/* ---------- NOTICIAS ---------- */
+const news=[
+ ["19 nov. 2026","Perú","Solo el 5% de empresas peruanas integra IA a procesos clave","Encuesta de Tivit: la mitad de ejecutivos reporta algún gobierno formal para IA generativa.","https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit","Forbes Perú"],
+ ["Nov. 2026","Perú","Especialistas piden un Consejo Nacional Científico y Ciudadano de IA","Advierten sobre la dependencia tecnológica del país y reclaman participación ciudadana en la estrategia.","https://altavoz.pe/politica/peru-esta-expuesto-a-la-dependencia-tecnologica-intelectuales-reclaman-una-estrategia-nacional-de-inteligencia-artificial/","Altavoz"],
+ ["2026","Perú","UNESCO Perú lleva a la FIL 2026 el debate sobre los horizontes éticos de la IA","Diálogo público sobre la Recomendación de UNESCO y su aplicación en el país.","https://www.unesco.org/es/articles/unesco-peru-impulsa-en-la-fil2026-dialogo-sobre-los-horizontes-eticos-de-la-inteligencia-artificial","UNESCO"],
+ ["2026","Perú","Minsa prepara una política de IA en salud","Lineamientos para el uso seguro y ético de IA en sistemas de salud.","https://consultorsalud.com/inteligencia-artificial-salud-peru-politica/","ConsultorSalud"],
+ ["May. 2026","Perú","Gobierno aprueba la Estrategia Nacional de IA 2026-2030","RM 152-2026-PCM, aplicable a toda la administración pública, con un pilar de marco ético y regulatorio.","https://andina.pe/ingles/noticia-peru-government-approves-national-artificial-intelligence-strategy-2026–2030-1073446.aspx","Andina"],
+ ["7 may. 2026","Europa","UE pacta postergar las obligaciones de alto riesgo del AI Act","Acuerdo provisional del Digital Omnibus: dic. 2027 para sistemas autónomos y ago. 2028 para los integrados en productos.","https://www.pinsentmasons.com/out-law/news/rules-high-risk-ai-delayed-under-eu-omnibus-deal","Pinsent Masons"],
+ ["Mar. 2026","Perú","JNE detecta más de 700 alertas de desinformación en la campaña","El comité de verificación reforzó el rastreo con IA en TikTok, X, Facebook y streaming.","https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx","Andina"],
+ ["2026","Latam","¿Quién avanza y quién frena en la regulación de IA en la región?","Brasil y Chile con proyectos avanzados; Perú y El Salvador con leyes vigentes.","https://acento.com.do/radar-innovador/regulacion-de-la-ia-en-america-latina-quien-avanza-quien-frena-y-que-esta-en-juego-en-2026-9641659.html","Acento"],
+ ["2026","Perú","SUNAT, comercio y banca: los avances en IA para 2026","El 45,6% de empresas locales ya había implementado IA en 2025, según Sonda.","https://gestion.pe/g-de-gestion/reportaje/sunat-comercio-y-banca-los-avances-en-ia-y-nube-para-el-2026-segun-sonda-peru-noticia/","Gestión"]
+];
+const nf=$("#newsFilters"),ng=$("#news");let nk="Todas";const nTags=["Todas","Perú","Latam","Europa"];
+function drawNews(){[...nf.children].forEach((b,i)=>b.setAttribute("aria-selected",nTags[i]===nk));ng.innerHTML="";
+ news.filter(n=>nk==="Todas"||n[1]===nk).forEach(n=>ng.append(el("article",{class:"nitem"},`<div class="d">${n[0]}</div><div><h3><a href="${n[4]}" style="color:inherit">${n[2]}</a></h3><p>${n[3]} <span class="src">· ${n[5]}</span></p></div><span class="ntag">${n[1]}</span>`)));}
+nTags.forEach(t=>{const b=el("button",{class:"tab",type:"button"},t);b.onclick=()=>{nk=t;drawNews()};nf.append(b)});drawNews();
+
+/* ---------- PROTOCOLO ---------- */
+const checks=[
+ ["Gobernar",["Existe un responsable o comité de IA con autoridad para aprobar y detener sistemas","Tenemos una política de uso de IA generativa aprobada por la dirección","Definimos usos permitidos, condicionados y prohibidos"]],
+ ["Mapear",["Tenemos un inventario de todos los sistemas y herramientas de IA en uso","Clasificamos cada sistema por nivel de riesgo","Identificamos partes interesadas y grupos vulnerables afectados"]],
+ ["Medir",["Hacemos evaluación de impacto antes de lanzar sistemas de riesgo alto","Probamos sesgos y alucinaciones con casos reales","Medimos el desempeño de los modelos en producción"]],
+ ["Gestionar",["Hay supervisión humana con poder de revertir decisiones","Avisamos a usuarios cuando interactúan con IA o ven contenido sintético","Tenemos un procedimiento de reporte y respuesta a incidentes","Ofrecemos un canal de reclamo y reparación a los afectados","Capacitamos al personal y revisamos la política al menos una vez al año"]]
+];
+const cb=$("#checks");let saved={};try{saved=JSON.parse(localStorage.getItem("iar-checks")||"{}")}catch(e){}
+let idx=0;checks.forEach(g=>{cb.append(el("div",{class:"grp"},g[0]));g[1].forEach(t=>{const id="ck"+idx++;const l=el("label",{for:id},`<input type="checkbox" id="${id}"${saved[id]?" checked":""}><span>${t}</span>`);cb.append(l)})});
+const levels=[[0,"Inicial","La IA se usa sin reglas formales. El riesgo depende del criterio de cada persona.","Nombra un responsable y aprueba una política breve de uso de IA generativa."],
+ [30,"En desarrollo","Hay reglas básicas, pero falta visibilidad de qué sistemas existen y cuánto riesgo tienen.","Construye el inventario de sistemas y clasifícalos por riesgo según el reglamento de la Ley 31814."],
+ [60,"Definido","La gobernanza existe y se aplica en los casos importantes.","Formaliza evaluaciones de impacto y un procedimiento de incidentes."],
+ [85,"Gestionado","Gobernanza madura, comparable a un sistema ISO/IEC 42001.","Evalúa una auditoría externa o la certificación ISO/IEC 42001."]];
+function score(){const all=[...cb.querySelectorAll("input")];const n=all.filter(i=>i.checked).length;const p=Math.round(n/all.length*100);
+ const s={};all.forEach(i=>{if(i.checked)s[i.id]=1});try{localStorage.setItem("iar-checks",JSON.stringify(s))}catch(e){}
+ $("#pct").textContent=p+"%";$("#barFill").style.width=p+"%";const L=[...levels].reverse().find(l=>p>=l[0]);$("#lvlName").textContent=L[1];$("#lvlText").textContent=L[2];$("#nextStep").textContent=L[3];}
+cb.addEventListener("change",score);$("#resetChecks").onclick=()=>{cb.querySelectorAll("input").forEach(i=>i.checked=false);score()};score();
+
+/* ---------- QUIZ ---------- */
+const qs=[
+ ["¿Qué norma reglamenta la Ley 31814 de IA en el Perú?",["DS 016-2024-JUS","DS 115-2025-PCM","RM 152-2026-PCM","Ley 29733"],1,"El DS 115-2025-PCM es el reglamento. El DS 016-2024-JUS reglamenta la ley de datos personales y la RM 152-2026-PCM aprueba la ENIA."],
+ ["Un banco usa IA para aprobar créditos. ¿Qué nivel de riesgo tiene?",["Mínimo","Limitado","Alto","Inaceptable"],2,"La evaluación crediticia afecta derechos económicos: es riesgo alto en el Perú y en la UE."],
+ ["¿Cuáles son las cuatro funciones del NIST AI RMF?",["Planificar, hacer, verificar, actuar","Gobernar, mapear, medir, gestionar","Identificar, proteger, detectar, responder","Diseñar, entrenar, desplegar, retirar"],1,"Gobernar, Mapear, Medir y Gestionar. El ciclo PHVA corresponde a ISO/IEC 42001."],
+ ["¿Qué enseña el caso Air Canada (2024)?",["Los chatbots no tienen responsabilidad legal","La empresa responde por lo que dice su IA","Hay que prohibir los chatbots","Solo aplica en Europa"],1,"El tribunal rechazó que el bot fuera una entidad separada: la empresa respondió por la información falsa."],
+ ["¿Qué tipo de instrumento es ISO/IEC 42001?",["Una ley internacional","Un tratado de la ONU","Un estándar certificable de sistema de gestión","Un código de ética voluntario sin requisitos"],2,"Es un estándar de sistema de gestión de IA que puede auditarse y certificarse."],
+ ["En el Perú, ¿para quién es obligatoria la evaluación de impacto según el reglamento?",["Solo para startups","Para entidades públicas","Para nadie","Solo para bancos"],1,"Es obligatoria para entidades públicas; para el sector privado es voluntaria, aunque recomendable en usos de riesgo alto."]
+];
+let qi=0,good=0,answered=false;const qb=$("#quizBox");
+function drawQ(){answered=false;if(qi>=qs.length){qb.innerHTML=`<div class="eyebrow">Resultado</div><div class="big">${good} / ${qs.length}</div><p class="lead">${good>=5?"Dominas los conceptos clave del curso.":good>=3?"Buen avance. Repasa las secciones de marcos y riesgo.":"Vuelve a recorrer la página y prueba otra vez."}</p><div><button class="btn" id="qRe" type="button">Reintentar</button></div>`;$("#qRe").onclick=()=>{qi=0;good=0;drawQ()};return}
+ const q=qs[qi];qb.innerHTML=`<div class="eyebrow">Pregunta ${qi+1} de ${qs.length}</div><h3 style="font-size:1.2rem">${q[0]}</h3><div class="opts">${q[1].map((o,i)=>`<button class="opt" data-i="${i}" type="button">${o}</button>`).join("")}</div><p id="qExp" class="lead" aria-live="polite"></p><div class="qfoot"><span class="note">Aciertos: ${good}</span><button class="btn" id="qNext" type="button" hidden>Siguiente</button></div>`;
+ qb.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(answered)return;answered=true;const i=+b.dataset.i;if(i===q[2])good++;else b.classList.add("wrong");qb.querySelectorAll(".opt")[q[2]].classList.add("right");$("#qExp").textContent=q[3];$("#qNext").hidden=false;});
+ $("#qNext").onclick=()=>{qi++;drawQ()};}
+drawQ();
+
+/* ---------- NAV ACTIVA ---------- */
+const links=[...document.querySelectorAll("#navlist a")];
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id))}}),{rootMargin:"-45% 0px -50% 0px"});
+document.querySelectorAll("section[id]").forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
