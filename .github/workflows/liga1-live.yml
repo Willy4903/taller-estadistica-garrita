@@ -13,6 +13,7 @@ on:
 permissions:
   contents: write
   pages: write
+  actions: read
   id-token: write
 
 concurrency:
