@@ -7,33 +7,25 @@
 <title>IA Responsable Perú</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Sora:wght@500;600;700;800&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: columna editorial de 1120px; bandas a todo el ancho por sección; nav fija con anclas */
 :root{
-  --bg:#F3F6F5; --surface:#FFFFFF; --ink:#13212A; --muted:#55666F; --line:#D5DEDC;
-  --accent:#0E6B66; --accent-soft:#DCEEEC; --band:#E6EEEC;
-  --ok:#2E7D4F; --warn:#B7791F; --high:#C2410C; --ban:#9F1239;
-  --ok-bg:#E3F2E8; --warn-bg:#FBF1DE; --high-bg:#FDE8DC; --ban-bg:#FBE3EA;
-  --f-display:"Sora",system-ui,sans-serif; --f-body:"Source Sans 3",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+  --bg:#070B1F; --surface:#0F1533; --ink:#E8ECFF; --muted:#9AA3C7; --line:#252E5C;
+  --accent:#22D3EE; --accent2:#A855F7; --accent-soft:rgba(34,211,238,.12); --band:#0A0F28;
+  --ok:#22D3EE; --warn:#C4B5FD; --high:#E879F9; --ban:#F472B6;
+  --ok-bg:rgba(34,211,238,.12); --warn-bg:rgba(196,181,253,.12); --high-bg:rgba(232,121,249,.14); --ban-bg:rgba(244,114,182,.16);
+  --glow:0 0 0 1px rgba(168,85,247,.35),0 0 24px rgba(168,85,247,.18);
+  --f-display:"Orbitron","Sora",system-ui,sans-serif; --f-body:"Source Sans 3",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0E1619; --surface:#152126; --ink:#E4ECEA; --muted:#9AAAA8; --line:#26363B;
-  --accent:#4FC1B8; --accent-soft:#163A38; --band:#121D21;
-  --ok:#6FCF97; --warn:#E9B45A; --high:#F2915E; --ban:#F17C9A;
-  --ok-bg:#16301F; --warn-bg:#33280F; --high-bg:#3A2013; --ban-bg:#3A1622; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0E1619; --surface:#152126; --ink:#E4ECEA; --muted:#9AAAA8; --line:#26363B;
-  --accent:#4FC1B8; --accent-soft:#163A38; --band:#121D21;
-  --ok:#6FCF97; --warn:#E9B45A; --high:#F2915E; --ban:#F17C9A;
-  --ok-bg:#16301F; --warn-bg:#33280F; --high-bg:#3A2013; --ban-bg:#3A1622; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+body{background:radial-gradient(1200px 600px at 85% -10%,rgba(168,85,247,.22),transparent 60%),radial-gradient(900px 500px at -10% 30%,rgba(34,211,238,.12),transparent 60%),var(--bg);background-attachment:fixed;color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 .wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
-h2{font-size:clamp(1.6rem,3.2vw,2.3rem);font-weight:700}
-h3{font-size:1.12rem;font-weight:600}
+h2{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:700;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+h3{font-size:1.08rem;font-weight:600;font-family:"Sora",system-ui,sans-serif}
 p{margin:0}
 a{color:var(--accent)}
 .eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
@@ -45,7 +37,7 @@ button{font:inherit;cursor:pointer}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
 /* nav */
-.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(7,11,31,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .nav .wrap{display:flex;align-items:center;gap:20px;height:58px}
 .brand{font-family:var(--f-display);font-weight:800;letter-spacing:-.01em;white-space:nowrap}
 .brand span{color:var(--accent)}
@@ -55,15 +47,15 @@ button{font:inherit;cursor:pointer}
 .nav a:hover,.nav a.on{color:var(--ink);background:var(--accent-soft)}
 
 /* hero */
-.hero{padding-block:72px 56px;border-bottom:1px solid var(--line);background:var(--surface)}
+.hero{padding-block:64px 56px;border-bottom:1px solid var(--line)}
 .hero-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:48px;align-items:center}
-.hero h1{font-size:clamp(2.2rem,5.4vw,3.9rem);font-weight:800;letter-spacing:-.02em}
-.hero h1 em{font-style:normal;color:var(--accent)}
+.hero h1{font-size:clamp(2rem,4.6vw,3.4rem);font-weight:800;letter-spacing:.01em}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero .lead{font-size:1.15rem;margin-top:18px}
 .hero-meta{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px}
 .chip{font-family:var(--f-mono);font-size:.78rem;padding:5px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--bg)}
 .pyramid{display:grid;gap:6px;justify-items:center}
-.pyr{width:var(--w);padding:12px 14px;text-align:center;border-radius:6px;font-family:var(--f-display);font-weight:600;font-size:.95rem;border:0;color:var(--ink);transition:transform .15s}
+.pyr{text-decoration:none;box-shadow:var(--glow);width:var(--w);padding:12px 14px;text-align:center;border-radius:6px;font-family:var(--f-display);font-weight:600;font-size:.95rem;border:0;color:var(--ink);transition:transform .15s}
 .pyr small{display:block;font-family:var(--f-body);font-weight:400;font-size:.8rem;color:var(--muted)}
 .pyr:hover{transform:scale(1.03)}
 .pyr.ban{background:var(--ban-bg)} .pyr.high{background:var(--high-bg)} .pyr.warn{background:var(--warn-bg)} .pyr.ok{background:var(--ok-bg)}
@@ -72,8 +64,8 @@ button{font:inherit;cursor:pointer}
 /* tabs */
 .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
 .tab{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 16px;border-radius:8px;font-weight:600;font-size:.95rem}
-.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.tab[aria-selected="true"]{background:linear-gradient(90deg,var(--accent2),var(--accent));border-color:transparent;color:#070B1F}
+.panel{background:linear-gradient(160deg,rgba(168,85,247,.10),rgba(34,211,238,.04)),var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
 .panel ul{margin:8px 0 0;padding-left:18px}
 .panel li{margin-bottom:4px}
 .weeks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
@@ -82,18 +74,18 @@ button{font:inherit;cursor:pointer}
 /* principles */
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.pcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;text-align:left;color:var(--ink);display:grid;gap:6px;align-content:start}
+.pcard{background:linear-gradient(160deg,rgba(168,85,247,.10),rgba(34,211,238,.04)),var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;text-align:left;color:var(--ink);display:grid;gap:6px;align-content:start}
 .pcard .q{font-size:.92rem;color:var(--muted)}
 .pcard .a{display:none;font-size:.95rem;border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}
 .pcard.open .a{display:block}
 .pcard .tag{font-family:var(--f-mono);font-size:.72rem;color:var(--accent)}
 
 /* dilemma */
-.dilemma{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;display:grid;gap:18px}
+.dilemma{background:linear-gradient(160deg,rgba(168,85,247,.10),rgba(34,211,238,.04)),var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;display:grid;gap:18px}
 .case-box{border-left:4px solid var(--accent);padding:4px 0 4px 16px}
 .lens-row{display:flex;flex-wrap:wrap;gap:8px}
 .lens{border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:8px 14px;border-radius:999px;font-weight:600;font-size:.92rem}
-.lens.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.lens.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
 .lens-out{min-height:120px;background:var(--bg);border-radius:8px;padding:18px;display:grid;gap:8px}
 .verdict{font-family:var(--f-mono);font-size:.82rem;color:var(--accent)}
 
@@ -103,7 +95,7 @@ button{font:inherit;cursor:pointer}
 .use{text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:12px 14px;border-radius:8px;display:flex;justify-content:space-between;gap:10px;align-items:center}
 .use.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .use .s{font-size:.8rem;color:var(--muted)}
-.result{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px;display:grid;gap:14px;align-content:start;position:sticky;top:76px}
+.result{background:linear-gradient(160deg,rgba(168,85,247,.10),rgba(34,211,238,.04)),var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px;display:grid;gap:14px;align-content:start;position:sticky;top:76px}
 .level{display:inline-block;font-family:var(--f-mono);font-size:.8rem;font-weight:500;padding:5px 10px;border-radius:6px}
 .lv-ban{background:var(--ban-bg);color:var(--ban)} .lv-high{background:var(--high-bg);color:var(--high)} .lv-warn{background:var(--warn-bg);color:var(--warn)} .lv-ok{background:var(--ok-bg);color:var(--ok)}
 .result dl{margin:0;display:grid;gap:10px}
@@ -119,14 +111,14 @@ button{font:inherit;cursor:pointer}
 .ev h3{font-size:1.02rem}
 .ev p{color:var(--muted);font-size:.95rem;margin-top:4px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:10px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.stat{background:linear-gradient(160deg,rgba(168,85,247,.10),rgba(34,211,238,.04)),var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
 .stat b{display:block;font-family:var(--f-display);font-size:2rem;color:var(--accent);font-variant-numeric:tabular-nums}
 .stat span{font-size:.9rem;color:var(--muted)}
 .stat a{font-size:.8rem}
 
 /* latam */
 .latam{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
-.ctry{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:8px;align-content:start}
+.ctry{background:linear-gradient(160deg,rgba(168,85,247,.10),rgba(34,211,238,.04)),var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:8px;align-content:start}
 .ctry header{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .st{font-family:var(--f-mono);font-size:.7rem;padding:3px 8px;border-radius:5px;white-space:nowrap}
 .st-law{background:var(--ok-bg);color:var(--ok)} .st-bill{background:var(--warn-bg);color:var(--warn)} .st-pol{background:var(--accent-soft);color:var(--accent)}
@@ -143,7 +135,7 @@ td b{font-family:var(--f-display);font-weight:600}
 /* cases */
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
 .cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
-.case{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:10px;align-content:start}
+.case{background:linear-gradient(160deg,rgba(168,85,247,.10),rgba(34,211,238,.04)),var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:10px;align-content:start}
 .case .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .sector{font-family:var(--f-mono);font-size:.72rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em}
 .case p{font-size:.95rem}
@@ -162,24 +154,24 @@ td b{font-family:var(--f-display);font-weight:600}
 
 /* tool */
 .tool{display:grid;grid-template-columns:1.2fr 1fr;gap:22px}
-.checks{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:grid;gap:4px}
+.checks{background:linear-gradient(160deg,rgba(168,85,247,.10),rgba(34,211,238,.04)),var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:grid;gap:4px}
 .checks label{display:flex;gap:12px;align-items:flex-start;padding:9px 6px;border-radius:6px;cursor:pointer}
 .checks label:hover{background:var(--bg)}
 .checks input{margin-top:5px;accent-color:var(--accent);width:18px;height:18px;flex:none}
 .checks .grp{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:12px 0 2px}
-.score{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:grid;gap:14px;align-content:start;position:sticky;top:76px}
+.score{background:linear-gradient(160deg,rgba(168,85,247,.10),rgba(34,211,238,.04)),var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:grid;gap:14px;align-content:start;position:sticky;top:76px}
 .bar{height:12px;background:var(--bg);border-radius:999px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .3s}
 .big{font-family:var(--f-display);font-size:2.6rem;font-weight:800;font-variant-numeric:tabular-nums}
 
 /* quiz */
-.quiz{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:26px;display:grid;gap:16px;max-width:760px}
+.quiz{background:linear-gradient(160deg,rgba(168,85,247,.10),rgba(34,211,238,.04)),var(--surface);border:1px solid var(--line);border-radius:12px;padding:26px;display:grid;gap:16px;max-width:760px}
 .opts{display:grid;gap:8px}
 .opt{text-align:left;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:12px 14px;border-radius:8px}
 .opt.right{border-color:var(--ok);background:var(--ok-bg)}
 .opt.wrong{border-color:var(--ban);background:var(--ban-bg)}
 .qfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.btn{border:0;background:var(--accent);color:var(--surface);padding:10px 18px;border-radius:8px;font-weight:700}
+.btn{border:0;background:linear-gradient(90deg,var(--accent2),var(--accent));color:#070B1F;padding:10px 18px;border-radius:8px;font-weight:700}
 .btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
 
 /* sources */
@@ -188,6 +180,44 @@ td b{font-family:var(--f-display);font-weight:600}
 footer{padding-block:32px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
 .note{font-size:.85rem;color:var(--muted)}
 
+
+/* ticker */
+.ticker{background:linear-gradient(90deg,rgba(168,85,247,.25),rgba(34,211,238,.18));border-bottom:1px solid var(--line);overflow:hidden;position:relative}
+.ticker .wrap{display:flex;align-items:center;gap:14px;height:40px}
+.tk-label{flex:none;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;color:#070B1F;background:var(--accent);padding:4px 10px;border-radius:4px;font-weight:500}
+.tk-view{overflow:hidden;flex:1;min-width:0;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.tk-track{display:inline-flex;gap:40px;white-space:nowrap;animation:tk 70s linear infinite;padding-left:100%}
+.tk-view:hover .tk-track{animation-play-state:paused}
+.tk-track a{color:var(--ink);text-decoration:none;font-size:.92rem}
+.tk-track a:hover{color:var(--accent)}
+.tk-track b{color:var(--accent2);font-family:var(--f-mono);font-weight:500;font-size:.8rem;margin-right:8px}
+@keyframes tk{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+@media (prefers-reduced-motion:reduce){.tk-track{animation:none;padding-left:0}.tk-view{overflow-x:auto}}
+/* laws */
+.laws{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.law{position:relative;text-align:left;border:1px solid var(--line);border-radius:14px;padding:20px;background:linear-gradient(160deg,rgba(168,85,247,.16),rgba(34,211,238,.06)),var(--surface);color:var(--ink);display:grid;gap:10px;align-content:start;transition:transform .2s,box-shadow .2s}
+.law:hover{transform:translateY(-3px);box-shadow:var(--glow)}
+.law .ic{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.35);color:var(--accent)}
+.law .ic svg{width:28px;height:28px}
+.law .code{font-family:var(--f-mono);font-size:.74rem;color:var(--accent2)}
+.law .one{font-size:.92rem;color:var(--muted)}
+.law .kpi{font-family:var(--f-display);font-size:1.25rem;color:var(--accent)}
+.law .kpi small{display:block;font-family:var(--f-body);font-size:.78rem;color:var(--muted)}
+.law .more{font-size:.82rem;color:var(--accent);font-weight:600}
+dialog.lawd{max-width:720px;width:calc(100% - 32px);border:1px solid var(--line);border-radius:16px;padding:0;background:var(--surface);color:var(--ink);box-shadow:0 0 60px rgba(168,85,247,.35)}
+dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
+.ld-head{display:flex;gap:16px;align-items:center;padding:22px 24px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(168,85,247,.2),rgba(34,211,238,.1))}
+.ld-body{padding:22px 24px;display:grid;gap:16px;max-height:70vh;overflow:auto}
+.ld-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ld-box{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px}
+.ld-box .eyebrow{margin-bottom:6px}
+.ld-data{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ld-data div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
+.ld-data b{display:block;font-family:var(--f-display);color:var(--accent);font-size:1.2rem}
+.ld-data span{font-size:.8rem;color:var(--muted)}
+.ld-foot{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding:16px 24px;border-top:1px solid var(--line)}
+.ld-foot a{text-decoration:none}
+@media (max-width:620px){.ld-grid,.ld-data{grid-template-columns:1fr}}
 @media (max-width:860px){
   .hero-grid,.panel,.risk,.tool{grid-template-columns:1fr}
   .grid3{grid-template-columns:1fr 1fr}
@@ -209,6 +239,7 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--muted);fo
     <div class="brand">IA<span>·</span>Responsable</div>
     <ul id="navlist">
       <li><a href="#curso">Curso</a></li>
+      <li><a href="#leyes">Leyes</a></li>
       <li><a href="#principios">Principios</a></li>
       <li><a href="#dilema">Dilemas</a></li>
       <li><a href="#riesgo">Riesgo</a></li>
@@ -222,6 +253,9 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--muted);fo
     </ul>
   </div>
 </nav>
+<div class="ticker" aria-label="Últimas noticias">
+  <div class="wrap"><span class="tk-label">LO ÚLTIMO</span><div class="tk-view"><div class="tk-track" id="tkTrack"></div></div></div>
+</div>
 
 <header class="hero">
   <div class="wrap hero-grid">
@@ -244,6 +278,18 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--muted);fo
     </div>
   </div>
 </header>
+
+<section id="leyes">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Marco legal en un vistazo</div>
+      <h2>Las normas que tienes que conocer</h2>
+      <p class="lead">Cada ficha resume en lenguaje sencillo el objetivo de la norma, a quién se dirige, un ejemplo y su impacto, con datos. Toca una ficha para ver el detalle y abrir el texto oficial.</p>
+    </div>
+    <div class="laws" id="laws"></div>
+  </div>
+  <dialog class="lawd" id="lawDlg" aria-labelledby="ldTitle"></dialog>
+</section>
 
 <section id="curso">
   <div class="wrap">
@@ -622,6 +668,89 @@ function drawQ(){answered=false;if(qi>=qs.length){qb.innerHTML=`<div class="eyeb
  qb.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(answered)return;answered=true;const i=+b.dataset.i;if(i===q[2])good++;else b.classList.add("wrong");qb.querySelectorAll(".opt")[q[2]].classList.add("right");$("#qExp").textContent=q[3];$("#qNext").hidden=false;});
  $("#qNext").onclick=()=>{qi++;drawQ()};}
 drawQ();
+
+/* ---------- TICKER ---------- */
+$("#tkTrack").innerHTML=news.map(n=>`<a href="${n[4]}" target="_blank" rel="noopener"><b>${n[0]} · ${n[1]}</b>${n[2]}</a>`).join("");
+
+/* ---------- LEYES ---------- */
+const IC={
+ shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>',
+ chip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/><path d="M10 10h4v4h-4z"/></svg>',
+ doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>',
+ lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/><circle cx="12" cy="15" r="1.4"/></svg>',
+ map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2z"/><path d="M9 4v14M15 6v14"/></svg>',
+ alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>',
+ globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>',
+ scale:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M5 21h14M5 7h14"/><path d="M5 7l-3 6a3 3 0 006 0zM19 7l-3 6a3 3 0 006 0z"/></svg>'
+};
+const laws=[
+ {i:"chip",c:"Ley N.º 31814 · 2023",t:"Ley que promueve el uso de la IA",one:"La primera ley peruana dedicada a la IA.",k:"Jul. 2023",ks:"publicada en El Peruano",
+  obj:"Promover el desarrollo y uso de la IA para el desarrollo económico y social, con respeto a los derechos humanos.",
+  dir:"Entidades públicas, empresas privadas, academia y sociedad civil que desarrollen o usen IA en el Perú.",
+  ej:"Un ministerio que implementa un chatbot de atención debe hacerlo con transparencia y seguridad basada en riesgos.",
+  imp:"Designa a la PCM, a través de la SGTD, como autoridad técnico-normativa y fija principios: seguridad basada en riesgos, enfoque multiactor, ética, privacidad y desarrollo sostenible.",
+  d:[["2023","año de publicación"],["PCM","ente rector"],["Art. 4","principios rectores"]],
+  u:"https://www.gob.pe/busquedas?term=Ley+31814+inteligencia+artificial"},
+ {i:"shield",c:"DS 115-2025-PCM · 2025",t:"Reglamento de la Ley 31814",one:"Pasa de los principios a obligaciones concretas por nivel de riesgo.",k:"Ene. 2026",ks:"inicio de vigencia",
+  obj:"Establecer cómo se clasifica y supervisa la IA según su riesgo: inaceptable (prohibido), alto y aceptable.",
+  dir:"Todo desarrollador e implementador de IA en el país. Obligaciones más estrictas para entidades públicas.",
+  ej:"Un banco que usa IA para evaluar créditos está en riesgo alto: necesita supervisión humana, trazabilidad y transparencia con el cliente.",
+  imp:"Exige evaluación de impacto obligatoria al sector público, supervisión humana en decisiones de alto impacto y etiquetado de contenido generado, con plazos escalonados por sector.",
+  d:[["3","niveles de riesgo"],["Set. 2025","publicación"],["Art. 24","define riesgo alto"]],
+  u:"https://busquedas.elperuano.pe/dispositivo/NL/2436426-1"},
+ {i:"map",c:"RM 152-2026-PCM · 2026",t:"Estrategia Nacional de IA 2026-2030",one:"La hoja de ruta del Estado para pasar de digital a inteligente.",k:"2026-2030",ks:"horizonte",
+  obj:"Orientar y coordinar las acciones del Estado para desarrollar y gestionar la IA de forma segura, ética e inclusiva.",
+  dir:"Todas las entidades de la administración pública, incluidas empresas públicas regionales y locales.",
+  ej:"Una municipalidad que quiera usar IA para trámites debe alinearse a los pilares y metas de la ENIA.",
+  imp:"Organiza la acción del Estado en cuatro pilares, uno de ellos dedicado al marco ético y regulatorio, con metas al 2030.",
+  d:[["4","pilares"],["2 may. 2026","entrada en vigor"],["5 años","de ejecución"]],
+  u:"https://elperuano.pe/noticia/294852-estrategia-2026-2030-promovera-uso-seguro-etico-e-inclusivo-de-ia"},
+ {i:"lock",c:"Ley N.º 29733 · 2011",t:"Ley de Protección de Datos Personales",one:"Todo sistema de IA que use datos de personas debe cumplirla.",k:"Mar. 2025",ks:"rige su nuevo reglamento",
+  obj:"Garantizar el derecho fundamental a la protección de los datos personales.",
+  dir:"Empresas y entidades públicas que recopilan, almacenan o procesan datos personales en el Perú.",
+  ej:"Una teleco que entrena un modelo con grabaciones de llamadas necesita consentimiento, finalidad clara y medidas de seguridad.",
+  imp:"Su reglamento (DS 016-2024-JUS) incorpora reglas sobre tratamiento automatizado, oficial de datos y notificación de incidentes. La autoridad es la ANPD del Minjusdh.",
+  d:[["2011","año de la ley"],["ANPD","autoridad"],["ARCO","derechos del titular"]],
+  u:"https://www.gob.pe/busquedas?term=Ley+29733+proteccion+de+datos+personales"},
+ {i:"alert",c:"Ley N.º 30096 · 2013",t:"Ley de Delitos Informáticos",one:"Sanciona fraudes y suplantaciones, también cuando se hacen con IA.",k:"Hasta 8 años",ks:"de prisión en fraude informático",
+  obj:"Prevenir y sancionar conductas ilícitas que afectan sistemas y datos informáticos.",
+  dir:"Cualquier persona. Relevante para bancos, telecos y comercio electrónico.",
+  ej:"Una estafa con voz clonada por IA para pedir transferencias puede encuadrarse como fraude informático o suplantación de identidad.",
+  imp:"Da base penal para perseguir deepfakes usados en fraudes, aunque no menciona la IA de forma expresa.",
+  d:[["2013","año de la ley"],["3 a 8","años de pena en fraude"],["Conv. Budapest","Perú adherido en 2019"]],
+  u:"https://www.gob.pe/busquedas?term=Ley+30096+delitos+informaticos"},
+ {i:"scale",c:"Reglamento (UE) 2024/1689",t:"EU AI Act",one:"La referencia mundial de regulación por riesgo.",k:"Hasta 7%",ks:"de la facturación global en multas",
+  obj:"Asegurar que la IA en el mercado europeo sea segura y respete los derechos fundamentales.",
+  dir:"Proveedores e implementadores de IA en la UE, incluidas empresas peruanas que ofrezcan IA a clientes europeos.",
+  ej:"Una fintech peruana que ofrece scoring de crédito a usuarios en España debe cumplir las reglas de alto riesgo.",
+  imp:"Prohibiciones vigentes desde feb. 2025 y reglas para modelos de propósito general desde ago. 2025. Las obligaciones de alto riesgo se postergan a dic. 2027 por el acuerdo Digital Omnibus.",
+  d:[["4","niveles de riesgo"],["35 M€","multa máxima"],["Dic. 2027","alto riesgo (nuevo plazo)"]],
+  u:"https://eur-lex.europa.eu/eli/reg/2024/1689/oj"},
+ {i:"globe",c:"UNESCO · 2021",t:"Recomendación sobre la Ética de la IA",one:"El primer acuerdo mundial sobre ética de la IA.",k:"193",ks:"Estados miembros la adoptaron",
+  obj:"Ofrecer valores, principios y áreas de política para una IA al servicio de las personas.",
+  dir:"Gobiernos, con impacto en empresas, universidades y sociedad civil.",
+  ej:"Con la metodología RAM, UNESCO ayuda a cada país a medir qué tan preparado está para la IA y dónde están sus brechas.",
+  imp:"Inspira estrategias nacionales y leyes en la región, incluida la peruana. Es soft law: orienta pero no sanciona.",
+  d:[["4","valores"],["10","principios"],["11","áreas de política"]],
+  u:"https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"},
+ {i:"doc",c:"ISO/IEC 42001 · 2023",t:"Sistema de gestión de IA",one:"El estándar certificable para demostrar que gobiernas bien tu IA.",k:"38",ks:"controles en el Anexo A",
+  obj:"Definir requisitos para establecer, mantener y mejorar un sistema de gestión de IA.",
+  dir:"Cualquier organización que desarrolle, ofrezca o use sistemas de IA.",
+  ej:"Un banco certifica su gestión de IA con ISO/IEC 42001 para demostrar control ante reguladores y clientes.",
+  imp:"Se integra con ISO 27001 y facilita cumplir el reglamento peruano y el EU AI Act con evidencias auditables.",
+  d:[["PHVA","ciclo de mejora"],["38","controles"],["Certificable","por terceros"]],
+  u:"https://www.iso.org/standard/42001"}
+];
+const lg2=$("#laws"),dlg=$("#lawDlg");
+laws.forEach((L,i)=>{const b=el("button",{class:"law",type:"button"},`<div class="ic">${IC[L.i]}</div><div class="code">${L.c}</div><h3>${L.t}</h3><p class="one">${L.one}</p><div class="kpi">${L.k}<small>${L.ks}</small></div><span class="more">Ver ficha y texto oficial →</span>`);b.onclick=()=>openLaw(i);lg2.append(b)});
+function openLaw(i){const L=laws[i];
+ dlg.innerHTML=`<div class="ld-head"><div class="law" style="padding:0;border:0;background:none"><div class="ic">${IC[L.i]}</div></div><div><div class="code" style="font-family:var(--f-mono);font-size:.78rem;color:var(--accent2)">${L.c}</div><h3 id="ldTitle" style="font-size:1.3rem">${L.t}</h3></div></div>
+ <div class="ld-body"><div class="ld-data">${L.d.map(x=>`<div><b>${x[0]}</b><span>${x[1]}</span></div>`).join("")}</div>
+ <div class="ld-grid"><div class="ld-box"><div class="eyebrow">Objetivo</div><p>${L.obj}</p></div><div class="ld-box"><div class="eyebrow">Dirigido a</div><p>${L.dir}</p></div>
+ <div class="ld-box"><div class="eyebrow">Ejemplo</div><p>${L.ej}</p></div><div class="ld-box"><div class="eyebrow">Impacto</div><p>${L.imp}</p></div></div></div>
+ <div class="ld-foot"><button class="btn ghost" type="button" id="ldClose">Cerrar</button><a class="btn" href="${L.u}" target="_blank" rel="noopener">Abrir texto oficial</a></div>`;
+ $("#ldClose").onclick=()=>dlg.close();dlg.showModal();}
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
 
 /* ---------- NAV ACTIVA ---------- */
 const links=[...document.querySelectorAll("#navlist a")];
