@@ -235,7 +235,7 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
 .ld-data span{font-size:.8rem;color:var(--muted)}
 .ld-foot{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding:16px 24px;border-top:1px solid var(--line)}
 .ld-foot a{text-decoration:none}
-@media (max-width:620px){.ld-grid,.ld-data{grid-template-columns:1fr}}
+@media (max-width:620px){.ld-grid{grid-template-columns:1fr}.ld-data{gap:6px}.ld-data div{padding:8px 4px}.ld-data b{font-size:.92rem}.ld-data span{font-size:.7rem}}
 
 /* flip */
 .flip{perspective:1400px;cursor:pointer;outline:none;border-radius:14px}
@@ -292,7 +292,7 @@ dialog.lawd::backdrop{background:rgba(3,5,15,.7);backdrop-filter:blur(3px)}
 .roles{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px}
 .role{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:4px;background:rgba(255,255,255,.03)}
 .role b{font-family:var(--f-display);font-size:.9rem}.role span{font-size:.8rem;color:var(--muted)}
-.role.core{border-color:var(--accent);box-shadow:var(--glow)}
+.role.core,.roles .role-core .face{border-color:var(--accent);box-shadow:var(--glow)}
 
 /* fx */
 #fxBg{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
@@ -418,6 +418,25 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
 .cifras .back .why{font-size:.86rem;color:var(--accent);border-top:1px dashed var(--line);padding-top:8px}
 .cifras .src{font-size:.75rem;color:var(--muted)}
 @media (max-width:520px){#cifrasGrid{grid-template-columns:1fr}.cifras .back p{font-size:.9rem}}
+
+.xp{margin-top:16px;border:1px solid rgba(79,209,197,.5);border-radius:14px;padding:16px 18px;background:linear-gradient(160deg,rgba(79,209,197,.12),rgba(124,156,245,.06));display:grid;gap:6px;box-shadow:0 0 24px rgba(79,209,197,.12)}
+.xp .bt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2)}
+.xp .h{font-family:var(--f-display);font-weight:700;font-size:1.08rem;line-height:1.3}
+.xp p{font-size:.93rem}
+.xp .why{font-size:.88rem;color:var(--accent);border-top:1px dashed var(--line);padding-top:8px}
+.xp.pop{animation:xpop .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes xpop{from{transform:translateY(8px) scale(.98);opacity:.3}to{transform:none;opacity:1}}
+.tap{cursor:pointer}
+.tap.sel{background:rgba(79,209,197,.10)!important;box-shadow:inset 3px 0 0 var(--accent)}
+.ck-ev.tap.sel{box-shadow:0 0 0 1px var(--accent),0 0 18px rgba(79,209,197,.35)}
+.xhint{font-family:var(--f-mono);font-size:.7rem;color:var(--accent);margin-top:-8px;margin-bottom:10px}
+button.chip{cursor:pointer;font:inherit;font-family:var(--f-mono);font-size:.78rem;transition:border-color .2s,color .2s,box-shadow .2s}
+button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 12px rgba(79,209,197,.35)}
+.ld-frase{font-family:var(--f-display);font-weight:700;font-size:1.15rem;line-height:1.35;padding:14px 16px;border-radius:12px;background:linear-gradient(90deg,rgba(79,209,197,.16),rgba(124,156,245,.08));border:1px solid rgba(79,209,197,.4)}
+.roles .flip .face{padding:14px}
+.roles .flip .face b{font-family:var(--f-display);font-size:.92rem}
+.roles .flip .face span{font-size:.8rem;color:var(--muted)}
+.roles .flip .face p{font-size:.82rem}
 @media (max-width:860px){.cifras{grid-template-columns:1fr 1fr}.chart-grid{grid-template-columns:1fr}.clocks{grid-template-columns:1fr 40px 1fr}.ck-ev{padding:6px 8px}.hb,.hb-axis{grid-template-columns:92px 1fr 40px}}
 @media (max-width:520px){.clocks{grid-template-columns:1fr 34px 1fr;gap:0 6px}.ck-ev b{font-size:.8rem}.gt-row,.gt-axis{grid-template-columns:1fr}.gt-axis>div:first-child{display:none}}
 @media (max-width:860px){.oia-grid{grid-template-columns:1fr}.roles{grid-template-columns:1fr 1fr}.oia-head{flex-direction:column}}
@@ -470,7 +489,7 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
       <p class="sub">De los valores a la gobernanza, en el Perú y la región</p>
       <p class="lead" style="margin-top:16px">Guía interactiva para directivos: principios, ley peruana vigente desde 2026, regulación en América Latina y casos reales de banca, telecomunicaciones, energía y Estado.</p>
       <div class="hero-meta">
-        <span class="chip">Ley 31814</span><span class="chip">DS 115-2025-PCM</span><span class="chip">ENIA 2026-2030</span><span class="chip">Ley 29733</span><span class="chip">EU AI Act</span><span class="chip">Directiva OIA</span><span class="chip">ISO/IEC 42001</span>
+        <button type="button" class="chip" data-law="0">Ley 31814</button><button type="button" class="chip" data-law="1">DS 115-2025-PCM</button><button type="button" class="chip" data-law="2">ENIA 2026-2030</button><button type="button" class="chip" data-law="4">Ley 29733</button><button type="button" class="chip" data-law="6">EU AI Act</button><button type="button" class="chip" data-law="3">Directiva OIA</button><button type="button" class="chip" data-law="8">ISO/IEC 42001</button>
       </div>
     </div>
     <div class="hero-art"><svg viewBox="0 0 420 420" fill="none" aria-hidden="true">
@@ -606,13 +625,7 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
         <div class="ld-box"><div class="eyebrow">Plazos</div><ul class="oia-ul"><li>Designación en 6 a 12 meses según el tipo de entidad.</li><li>El perfil profesional es exigible a los 12 meses de vigencia de la directiva.</li><li>Lo designa la máxima autoridad administrativa.</li></ul></div>
       </div>
       <div class="eyebrow" style="margin-top:22px">Con quién trabaja</div>
-      <div class="roles">
-        <div class="role core"><b>Oficial de IA</b><span>Política, plan y cumplimiento de IA</span></div>
-        <div class="role"><b>Oficial de Datos Personales</b><span>Ley 29733 y DS 016-2024-JUS</span></div>
-        <div class="role"><b>Oficial de Seguridad y Confianza Digital</b><span>Ciberseguridad e incidentes</span></div>
-        <div class="role"><b>Comité de Gobierno y Transformación Digital</b><span>Aprueba y supervisa proyectos de IA</span></div>
-        <div class="role"><b>SGTD de la PCM</b><span>Autoridad nacional de IA</span></div>
-      </div>
+      <div class="roles" id="roles"></div>
       <p class="note" style="margin-top:12px">Para el sector privado no existe aún un cargo obligatorio equivalente, pero designar un responsable de IA es una buena práctica alineada con ISO/IEC 42001. Fuentes: <a href="https://www.gob.pe/institucion/pcm/normas-legales/8743150-004-2026-pcm-sgtd">Resolución 004-2026-PCM/SGTD</a>, <a href="https://elperuano.pe/noticia/307286-inteligencia-artificial-en-el-estado-establecen-perfil-y-responsabilidades-de-un-nuevo-oficial">El Peruano</a>, <a href="https://lpderecho.pe/oficial-inteligencia-artificial-oia-perfil-funciones-plazos-directiva-002-2026-pcm-sgtd/">LP Derecho</a>.</p>
     </div>
   </div>
@@ -774,6 +787,13 @@ const cifras=[
  `<b class="cnum"${x.c?` data-count="${x.c}" data-dec="${x.d||0}" data-pre="${x.pre||""}" data-suf="${x.suf||""}"`:""}>${x.n}</b><span class="t">${x.t}</span>`,
  `<span class="bt">Qué significa</span><span class="big1">${x.h}</span><p>${x.p}</p><span class="why">${x.w}</span><a class="src" href="${x.u}" target="_blank" rel="noopener">Fuente: ${x.f}</a>`,"cifra-f")))})();
 
+/* ---------- ROLES DEL OIA ---------- */
+(()=>{const roles=[["Oficial de IA","Política, plan y cumplimiento de IA","Es el dueño de la IA en la entidad.","Aprueba la política de uso, dirige el plan de IA y vigila que cada sistema cumpla la norma."],
+ ["Oficial de Datos Personales","Ley 29733 y DS 016-2024-JUS","Cuida los datos de las personas.","Verifica que la IA use datos con consentimiento, finalidad clara y seguridad."],
+ ["Oficial de Seguridad y Confianza Digital","Ciberseguridad e incidentes","Protege a la IA de ataques y fallas.","Gestiona riesgos de ciberseguridad y responde cuando algo sale mal."],
+ ["Comité de Gobierno y Transformación Digital","Aprueba y supervisa proyectos de IA","Decide qué proyectos de IA avanzan.","Lidera, evalúa y supervisa los sistemas de IA estratégicos de la entidad."],
+ ["SGTD de la PCM","Autoridad nacional de IA","Pone las reglas para todo el Estado.","Dirige, evalúa y supervisa el uso de la IA en el país y da asistencia técnica."]];
+ const box=$("#roles");if(!box)return;roles.forEach((r,i)=>box.append(flipCard(`<b>${r[0]}</b><span>${r[1]}</span>`,`<span class="bt">Qué hace</span><b>${r[2]}</b><p>${r[3]}</p>`,i===0?"role-core":"")))})();
 /* ---------- UNIDADES ---------- */
 const units=[
  {t:"I. Fundamentos éticos",w:"Semanas 1 a 4",d:"Qué es la IA generativa y con qué lentes éticas evaluarla.",c:["Diferencias entre IA, aprendizaje automático, modelos fundacionales y LLM","Capacidades, alucinaciones y límites","Enfoques deontológico, utilitarista, de la virtud y del cuidado","Principios: equidad, transparencia, explicabilidad, privacidad, supervisión humana"],e:"Mapa conceptual del ciclo de vida de la IA, deliberación ética de un caso y primer ensayo (semana 4).",r:["UNESCO 2021","OCDE 2024","Floridi 2023","Coeckelbergh 2020"]},
@@ -984,63 +1004,63 @@ $("#tkTrack").innerHTML=news.map(n=>`<a href="${n.u}" target="_blank" rel="noope
 /* ---------- LEYES ---------- */
 
 const laws=[
- {i:"chip",c:"Ley N.º 31814 · 2023",t:"Ley que promueve el uso de la IA",one:"La primera ley peruana dedicada a la IA.",k:"Jul. 2023",ks:"publicada en El Peruano",
+ {i:"chip",c:"Ley N.º 31814 · 2023",fr:"La IA en el Perú tiene ley desde 2023: hay que usarla con ética, seguridad y respeto a los derechos.",t:"Ley que promueve el uso de la IA",one:"La primera ley peruana dedicada a la IA.",k:"Jul. 2023",ks:"publicada en El Peruano",
   obj:"Promover el desarrollo y uso de la IA para el desarrollo económico y social, con respeto a los derechos humanos.",
   dir:"Entidades públicas, empresas privadas, academia y sociedad civil que desarrollen o usen IA en el Perú.",
   ej:"Un ministerio que implementa un chatbot de atención debe hacerlo con transparencia y seguridad basada en riesgos.",
   imp:"Designa a la Secretaría de Gobierno y Transformación Digital de la PCM como autoridad técnico-normativa (art. 4) y fija principios como estándares de seguridad basados en riesgos, ética, privacidad y colaboración nacional e internacional.",
   d:[["Jul. 2023","publicación"],["SGTD-PCM","autoridad (art. 4)"],["Riesgos","enfoque central"]],
   u:"https://busquedas.elperuano.pe/dispositivo/NL/2192926-1"},
- {i:"shield",c:"DS 115-2025-PCM · 2025",t:"Reglamento de la Ley 31814",one:"Pasa de los principios a obligaciones concretas por nivel de riesgo.",k:"22 ene. 2026",ks:"entrada en vigor",
+ {i:"shield",c:"DS 115-2025-PCM · 2025",fr:"Define qué IA está prohibida, cuál es de riesgo alto y qué controles exige. Es la norma que se cumple día a día.",t:"Reglamento de la Ley 31814",one:"Pasa de los principios a obligaciones concretas por nivel de riesgo.",k:"22 ene. 2026",ks:"entrada en vigor",
   obj:"Establecer cómo se clasifica y supervisa la IA: uso indebido (prohibido), riesgo alto (con controles) y riesgo aceptable.",
   dir:"Todo desarrollador e implementador de IA en el país. Obligaciones más estrictas para entidades públicas.",
   ej:"Un banco que usa IA para evaluar créditos está en riesgo alto: necesita supervisión humana, trazabilidad y transparencia con el cliente.",
   imp:"Prohíbe usos como la vigilancia masiva sin base legal o los sistemas letales autónomos. Para riesgo alto exige registro de cómo funciona el sistema, sus datos y su lógica, evaluación de impacto previa y supervisión humana. Las entidades públicas deben aprobar una política institucional de IA.",
   d:[["22 ene. 2026","entrada en vigor"],["1 a 3 años","implementación en el Estado"],["10 set. 2026","primer plazo sectorial"]],
   u:"https://busquedas.elperuano.pe/dispositivo/NL/2436426-1"},
- {i:"map",c:"RM 152-2026-PCM · 2026",t:"Estrategia Nacional de IA 2026-2030",one:"La hoja de ruta del Estado para pasar de digital a inteligente.",k:"2026-2030",ks:"horizonte",
+ {i:"map",c:"RM 152-2026-PCM · 2026",fr:"Es el plan del Estado para que la IA mejore los servicios públicos sin dañar derechos.",t:"Estrategia Nacional de IA 2026-2030",one:"La hoja de ruta del Estado para pasar de digital a inteligente.",k:"2026-2030",ks:"horizonte",
   obj:"Orientar y coordinar las acciones del Estado para desarrollar y gestionar la IA de forma segura, ética e inclusiva.",
   dir:"Todas las entidades de la administración pública, incluidas empresas públicas regionales y locales.",
   ej:"Una municipalidad que quiera usar IA para trámites debe alinearse a los pilares y metas de la ENIA.",
   imp:"Cuatro ejes: talento y capacidades; innovación y emprendimiento (con el Centro Nacional de Innovación Digital e IA); marco ético y regulatorio; y participación ciudadana y colaboración. La conduce la SGTD y encarga definir el perfil del Oficial de IA.",
   d:[["4","pilares"],["2 may. 2026","entrada en vigor"],["5 años","de ejecución"]],
   u:"https://elperuano.pe/noticia/294852-estrategia-2026-2030-promovera-uso-seguro-etico-e-inclusivo-de-ia"},
- {i:"user",c:"Directiva 002-2026-PCM/SGTD · 2026",t:"Oficial de Inteligencia Artificial",one:"Cada entidad pública debe tener un responsable de IA.",k:"6 a 12 meses",ks:"para designarlo según la entidad",
+ {i:"user",c:"Directiva 002-2026-PCM/SGTD · 2026",fr:"Cada entidad pública debe tener una persona responsable de la IA. Sin responsable, no hay gobernanza.",t:"Oficial de Inteligencia Artificial",one:"Cada entidad pública debe tener un responsable de IA.",k:"6 a 12 meses",ks:"para designarlo según la entidad",
   obj:"Fijar el perfil, las funciones y los plazos del Oficial de IA en las entidades públicas.",
   dir:"Ministerios, organismos autónomos, Poder Judicial, Congreso, universidades públicas, IPRESS II-2 o más, gobiernos regionales, municipalidades tipo A y C, y empresas públicas.",
   ej:"Un hospital regional nombra a su Oficial de IA, que aprueba la política de uso, lidera el plan de IA y revisa que el sistema de triaje tenga supervisión médica.",
   imp:"Da un rostro y una responsabilidad concreta a la gobernanza de la IA en el Estado. Coordina con el Oficial de Datos Personales y el de Seguridad y Confianza Digital.",
   d:[["21 oct. 2026","publicación"],["RSGTD 004-2026","norma que la aprueba"],["12 meses","para cumplir el perfil"]],
   u:"https://www.gob.pe/institucion/pcm/normas-legales/8743150-004-2026-pcm-sgtd"},
- {i:"lock",c:"Ley N.º 29733 · 2011",t:"Ley de Protección de Datos Personales",one:"Todo sistema de IA que use datos de personas debe cumplirla.",k:"Mar. 2025",ks:"rige su nuevo reglamento",
+ {i:"lock",c:"Ley N.º 29733 · 2011",fr:"Si tu IA usa datos de personas, esta ley manda: consentimiento, finalidad y seguridad.",t:"Ley de Protección de Datos Personales",one:"Todo sistema de IA que use datos de personas debe cumplirla.",k:"Mar. 2025",ks:"rige su nuevo reglamento",
   obj:"Garantizar el derecho fundamental a la protección de los datos personales.",
   dir:"Empresas y entidades públicas que recopilan, almacenan o procesan datos personales en el Perú.",
   ej:"Una teleco que entrena un modelo con grabaciones de llamadas necesita consentimiento, finalidad clara y medidas de seguridad.",
   imp:"Su reglamento (DS 016-2024-JUS, vigente desde fines de marzo de 2025) obliga a las entidades públicas, y a empresas de forma escalonada desde nov. 2025, a designar un Oficial de Datos Personales, que debe coordinar con el Oficial de IA. También regula el tratamiento automatizado y la notificación de incidentes.",
   d:[["2011","año de la ley"],["ANPD","autoridad"],["ARCO","derechos del titular"]],
   u:"https://www.congreso.gob.pe/Docs/DGP/DIDP/files/ley_29733.pdf"},
- {i:"alert",c:"Ley N.º 30096 · 2013",t:"Ley de Delitos Informáticos",one:"Sanciona fraudes y suplantaciones, también cuando se hacen con IA.",k:"3 reformas",ks:"Ley 30171, DL 1614 y DL 1700",
+ {i:"alert",c:"Ley N.º 30096 · 2013",fr:"Estafar o suplantar con IA sigue siendo delito: la ley penal alcanza a los deepfakes usados para fraude.",t:"Ley de Delitos Informáticos",one:"Sanciona fraudes y suplantaciones, también cuando se hacen con IA.",k:"3 reformas",ks:"Ley 30171, DL 1614 y DL 1700",
   obj:"Prevenir y sancionar conductas ilícitas que afectan sistemas y datos informáticos.",
   dir:"Cualquier persona. Relevante para bancos, telecos y comercio electrónico.",
   ej:"Una estafa con voz clonada por IA para pedir transferencias puede encuadrarse como fraude informático o suplantación de identidad.",
   imp:"Da base penal para perseguir deepfakes usados en fraudes, aunque no menciona la IA de forma expresa. Sus reformas de 2023 y 2026 endurecieron la lucha contra la ciberdelincuencia y el tráfico ilícito de datos.",
   d:[["Oct. 2013","publicación"],["Dic. 2023","DL 1614 contra ciberdelincuencia"],["Ene. 2026","DL 1700, tráfico de datos"]],
   u:"https://busquedas.elperuano.pe/dispositivo/NL/1003117-1"},
- {i:"scale",c:"Reglamento (UE) 2024/1689",t:"EU AI Act",one:"La referencia mundial de regulación por riesgo.",k:"Hasta 7%",ks:"de la facturación global en multas",
+ {i:"scale",c:"Reglamento (UE) 2024/1689",fr:"La ley europea que marca el estándar mundial. Si atiendes clientes en Europa, te alcanza.",t:"EU AI Act",one:"La referencia mundial de regulación por riesgo.",k:"Hasta 7%",ks:"de la facturación global en multas",
   obj:"Asegurar que la IA en el mercado europeo sea segura y respete los derechos fundamentales.",
   dir:"Proveedores e implementadores de IA en la UE, incluidas empresas peruanas que ofrezcan IA a clientes europeos.",
   ej:"Una fintech peruana que ofrece scoring de crédito a usuarios en España debe cumplir las reglas de alto riesgo.",
   imp:"Prohibiciones vigentes desde feb. 2025 y reglas para modelos de propósito general desde ago. 2025. El Digital Omnibus (Reglamento (UE) 2026/1744, vigente desde el 27 jul. 2026) posterga las obligaciones de alto riesgo a dic. 2027 y ago. 2028.",
   d:[["4","niveles de riesgo"],["35 M€","multa máxima"],["Dic. 2027","alto riesgo (nuevo plazo)"]],
   u:"https://eur-lex.europa.eu/eli/reg/2024/1689/oj"},
- {i:"globe",c:"UNESCO · 2021",t:"Recomendación sobre la Ética de la IA",one:"El primer acuerdo mundial sobre ética de la IA.",k:"193",ks:"Estados miembros la adoptaron",
+ {i:"globe",c:"UNESCO · 2021",fr:"El primer acuerdo mundial sobre ética de la IA: pone a las personas en el centro.",t:"Recomendación sobre la Ética de la IA",one:"El primer acuerdo mundial sobre ética de la IA.",k:"193",ks:"Estados miembros la adoptaron",
   obj:"Ofrecer valores, principios y áreas de política para una IA al servicio de las personas.",
   dir:"Gobiernos, con impacto en empresas, universidades y sociedad civil.",
   ej:"Con la metodología RAM, UNESCO ayuda a cada país a medir qué tan preparado está para la IA y dónde están sus brechas.",
   imp:"Inspira estrategias nacionales y leyes en la región, incluida la peruana. Es soft law: orienta pero no sanciona.",
   d:[["4","valores"],["10","principios"],["11","áreas de política"]],
   u:"https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"},
- {i:"doc",c:"ISO/IEC 42001 · 2023",t:"Sistema de gestión de IA",one:"El estándar certificable para demostrar que gobiernas bien tu IA.",k:"38",ks:"controles en el Anexo A",
+ {i:"doc",c:"ISO/IEC 42001 · 2023",fr:"El certificado que demuestra que tu organización gobierna su IA con orden y evidencias.",t:"Sistema de gestión de IA",one:"El estándar certificable para demostrar que gobiernas bien tu IA.",k:"38",ks:"controles en el Anexo A",
   obj:"Definir requisitos para establecer, mantener y mejorar un sistema de gestión de IA.",
   dir:"Cualquier organización que desarrolle, ofrezca o use sistemas de IA.",
   ej:"Un banco certifica su gestión de IA con ISO/IEC 42001 para demostrar control ante reguladores y clientes.",
@@ -1052,12 +1072,13 @@ const lg2=$("#laws"),dlg=$("#lawDlg");
 laws.forEach((L,i)=>{const b=el("button",{class:"law",type:"button"},`<div class="ic">${IC[L.i]}</div><div class="code">${L.c}</div><h3>${L.t}</h3><p class="one">${L.one}</p><div class="kpi">${L.k}<small>${L.ks}</small></div><span class="more">Ver ficha y texto oficial →</span>`);b.onclick=()=>openLaw(i);lg2.append(b)});
 function openLaw(i){const L=laws[i];
  dlg.innerHTML=`<div class="ld-head"><div class="law" style="padding:0;border:0;background:none"><div class="ic">${IC[L.i]}</div></div><div><div class="code" style="font-family:var(--f-mono);font-size:.78rem;color:var(--accent2)">${L.c}</div><h3 id="ldTitle" style="font-size:1.3rem">${L.t}</h3></div></div>
- <div class="ld-body"><div class="ld-data">${L.d.map(x=>`<div><b>${x[0]}</b><span>${x[1]}</span></div>`).join("")}</div>
+ <div class="ld-body"><div class="ld-frase">${L.fr}</div><div class="ld-data">${L.d.map(x=>`<div><b>${x[0]}</b><span>${x[1]}</span></div>`).join("")}</div>
  <div class="ld-grid"><div class="ld-box"><div class="eyebrow">Objetivo</div><p>${L.obj}</p></div><div class="ld-box"><div class="eyebrow">Dirigido a</div><p>${L.dir}</p></div>
  <div class="ld-box"><div class="eyebrow">Ejemplo</div><p>${L.ej}</p></div><div class="ld-box"><div class="eyebrow">Impacto</div><p>${L.imp}</p></div></div></div>
  <div class="ld-foot"><button class="btn ghost" type="button" id="ldClose">Cerrar</button><a class="btn" href="${L.u}" target="_blank" rel="noopener">Abrir texto oficial</a></div>`;
  $("#ldClose").onclick=()=>dlg.close();dlg.showModal();}
 dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+document.querySelectorAll("button.chip[data-law]").forEach(b=>b.addEventListener("click",()=>openLaw(+b.dataset.law)));
 
 const SEC={leyes:"doc",curso:"map",principios:"scale",dilema:"bulb",riesgo:"alert",peru:"map",latam:"globe",marcos:"net",casos:"case",noticias:"news",protocolo:"check",quiz:"quiz",fuentes:"doc"};
 for(const id in SEC){const h=document.querySelector(`#${id} .sec-head`);if(h)h.insertAdjacentHTML("afterbegin",`<div class="sec-ic">${IC[SEC[id]]}</div>`)}
@@ -1068,11 +1089,24 @@ const showTip=(e,h)=>{tip.innerHTML=h;tip.style.opacity=1;const x=Math.min(e.cli
 const hideTip=()=>tip.style.opacity=0;
 const bindTip=(node,h)=>{node.addEventListener("pointermove",e=>showTip(e,h));node.addEventListener("pointerleave",hideTip)};
 const onView=(node,fn)=>{const o=new IntersectionObserver(es=>{if(es[0].isIntersecting){fn();o.disconnect()}},{threshold:.2});o.observe(node)};
+const explain=(card,o)=>{let x=card.querySelector(":scope > .xp");if(!x){x=el("div",{class:"xp","aria-live":"polite"});card.append(x)}
+ x.innerHTML=`<span class="bt">Qué significa</span><span class="h">${o.h}</span><p>${o.p}</p>${o.w?`<span class="why">${o.w}</span>`:""}`;x.classList.remove("pop");void x.offsetWidth;x.classList.add("pop");return x};
+const tappable=(node,group,fn)=>{node.classList.add("tap");node.setAttribute("tabindex","0");node.setAttribute("role","button");
+ const go=(scroll)=>{group().forEach(n=>n.classList.remove("sel"));node.classList.add("sel");const x=fn();if(scroll&&x&&innerWidth<860)x.scrollIntoView({behavior:"smooth",block:"nearest"})};
+ node.addEventListener("click",()=>go(true));node.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go(true)}});return go};
+const hint=(card,t="Toca un elemento del gráfico para ver qué significa")=>{const h=card.querySelector(".ch-head");if(h)h.insertAdjacentHTML("beforeend",`<div class="xhint">${t}</div>`)};
 /* ILIA */
 
 (()=>{const box=$("#ilia");ilia.forEach(([c,v],i)=>{const r=el("div",{class:"hb"+(c==="Perú"?" me":"")},`<span class="lab">${c}</span><span class="tr"><span class="bar" data-w="${v}"></span><span class="ref" style="left:60%"></span><span class="ref" style="left:35%"></span></span><span class="val">${v.toFixed(1).replace(".",",")}</span>`);
- bindTip(r,`<b>${c}</b><br>${v.toFixed(1).replace(".",",")} puntos · puesto ${i+1}<br>${v>=60?"Pionero":"Adoptante"}`);box.append(r)});
- box.insertAdjacentHTML("afterend",`<div class="hb-axis"><div></div><div class="ax"><span style="left:0">0</span><span style="left:35%">35</span><span style="left:60%">60 · pioneros</span><span style="left:100%">100</span></div><div></div></div>`);
+ bindTip(r,`<b>${c}</b><br>${v.toFixed(1).replace(".",",")} puntos · puesto ${i+1}<br>${v>=60?"Pionero":"Adoptante"}`);box.append(r);
+ const card=box.closest(".chart-card"),f=n=>n.toFixed(1).replace(".",","),pe=52.7,dif=v-pe;
+ const go=tappable(r,()=>box.querySelectorAll(".hb"),()=>explain(card,{
+  h:c==="Perú"?"El Perú aprueba a medias: está en el grupo de adoptantes, no de pioneros.":v>=60?`${c} lidera la región en preparación para la IA.`:`${c} avanza, pero todavía no alcanza a los pioneros.`,
+  p:`${c} obtiene ${f(v)} puntos y ocupa el puesto ${i+1} de 20. ${c==="Chile"?"Es el primero por cuarto año consecutivo.":`Está a ${f(71.4-v)} puntos de Chile, el líder.`} El índice mide talento, infraestructura, investigación, adopción y gobierno de la IA.`,
+  w:c==="Perú"?"Pioneros desde 60 puntos: al Perú le faltan 7,3 puntos para entrar a ese grupo.":`Frente al Perú: ${dif>0?f(dif)+" puntos más":f(-dif)+" puntos menos"}.`}));
+ if(c==="Perú")setTimeout(()=>go(false),0)});
+ hint(box.closest(".chart-card"));
+ box.insertAdjacentHTML("afterend",`<div class="hb-axis"><div></div><div class="ax"><span style="left:0">0</span><span style="left:35%">35</span><span style="left:60%">60</span><span style="left:100%">100</span></div><div></div></div>`);
  onView(box,()=>box.querySelectorAll(".bar").forEach(b=>b.style.width=b.dataset.w+"%"));})();
 /* Avance regulatorio */
 const stages=["Estrategia","Proyecto de ley","Ley aprobada","Reglamento vigente"];
@@ -1080,7 +1114,13 @@ const reg=[["Perú",4,"Ley 31814 (2023) y reglamento vigente desde ene. 2026"],[
 (()=>{const box=$("#regTrack");box.append(el("div",{class:"tk-head"},`<span></span><div class="tk-stages">${stages.map(x=>`<span>${x}</span>`).join("")}</div>`));
  const pos=v=>12.5+(v-1)*25;
  reg.forEach(([c,v,t])=>{const r=el("div",{class:"tk-row"+(c==="Perú"?" me":"")},`<span class="lab">${c}</span><div class="tk-line">${[1,2,3,4].map(k=>`<span class="tk-tick" style="left:${pos(k)}%"></span>`).join("")}<span class="tk-fill" data-w="${pos(v)-12.5}"></span><span class="tk-dot" data-l="${pos(v)}"></span></div>`);
-  bindTip(r,`<b>${c}</b><br>${t}`);box.append(r)});
+  bindTip(r,`<b>${c}</b><br>${t}`);box.append(r);
+  const card=box.closest(".chart-card");
+  const H={4:"Ya tiene reglas obligatorias en marcha.",3:"Ya tiene ley; falta ponerla en práctica con reglamento.",2.5:"Su ley de IA está a un paso de aprobarse.",2:"Debate proyectos, pero aún no tiene ley de IA.",1:"Orienta con una estrategia; no tiene ley específica."};
+  const W={4:"Las empresas y entidades que operan allí ya deben adecuarse.",3:"Conviene prepararse: el reglamento traerá obligaciones concretas.",2.5:"Si operas allí, empieza hoy: estos proyectos siguen el modelo de riesgo europeo.",2:"Hay tiempo, pero las reglas que vienen se parecen a las peruanas y europeas.",1:"Las reglas de datos personales ya aplican aunque no haya ley de IA."};
+  const go=tappable(r,()=>box.querySelectorAll(".tk-row"),()=>explain(card,{h:`${c}: ${H[v]}`,p:t+".",w:W[v]}));
+  if(c==="Perú")setTimeout(()=>go(false),0)});
+ hint(box.closest(".chart-card"));
  onView(box,()=>{box.querySelectorAll(".tk-fill").forEach(f=>f.style.width=f.dataset.w+"%");box.querySelectorAll(".tk-dot").forEach(d=>d.style.left=d.dataset.l+"%")});})();
 /* Dos relojes */
 const TODAY=new Date(2026,10,24);
@@ -1103,14 +1143,23 @@ const clk=[
  let nowShown=false;
  for(let y=2023;y<=2028;y++){
   if(!nowShown&&y===2027){box.insertAdjacentHTML("beforeend",`<div class="ck-now">HOY · 24 NOV. 2026</div>`);nowShown=true}
-  const ev=(side)=>clk.filter(e=>e[0]===y&&e[1]===side).map(e=>`<div class="ck-ev${e[5]>TODAY?" fut":""}"><span class="dt">${e[2]}</span><b>${e[3]}</b><span>${e[4]}</span></div>`).join("");
-  box.insertAdjacentHTML("beforeend",`<div class="ck-col pe">${ev("pe")}</div><div class="ck-yr">${y}</div><div class="ck-col eu">${ev("eu")}</div>`)}})();
+  const ev=(side)=>clk.filter(e=>e[0]===y&&e[1]===side).map(e=>`<div class="ck-ev${e[5]>TODAY?" fut":""}" data-k="${clk.indexOf(e)}"><span class="dt">${e[2]}</span><b>${e[3]}</b><span>${e[4]}</span></div>`).join("");
+  box.insertAdjacentHTML("beforeend",`<div class="ck-col pe">${ev("pe")}</div><div class="ck-yr">${y}</div><div class="ck-col eu">${ev("eu")}</div>`)}
+ const XP={"Ley 31814": "El Perú fue de los primeros de la región en tener una ley de IA. Promueve su uso y fija principios, pero aún sin obligaciones detalladas.", "Entra en vigor el AI Act": "La primera ley integral de IA del mundo. Clasifica la IA por riesgo y aplica a quien ofrezca IA en Europa, aunque esté fuera.", "Prohibiciones y alfabetización": "Desde esta fecha están prohibidos en Europa usos como el puntaje social o la manipulación, y las empresas deben capacitar a quien usa IA.", "Modelos de propósito general": "Los creadores de modelos como los de chat deben documentar cómo los entrenan y respetar los derechos de autor.", "Reglamento DS 115-2025-PCM": "La ley peruana pasa de principios a reglas: qué está prohibido, qué es de riesgo alto y qué controles exige.", "Reglamento en vigor": "Desde aquí las reglas son exigibles en el Perú. Quien usa IA para decidir sobre personas debe tener control humano y registros.", "ENIA 2026-2030": "El Estado tiene hoja de ruta: formar talento, innovar, regular con ética y abrir la participación ciudadana.", "Digital Omnibus": "Europa da más tiempo a las empresas: las reglas de riesgo alto se postergan hasta fines de 2027 y 2028.", "Primer plazo sectorial": "Salud, educación, justicia, seguridad, economía y finanzas debían adecuar su uso de IA en el Estado. El plazo ya venció.", "Oficial de IA": "Cada entidad pública debe nombrar a una persona responsable de la IA. La gobernanza ya tiene nombre y apellido.", "Gobiernos regionales": "Gobiernos regionales, EsSalud y universidades públicas deben cumplir el reglamento hasta esta fecha.", "Alto riesgo autónomo": "Desde aquí en Europa la IA para crédito, empleo o educación deberá cumplir requisitos estrictos.", "Alto riesgo en productos": "La IA dentro de dispositivos médicos, máquinas o juguetes entra a las reglas de alto riesgo.", "Gobiernos locales": "Las municipalidades son las últimas en cumplir. Para entonces todo el Estado peruano deberá estar adecuado."};const card=box.closest(".chart-card");
+ box.querySelectorAll(".ck-ev").forEach(n=>{const e=clk[+n.dataset.k];const go=tappable(n,()=>box.querySelectorAll(".ck-ev"),()=>explain(card,{h:`${e[1]==="pe"?"Perú":"Unión Europea"} · ${e[2]}: ${e[3]}`,p:XP[e[3]],w:e[5]>TODAY?"Todavía no llega: hay tiempo para prepararse.":"Ya ocurrió: es parte de las reglas vigentes."}));if(e[3]==="Oficial de IA")setTimeout(()=>go(false),0)});
+ hint(card,"Toca un hito para ver qué significa");})();
 /* Gantt */
 (()=>{const start=new Date(2025,8,10),end=new Date(2028,8,10),span=end-start,pct=d=>Math.max(0,Math.min(100,(d-start)/span*100));
  const rows=[["Poder Ejecutivo, Legislativo y Judicial","1 año",new Date(2026,8,10)],["Organismos constitucionales autónomos","1 año",new Date(2026,8,10)],["IA en salud, educación, justicia, seguridad y finanzas","1 año",new Date(2026,8,10)],["Gobiernos regionales, EsSalud y universidades públicas","2 años",new Date(2027,8,10)],["Gobiernos locales","3 años",new Date(2028,8,10)]];
  const box=$("#gantt");
  rows.forEach(([n,t,d])=>{const done=d<=TODAY;const r=el("div",{class:"gt-row"},`<div class="lab">${n}<small>${t}${done?" · plazo vencido":""}</small></div><div class="gt-tr"><div class="gt-bar${done?" done":""}" data-w="${pct(d)}">${d.toLocaleDateString("es-PE",{month:"short",year:"numeric"})}</div></div>`);
-  bindTip(r,`<b>${n}</b><br>Plazo máximo: ${t}<br>Hasta ${d.toLocaleDateString("es-PE",{day:"numeric",month:"long",year:"numeric"})}`);box.append(r)});
+  bindTip(r,`<b>${n}</b><br>Plazo máximo: ${t}<br>Hasta ${d.toLocaleDateString("es-PE",{day:"numeric",month:"long",year:"numeric"})}`);box.append(r);
+  const card=box.closest(".chart-card"),months=Math.round((d-TODAY)/2629800000);
+  const go=tappable(r,()=>box.querySelectorAll(".gt-row"),()=>explain(card,{h:done?`${n}: el plazo ya venció.`:`${n}: le quedan unos ${months} meses.`,
+   p:`Tenían ${t} desde la publicación del reglamento para adecuarse. Eso implica aprobar una política institucional de IA, garantizar supervisión humana en decisiones de alto impacto y evaluar el impacto de los sistemas de riesgo alto.`,
+   w:done?"Si una de estas entidades aún no cumple, ya está fuera de plazo.":"Empezar ahora evita correr al final, como pasó con otras normas digitales."}));
+  if(n.startsWith("Gobiernos regionales"))setTimeout(()=>go(false),0)});
+ hint(box.closest(".chart-card"),"Toca una fila para ver qué implica");
  const ticks=[[new Date(2025,8,10),"set. 2025"],[new Date(2026,8,10),"set. 2026"],[new Date(2027,8,10),"set. 2027"],[new Date(2028,8,10),"set. 2028"]];
  box.insertAdjacentHTML("beforeend",`<div class="gt-axis"><div></div><div class="ax">${ticks.map(([d,l])=>`<span style="left:${pct(d)}%">${l}</span>`).join("")}</div></div>`);
  const trs=box.querySelectorAll(".gt-tr");trs.forEach((t,i)=>{if(i===0)t.insertAdjacentHTML("beforeend",`<div class="gt-now" style="left:${pct(TODAY)}%"><span>hoy</span></div>`);else t.insertAdjacentHTML("beforeend",`<div class="gt-now" style="left:${pct(TODAY)}%"></div>`)});
@@ -1126,8 +1175,13 @@ const clk=[
  const L={yes:"Sí",no:"No",part:"Parcial"};
  const m=$("#matrix");m.innerHTML=`<div class="mx-c mx-h">Marco</div>${cols.map(c=>`<div class="mx-c mx-h">${c}</div>`).join("")}`;
  D.forEach(([n,sub,v,note])=>{const row=el("div",{class:"mx-row"},`<div class="mx-c"><div><b>${n}</b><small>${sub}</small></div></div>${v.map((x,i)=>i<3?`<div class="mx-c"><span class="${x}" aria-hidden="true"></span>${L[x]}</div>`:`<div class="mx-c" style="color:var(--muted)">${x}</div>`).join("")}`);
-  m.append(row);[...row.children].forEach(c=>bindTip(c,`<b>${n}</b><br>${note}`))});
- m.insertAdjacentHTML("afterend",`<div class="legend" style="padding:12px 14px"><span><i class="yes"></i>Sí</span><span><i class="part"></i>Parcial</span><span><i class="no"></i>No</span></div>`);})();
+  m.append(row);const FR={"Recomendación UNESCO":"Orienta a los países, pero no obliga ni sanciona.","Principios OCDE":"Es un acuerdo de valores entre países, no una ley.","NIST AI RMF y AI 600-1":"Es una guía práctica para gestionar riesgos, voluntaria pero muy usada.","ISO/IEC 42001":"Es la forma de demostrar con un certificado que gobiernas bien tu IA.","EU AI Act":"Es ley: obliga y sanciona a quien ofrezca IA en Europa.","Ley 31814 y DS 115-2025-PCM":"Es ley en el Perú: obliga a quien desarrolla o usa IA en el país."};
+  const WH={"Recomendación UNESCO":"Útil para fundamentar la política ética de tu organización.","Principios OCDE":"Te da un lenguaje común con socios internacionales.","NIST AI RMF y AI 600-1":"El mejor punto de partida para ordenar riesgos paso a paso.","ISO/IEC 42001":"Clientes y reguladores la piden cada vez más como prueba.","EU AI Act":"Si vendes o atiendes clientes en Europa, aplica aunque estés en el Perú.","Ley 31814 y DS 115-2025-PCM":"Es la norma que debes cumplir primero si operas en el Perú."};
+  const cells=[...row.children];cells.forEach(c=>bindTip(c,`<b>${n}</b><br>${note}`));
+  const go=()=>{$$mx().forEach(x=>x.classList.remove("sel"));cells.forEach(c=>c.classList.add("sel"));const x=explain($("#marcos .wrap"),{h:`${n}: ${FR[n]}`,p:note,w:WH[n]});if(innerWidth<860)x.scrollIntoView({behavior:"smooth",block:"nearest"})};
+  cells.forEach(c=>{c.classList.add("tap");c.addEventListener("click",go)});if(n.startsWith("Ley 31814"))setTimeout(go,0)});
+ function $$mx(){return m.querySelectorAll(".mx-c.tap")}
+ m.insertAdjacentHTML("afterend",`<div class="xhint" style="padding:0 14px;margin:8px 0 0">Toca una fila para ver qué significa</div><div class="legend" style="padding:12px 14px"><span><i class="yes"></i>Sí</span><span><i class="part"></i>Parcial</span><span><i class="no"></i>No</span></div>`);})();
 /* Contadores de cifras */
 document.querySelectorAll(".cifras b[data-count]").forEach(b=>{const T=+b.dataset.count,dec=+(b.dataset.dec||0),pre=b.dataset.pre||"",suf=b.dataset.suf||"";
  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
