@@ -57,3 +57,7 @@ Los datos reales se actualizan dentro de `daily-update.yml` (06:05, 10:05, 14:05
 Si una fuente falla se conserva el último dato válido y el motivo queda en `sources` y `checks` dentro de `live.json`. Sin `live.json` la página muestra datos de demostración (`site/liga1/data.js`). Para correrlo a mano: `pip install beautifulsoup4 lxml && python scripts/fetch_liga1.py`.
 
 Escudos: `site/liga1/escudos/` (un `.png` por club). La mascota Garrita se muestra en el pie si existe `site/liga1/img/garrita.png`.
+
+## IA Responsable (`site/etica-ia/`)
+
+Guía interactiva sobre ética, normatividad y gobernanza de la IA generativa en el Perú y América Latina. La sección "Lo último" se alimenta de `site/etica-ia/data/news.json`, que genera `scripts/fetch_etica_news.py` desde Gestión, El Comercio, Andina, El Peruano, Gob.pe, Infobae Perú, CEPAL y UNESCO (feeds RSS y búsquedas de Google Noticias por sitio). El flujo `etica-ia-news.yml` lo ejecuta a las 06:00, 12:00, 16:00 y 20:00 de Lima y publica el sitio. Si una fuente falla, se conservan sus noticias anteriores y el error queda en `sources` dentro del JSON.

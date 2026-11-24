@@ -309,7 +309,7 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
 /* charts */
 :root{--s1:#26A69A;--s2:#5C7CE0;--mute:rgba(163,180,200,.32)}
 .cifras-sec{padding-block:40px;border-bottom:1px solid var(--line)}
-.cifras{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.cifras{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .cifra{border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--glass),rgba(18,34,58,.55);display:grid;gap:6px;align-content:start}
 .cifra b{font-family:var(--f-display);font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:800;letter-spacing:-.02em;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.05}
 .cifra span{font-size:.92rem;color:var(--ink)}
@@ -445,6 +445,42 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 .cifras .front{min-height:250px}
 .cases .bigic2,.latam .bigic2{position:absolute;right:16px;bottom:40px;width:64px;height:64px;color:var(--accent);opacity:.55}
 @media (max-width:520px){.cifras .front{min-height:200px}.cifras .bigic{width:64px;height:64px;bottom:40px}}
+@media (max-width:1100px){.cifras{grid-template-columns:repeat(3,1fr)}}
+
+.dots{display:grid;gap:8px}
+.dt-row{display:grid;grid-template-columns:minmax(150px,260px) 1fr 52px;gap:12px;align-items:center;font-size:.86rem;border-radius:6px;padding:2px 0}
+.dt-row .lab{color:var(--ink)}
+.dt-tr{position:relative;height:16px}
+.dt-tr::before{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(255,255,255,.1)}
+.dt-tr .half{position:absolute;left:50%;top:-2px;bottom:-2px;border-left:1px dashed rgba(255,255,255,.25)}
+.dt-dot{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%);border:2px solid var(--bg);left:0;transition:left 1s cubic-bezier(.2,.8,.2,1)}
+.dt-row .v{font-variant-numeric:tabular-nums;color:var(--muted);text-align:right;font-family:var(--f-mono);font-size:.78rem}
+.dt-axis{display:grid;grid-template-columns:minmax(150px,260px) 1fr 52px;gap:12px;font-size:.7rem;color:var(--muted);font-family:var(--f-mono)}
+.dt-axis .ax{position:relative;height:14px}.dt-axis .ax span{position:absolute;transform:translateX(-50%)}.dt-axis .ax span:first-child{transform:none}.dt-axis .ax span:last-child{transform:translateX(-100%)}
+@media (max-width:520px){.dt-row,.dt-axis{grid-template-columns:1fr 44px}.dt-row .lab{grid-column:1/-1}.dt-axis>div:first-child{display:none}}
+
+.live{border:1px solid rgba(79,209,197,.45);border-radius:16px;padding:18px;background:var(--glass),rgba(18,34,58,.6);box-shadow:0 0 30px rgba(79,209,197,.1);display:grid;gap:12px}
+.live-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.live-head b{font-family:var(--f-display)}
+.pulse-dot{width:10px;height:10px;border-radius:50%;background:#F38BA8;box-shadow:0 0 0 0 rgba(243,139,168,.7);animation:pd 1.8s infinite}
+@keyframes pd{70%{box-shadow:0 0 0 10px rgba(243,139,168,0)}100%{box-shadow:0 0 0 0 rgba(243,139,168,0)}}
+.live-list{display:grid;gap:8px}
+.lv{border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:rgba(255,255,255,.03);display:grid;gap:4px;cursor:pointer}
+.lv:hover{border-color:var(--accent)}
+.lv .m{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-family:var(--f-mono);font-size:.7rem;color:var(--muted)}
+.lv b{font-family:var(--f-display);font-size:.95rem;line-height:1.3}
+.lv .more{display:none;font-size:.88rem;color:var(--muted)}
+.lv.open .more{display:grid;gap:6px}
+.lv .more a{font-weight:600}
+.srcbox{margin-top:30px;border:1px solid var(--line);border-radius:16px;padding:20px;background:rgba(255,255,255,.02)}
+.srclist{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-top:14px}
+.src-i{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:3px;font-size:.84rem}
+.src-i b{font-family:var(--f-display);font-size:.9rem;display:flex;align-items:center;gap:8px}
+.src-i .st{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mute);flex:none}
+.src-i .st.ok{background:var(--s1);box-shadow:0 0 8px var(--s1)}
+.src-i .st.err{background:#F38BA8}
+.src-i span{color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.pulse-dot{animation:none}}
 @media (max-width:860px){.cifras{grid-template-columns:1fr 1fr}.chart-grid{grid-template-columns:1fr}.clocks{grid-template-columns:1fr 40px 1fr}.ck-ev{padding:6px 8px}.hb,.hb-axis{grid-template-columns:92px 1fr 40px}}
 @media (max-width:520px){.clocks{grid-template-columns:1fr 34px 1fr;gap:0 6px}.ck-ev b{font-size:.8rem}.gt-row,.gt-axis{grid-template-columns:1fr}.gt-axis>div:first-child{display:none}}
 @media (max-width:860px){.oia-grid{grid-template-columns:1fr}.roles{grid-template-columns:1fr 1fr}.oia-head{flex-direction:column}}
@@ -620,6 +656,10 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
       <div class="ch-head"><h3>Plazos del Estado para cumplir el reglamento de IA</h3><p class="note">Plazos máximos contados desde la publicación del DS 115-2025-PCM (set. 2025). La línea vertical marca hoy.</p></div>
       <div class="gantt" id="gantt"></div>
     </div>
+    <div class="chart-card">
+      <div class="ch-head"><h3>Dónde el Perú es fuerte y dónde es débil en IA</h3><p class="note">Puesto entre 70 economías en subfactores del Ranking Mundial Digital y de IA 2026 (IMD y Centrum PUCP). Más a la izquierda es mejor.</p><div class="legend"><span><i style="background:var(--s1)"></i>Mitad superior</span><span><i style="background:#F38BA8"></i>Entre los 10 últimos</span><span><i style="background:var(--mute)"></i>Resto</span></div></div>
+      <div class="dots" id="peDots"></div>
+    </div>
     
     <div class="oia" id="oia">
       <div class="oia-head">
@@ -656,6 +696,10 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
         <div class="track" id="regTrack"></div>
       </div>
     </div>
+    <div class="chart-card">
+      <div class="ch-head"><h3>Ranking Mundial Digital y de IA 2026 · América Latina</h3><p class="note">Puntaje de 0 a 100 y puesto entre 70 economías. Fuente: IMD y Centrum PUCP, publicado por Gestión el 24 nov. 2026.</p></div>
+      <div class="hbars" id="imd"></div>
+    </div>
     <div class="filters" id="latFilters" style="margin-top:26px"></div>
     <div class="latam" id="latGrid"></div>
     <p class="note" style="margin-top:14px">El estado legislativo cambia rápido. Verifica en los portales oficiales de cada congreso antes de usar estos datos en un informe.</p>
@@ -676,12 +720,25 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 <section id="noticias" class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Capítulo 9 · Lo último · al 24 nov. 2026</div>
+      <div class="eyebrow">Capítulo 9 · Lo último</div>
       <h2>Lo que se está moviendo</h2>
-      <p class="lead">Toca una nota para ver objetivo, público, impacto y ejemplo.</p>
+      <p class="lead">Arriba, las noticias que se actualizan solas cuatro veces al día. Abajo, las notas clave analizadas: tócalas para ver objetivo, público, impacto y ejemplo.</p>
     </div>
+    <div class="live" id="live">
+      <div class="live-head"><span class="pulse-dot" aria-hidden="true"></span><b>En vivo</b><span id="liveStamp" class="note">Cargando noticias automáticas…</span></div>
+      <div class="live-list" id="liveList"></div>
+      <button class="btn ghost" id="liveMore" type="button" hidden>Ver más noticias</button>
+    </div>
+    <h3 style="margin:34px 0 14px">Notas clave analizadas</h3>
     <div class="filters" id="newsFilters"></div>
     <div class="news" id="news"></div>
+    <div class="srcbox" id="fuentes-vivo">
+      <div class="eyebrow">Fuentes que alimentan esta sección</div>
+      <h3 style="margin-top:6px">Cómo se construye "Lo último"</h3>
+      <p class="note" style="margin-top:6px">Un proceso automático revisa estas fuentes todos los días a las 6:00, 12:00, 16:00 y 20:00 (hora de Lima), conserva solo lo que trata de inteligencia artificial, ética, datos personales o deepfakes, elimina duplicados y publica las noticias de los últimos 21 días. Si una fuente falla, se mantienen sus noticias anteriores. Los horarios dependen de GitHub Actions y pueden retrasarse unos minutos.</p>
+      <div class="srclist" id="srcList"></div>
+      <p class="note" id="srcFoot" style="margin-top:10px"></p>
+    </div>
   </div>
 </section>
 
@@ -722,6 +779,8 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
   <div class="wrap">
     <div class="sec-head"><div class="eyebrow">Fuentes</div><h2>Referencias confiables</h2></div>
     <ul class="srcs">
+      <li><a href="#fuentes-vivo">Fuentes automáticas de la sección Lo último</a>: Gestión, El Comercio, Andina, El Peruano, Gob.pe, Infobae Perú, CEPAL y UNESCO.</li>
+      <li><a href="https://gestion.pe">Gestión, edición del 24 nov. 2026</a>: Ranking Mundial Digital y de IA 2026 (IMD y Centrum PUCP), cooperación China-Perú en IA, Millicom y Entel Perú, minería autónoma, informe del MIT sobre IA en educación y Financial Times sobre regulación de IA en EE. UU.</li>
       <li><a href="https://busquedas.elperuano.pe/dispositivo/NL/2192926-1">Ley 31814 (El Peruano)</a></li>
       <li><a href="https://www.congreso.gob.pe/Docs/DGP/DIDP/files/ley_29733.pdf">Ley 29733 (Congreso)</a></li>
       <li><a href="https://www.gob.pe/institucion/anpd/normas-legales/6554453-16-2024-jus">DS 016-2024-JUS (ANPD)</a></li>
@@ -790,11 +849,13 @@ const BIG={
  reg:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h22l10 10v38H18z"/><path d="M40 8v10h10"/><path d="M24 30h20M24 38h20M24 46h12"/><circle cx="46" cy="48" r="9" fill="rgba(79,209,197,.15)"/><path d="M42 48l3 3 6-6"/></svg>',
  ilia:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 56h48"/><rect x="12" y="34" width="8" height="22" rx="2"/><rect x="26" y="22" width="8" height="34" rx="2"/><rect x="40" y="12" width="8" height="44" rx="2" fill="rgba(79,209,197,.15)"/><path d="M14 26l12-10 12 6 14-12"/><circle cx="52" cy="10" r="3" fill="currentColor"/></svg>',
  emp:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="20" width="26" height="36" rx="2"/><path d="M36 30h18v26H36"/><path d="M16 28h4M26 28h4M16 36h4M26 36h4M16 44h4M26 44h4M42 38h6M42 46h6"/><circle cx="48" cy="14" r="8" fill="rgba(79,209,197,.15)"/><path d="M45 14h6M48 11v6"/></svg>',
+ imd:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="32" r="22"/><path d="M10 32h44M32 10c7 6 10 14 10 22s-3 16-10 22c-7-6-10-14-10-22s3-16 10-22z"/><circle cx="46" cy="46" r="9" fill="rgba(243,139,168,.15)" stroke="#F38BA8"/><path d="M43 46h6" stroke="#F38BA8"/></svg>',
  jne:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="12" y="30" width="40" height="26" rx="3"/><path d="M24 30V12h16v18"/><path d="M28 20h8"/><path d="M32 4l10 18H22z" fill="rgba(243,139,168,.15)" stroke="#F38BA8"/><path d="M32 11v5M32 19v.5" stroke="#F38BA8"/></svg>'};
 
 const cifras=[
  {n:"22 ene. 2026",t:"Entra en vigor el Reglamento de la Ley 31814 de IA (DS 115-2025-PCM)",ic:"reg",h:"Desde ese día, la IA en el Perú tiene reglas obligatorias.",p:"Prohíbe los usos que dañan derechos, como la vigilancia masiva sin base legal, y exige control humano cuando la IA decide sobre crédito, empleo, salud o educación.",w:"Si tu organización usa IA para decidir sobre personas, ya debe cumplir.",u:"https://www.garrigues.com/es_ES/noticia/peru-aprueba-reglamento-ley-promueve-uso-inteligencia-artificial-favor-desarrollo-economico",f:"Garrigues"},
  {n:"52,7",c:52.7,d:1,t:"Puntos del Perú en el Índice Latinoamericano de IA (ILIA 2026) de CEPAL: puesto 7 de 20",ic:"ilia",h:"El Perú aprueba a medias en preparación para la IA.",p:"El índice mide talento, infraestructura, investigación y gobierno. El Perú está a casi 19 puntos de Chile (71,4) y avanzó solo 0,8 en un año.",w:"Sin talento ni datos, las leyes no bastan para competir.",u:"https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026",f:"CEPAL"},
+ {n:"65 de 70",ic:"imd",t:"Puesto del Perú en el Ranking Mundial Digital y de IA 2026 (IMD y Centrum PUCP)",h:"En la región, el Perú solo supera a Venezuela en adopción digital y uso de la IA.",p:"Con 56,3 puntos de 100, subió un puesto, pero es último en talento (70.º) y está 68.º en adopción de IA en empresas. Chile, el mejor de la región, ocupa el puesto 45.",w:"El talento es el cuello de botella: sin personas preparadas, la IA no escala.",u:"https://gestion.pe",f:"Gestión, 24 nov. 2026"},
  {n:"5%",c:5,suf:"%",t:"De empresas peruanas integra IA en sus procesos clave (estudio Tivit, nov. 2026)",ic:"emp",h:"Solo 5 de cada 100 empresas usa IA donde de verdad mueve el negocio.",p:"La mayoría se queda en pilotos o en un chatbot. Aun así, la mitad de ejecutivos ya tiene algún gobierno formal de IA generativa.",w:"Quien ordene hoy su gobierno de IA podrá escalar antes que su competencia.",u:"https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit",f:"Forbes Perú"},
  {n:"+700",c:700,pre:"+",t:"Alertas de desinformación detectadas por el JNE en las Elecciones Generales 2026",ic:"jne",h:"La IA ya influye en cómo nos informamos para votar.",p:"El JNE rastreó más de 700 casos de contenido falso en redes, incluidos videos y audios manipulados con IA, y publicó una guía para detectar deepfakes.",w:"Verificar antes de compartir también es usar la IA con responsabilidad.",u:"https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx",f:"Andina"}];
 (()=>{const g=$("#cifrasGrid");cifras.forEach(x=>g.append(flipCard(
@@ -916,6 +977,8 @@ const cases=[
  {s:"Banca",t:"Nubank y Bancolombia lideran madurez de IA",r:"ok",p:"El ranking regional de Evident ubica a Nubank primero y a Bancolombia entre los diez bancos más avanzados de América Latina, evaluando talento, innovación, liderazgo y transparencia.",l:"La transparencia sobre el uso de IA ya es un factor de reputación que se mide públicamente.",u:"https://www.enter.co/?p=585487",f:"Enter.co"},
  {s:"Telecom",t:"Telefónica: principios de IA desde 2018",r:"ok",p:"Fue una de las primeras empresas de la región en publicar principios de IA: justa, transparente y explicable, centrada en las personas, con privacidad y seguridad desde el diseño, extendida a sus proveedores. En 2024 los actualizó y sumó un principio sobre medio ambiente.",l:"Los principios deben alcanzar a la cadena de proveedores, no solo a los desarrollos propios.",u:"https://www.telefonica.com/es/centro-global-de-transparencia/inteligencia-artificial-y-nuevas-tecnologias/principios-de-inteligencia-artificial/",f:"Telefónica"},
  {s:"Telecom",t:"Samsung: código confidencial filtrado en un chatbot",r:"bad",p:"En 2023 ingenieros pegaron código fuente y notas internas en ChatGPT. La empresa restringió el uso de IA generativa pública.",l:"Política de uso clara: qué datos nunca se ingresan y qué herramientas están aprobadas.",u:"https://www.bloomberg.com/news/articles/2023-05-02/samsung-bans-chatgpt-and-other-generative-ai-use-by-staff-after-leak",f:"Bloomberg"},
+ {s:"Energía",t:"Minería autónoma en el Perú",r:"ok",p:"Las mineras peruanas ya operan con equipos automatizados y gestión remota. Según el Ministerio de Energía y Minas, la automatización puede ahorrar entre 10% y 15% de energía.",l:"Automatizar no es reemplazar: exige reconvertir talento hacia análisis de datos, mantenimiento predictivo y operación remota.",u:"https://gestion.pe",f:"Gestión, 24 nov. 2026 (opinión de Komatsu-Mitsui)"},
+ {s:"Telecom",t:"Tigo y Entel Perú: atención al cliente con IA",r:"mix",p:"Millicom (Tigo), que acordó comprar Entel Perú por US$ 1,714 millones, estima ahorrar US$ 30 millones el próximo año trasladando parte de la atención al cliente a soluciones digitales y de IA.",l:"La eficiencia con IA debe ir con transparencia ante el cliente, un canal humano disponible y un plan para los trabajadores afectados.",u:"https://gestion.pe",f:"Gestión, 24 nov. 2026"},
  {s:"Energía",t:"Infraestructura crítica: alto riesgo por diseño",r:"mix",p:"Las eléctricas usan IA para pronóstico de demanda, mantenimiento predictivo e integración de renovables. Tanto el reglamento peruano como el AI Act tratan la gestión de redes como uso de riesgo alto.",l:"Plan manual de contingencia, pruebas de robustez y ciberseguridad antes de automatizar decisiones sobre la red.",u:"https://eur-lex.europa.eu/eli/reg/2024/1689/oj",f:"Reglamento (UE) 2024/1689, Anexo III"},
  {s:"Servicios",t:"Air Canada: responsable por lo que dijo su chatbot",r:"bad",p:"En 2024 un tribunal canadiense obligó a la aerolínea a respetar una política de reembolso falsa que inventó su chatbot. La empresa alegó que el bot era una entidad separada y perdió.",l:"La organización responde por lo que dice su IA frente al consumidor.",u:"https://www.canlii.org/en/bc/bccrt/doc/2024/2024bccrt149/2024bccrt149.html",f:"CanLII"},
  {s:"RR. HH.",t:"Amazon: reclutamiento que penalizaba a mujeres",r:"bad",p:"Un modelo entrenado con diez años de CV, mayormente de hombres, aprendió a bajar el puntaje de candidatas. Amazon lo abandonó en 2018.",l:"Los datos históricos traen los sesgos del pasado. Hay que probar equidad antes de usarlos.",u:"https://www.euronews.com/2018/10/10/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women",f:"Reuters vía Euronews"},
@@ -941,6 +1004,24 @@ cSec.forEach(s=>{const b=el("button",{class:"tab",type:"button"},s);b.onclick=()
 
 /* ---------- NOTICIAS ---------- */
 const news=[
+ {d:"24 nov. 2026",r:"Perú",t:"El Perú solo supera a Venezuela en adopción digital y uso de IA en la región",u:"https://gestion.pe",f:"Gestión",
+  s:"En el Ranking Mundial Digital y de IA 2026 de IMD y Centrum PUCP, el Perú ocupa el puesto 65 de 70 con 56,3 puntos. Subió un lugar, pero es último en talento y 68.º en adopción de IA en empresas.",
+  o:"Medir qué tan preparados están los países para adoptar tecnología digital e IA.",p:"Gobierno, empresas, universidades e inversionistas.",i:"El 56,7% de ejecutivos peruanos señala infraestructura digital insuficiente; la falta de talento es la barrera más citada.",e:"Un banco que quiere escalar IA no encuentra suficientes especialistas en el país.",ic:"globe"},
+ {d:"24 nov. 2026",r:"Perú",t:"China propone cooperar con el Perú en IA para agricultura, minería, salud, educación y desastres",u:"https://gestion.pe",f:"Gestión",
+  s:"La embajada china plantea compartir modelos de IA de código abierto y el sistema de alerta temprana Mazu para El Niño, además de comandos de monitoreo inteligente para seguridad urbana.",
+  o:"Ampliar la cooperación tecnológica bajo el Plan de Acción Conjunta 2024-2029.",p:"Ministerios, gobiernos regionales y municipios.",i:"Abre oportunidades, pero los sistemas de monitoreo de seguridad deben evaluarse frente al reglamento peruano, que prohíbe la vigilancia masiva sin base legal.",e:"Usar IA para alertar huaicos a comunidades con horas de anticipación.",ic:"alert"},
+ {d:"24 nov. 2026",r:"Perú",t:"Tigo prevé ahorrar US$ 30 millones con atención digital e IA tras comprar Entel Perú",u:"https://gestion.pe",f:"Gestión",
+  s:"Millicom acordó comprar Entel Perú por US$ 1,714 millones y planea trasladar parte de la atención al cliente a soluciones digitales y de IA.",
+  o:"Reducir costos e integrar operaciones tras la compra.",p:"Clientes de telefonía móvil, trabajadores y regulador.",i:"La IA en atención al cliente exige avisar que es IA, mantener un canal humano y gestionar el impacto laboral.",e:"Un chatbot que resuelve reclamos y deriva a una persona cuando no puede.",ic:"chip"},
+ {d:"24 nov. 2026",r:"Mundo",t:"En EE. UU., la IA enfrenta un nuevo frente político que pide más regulación",u:"https://gestion.pe",f:"Financial Times en Gestión",
+  s:"Tras las elecciones de mitad de período, el nuevo Congreso presiona por regular la IA. El CEO de Anthropic, que acaba de salir a bolsa, sostiene que la IA debe regularse, y OpenAI se comprometió a cubrir los costos locales de energía de sus centros de datos.",
+  o:"Entender el giro político sobre la IA en el principal mercado tecnológico.",p:"Empresas que usan modelos de IA estadounidenses.",i:"Más reglas en EE. UU. pueden cambiar las condiciones de los modelos que usan las empresas peruanas.",e:"Un proveedor de IA que debe documentar mejor sus modelos para cumplir nuevas leyes.",ic:"scale"},
+ {d:"24 nov. 2026",r:"Mundo",t:"Informe del MIT advierte sobre la rendición cognitiva por el uso de IA en educación",u:"https://gestion.pe",f:"Gestión (opinión UTEC)",
+  s:"El informe, publicado en agosto de 2026, alerta que recurrir de inmediato a la IA puede crear una ilusión de aprendizaje y recomienda reglas claras sobre cuándo se permite su uso.",
+  o:"Usar la IA para ampliar capacidades sin renunciar al pensamiento propio.",p:"Educadores, estudiantes y áreas de capacitación de empresas.",i:"Las organizaciones deben definir cuándo se permite, exige o restringe la IA y exigir transparencia en ambos sentidos.",e:"Una política interna que pide declarar el uso de IA en informes y verificar cada dato.",ic:"bulb"},
+ {d:"24 nov. 2026",r:"Mundo",t:"EE. UU. incluye a Megaspeed en su lista negra por desviar chips de IA a China",u:"https://gestion.pe",f:"EFE en Gestión",
+  s:"El Departamento de Comercio exigirá licencia a las empresas estadounidenses para venderle productos o tecnología a la firma singapurense.",
+  o:"Hacer cumplir los controles de exportación de chips de IA.",p:"Fabricantes y distribuidores de hardware de IA.",i:"La geopolítica del cómputo afecta el costo y acceso a la IA en países como el Perú.",e:"Retrasos o mayores precios en servidores para proyectos de IA.",ic:"net"},
  {d:"21 oct. 2026",r:"Perú",t:"El Estado define el perfil y las funciones del Oficial de Inteligencia Artificial",u:"https://elperuano.pe/noticia/307286-inteligencia-artificial-en-el-estado-establecen-perfil-y-responsabilidades-de-un-nuevo-oficial",f:"El Peruano",
   s:"La PCM aprobó la Directiva 002-2026-PCM/SGTD, que obliga a las entidades públicas a designar un Oficial de IA y fija su perfil, responsabilidades y coordinación institucional.",
   o:"Que cada entidad tenga un responsable visible de la IA.",p:"Ministerios, gobiernos regionales y locales, universidades, hospitales y empresas públicas.",i:"La gobernanza de IA deja de ser difusa: hay un cargo que rinde cuentas.",e:"Una universidad pública designa a su OIA para aprobar la política de uso de IA generativa.",ic:"user"},
@@ -975,7 +1056,7 @@ const news=[
   s:"Según Sonda Perú, el 45,6% de empresas locales ya había implementado alguna solución de IA en 2025, con la SUNAT, la banca y el comercio a la cabeza.",
   o:"Mostrar dónde se concentra la inversión en IA y nube en el país.",p:"Empresas privadas y entidades públicas en transformación digital.",i:"Más adopción exige más gobernanza de datos y ciberseguridad.",e:"La SUNAT cruzando datos con IA para priorizar fiscalizaciones.",ic:"chip"}
 ];
-const nf=$("#newsFilters"),ng=$("#news");let nk="Todas";const nTags=["Todas","Perú","Latam","Europa"];
+const nf=$("#newsFilters"),ng=$("#news");let nk="Todas";const nTags=["Todas","Perú","Latam","Europa","Mundo"];
 const shot=u=>"https://s.wordpress.com/mshots/v1/"+encodeURIComponent(u)+"?w=640&h=360";
 function drawNews(){[...nf.children].forEach((b,i)=>b.setAttribute("aria-selected",nTags[i]===nk));ng.innerHTML="";
  news.filter(n=>nk==="Todas"||n.r===nk).forEach(n=>{const c=flipCard(`<div class="nimg"><span class="ntag">${n.r}</span><img src="${shot(n.u)}" alt="Captura de la nota en ${n.f}" loading="lazy" onerror="this.remove()"><div class="fb">${IC[n.ic]}</div></div><div class="nbody"><div class="d">${n.d} · ${n.f}</div><h3>${n.t}</h3><p class="nsum">${n.s}</p></div>`,
@@ -1185,6 +1266,44 @@ const clk=[
  box.insertAdjacentHTML("beforeend",`<div class="gt-axis"><div></div><div class="ax">${ticks.map(([d,l])=>`<span style="left:${pct(d)}%">${l}</span>`).join("")}</div></div>`);
  const trs=box.querySelectorAll(".gt-tr");trs.forEach((t,i)=>{if(i===0)t.insertAdjacentHTML("beforeend",`<div class="gt-now" style="left:${pct(TODAY)}%"><span>hoy</span></div>`);else t.insertAdjacentHTML("beforeend",`<div class="gt-now" style="left:${pct(TODAY)}%"></div>`)});
  onView(box,()=>box.querySelectorAll(".gt-bar").forEach(b=>b.style.width=b.dataset.w+"%"));})();
+
+/* IMD Latam */
+(()=>{const D=[["Chile",72.7,45],["Brasil",66.2,54],["Argentina",65.0,58],["Colombia",62.0,62],["México",57.8,63],["Perú",56.3,65],["Venezuela",39.1,70]];
+ const box=$("#imd");if(!box)return;const card=box.closest(".chart-card"),f=n=>n.toFixed(1).replace(".",",");
+ D.forEach(([c,v,pos])=>{const r=el("div",{class:"hb"+(c==="Perú"?" me":"")},`<span class="lab">${c}</span><span class="tr"><span class="bar" data-w="${v}"></span></span><span class="val">${pos}.º</span>`);
+  bindTip(r,`<b>${c}</b><br>${f(v)} puntos · puesto ${pos} de 70`);box.append(r);
+  const go=tappable(r,()=>box.querySelectorAll(".hb"),()=>explain(card,{
+   h:c==="Perú"?"El Perú solo supera a Venezuela en la región.":c==="Chile"?"Chile es el mejor de la región, pero apenas en la mitad del ranking mundial.":`${c} está por delante del Perú.`,
+   p:`${c}: ${f(v)} puntos, puesto ${pos} de 70 economías. El ranking mide gobernanza, tecnología e infraestructura, eficiencia, fuerza laboral y valores. Lidera Estados Unidos con 100 puntos.`,
+   w:c==="Perú"?"Subió un puesto en 2026, pero es último del mundo en talento.":`Frente al Perú: ${pos<65?(65-pos)+" puestos arriba":"5 puestos abajo"}.`}));
+  if(c==="Perú")setTimeout(()=>go(false),0)});
+ box.insertAdjacentHTML("afterend",`<div class="hb-axis"><div></div><div class="ax"><span style="left:0">0</span><span style="left:50%">50</span><span style="left:100%">100 puntos</span></div><div></div></div>`);
+ hint(card,"Toca un país para ver qué significa");
+ onView(box,()=>box.querySelectorAll(".bar").forEach(b=>b.style.width=b.dataset.w+"%"));})();
+/* Perú fortalezas y debilidades */
+(()=>{const D=[
+ ["Prestación de servicios públicos digitales",15,"El Estado peruano digitaliza bien sus servicios: es una de sus mayores fortalezas."],
+ ["Sistemas centrales de gobierno",17,"Los sistemas digitales del Estado están entre los mejor ubicados del país."],
+ ["Velocidad de banda ancha",21,"La conectividad no es el principal problema: el Perú destaca en velocidad."],
+ ["Educación y formación",50,"Avanza, pero todavía está en la mitad inferior."],
+ ["Confianza",66,"Cayó con fuerza y arrastró al factor Valores (61.º)."],
+ ["Estrategia nacional de IA",67,"Pese a la ENIA, el ranking la ubica entre las más débiles."],
+ ["Adopción de IA en empresas",68,"Las empresas peruanas casi no integran IA en su operación."],
+ ["Acceso de la sociedad a la IA",68,"La mayoría de personas aún no accede ni usa IA."],
+ ["Habilidades en IA",68,"Faltan personas que sepan usar y construir IA."],
+ ["Propiedad intelectual",68,"La legislación de propiedad intelectual figura entre las más débiles."],
+ ["Capital e inversión en IA",69,"Casi no hay inversión en IA: penúltimo lugar."],
+ ["Gestión de brechas de datos",70,"Último lugar en ciberseguridad de datos: un riesgo directo para la IA."],
+ ["Talento",70,"Último del mundo en talento: es la barrera central para escalar la IA."]];
+ const box=$("#peDots");if(!box)return;const card=box.closest(".chart-card");
+ D.forEach(([n,p,t])=>{const col=p<=35?"var(--s1)":p>=61?"#F38BA8":"var(--mute)";const x=(p-1)/69*100;
+  const r=el("div",{class:"dt-row"},`<span class="lab">${n}</span><span class="dt-tr"><span class="half"></span><span class="dt-dot" data-l="${x}" style="background:${col}"></span></span><span class="v">${p}.º</span>`);
+  bindTip(r,`<b>${n}</b><br>Puesto ${p} de 70`);box.append(r);
+  const go=tappable(r,()=>box.querySelectorAll(".dt-row"),()=>explain(card,{h:`${n}: puesto ${p} de 70.`,p:t,w:p<=35?"Es una fortaleza que conviene aprovechar para la IA en el Estado.":p>=61?"Está entre los 10 peores del mundo: es una prioridad.":"Hay margen de mejora."}));
+  if(n==="Talento")setTimeout(()=>go(false),0)});
+ box.insertAdjacentHTML("afterend",`<div class="dt-axis"><div></div><div class="ax"><span style="left:0">1.º</span><span style="left:50%">35.º</span><span style="left:100%">70.º</span></div><div></div></div>`);
+ hint(card,"Toca un indicador para ver qué significa");
+ onView(box,()=>box.querySelectorAll(".dt-dot").forEach(d=>d.style.left=d.dataset.l+"%"));})();
 /* Matriz de marcos */
 (()=>{const cols=["Obligatorio","Certificable","Enfoque de riesgo","Ámbito"];
  const D=[["Recomendación UNESCO","2021",["no","no","part","193 Estados"],"Soft law: orienta políticas, no sanciona."],
@@ -1207,6 +1326,33 @@ const clk=[
 document.querySelectorAll(".cifras b[data-count]").forEach(b=>{const T=+b.dataset.count,dec=+(b.dataset.dec||0),pre=b.dataset.pre||"",suf=b.dataset.suf||"";
  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
  onView(b,()=>{const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)/1200),e=1-Math.pow(1-k,3);b.textContent=pre+(T*e).toFixed(dec).replace(".",",")+suf;if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)})});
+
+
+/* ---------- NOTICIAS AUTOMÁTICAS (data/news.json) ---------- */
+(()=>{const list=$("#liveList"),stamp=$("#liveStamp"),more=$("#liveMore"),srcList=$("#srcList"),foot=$("#srcFoot");if(!list)return;
+ const SRC=[["Gestión","Diario de economía y negocios","https://gestion.pe"],["El Comercio","Diario nacional","https://elcomercio.pe/tecnologia/"],["Andina","Agencia oficial de noticias","https://andina.pe"],["El Peruano","Diario oficial","https://elperuano.pe"],["Gob.pe (PCM y SGTD)","Portal del Estado peruano","https://www.gob.pe"],["Infobae Perú","Medio digital","https://www.infobae.com/peru/"],["CEPAL","Organismo de Naciones Unidas","https://www.cepal.org"],["UNESCO","Organismo de Naciones Unidas","https://www.unesco.org"]];
+ const host=u=>u.replace(/^https?:\/\//,"").replace(/\/$/,"");
+ const drawSrc=rows=>{srcList.innerHTML=rows.map(r=>`<div class="src-i"><b><i class="st ${r.ok===true?"ok":r.ok===false?"err":""}"></i>${r.name}</b><span>${r.kind}${r.count!=null?` · ${r.count} noticias en la última revisión`:""}</span><a href="${r.site}" target="_blank" rel="noopener">${host(r.site)}</a></div>`).join("")};
+ drawSrc(SRC.map(([name,kind,site])=>({name,kind,site})));
+ const fmt=d=>new Date(d).toLocaleString("es-PE",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit",timeZone:"America/Lima"});
+ fetch("data/news.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
+  stamp.textContent=`Última actualización: ${d.updated_lima} (hora de Lima) · revisiones diarias: ${d.schedule_lima.join(", ")}`;
+  drawSrc(d.sources.map(x=>({name:x.name,kind:x.kind,site:x.site,ok:x.ok,count:x.count})));
+  const okN=d.sources.filter(x=>x.ok).length;
+  foot.textContent=`${okN} de ${d.sources.length} fuentes respondieron en la última revisión. Cada noticia enlaza a la nota original del medio.`;
+  const items=d.items||[];
+  if(!items.length){list.innerHTML=`<p class="note">No hubo noticias nuevas sobre IA en la última revisión.</p>`;return}
+  let shown=8;
+  const draw=()=>{list.innerHTML="";items.slice(0,shown).forEach(n=>{
+   const c=el("article",{class:"lv",tabindex:"0",role:"button"},`<div class="m"><span class="ntag">${n.r}</span><span>${fmt(n.d)}</span><span>${n.f}</span></div><b>${n.t}</b><div class="more">${n.s?`<p>${n.s}</p>`:""}<a href="${n.u}" target="_blank" rel="noopener">Leer la nota en ${n.f} →</a></div>`);
+   const t=()=>c.classList.toggle("open");
+   c.addEventListener("click",e=>{if(e.target.closest("a"))return;t()});
+   c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();t()}});
+   list.append(c)});
+   more.hidden=shown>=items.length};
+  more.onclick=()=>{shown+=8;draw()};draw();
+  const tk=$("#tkTrack");if(tk)tk.insertAdjacentHTML("afterbegin",items.slice(0,8).map(n=>`<a href="${n.u}" target="_blank" rel="noopener"><b>${fmt(n.d)} · ${n.f}</b>${n.t}</a>`).join(""));
+ }).catch(()=>{stamp.textContent="Las noticias automáticas aparecen en el sitio publicado y se renuevan a las 6:00, 12:00, 16:00 y 20:00 (hora de Lima).";list.innerHTML="";foot.textContent=""});})();
 
 /* ---------- NAV ACTIVA ---------- */
 const links=[...document.querySelectorAll("#navlist a")];
