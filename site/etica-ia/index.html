@@ -100,6 +100,15 @@ button{font:inherit;cursor:pointer}
 .xp .bt{opacity:.75}
 .xp .why{border-top-color:rgba(6,24,42,.25)!important;font-weight:600}
 .ld-frase{background:var(--back-a)!important;color:var(--back-ink)!important;border-color:rgba(255,255,255,.5)!important}
+
+/* al pasar el mouse, el frente cambia de color */
+@media (hover:hover){
+ .flip:not(.on):hover .face.front{background:linear-gradient(160deg,rgba(79,209,197,.32),rgba(124,156,245,.18)),var(--surface)!important;border-color:var(--accent)!important}
+ .flip:nth-child(even):not(.on):hover .face.front{background:linear-gradient(160deg,rgba(124,156,245,.36),rgba(79,209,197,.14)),var(--surface)!important;border-color:#9DB6FF!important}
+ .flip:not(.on):hover .flip-in{transform:rotateY(-8deg) translateY(-3px)}
+ .law:hover{background:linear-gradient(160deg,rgba(79,209,197,.32),rgba(124,156,245,.18)),var(--surface)!important}
+}
+.flip .face{transition:background .3s,border-color .3s,box-shadow .25s}
 @media (max-width:860px){
  .nav .wrap{flex-wrap:wrap;gap:8px}
  .brand{display:block!important}
