@@ -437,6 +437,14 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 .roles .flip .face b{font-family:var(--f-display);font-size:.92rem}
 .roles .flip .face span{font-size:.8rem;color:var(--muted)}
 .roles .flip .face p{font-size:.82rem}
+
+.cifras .front{position:relative}
+.cifras .bigic{position:absolute;right:16px;bottom:44px;width:84px;height:84px;color:var(--accent);opacity:.9;filter:drop-shadow(0 0 14px rgba(79,209,197,.55));transition:transform .4s}
+.cifras .flip:hover .bigic{transform:scale(1.12) rotate(-4deg)}
+.cifras .cnum,.cifras .front span.t{position:relative;z-index:1}
+.cifras .front{min-height:250px}
+.cases .bigic2,.latam .bigic2{position:absolute;right:16px;bottom:40px;width:64px;height:64px;color:var(--accent);opacity:.55}
+@media (max-width:520px){.cifras .front{min-height:200px}.cifras .bigic{width:64px;height:64px;bottom:40px}}
 @media (max-width:860px){.cifras{grid-template-columns:1fr 1fr}.chart-grid{grid-template-columns:1fr}.clocks{grid-template-columns:1fr 40px 1fr}.ck-ev{padding:6px 8px}.hb,.hb-axis{grid-template-columns:92px 1fr 40px}}
 @media (max-width:520px){.clocks{grid-template-columns:1fr 34px 1fr;gap:0 6px}.ck-ev b{font-size:.8rem}.gt-row,.gt-axis{grid-template-columns:1fr}.gt-axis>div:first-child{display:none}}
 @media (max-width:860px){.oia-grid{grid-template-columns:1fr}.roles{grid-template-columns:1fr 1fr}.oia-head{flex-direction:column}}
@@ -484,10 +492,10 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 <header class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow">Ética y Normatividad en el uso de IAG · UNMSM 2026-II</div>
+      <div class="eyebrow">Guía de ética, normas y gobernanza de la IA generativa</div>
       <h1 style="margin-top:16px">Estrategia <em>IA</em> Responsable</h1>
       <p class="sub">De los valores a la gobernanza, en el Perú y la región</p>
-      <p class="lead" style="margin-top:16px">Guía interactiva para directivos: principios, ley peruana vigente desde 2026, regulación en América Latina y casos reales de banca, telecomunicaciones, energía y Estado.</p>
+      <p class="lead" style="margin-top:16px">Guía interactiva para directivos: principios, la Ley 31814 y su reglamento vigente desde enero de 2026, regulación en América Latina y casos reales de banca, telecomunicaciones, energía y Estado.</p>
       <div class="hero-meta">
         <button type="button" class="chip" data-law="0">Ley 31814</button><button type="button" class="chip" data-law="1">DS 115-2025-PCM</button><button type="button" class="chip" data-law="2">ENIA 2026-2030</button><button type="button" class="chip" data-law="4">Ley 29733</button><button type="button" class="chip" data-law="6">EU AI Act</button><button type="button" class="chip" data-law="3">Directiva OIA</button><button type="button" class="chip" data-law="8">ISO/IEC 42001</button>
       </div>
@@ -517,7 +525,7 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 <section id="curso">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">El recorrido · 16 semanas</div>
+      <div class="eyebrow">El recorrido</div>
       <h2>De los valores a la gobernanza en cuatro pasos</h2>
       <p class="lead">Cada paso es un capítulo de esta página. Elige uno para ver su contenido y saltar a él.</p>
     </div>
@@ -561,10 +569,10 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
       <p class="lead">Toca un nivel de la pirámide o un caso. Es orientativo y no reemplaza una opinión legal.</p>
     </div>
     <div class="pyramid" aria-label="Pirámide de riesgo" style="margin-bottom:26px">
-        <button class="pyr ban" style="--w:42%" type="button">Prohibido<small>Uso indebido: vigilancia masiva sin base legal, manipulación</small></button>
+        <button class="pyr ban" style="--w:42%" type="button">Prohibido<small>Vigilancia masiva sin base legal, manipulación. Perú: uso indebido</small></button>
         <button class="pyr high" style="--w:62%" type="button">Alto<small>Crédito, empleo, salud, educación, programas sociales</small></button>
-        <button class="pyr warn" style="--w:82%" type="button">Limitado<small>Chatbots y contenido sintético: transparencia</small></button>
-        <button class="pyr ok" style="--w:100%" type="button">Mínimo o aceptable<small>Resúmenes, filtros de spam: buenas prácticas</small></button>
+        <button class="pyr warn" style="--w:82%" type="button">Transparencia<small>Chatbots y contenido sintético: avisar que es IA. Perú: aceptable · UE: limitado</small></button>
+        <button class="pyr ok" style="--w:100%" type="button">Bajo<small>Resúmenes, filtros de spam: buenas prácticas. Perú: aceptable · UE: mínimo</small></button>
       </div>
       <div class="risk">
       <div class="uses" id="uses"></div>
@@ -609,7 +617,7 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
       <div class="clocks" id="clocks"></div>
     </div>
     <div class="chart-card">
-      <div class="ch-head"><h3>¿Cuánto tiempo tiene cada entidad pública para cumplir el reglamento?</h3><p class="note">Plazos máximos contados desde la publicación del DS 115-2025-PCM (set. 2025). La línea vertical marca hoy.</p></div>
+      <div class="ch-head"><h3>Plazos del Estado para cumplir el reglamento de IA</h3><p class="note">Plazos máximos contados desde la publicación del DS 115-2025-PCM (set. 2025). La línea vertical marca hoy.</p></div>
       <div class="gantt" id="gantt"></div>
     </div>
     
@@ -744,7 +752,7 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 </section>
 
 <footer>
-  <div class="wrap">Material de apoyo para el curso Ética y Normatividad en el uso de IAG, Maestría en IA para la Administración, UNMSM. Contenido informativo; no constituye asesoría legal. Datos revisados al 24 de noviembre de 2026.</div>
+  <div class="wrap">Guía informativa sobre ética, normatividad y gobernanza de la IA generativa en el Perú y América Latina. No constituye asesoría legal. Datos revisados al 24 de noviembre de 2026.</div>
 </footer>
 
 <script>
@@ -778,13 +786,19 @@ const IC={
 const ilia=[["Chile",71.4],["Brasil",68.4],["Uruguay",67.0],["Colombia",56.8],["Costa Rica",56.0],["Argentina",55.6],["Perú",52.7],["México",52.0],["Ecuador",51.8],["Rep. Dominicana",45.1],["Panamá",39.3],["El Salvador",37.9],["Trinidad y Tobago",35.5]];
 
 /* ---------- CIFRAS QUE SE VOLTEAN ---------- */
+const BIG={
+ reg:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h22l10 10v38H18z"/><path d="M40 8v10h10"/><path d="M24 30h20M24 38h20M24 46h12"/><circle cx="46" cy="48" r="9" fill="rgba(79,209,197,.15)"/><path d="M42 48l3 3 6-6"/></svg>',
+ ilia:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 56h48"/><rect x="12" y="34" width="8" height="22" rx="2"/><rect x="26" y="22" width="8" height="34" rx="2"/><rect x="40" y="12" width="8" height="44" rx="2" fill="rgba(79,209,197,.15)"/><path d="M14 26l12-10 12 6 14-12"/><circle cx="52" cy="10" r="3" fill="currentColor"/></svg>',
+ emp:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="20" width="26" height="36" rx="2"/><path d="M36 30h18v26H36"/><path d="M16 28h4M26 28h4M16 36h4M26 36h4M16 44h4M26 44h4M42 38h6M42 46h6"/><circle cx="48" cy="14" r="8" fill="rgba(79,209,197,.15)"/><path d="M45 14h6M48 11v6"/></svg>',
+ jne:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="12" y="30" width="40" height="26" rx="3"/><path d="M24 30V12h16v18"/><path d="M28 20h8"/><path d="M32 4l10 18H22z" fill="rgba(243,139,168,.15)" stroke="#F38BA8"/><path d="M32 11v5M32 19v.5" stroke="#F38BA8"/></svg>'};
+
 const cifras=[
- {n:"22 ene. 2026",t:"Entra en vigor el reglamento peruano de IA",h:"Desde ese día, la IA en el Perú tiene reglas obligatorias.",p:"Prohíbe los usos que dañan derechos, como la vigilancia masiva sin base legal, y exige control humano cuando la IA decide sobre crédito, empleo, salud o educación.",w:"Si tu organización usa IA para decidir sobre personas, ya debe cumplir.",u:"https://www.garrigues.com/es_ES/noticia/peru-aprueba-reglamento-ley-promueve-uso-inteligencia-artificial-favor-desarrollo-economico",f:"Garrigues"},
- {n:"52,7",c:52.7,d:1,t:"Puntos del Perú en el ILIA 2026: 7.º de 20 países",h:"El Perú aprueba a medias en preparación para la IA.",p:"El índice mide talento, infraestructura, investigación y gobierno. El Perú está a casi 19 puntos de Chile (71,4) y avanzó solo 0,8 en un año.",w:"Sin talento ni datos, las leyes no bastan para competir.",u:"https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026",f:"CEPAL"},
- {n:"5%",c:5,suf:"%",t:"De empresas peruanas integra IA en procesos clave",h:"Solo 5 de cada 100 empresas usa IA donde de verdad mueve el negocio.",p:"La mayoría se queda en pilotos o en un chatbot. Aun así, la mitad de ejecutivos ya tiene algún gobierno formal de IA generativa.",w:"Quien ordene hoy su gobierno de IA podrá escalar antes que su competencia.",u:"https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit",f:"Forbes Perú"},
- {n:"+700",c:700,pre:"+",t:"Alertas de desinformación del JNE en las elecciones 2026",h:"La IA ya influye en cómo nos informamos para votar.",p:"El JNE rastreó más de 700 casos de contenido falso en redes, incluidos videos y audios manipulados con IA, y publicó una guía para detectar deepfakes.",w:"Verificar antes de compartir también es usar la IA con responsabilidad.",u:"https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx",f:"Andina"}];
+ {n:"22 ene. 2026",t:"Entra en vigor el Reglamento de la Ley 31814 de IA (DS 115-2025-PCM)",ic:"reg",h:"Desde ese día, la IA en el Perú tiene reglas obligatorias.",p:"Prohíbe los usos que dañan derechos, como la vigilancia masiva sin base legal, y exige control humano cuando la IA decide sobre crédito, empleo, salud o educación.",w:"Si tu organización usa IA para decidir sobre personas, ya debe cumplir.",u:"https://www.garrigues.com/es_ES/noticia/peru-aprueba-reglamento-ley-promueve-uso-inteligencia-artificial-favor-desarrollo-economico",f:"Garrigues"},
+ {n:"52,7",c:52.7,d:1,t:"Puntos del Perú en el Índice Latinoamericano de IA (ILIA 2026) de CEPAL: puesto 7 de 20",ic:"ilia",h:"El Perú aprueba a medias en preparación para la IA.",p:"El índice mide talento, infraestructura, investigación y gobierno. El Perú está a casi 19 puntos de Chile (71,4) y avanzó solo 0,8 en un año.",w:"Sin talento ni datos, las leyes no bastan para competir.",u:"https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026",f:"CEPAL"},
+ {n:"5%",c:5,suf:"%",t:"De empresas peruanas integra IA en sus procesos clave (estudio Tivit, nov. 2026)",ic:"emp",h:"Solo 5 de cada 100 empresas usa IA donde de verdad mueve el negocio.",p:"La mayoría se queda en pilotos o en un chatbot. Aun así, la mitad de ejecutivos ya tiene algún gobierno formal de IA generativa.",w:"Quien ordene hoy su gobierno de IA podrá escalar antes que su competencia.",u:"https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit",f:"Forbes Perú"},
+ {n:"+700",c:700,pre:"+",t:"Alertas de desinformación detectadas por el JNE en las Elecciones Generales 2026",ic:"jne",h:"La IA ya influye en cómo nos informamos para votar.",p:"El JNE rastreó más de 700 casos de contenido falso en redes, incluidos videos y audios manipulados con IA, y publicó una guía para detectar deepfakes.",w:"Verificar antes de compartir también es usar la IA con responsabilidad.",u:"https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx",f:"Andina"}];
 (()=>{const g=$("#cifrasGrid");cifras.forEach(x=>g.append(flipCard(
- `<b class="cnum"${x.c?` data-count="${x.c}" data-dec="${x.d||0}" data-pre="${x.pre||""}" data-suf="${x.suf||""}"`:""}>${x.n}</b><span class="t">${x.t}</span>`,
+ `<span class="bigic">${BIG[x.ic]}</span><b class="cnum"${x.c?` data-count="${x.c}" data-dec="${x.d||0}" data-pre="${x.pre||""}" data-suf="${x.suf||""}"`:""}>${x.n}</b><span class="t">${x.t}</span>`,
  `<span class="bt">Qué significa</span><span class="big1">${x.h}</span><p>${x.p}</p><span class="why">${x.w}</span><a class="src" href="${x.u}" target="_blank" rel="noopener">Fuente: ${x.f}</a>`,"cifra-f")))})();
 
 /* ---------- ROLES DEL OIA ---------- */
@@ -796,14 +810,14 @@ const cifras=[
  const box=$("#roles");if(!box)return;roles.forEach((r,i)=>box.append(flipCard(`<b>${r[0]}</b><span>${r[1]}</span>`,`<span class="bt">Qué hace</span><b>${r[2]}</b><p>${r[3]}</p>`,i===0?"role-core":"")))})();
 /* ---------- UNIDADES ---------- */
 const units=[
- {t:"I. Fundamentos éticos",w:"Semanas 1 a 4",d:"Qué es la IA generativa y con qué lentes éticas evaluarla.",c:["Diferencias entre IA, aprendizaje automático, modelos fundacionales y LLM","Capacidades, alucinaciones y límites","Enfoques deontológico, utilitarista, de la virtud y del cuidado","Principios: equidad, transparencia, explicabilidad, privacidad, supervisión humana"],e:"Mapa conceptual del ciclo de vida de la IA, deliberación ética de un caso y primer ensayo (semana 4).",r:["UNESCO 2021","OCDE 2024","Floridi 2023","Coeckelbergh 2020"]},
- {t:"II. Riesgos y derechos",w:"Semanas 5 a 8",d:"Dónde la IA generativa puede dañar personas o a la organización.",c:["Sesgos, estereotipos, deepfakes y desinformación","Datos personales, consentimiento, anonimización, ataques por prompt","Derechos de autor, licencias, atribución y plagio","Declaración transparente del uso de IA"],e:"Auditoría básica de respuestas, matriz de riesgos de datos y examen parcial (semana 8).",r:["NIST AI 600-1","OMPI 2024","Comisión Europea: protección de datos"]},
- {t:"III. Normativa y estándares",w:"Semanas 9 a 12",d:"Qué es obligatorio, qué es recomendable y quién responde.",c:["Ética, ley, regulación, política y estándar; hard law y soft law","Responsabilidades de proveedor, desarrollador, implementador y usuario","UNESCO, OCDE, NIST AI RMF, ISO/IEC 42001","EU AI Act y legislación nacional"],e:"Mapa de actores y normas, caso de cumplimiento con matriz normativa y exposición (semana 12).",r:["Reglamento (UE) 2024/1689","ISO/IEC 42001","NIST AI 100-1"]},
- {t:"IV. Gobernanza aplicada",w:"Semanas 13 a 16",d:"Llevar todo a un protocolo que funcione en la institución.",c:["Evaluación de impacto: partes interesadas, daños, probabilidad y severidad","Controles preventivos, detectivos y correctivos; riesgo residual","Usos permitidos, condicionados y prohibidos","Indicadores, auditoría, reclamos, incidentes y rendición de cuentas"],e:"Protocolo institucional de uso responsable de IAG, sustentado ante comisión, y examen final (semana 16).",r:["NIST AI RMF Playbook","OCDE: catálogo de herramientas","ISO/IEC 42001"]}
+ {t:"I. Fundamentos éticos",w:"Paso 1 · Valores",d:"Qué es la IA generativa y con qué lentes éticas evaluarla.",c:["Diferencias entre IA, aprendizaje automático, modelos fundacionales y LLM","Capacidades, alucinaciones y límites","Enfoques deontológico, utilitarista, de la virtud y del cuidado","Principios: equidad, transparencia, explicabilidad, privacidad, supervisión humana"],e:"Distinguir qué es la IA generativa y razonar un dilema con distintas teorías éticas.",r:["UNESCO 2021","OCDE 2024","Floridi 2023","Coeckelbergh 2020"]},
+ {t:"II. Riesgos y derechos",w:"Paso 2 · Riesgos",d:"Dónde la IA generativa puede dañar personas o a la organización.",c:["Sesgos, estereotipos, deepfakes y desinformación","Datos personales, consentimiento, anonimización, ataques por prompt","Derechos de autor, licencias, atribución y plagio","Declaración transparente del uso de IA"],e:"Detectar sesgos, alucinaciones y riesgos de privacidad y propiedad intelectual.",r:["NIST AI 600-1","OMPI 2024","Comisión Europea: protección de datos"]},
+ {t:"III. Normativa y estándares",w:"Paso 3 · Reglas",d:"Qué es obligatorio, qué es recomendable y quién responde.",c:["Ética, ley, regulación, política y estándar; hard law y soft law","Responsabilidades de proveedor, desarrollador, implementador y usuario","UNESCO, OCDE, NIST AI RMF, ISO/IEC 42001","EU AI Act y legislación nacional"],e:"Saber qué norma o estándar aplica y quién responde en cada caso.",r:["Reglamento (UE) 2024/1689","ISO/IEC 42001","NIST AI 100-1"]},
+ {t:"IV. Gobernanza aplicada",w:"Paso 4 · Gobernanza",d:"Llevar todo a un protocolo que funcione en la institución.",c:["Evaluación de impacto: partes interesadas, daños, probabilidad y severidad","Controles preventivos, detectivos y correctivos; riesgo residual","Usos permitidos, condicionados y prohibidos","Indicadores, auditoría, reclamos, incidentes y rendición de cuentas"],e:"Diseñar un protocolo de uso responsable y medir si funciona.",r:["NIST AI RMF Playbook","OCDE: catálogo de herramientas","ISO/IEC 42001"]}
 ];
 const ut=$("#unitTabs"),up=$("#unitPanel");
 function showUnit(i){[...ut.querySelectorAll(".step")].forEach((b,j)=>b.setAttribute("aria-selected",i===j));const u=units[i];
- up.innerHTML=`<div><div class="weeks">${u.w}</div><h3 style="font-size:1.4rem;margin-top:6px">${u.t}</h3><p class="lead" style="margin-top:8px">${u.d}</p><div class="deliv"><b>Entregables:</b> ${u.e}</div><a class="go" href="${["#principios","#riesgo","#leyes","#oia"][i]}">Ir al capítulo →</a></div>
+ up.innerHTML=`<div><div class="weeks">${u.w}</div><h3 style="font-size:1.4rem;margin-top:6px">${u.t}</h3><p class="lead" style="margin-top:8px">${u.d}</p><div class="deliv"><b>Lo que podrás hacer:</b> ${u.e}</div><a class="go" href="${["#principios","#riesgo","#leyes","#oia"][i]}">Ir al capítulo →</a></div>
  <div><div class="eyebrow">Contenidos</div><ul>${u.c.map(x=>`<li>${x}</li>`).join("")}</ul><div class="eyebrow" style="margin-top:16px">Lecturas clave</div><div class="hero-meta" style="margin-top:8px">${u.r.map(x=>`<span class="chip">${x}</span>`).join("")}</div></div>`;}
 const UI=['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l9 17H3z"/><path d="M8.3 11h7.4M6.2 15h11.6"/></svg>',IC.shield,IC.net];
 units.forEach((u,i)=>{const b=el("button",{class:"step",role:"tab",type:"button"},`${UI[i]}<span>${i+1}. ${u.t.replace(/^[IV]+\. /,"")}</span><small>${u.w}</small>`);b.onclick=()=>showUnit(i);ut.append(b)});showUnit(0);
@@ -852,7 +866,8 @@ dils.forEach((d,i)=>{const b=el("button",{class:"tab",type:"button"},d.t);b.oncl
 lK="Deontológico";drawDil();
 
 /* ---------- RIESGO ---------- */
-const lv={ban:["Prohibido","lv-ban"],high:["Alto","lv-high"],warn:["Limitado","lv-warn"],ok:["Mínimo","lv-ok"]};
+const lv={ban:["Prohibido","lv-ban"],high:["Alto","lv-high"],warn:["Transparencia","lv-warn"],ok:["Bajo","lv-ok"]};
+const LVJ={ban:["Uso indebido (prohibido)","Prohibido"],high:["Riesgo alto","Alto riesgo"],warn:["Riesgo aceptable","Riesgo limitado"],ok:["Riesgo aceptable","Riesgo mínimo"]};
 const uses=[
  {n:"Puntaje social de ciudadanos para dar o quitar beneficios",s:"Sector público",l:"ban",pe:"Probable uso indebido (prohibido): el reglamento prohíbe los sistemas que afectan de forma irreversible y significativa los derechos fundamentales, como la vigilancia masiva sin base legal.",eu:"Práctica prohibida (art. 5) desde febrero de 2025.",c:["No implementar","Revisar sistemas existentes que se parezcan a esta práctica"]},
  {n:"IA que manipula decisiones explotando vulnerabilidades (edad, discapacidad)",s:"Comercial",l:"ban",pe:"Uso indebido (prohibido): la manipulación engañosa está entre los usos prohibidos por el reglamento.",eu:"Práctica prohibida (art. 5).",c:["No implementar","Auditar campañas de marketing automatizadas"]},
@@ -868,7 +883,7 @@ const uses=[
 ];
 const ul=$("#uses"),rr=$("#riskResult");
 function showUse(i){[...ul.children].forEach((b,j)=>b.classList.toggle("on",j===i));const u=uses[i],L=lv[u.l];
- rr.innerHTML=`<div><span class="level ${L[1]}">Riesgo ${L[0]}</span></div><h3 style="font-size:1.25rem">${u.n}</h3>
+ rr.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level ${L[1]}">Perú: ${LVJ[u.l][0]}</span><span class="level ${L[1]}">UE: ${LVJ[u.l][1]}</span></div><h3 style="font-size:1.25rem">${u.n}</h3>
  <dl><div><dt>Perú · Ley 31814 y reglamento</dt><dd>${u.pe}</dd></div><div><dt>Unión Europea · AI Act</dt><dd>${u.eu}</dd></div>
  <div><dt>Controles mínimos</dt><dd><ul style="margin:4px 0 0;padding-left:18px">${u.c.map(x=>`<li>${x}</li>`).join("")}</ul></dd></div></dl>`;}
 uses.forEach((u,i)=>{const L=lv[u.l];const b=el("button",{class:"use",type:"button"},`<span>${u.n}<br><span class="s">${u.s}</span></span><span class="level ${L[1]}">${L[0]}</span>`);b.onclick=()=>showUse(i);ul.append(b)});
@@ -915,7 +930,13 @@ const rTag={ok:["Buena práctica","lv-ok"],bad:["Falla","lv-ban"],mix:["Con rese
 const cf=$("#caseFilters"),cg=$("#cases");let ck="Todos";
 const cSec=["Todos",...new Set(cases.map(c=>c.s))];
 function drawCases(){[...cf.children].forEach((b,i)=>b.setAttribute("aria-selected",cSec[i]===ck));cg.innerHTML="";
- cases.filter(c=>ck==="Todos"||c.s===ck).forEach(c=>{const R=rTag[c.r];cg.append(flipCard(`<div class="meta"><span class="sector">${c.s}</span><span class="level ${R[1]}">${R[0]}</span></div><h3>${c.t}</h3><p style="color:var(--muted)">¿Qué pasó y qué aprendimos?</p>`,`<span class="bt">Qué pasó</span><p>${c.p}</p><span class="bt">Lección de gobernanza</span><p>${c.l}</p><a class="src" href="${c.u}" target="_blank" rel="noopener">Fuente: ${c.f}</a>`))});}
+ cases.filter(c=>ck==="Todos"||c.s===ck).forEach(c=>{const R=rTag[c.r];const IC2={
+ gov:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-5 9 5"/><path d="M5 9v9M9.5 9v9M14.5 9v9M19 9v9M3 20h18"/></svg>',
+ signal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 13v8M9 21h6"/><circle cx="12" cy="11" r="2"/><path d="M8.5 7.5a5 5 0 000 7M15.5 7.5a5 5 0 010 7M5.6 4.6a9 9 0 000 12.8M18.4 4.6a9 9 0 010 12.8"/></svg>',
+ bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>',
+ bank:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h4"/></svg>',
+ chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>'};
+const SI={"Banca":IC2.bank,"Telecom":IC2.signal,"Energía":IC2.bolt,"Servicios":IC2.chat,"RR. HH.":IC.people,"Sector público":IC2.gov,"Justicia":IC.scale};cg.append(flipCard(`<span class="bigic2">${SI[c.s]||IC.case}</span><div class="meta"><span class="sector">${c.s}</span><span class="level ${R[1]}">${R[0]}</span></div><h3>${c.t}</h3><p style="color:var(--muted)">¿Qué pasó y qué aprendimos?</p>`,`<span class="bt">Qué pasó</span><p>${c.p}</p><span class="bt">Lección de gobernanza</span><p>${c.l}</p><a class="src" href="${c.u}" target="_blank" rel="noopener">Fuente: ${c.f}</a>`))});}
 cSec.forEach(s=>{const b=el("button",{class:"tab",type:"button"},s);b.onclick=()=>{ck=s;drawCases()};cf.append(b)});drawCases();
 
 /* ---------- NOTICIAS ---------- */
@@ -925,7 +946,7 @@ const news=[
   o:"Que cada entidad tenga un responsable visible de la IA.",p:"Ministerios, gobiernos regionales y locales, universidades, hospitales y empresas públicas.",i:"La gobernanza de IA deja de ser difusa: hay un cargo que rinde cuentas.",e:"Una universidad pública designa a su OIA para aprobar la política de uso de IA generativa.",ic:"user"},
  {d:"20 oct. 2026",r:"Latam",t:"ILIA 2026: Chile lidera y el Perú se ubica en el séptimo lugar",u:"https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026",f:"CEPAL",
   s:"La cuarta edición del Índice Latinoamericano de IA de CEPAL y CENIA ubica a Chile (71,4), Brasil (68,4) y Uruguay (67,0) como pioneros. El Perú obtiene 52,7 puntos.",
-  o:"Medir la preparación de 19 países en talento, infraestructura, investigación y gobernanza de IA.",p:"Gobiernos, academia, inversionistas y empresas.",i:"Muestra que el Perú avanza poco (+0,8 puntos) frente a los líderes.",e:"Un ministerio usa el índice para priorizar inversión en talento de IA.",ic:"globe"},
+  o:"Medir la preparación de 20 países en talento, infraestructura, investigación y gobernanza de IA.",p:"Gobiernos, academia, inversionistas y empresas.",i:"Muestra que el Perú avanza poco (+0,8 puntos) frente a los líderes.",e:"Un ministerio usa el índice para priorizar inversión en talento de IA.",ic:"globe"},
  {d:"19 nov. 2026",r:"Perú",t:"Solo el 5% de empresas peruanas integra IA a procesos clave",u:"https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit",f:"Forbes Perú",
   s:"Un estudio de la tecnológica Tivit ubica al Perú con la menor proporción de empresas que usan IA a escala entre los mercados evaluados, aunque la mitad de ejecutivos ya reporta algún gobierno formal de IA generativa.",
   o:"Medir la madurez real de adopción de IA y de soberanía de datos en empresas.",p:"Gerentes generales, CIO y directorios.",i:"La brecha entre pilotos y uso en procesos clave limita productividad; la gobernanza aparece antes que la escala.",e:"Un retail que tiene un chatbot en pruebas pero no usa IA en inventarios ni precios.",ic:"chip"},
@@ -984,7 +1005,7 @@ cb.addEventListener("change",score);$("#resetChecks").onclick=()=>{cb.querySelec
 /* ---------- QUIZ ---------- */
 const qs=[
  ["¿Qué norma reglamenta la Ley 31814 de IA en el Perú?",["DS 016-2024-JUS","DS 115-2025-PCM","RM 152-2026-PCM","Ley 29733"],1,"El DS 115-2025-PCM es el reglamento. El DS 016-2024-JUS reglamenta la ley de datos personales y la RM 152-2026-PCM aprueba la ENIA."],
- ["Un banco usa IA para aprobar créditos. ¿Qué nivel de riesgo tiene?",["Aceptable","Limitado","Alto","Prohibido"],2,"La evaluación crediticia afecta derechos económicos: es riesgo alto en el Perú y en la UE."],
+ ["Un banco usa IA para aprobar créditos. ¿Qué nivel de riesgo tiene?",["Bajo","Transparencia","Alto","Prohibido"],2,"El reglamento peruano incluye las decisiones sobre acceso al crédito como riesgo alto; en la UE también es alto riesgo."],
  ["¿Cuáles son las cuatro funciones del NIST AI RMF?",["Planificar, hacer, verificar, actuar","Gobernar, mapear, medir, gestionar","Identificar, proteger, detectar, responder","Diseñar, entrenar, desplegar, retirar"],1,"Gobernar, Mapear, Medir y Gestionar. El ciclo PHVA corresponde a ISO/IEC 42001."],
  ["¿Qué enseña el caso Air Canada (2024)?",["Los chatbots no tienen responsabilidad legal","La empresa responde por lo que dice su IA","Hay que prohibir los chatbots","Solo aplica en Europa"],1,"El tribunal rechazó que el bot fuera una entidad separada: la empresa respondió por la información falsa."],
  ["¿Qué tipo de instrumento es ISO/IEC 42001?",["Una ley internacional","Un tratado de la ONU","Un estándar certificable de sistema de gestión","Un código de ética voluntario sin requisitos"],2,"Es un estándar de sistema de gestión de IA que puede auditarse y certificarse."],
@@ -992,7 +1013,7 @@ const qs=[
  ["En el Perú, ¿para quién es obligatoria la evaluación de impacto según el reglamento?",["Solo para startups","Para entidades públicas","Para nadie","Solo para bancos"],1,"Es obligatoria para entidades públicas; para el sector privado es voluntaria, aunque recomendable en usos de riesgo alto."]
 ];
 let qi=0,good=0,answered=false;const qb=$("#quizBox");
-function drawQ(){answered=false;if(qi>=qs.length){qb.innerHTML=`<div class="eyebrow">Resultado</div><div class="big">${good} / ${qs.length}</div><p class="lead">${good>=6?"Dominas los conceptos clave del curso.":good>=3?"Buen avance. Repasa las secciones de marcos y riesgo.":"Vuelve a recorrer la página y prueba otra vez."}</p><div><button class="btn" id="qRe" type="button">Reintentar</button></div>`;$("#qRe").onclick=()=>{qi=0;good=0;drawQ()};return}
+function drawQ(){answered=false;if(qi>=qs.length){qb.innerHTML=`<div class="eyebrow">Resultado</div><div class="big">${good} / ${qs.length}</div><p class="lead">${good>=6?"Dominas los conceptos clave de la guía.":good>=3?"Buen avance. Repasa las secciones de marcos y riesgo.":"Vuelve a recorrer la página y prueba otra vez."}</p><div><button class="btn" id="qRe" type="button">Reintentar</button></div>`;$("#qRe").onclick=()=>{qi=0;good=0;drawQ()};return}
  const q=qs[qi];qb.innerHTML=`<div class="eyebrow">Pregunta ${qi+1} de ${qs.length}</div><h3 style="font-size:1.2rem">${q[0]}</h3><div class="opts">${q[1].map((o,i)=>`<button class="opt" data-i="${i}" type="button">${o}</button>`).join("")}</div><p id="qExp" class="lead" aria-live="polite"></p><div class="qfoot"><span class="note">Aciertos: ${good}</span><button class="btn" id="qNext" type="button" hidden>Siguiente</button></div>`;
  qb.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(answered)return;answered=true;const i=+b.dataset.i;if(i===q[2])good++;else b.classList.add("wrong");qb.querySelectorAll(".opt")[q[2]].classList.add("right");$("#qExp").textContent=q[3];$("#qNext").hidden=false;});
  $("#qNext").onclick=()=>{qi++;drawQ()};}
@@ -1039,11 +1060,11 @@ const laws=[
   imp:"Su reglamento (DS 016-2024-JUS, vigente desde fines de marzo de 2025) obliga a las entidades públicas, y a empresas de forma escalonada desde nov. 2025, a designar un Oficial de Datos Personales, que debe coordinar con el Oficial de IA. También regula el tratamiento automatizado y la notificación de incidentes.",
   d:[["2011","año de la ley"],["ANPD","autoridad"],["ARCO","derechos del titular"]],
   u:"https://www.congreso.gob.pe/Docs/DGP/DIDP/files/ley_29733.pdf"},
- {i:"alert",c:"Ley N.º 30096 · 2013",fr:"Estafar o suplantar con IA sigue siendo delito: la ley penal alcanza a los deepfakes usados para fraude.",t:"Ley de Delitos Informáticos",one:"Sanciona fraudes y suplantaciones, también cuando se hacen con IA.",k:"3 reformas",ks:"Ley 30171, DL 1614 y DL 1700",
+ {i:"alert",c:"Ley N.º 30096 · 2013",fr:"Estafar o suplantar con IA sigue siendo delito: la ley penal alcanza a los deepfakes usados para fraude.",t:"Ley de Delitos Informáticos",one:"Sanciona fraudes y suplantaciones, también cuando se hacen con IA.",k:"4 reformas",ks:"Ley 30171, DL 1591, DL 1614 y DL 1700",
   obj:"Prevenir y sancionar conductas ilícitas que afectan sistemas y datos informáticos.",
   dir:"Cualquier persona. Relevante para bancos, telecos y comercio electrónico.",
   ej:"Una estafa con voz clonada por IA para pedir transferencias puede encuadrarse como fraude informático o suplantación de identidad.",
-  imp:"Da base penal para perseguir deepfakes usados en fraudes, aunque no menciona la IA de forma expresa. Sus reformas de 2023 y 2026 endurecieron la lucha contra la ciberdelincuencia y el tráfico ilícito de datos.",
+  imp:"Da base penal para perseguir deepfakes usados en fraudes, aunque no menciona la IA de forma expresa. Sus reformas, en especial las de 2023 y 2026, endurecieron la lucha contra la ciberdelincuencia y el tráfico ilícito de datos.",
   d:[["Oct. 2013","publicación"],["Dic. 2023","DL 1614 contra ciberdelincuencia"],["Ene. 2026","DL 1700, tráfico de datos"]],
   u:"https://busquedas.elperuano.pe/dispositivo/NL/1003117-1"},
  {i:"scale",c:"Reglamento (UE) 2024/1689",fr:"La ley europea que marca el estándar mundial. Si atiendes clientes en Europa, te alcanza.",t:"EU AI Act",one:"La referencia mundial de regulación por riesgo.",k:"Hasta 7%",ks:"de la facturación global en multas",
@@ -1150,7 +1171,7 @@ const clk=[
  hint(card,"Toca un hito para ver qué significa");})();
 /* Gantt */
 (()=>{const start=new Date(2025,8,10),end=new Date(2028,8,10),span=end-start,pct=d=>Math.max(0,Math.min(100,(d-start)/span*100));
- const rows=[["Poder Ejecutivo, Legislativo y Judicial","1 año",new Date(2026,8,10)],["Organismos constitucionales autónomos","1 año",new Date(2026,8,10)],["IA en salud, educación, justicia, seguridad y finanzas","1 año",new Date(2026,8,10)],["Gobiernos regionales, EsSalud y universidades públicas","2 años",new Date(2027,8,10)],["Gobiernos locales","3 años",new Date(2028,8,10)]];
+ const rows=[["Poder Ejecutivo, Legislativo y Judicial","1 año",new Date(2026,8,10)],["Organismos constitucionales autónomos","1 año",new Date(2026,8,10)],["Uso de IA en salud, educación, justicia, seguridad y finanzas","1 año",new Date(2026,8,10)],["Gobiernos regionales, EsSalud y universidades públicas","2 años",new Date(2027,8,10)],["Gobiernos locales","3 años",new Date(2028,8,10)]];
  const box=$("#gantt");
  rows.forEach(([n,t,d])=>{const done=d<=TODAY;const r=el("div",{class:"gt-row"},`<div class="lab">${n}<small>${t}${done?" · plazo vencido":""}</small></div><div class="gt-tr"><div class="gt-bar${done?" done":""}" data-w="${pct(d)}">${d.toLocaleDateString("es-PE",{month:"short",year:"numeric"})}</div></div>`);
   bindTip(r,`<b>${n}</b><br>Plazo máximo: ${t}<br>Hasta ${d.toLocaleDateString("es-PE",{day:"numeric",month:"long",year:"numeric"})}`);box.append(r);
