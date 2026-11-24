@@ -409,6 +409,15 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
 .ckpi{font-family:var(--f-display);font-size:2rem;font-weight:800;color:var(--accent);line-height:1}
 .ckpi small{display:block;font-family:var(--f-body);font-size:.75rem;font-weight:400;color:var(--muted);margin-top:4px}
 .cbar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}.cbar i{display:block;height:100%;background:var(--s1)}
+
+.cifras .face{gap:8px}
+.cifras .cnum{font-family:var(--f-display);font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:800;letter-spacing:-.02em;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.05}
+.cifras .front span.t{font-size:.95rem;color:var(--ink)}
+.cifras .back .big1{font-family:var(--f-display);font-weight:700;font-size:1.02rem;line-height:1.3}
+.cifras .back p{font-size:.9rem;color:var(--ink)}
+.cifras .back .why{font-size:.86rem;color:var(--accent);border-top:1px dashed var(--line);padding-top:8px}
+.cifras .src{font-size:.75rem;color:var(--muted)}
+@media (max-width:520px){#cifrasGrid{grid-template-columns:1fr}.cifras .back p{font-size:.9rem}}
 @media (max-width:860px){.cifras{grid-template-columns:1fr 1fr}.chart-grid{grid-template-columns:1fr}.clocks{grid-template-columns:1fr 40px 1fr}.ck-ev{padding:6px 8px}.hb,.hb-axis{grid-template-columns:92px 1fr 40px}}
 @media (max-width:520px){.clocks{grid-template-columns:1fr 34px 1fr;gap:0 6px}.ck-ev b{font-size:.8rem}.gt-row,.gt-axis{grid-template-columns:1fr}.gt-axis>div:first-child{display:none}}
 @media (max-width:860px){.oia-grid{grid-template-columns:1fr}.roles{grid-template-columns:1fr 1fr}.oia-head{flex-direction:column}}
@@ -479,14 +488,11 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
 
 <section id="cifras" class="cifras-sec">
   <div class="wrap">
-    <div class="eyebrow" style="margin-bottom:14px">Por qué importa ahora</div>
-    <div class="cifras">
-      <div class="cifra"><b>22 ene. 2026</b><span>Entra en vigor el reglamento peruano de IA</span><a href="https://www.garrigues.com/es_ES/noticia/peru-aprueba-reglamento-ley-promueve-uso-inteligencia-artificial-favor-desarrollo-economico">Garrigues</a></div>
-      <div class="cifra"><b data-count="52.7" data-dec="1">52,7</b><span>Puntos del Perú en el ILIA 2026: 7.º de 20 países</span><a href="https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026">CEPAL</a></div>
-      <div class="cifra"><b data-count="5" data-suf="%">5%</b><span>De empresas peruanas integra IA en procesos clave</span><a href="https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit">Forbes Perú</a></div>
-      <div class="cifra"><b data-count="700" data-pre="+">+700</b><span>Alertas de desinformación del JNE en las elecciones 2026</span><a href="https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx">Andina</a></div>
-    </div>
-  </div>
+    <div class="eyebrow" style="margin-bottom:6px">Por qué importa ahora</div>
+    <p class="note" style="margin-bottom:14px">Toca cada cifra para entender qué significa.</p>
+    <div class="cifras" id="cifrasGrid"></div>
+
+      </div>
 </section>
 
 <section id="curso">
@@ -757,6 +763,17 @@ const IC={
  scale:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M5 21h14M5 7h14"/><path d="M5 7l-3 6a3 3 0 006 0zM19 7l-3 6a3 3 0 006 0z"/></svg>'
 };
 const ilia=[["Chile",71.4],["Brasil",68.4],["Uruguay",67.0],["Colombia",56.8],["Costa Rica",56.0],["Argentina",55.6],["Perú",52.7],["México",52.0],["Ecuador",51.8],["Rep. Dominicana",45.1],["Panamá",39.3],["El Salvador",37.9],["Trinidad y Tobago",35.5]];
+
+/* ---------- CIFRAS QUE SE VOLTEAN ---------- */
+const cifras=[
+ {n:"22 ene. 2026",t:"Entra en vigor el reglamento peruano de IA",h:"Desde ese día, la IA en el Perú tiene reglas obligatorias.",p:"Prohíbe los usos que dañan derechos, como la vigilancia masiva sin base legal, y exige control humano cuando la IA decide sobre crédito, empleo, salud o educación.",w:"Si tu organización usa IA para decidir sobre personas, ya debe cumplir.",u:"https://www.garrigues.com/es_ES/noticia/peru-aprueba-reglamento-ley-promueve-uso-inteligencia-artificial-favor-desarrollo-economico",f:"Garrigues"},
+ {n:"52,7",c:52.7,d:1,t:"Puntos del Perú en el ILIA 2026: 7.º de 20 países",h:"El Perú aprueba a medias en preparación para la IA.",p:"El índice mide talento, infraestructura, investigación y gobierno. El Perú está a casi 19 puntos de Chile (71,4) y avanzó solo 0,8 en un año.",w:"Sin talento ni datos, las leyes no bastan para competir.",u:"https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026",f:"CEPAL"},
+ {n:"5%",c:5,suf:"%",t:"De empresas peruanas integra IA en procesos clave",h:"Solo 5 de cada 100 empresas usa IA donde de verdad mueve el negocio.",p:"La mayoría se queda en pilotos o en un chatbot. Aun así, la mitad de ejecutivos ya tiene algún gobierno formal de IA generativa.",w:"Quien ordene hoy su gobierno de IA podrá escalar antes que su competencia.",u:"https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit",f:"Forbes Perú"},
+ {n:"+700",c:700,pre:"+",t:"Alertas de desinformación del JNE en las elecciones 2026",h:"La IA ya influye en cómo nos informamos para votar.",p:"El JNE rastreó más de 700 casos de contenido falso en redes, incluidos videos y audios manipulados con IA, y publicó una guía para detectar deepfakes.",w:"Verificar antes de compartir también es usar la IA con responsabilidad.",u:"https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx",f:"Andina"}];
+(()=>{const g=$("#cifrasGrid");cifras.forEach(x=>g.append(flipCard(
+ `<b class="cnum"${x.c?` data-count="${x.c}" data-dec="${x.d||0}" data-pre="${x.pre||""}" data-suf="${x.suf||""}"`:""}>${x.n}</b><span class="t">${x.t}</span>`,
+ `<span class="bt">Qué significa</span><span class="big1">${x.h}</span><p>${x.p}</p><span class="why">${x.w}</span><a class="src" href="${x.u}" target="_blank" rel="noopener">Fuente: ${x.f}</a>`,"cifra-f")))})();
+
 /* ---------- UNIDADES ---------- */
 const units=[
  {t:"I. Fundamentos éticos",w:"Semanas 1 a 4",d:"Qué es la IA generativa y con qué lentes éticas evaluarla.",c:["Diferencias entre IA, aprendizaje automático, modelos fundacionales y LLM","Capacidades, alucinaciones y límites","Enfoques deontológico, utilitarista, de la virtud y del cuidado","Principios: equidad, transparencia, explicabilidad, privacidad, supervisión humana"],e:"Mapa conceptual del ciclo de vida de la IA, deliberación ética de un caso y primer ensayo (semana 4).",r:["UNESCO 2021","OCDE 2024","Floridi 2023","Coeckelbergh 2020"]},
@@ -1112,7 +1129,7 @@ const clk=[
   m.append(row);[...row.children].forEach(c=>bindTip(c,`<b>${n}</b><br>${note}`))});
  m.insertAdjacentHTML("afterend",`<div class="legend" style="padding:12px 14px"><span><i class="yes"></i>Sí</span><span><i class="part"></i>Parcial</span><span><i class="no"></i>No</span></div>`);})();
 /* Contadores de cifras */
-document.querySelectorAll(".cifra b[data-count]").forEach(b=>{const T=+b.dataset.count,dec=+(b.dataset.dec||0),pre=b.dataset.pre||"",suf=b.dataset.suf||"";
+document.querySelectorAll(".cifras b[data-count]").forEach(b=>{const T=+b.dataset.count,dec=+(b.dataset.dec||0),pre=b.dataset.pre||"",suf=b.dataset.suf||"";
  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
  onView(b,()=>{const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)/1200),e=1-Math.pow(1-k,3);b.textContent=pre+(T*e).toFixed(dec).replace(".",",")+suf;if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)})});
 
