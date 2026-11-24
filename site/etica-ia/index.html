@@ -305,6 +305,112 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
 .sec-ic{transition:transform .3s,box-shadow .3s}
 .sec-head:hover .sec-ic{transform:rotate(-6deg) scale(1.08);box-shadow:0 0 30px rgba(79,209,197,.55)}
 @media (prefers-reduced-motion:reduce){section.flash::after,section.flash .sec-ic{animation:none}.cursor-light{display:none}}
+
+/* charts */
+:root{--s1:#26A69A;--s2:#5C7CE0;--mute:rgba(163,180,200,.32)}
+.cifras-sec{padding-block:40px;border-bottom:1px solid var(--line)}
+.cifras{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.cifra{border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--glass),rgba(18,34,58,.55);display:grid;gap:6px;align-content:start}
+.cifra b{font-family:var(--f-display);font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:800;letter-spacing:-.02em;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.05}
+.cifra span{font-size:.92rem;color:var(--ink)}
+.cifra a{font-size:.75rem;color:var(--muted)}
+.chart-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:16px}
+.chart-card{border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--glass),rgba(18,34,58,.55);margin-bottom:16px;min-width:0}
+.ch-head{display:grid;gap:6px;margin-bottom:16px}
+.ch-head h3{font-size:1.1rem}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend i.hollow{border:2px solid var(--muted);background:transparent}
+/* hbars */
+.hbars{display:grid;gap:5px;position:relative}
+.hb{display:grid;grid-template-columns:118px 1fr 44px;align-items:center;gap:10px;font-size:.86rem;border-radius:6px;padding:2px 0}
+.hb:hover{background:rgba(255,255,255,.04)}
+.hb .lab{color:var(--muted);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb.me .lab{color:var(--ink);font-weight:600}
+.hb .tr{position:relative;height:16px}
+.hb .bar{position:absolute;left:0;top:0;bottom:0;border-radius:0 4px 4px 0;background:var(--mute);width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.hb.me .bar{background:var(--s1);box-shadow:0 0 14px rgba(38,166,154,.6)}
+.hb .val{font-variant-numeric:tabular-nums;color:var(--ink);font-size:.84rem}
+.hb .ref{position:absolute;top:-4px;bottom:-4px;width:0;border-left:1px dashed rgba(255,255,255,.28)}
+.hb-axis{display:grid;grid-template-columns:118px 1fr 44px;gap:10px;font-size:.72rem;color:var(--muted);margin-top:6px}
+.hb-axis .ax{position:relative;height:14px}.hb-axis .ax span{position:absolute;transform:translateX(-50%)}
+/* track */
+.track{display:grid;gap:12px}
+.tk-head,.tk-row{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:center}
+.tk-stages{display:grid;grid-template-columns:repeat(4,1fr);font-size:.7rem;color:var(--muted);text-align:center;font-family:var(--f-mono)}
+.tk-line{position:relative;height:22px}
+.tk-line::before{content:"";position:absolute;left:12.5%;right:12.5%;top:50%;height:2px;background:rgba(255,255,255,.1);transform:translateY(-50%)}
+.tk-fill{position:absolute;left:12.5%;top:50%;height:2px;transform:translateY(-50%);background:linear-gradient(90deg,rgba(38,166,154,.2),var(--s1));width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.tk-tick{position:absolute;top:50%;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transform:translate(-50%,-50%)}
+.tk-dot{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:var(--s1);border:2px solid var(--bg);transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(38,166,154,.8);transition:left 1s cubic-bezier(.2,.8,.2,1);left:12.5%}
+.tk-row .lab{font-size:.86rem;text-align:right;color:var(--muted)}
+.tk-row.me .lab{color:var(--ink);font-weight:600}
+.tk-row:hover .tk-dot{transform:translate(-50%,-50%) scale(1.3)}
+/* clocks */
+.clocks{display:grid;grid-template-columns:1fr 64px 1fr;gap:0 12px}
+.ck-h{font-family:var(--f-display);font-weight:700;font-size:.95rem;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.ck-h.pe{color:var(--s1);text-align:right}.ck-h.eu{color:var(--s2)}
+.ck-yr{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);text-align:center;padding-top:12px;position:relative}
+.ck-yr::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(var(--s1),var(--s2));opacity:.35;transform:translateX(-50%);z-index:-1}
+.ck-col{display:grid;gap:8px;padding-block:10px;align-content:start}
+.ck-col.pe{justify-items:end}
+.ck-ev{display:grid;gap:2px;max-width:330px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:rgba(255,255,255,.03);position:relative}
+.ck-col.pe .ck-ev{text-align:right;border-right:3px solid var(--s1)}
+.ck-col.eu .ck-ev{border-left:3px solid var(--s2)}
+.ck-ev.fut{border-style:dashed;opacity:.8}
+.ck-ev b{font-size:.88rem;font-family:var(--f-display)}
+.ck-ev span{font-size:.78rem;color:var(--muted)}
+.ck-ev .dt{font-family:var(--f-mono);font-size:.7rem;color:var(--accent)}
+.ck-now{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:.72rem;color:var(--accent);margin:4px 0}
+.ck-now::before,.ck-now::after{content:"";flex:1;height:1px;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+/* gantt */
+.gantt{display:grid;gap:10px;position:relative}
+.gt-row,.gt-axis{display:grid;grid-template-columns:minmax(120px,240px) 1fr;gap:12px;align-items:center}
+.gt-row .lab{font-size:.86rem}
+.gt-row .lab small{display:block;color:var(--muted);font-size:.74rem}
+.gt-tr{position:relative;height:22px;background:rgba(255,255,255,.04);border-radius:4px}
+.gt-bar{position:absolute;left:0;top:0;bottom:0;border-radius:0 4px 4px 0;background:var(--s1);width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:.72rem;color:#06231F;font-weight:600;white-space:nowrap}
+.gt-bar.done{background:rgba(38,166,154,.45);color:var(--ink)}
+.gt-axis .ax{position:relative;height:16px;font-size:.7rem;color:var(--muted);font-family:var(--f-mono)}
+.gt-axis .ax span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.gt-now{position:absolute;top:-6px;bottom:-6px;border-left:2px solid var(--accent);box-shadow:0 0 10px var(--accent);pointer-events:none}
+.gt-now span{position:absolute;top:-16px;left:4px;font-family:var(--f-mono);font-size:.68rem;color:var(--accent)}
+/* matrix */
+.matrix{display:grid;grid-template-columns:minmax(170px,1.3fr) repeat(4,minmax(110px,1fr));min-width:720px}
+.mx-c{padding:12px 14px;border-bottom:1px solid var(--line);font-size:.88rem;display:flex;align-items:center;gap:8px}
+.mx-h{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.mx-c b{font-family:var(--f-display)}
+.mx-c small{display:block;color:var(--muted);font-size:.74rem}
+.yes,.no,.part{width:14px;height:14px;border-radius:50%;flex:none}
+.yes{background:var(--s1);box-shadow:0 0 10px rgba(38,166,154,.7)}
+.part{background:linear-gradient(90deg,var(--s1) 50%,transparent 50%);border:2px solid var(--s1)}
+.no{border:2px solid rgba(255,255,255,.25)}
+.mx-row:hover>.mx-c{background:rgba(255,255,255,.03)}
+.mx-row{display:contents}
+/* dims */
+.dims{display:grid;gap:8px}
+.dim{display:grid;grid-template-columns:84px 1fr 38px;gap:8px;align-items:center;font-size:.82rem}
+.dim .tr{height:8px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
+.dim .tr i{display:block;height:100%;width:0;background:var(--s1);transition:width .4s}
+.dim .v{font-variant-numeric:tabular-nums;color:var(--muted);text-align:right}
+.tip{position:fixed;z-index:70;pointer-events:none;background:#06101F;border:1px solid var(--accent);border-radius:8px;padding:8px 10px;font-size:.8rem;max-width:260px;box-shadow:0 0 20px rgba(79,209,197,.3);opacity:0;transition:opacity .15s}
+.tip b{font-family:var(--f-display)}
+.go{display:inline-flex;margin-top:14px;font-weight:600;text-decoration:none}
+
+.pyramid .pyr{border:1px solid var(--line);font-family:var(--f-display);transition:transform .2s,box-shadow .2s}
+.pyramid .pyr.ban{background:linear-gradient(90deg,rgba(243,139,168,.35),rgba(243,139,168,.18))}
+.pyramid .pyr.high{background:linear-gradient(90deg,rgba(92,124,224,.45),rgba(92,124,224,.22))}
+.pyramid .pyr.warn{background:linear-gradient(90deg,rgba(124,156,245,.25),rgba(79,209,197,.15))}
+.pyramid .pyr.ok{background:linear-gradient(90deg,rgba(38,166,154,.4),rgba(38,166,154,.18))}
+.pyramid .pyr small{color:var(--ink);opacity:.8}
+.gt-axis .ax span:first-child{transform:none}.gt-axis .ax span:last-child{transform:translateX(-100%)}
+.hb-axis .ax span:first-child{transform:none}.hb-axis .ax span:last-child{transform:translateX(-100%)}
+.ckpi{font-family:var(--f-display);font-size:2rem;font-weight:800;color:var(--accent);line-height:1}
+.ckpi small{display:block;font-family:var(--f-body);font-size:.75rem;font-weight:400;color:var(--muted);margin-top:4px}
+.cbar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}.cbar i{display:block;height:100%;background:var(--s1)}
+@media (max-width:860px){.cifras{grid-template-columns:1fr 1fr}.chart-grid{grid-template-columns:1fr}.clocks{grid-template-columns:1fr 40px 1fr}.ck-ev{padding:6px 8px}.hb,.hb-axis{grid-template-columns:92px 1fr 40px}}
+@media (max-width:520px){.clocks{grid-template-columns:1fr 34px 1fr;gap:0 6px}.ck-ev b{font-size:.8rem}.gt-row,.gt-axis{grid-template-columns:1fr}.gt-axis>div:first-child{display:none}}
 @media (max-width:860px){.oia-grid{grid-template-columns:1fr}.roles{grid-template-columns:1fr 1fr}.oia-head{flex-direction:column}}
 @media (max-width:860px){.steps{grid-template-columns:1fr 1fr}.step:nth-child(n){transform:none}.hero-art svg{max-width:280px}}
 @media (max-width:860px){
@@ -327,16 +433,16 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
   <div class="wrap">
     <div class="brand">IA<span>·</span>Responsable</div>
     <ul id="navlist">
-      <li><a href="#curso">Curso</a></li>
-      <li><a href="#leyes">Leyes</a></li>
-      <li><a href="#oia">Oficial IA</a></li>
+      <li><a href="#curso">Recorrido</a></li>
       <li><a href="#principios">Principios</a></li>
       <li><a href="#dilema">Dilemas</a></li>
       <li><a href="#riesgo">Riesgo</a></li>
+      <li><a href="#casos">Casos</a></li>
+      <li><a href="#leyes">Leyes</a></li>
       <li><a href="#peru">Perú</a></li>
+      <li><a href="#oia">Oficial IA</a></li>
       <li><a href="#latam">Latam</a></li>
       <li><a href="#marcos">Marcos</a></li>
-      <li><a href="#casos">Casos</a></li>
       <li><a href="#noticias">Noticias</a></li>
       <li><a href="#protocolo">Protocolo</a></li>
       <li><a href="#quiz">Quiz</a></li>
@@ -371,24 +477,24 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
   </div>
 </header>
 
-<section id="leyes">
+<section id="cifras" class="cifras-sec">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Marco legal en un vistazo</div>
-      <h2>Las normas que tienes que conocer</h2>
-      <p class="lead">Cada ficha resume en lenguaje sencillo el objetivo de la norma, a quién se dirige, un ejemplo y su impacto, con datos. Toca una ficha para ver el detalle y abrir el texto oficial.</p>
+    <div class="eyebrow" style="margin-bottom:14px">Por qué importa ahora</div>
+    <div class="cifras">
+      <div class="cifra"><b>22 ene. 2026</b><span>Entra en vigor el reglamento peruano de IA</span><a href="https://www.garrigues.com/es_ES/noticia/peru-aprueba-reglamento-ley-promueve-uso-inteligencia-artificial-favor-desarrollo-economico">Garrigues</a></div>
+      <div class="cifra"><b data-count="52.7" data-dec="1">52,7</b><span>Puntos del Perú en el ILIA 2026: 7.º de 20 países</span><a href="https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026">CEPAL</a></div>
+      <div class="cifra"><b data-count="5" data-suf="%">5%</b><span>De empresas peruanas integra IA en procesos clave</span><a href="https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit">Forbes Perú</a></div>
+      <div class="cifra"><b data-count="700" data-pre="+">+700</b><span>Alertas de desinformación del JNE en las elecciones 2026</span><a href="https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx">Andina</a></div>
     </div>
-    <div class="laws" id="laws"></div>
   </div>
-  <dialog class="lawd" id="lawDlg" aria-labelledby="ldTitle"></dialog>
 </section>
 
 <section id="curso">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Ruta del sílabo · 16 semanas</div>
-      <h2>Cuatro unidades, de los valores a la gobernanza</h2>
-      <p class="lead">El curso avanza desde qué es la IA generativa hasta diseñar un protocolo institucional. Elige una unidad.</p>
+      <div class="eyebrow">El recorrido · 16 semanas</div>
+      <h2>De los valores a la gobernanza en cuatro pasos</h2>
+      <p class="lead">Cada paso es un capítulo de esta página. Elige uno para ver su contenido y saltar a él.</p>
     </div>
     <div class="steps" role="tablist" id="unitTabs"><svg class="curve" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="gC" x1="0" x2="1"><stop offset="0" stop-color="#4FD1C5" stop-opacity=".2"/><stop offset=".5" stop-color="#4FD1C5"/><stop offset="1" stop-color="#7C9CF5"/></linearGradient></defs><path d="M0 150 C 250 150, 350 120, 500 105 S 800 60, 1000 40" stroke="url(#gC)" stroke-width="3" fill="none" style="filter:drop-shadow(0 0 6px #4FD1C5)"/></svg></div>
     <div class="panel" id="unitPanel" role="tabpanel" style="margin-top:22px"></div>
@@ -398,9 +504,9 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
 <section id="principios" class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Unidad I · UNESCO 2021 y OCDE 2024</div>
-      <h2>Nueve principios, explicados con una pregunta de gerencia</h2>
-      <p class="lead">Cada principio se vuelve práctico cuando lo convertimos en una pregunta que alguien en la organización debe poder responder. Toca una tarjeta para voltearla.</p>
+      <div class="eyebrow">Capítulo 1 · Valores</div>
+      <h2>Nueve principios convertidos en preguntas</h2>
+      <p class="lead">Toca una tarjeta: al frente la pregunta de gerencia, atrás el concepto y cómo aplicarlo.</p>
     </div>
     <div class="grid3" id="principles"></div>
   </div>
@@ -409,9 +515,9 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
 <section id="dilema">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Unidad I · Teorías éticas</div>
-      <h2>Un mismo dilema, cuatro lentes</h2>
-      <p class="lead">El sílabo pide analizar un dilema con el enfoque deontológico, utilitarista, de la virtud y del cuidado. Elige un caso y una lente.</p>
+      <div class="eyebrow">Capítulo 2 · Decidir</div>
+      <h2>Un dilema, cuatro lentes éticas</h2>
+      <p class="lead">Elige un caso y una lente. Compara qué decisión sugiere cada enfoque.</p>
     </div>
     <div class="dilemma">
       <div class="tabs" id="dilTabs" style="margin:0"></div>
@@ -425,30 +531,63 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
 <section id="riesgo" class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Unidad III · Regulación basada en riesgo</div>
-      <h2>Clasificador de riesgo: ¿dónde cae tu caso de uso?</h2>
-      <p class="lead">Selecciona un uso típico en empresas o el Estado. Verás el nivel según el Reglamento de la Ley 31814 y el EU AI Act, y qué controles mínimos aplicar. Es orientativo; no reemplaza una opinión legal.</p>
+      <div class="eyebrow">Capítulo 3 · Riesgos</div>
+      <h2>¿Cuánto riesgo tiene tu caso de uso?</h2>
+      <p class="lead">Toca un nivel de la pirámide o un caso. Es orientativo y no reemplaza una opinión legal.</p>
     </div>
-    <div class="risk">
+    <div class="pyramid" aria-label="Pirámide de riesgo" style="margin-bottom:26px">
+        <button class="pyr ban" style="--w:42%" type="button">Prohibido<small>Uso indebido: vigilancia masiva sin base legal, manipulación</small></button>
+        <button class="pyr high" style="--w:62%" type="button">Alto<small>Crédito, empleo, salud, educación, programas sociales</small></button>
+        <button class="pyr warn" style="--w:82%" type="button">Limitado<small>Chatbots y contenido sintético: transparencia</small></button>
+        <button class="pyr ok" style="--w:100%" type="button">Mínimo o aceptable<small>Resúmenes, filtros de spam: buenas prácticas</small></button>
+      </div>
+      <div class="risk">
       <div class="uses" id="uses"></div>
       <div class="result" id="riskResult" aria-live="polite"></div>
     </div>
   </div>
 </section>
 
+<section id="casos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Capítulo 4 · Lo que ya pasó</div>
+      <h2>Aciertos y errores reales</h2>
+      <p class="lead">Cada caso deja una lección de gobernanza. Toca una tarjeta para verla.</p>
+    </div>
+    <div class="filters" id="caseFilters"></div>
+    <div class="cases" id="cases"></div>
+  </div>
+</section>
+
+<section id="leyes" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Capítulo 5 · Las reglas</div>
+      <h2>Las normas que tienes que conocer</h2>
+      <p class="lead">Toca una ficha: objetivo, a quién aplica, ejemplo, impacto y enlace al texto oficial.</p>
+    </div>
+    <div class="laws" id="laws"></div>
+  </div>
+  <dialog class="lawd" id="lawDlg" aria-labelledby="ldTitle"></dialog>
+</section>
+
 <section id="peru">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Perú</div>
-      <h2>Qué pasa en el Perú: de la promoción a las obligaciones</h2>
-      <p class="lead">El Perú fue de los primeros países de la región con una ley específica de IA (2023). Con el reglamento vigente desde el 22 de enero de 2026, la Estrategia Nacional 2026-2030 y el nuevo Oficial de IA (octubre de 2026), el tema pasó del discurso a la exigencia, empezando por el sector público.</p>
+      <div class="eyebrow">Capítulo 6 · Perú</div>
+      <h2>Del discurso a la obligación</h2>
+      <p class="lead">El Perú y la Unión Europea regulan la IA con relojes distintos. Así se comparan.</p>
     </div>
-    <div class="tl" id="peruTl"></div>
-    <div class="stats">
-      <div class="stat"><b>5%</b><span>de empresas peruanas integra IA en procesos clave, la menor proporción entre los mercados evaluados.</span><br><a href="https://forbes.pe/tecnologia/2026-11-19/peru-avanza-en-soberania-de-datos-pero-solo-el-5-de-sus-empresas-integra-la-ia-a-procesos-clave-segun-la-tecnologica-tivit">Forbes Perú / Tivit, nov. 2026</a></div>
-      <div class="stat"><b>52,7</b><span>puntos del Perú en el Índice Latinoamericano de IA 2026 (7.º lugar). Lidera Chile con 71,4, seguido de Brasil (68,4) y Uruguay (67,0).</span><br><a href="https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026">CEPAL y CENIA, oct. 2026</a></div>
-      <div class="stat"><b>700+</b><span>alertas de desinformación detectadas por el JNE en las Elecciones Generales 2026, incluidas piezas manipuladas con IA.</span><br><a href="https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx">Andina, mar. 2026</a></div>
+    <div class="chart-card">
+      <div class="ch-head"><h3>Dos relojes: Perú y Unión Europea</h3><div class="legend"><span><i style="background:var(--s1)"></i>Perú</span><span><i style="background:var(--s2)"></i>Unión Europea</span><span><i class="hollow"></i>Próximo</span></div></div>
+      <div class="clocks" id="clocks"></div>
     </div>
+    <div class="chart-card">
+      <div class="ch-head"><h3>¿Cuánto tiempo tiene cada entidad pública para cumplir el reglamento?</h3><p class="note">Plazos máximos contados desde la publicación del DS 115-2025-PCM (set. 2025). La línea vertical marca hoy.</p></div>
+      <div class="gantt" id="gantt"></div>
+    </div>
+    
     <div class="oia" id="oia">
       <div class="oia-head">
         <div class="sec-ic" style="width:56px;height:56px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/><path d="M17 3l1.5 1.5L21 2"/></svg></div>
@@ -476,12 +615,22 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
 <section id="latam" class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">América Latina</div>
-      <h2>La región regula a distintas velocidades</h2>
-      <p class="lead">Pocos países tienen una ley de IA vigente; la mayoría avanza con proyectos de ley, políticas nacionales y su ley de datos personales. Filtra por estado.</p>
+      <div class="eyebrow">Capítulo 7 · La región</div>
+      <h2>¿Quién está más preparado y quién regula más rápido?</h2>
+      <p class="lead">Dos miradas que no siempre coinciden: la capacidad en IA (ILIA 2026) y el avance de la regulación.</p>
     </div>
-    <div class="filters" id="latFilters"></div>
-    <div class="latam" id="latam"></div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="ch-head"><h3>Preparación para la IA · ILIA 2026</h3><p class="note">Puntaje de 0 a 100. Pioneros desde 60, adoptantes de 35 a 60. Fuente: CEPAL y CENIA, oct. 2026.</p></div>
+        <div class="hbars" id="ilia"></div>
+      </div>
+      <div class="chart-card">
+        <div class="ch-head"><h3>Avance de la regulación de la IA</h3><p class="note">Etapa más avanzada alcanzada por cada país a noviembre de 2026.</p></div>
+        <div class="track" id="regTrack"></div>
+      </div>
+    </div>
+    <div class="filters" id="latFilters" style="margin-top:26px"></div>
+    <div class="latam" id="latGrid"></div>
     <p class="note" style="margin-top:14px">El estado legislativo cambia rápido. Verifica en los portales oficiales de cada congreso antes de usar estos datos en un informe.</p>
   </div>
 </section>
@@ -489,56 +638,32 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
 <section id="marcos">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Unidad III · Marcos internacionales</div>
-      <h2>Soft law, hard law y estándares: cómo se complementan</h2>
-      <p class="lead">Los principios orientan, la ley obliga y los estándares dicen cómo demostrarlo. Una empresa peruana con clientes en Europa puede tener que mirar los cinco.</p>
+      <div class="eyebrow">Capítulo 8 · Estándares</div>
+      <h2>Los principios orientan, las leyes obligan y los estándares lo demuestran</h2>
+      <p class="lead">Compara de un vistazo qué es obligatorio, qué es certificable y dónde aplica cada marco.</p>
     </div>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr><th>Marco</th><th>Tipo</th><th>Qué aporta</th><th>Úsalo para</th></tr></thead>
-        <tbody>
-          <tr><td><b>Recomendación UNESCO</b><br><span class="src">2021, 193 Estados</span></td><td>Soft law</td><td>Valores (dignidad, derechos humanos, diversidad, medio ambiente) y 11 áreas de política pública. Incluye la metodología RAM de evaluación de preparación país.</td><td>Fundamentar la política ética institucional.</td></tr>
-          <tr><td><b>Principios OCDE</b><br><span class="src">2019, actualizados 2024</span></td><td>Soft law</td><td>Cinco principios de IA confiable y recomendaciones a gobiernos. Perú los suscribe como adherente.</td><td>Alinear el lenguaje con estándares de países OCDE.</td></tr>
-          <tr><td><b>NIST AI RMF + AI 600-1</b><br><span class="src">EE. UU., 2023 y 2024</span></td><td>Marco voluntario</td><td>Cuatro funciones: Gobernar, Mapear, Medir, Gestionar. El perfil 600-1 lista 12 riesgos propios de IA generativa (confabulación, privacidad, propiedad intelectual, contenido dañino, entre otros).</td><td>Armar el proceso de gestión de riesgos paso a paso.</td></tr>
-          <tr><td><b>ISO/IEC 42001</b><br><span class="src">2023</span></td><td>Estándar certificable</td><td>Sistema de gestión de IA (AIMS) con ciclo planificar-hacer-verificar-actuar, controles del Anexo A y evaluación de impacto.</td><td>Demostrar ante clientes y reguladores que la gobernanza funciona.</td></tr>
-          <tr><td><b>EU AI Act</b><br><span class="src">Reglamento (UE) 2024/1689</span></td><td>Hard law</td><td>Cuatro niveles de riesgo, prácticas prohibidas desde feb. 2025, reglas para modelos de propósito general desde ago. 2025. El Digital Omnibus, Reglamento (UE) 2026/1744 vigente desde el 27 de julio de 2026, posterga las obligaciones de alto riesgo a dic. 2027 y ago. 2028.</td><td>Referencia de diseño; obligatorio si se ofrece IA en la UE.</td></tr>
-          <tr><td><b>Ley 31814 y DS 115-2025-PCM</b><br><span class="src">Perú</span></td><td>Hard law</td><td>Tres categorías: uso indebido (prohibido), riesgo alto (permitido con controles) y riesgo aceptable. Supervisión humana, registro del funcionamiento de sistemas de riesgo alto y evaluación de impacto en el sector público. La SGTD de la PCM es la autoridad, y la Directiva 002-2026-PCM/SGTD crea el Oficial de IA en las entidades.</td><td>Cumplimiento local, con implementación escalonada por sector.</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="tbl-wrap"><div class="matrix" id="matrix"></div></div>
   </div>
 </section>
 
-<section id="casos" class="band">
+<section id="noticias" class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Casos reales</div>
-      <h2>Lo que salió bien, lo que salió mal y qué aprender</h2>
-      <p class="lead">Casos documentados en sector privado y público. Toca un caso para ver qué pasó y la lección que deja.</p>
-    </div>
-    <div class="filters" id="caseFilters"></div>
-    <div class="cases" id="cases"></div>
-  </div>
-</section>
-
-<section id="noticias">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Noticias asociadas · actualizado al 24 nov. 2026</div>
+      <div class="eyebrow">Capítulo 9 · Lo último · al 24 nov. 2026</div>
       <h2>Lo que se está moviendo</h2>
-      <p class="lead">Selección de noticias de 2026 sobre regulación, gobernanza y uso de IA en el Perú, la región y Europa. Toca una nota para ver objetivo, público, impacto y ejemplo.</p>
+      <p class="lead">Toca una nota para ver objetivo, público, impacto y ejemplo.</p>
     </div>
     <div class="filters" id="newsFilters"></div>
     <div class="news" id="news"></div>
   </div>
 </section>
 
-<section id="protocolo" class="band">
+<section id="protocolo">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Unidad IV · Gobernanza aplicada</div>
-      <h2>Autodiagnóstico: ¿tu organización está lista?</h2>
-      <p class="lead">Basado en los componentes del protocolo institucional del sílabo, NIST AI RMF e ISO/IEC 42001. Marca lo que ya existe en tu organización. Tus respuestas se guardan solo en este navegador.</p>
+      <div class="eyebrow">Capítulo 10 · Tu organización</div>
+      <h2>¿Qué tan lista está tu organización?</h2>
+      <p class="lead">Marca lo que ya existe. Verás tu nivel general y por dimensión. Solo se guarda en este navegador.</p>
     </div>
     <div class="tool">
       <div class="checks" id="checks"></div>
@@ -548,6 +673,7 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
         <div class="bar"><i id="barFill"></i></div>
         <h3 id="lvlName"></h3>
         <p id="lvlText" class="lead"></p>
+        <div class="dims" id="dims"></div>
         <div><div class="eyebrow" style="margin-bottom:6px">Siguiente paso sugerido</div><p id="nextStep"></p></div>
         <button class="btn ghost" id="resetChecks" type="button">Reiniciar</button>
       </div>
@@ -555,17 +681,17 @@ section.flash .sec-ic{animation:icpop .9s ease-out}
   </div>
 </section>
 
-<section id="quiz">
+<section id="quiz" class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Repaso</div>
+      <div class="eyebrow">Cierre</div>
       <h2>Pon a prueba lo aprendido</h2>
     </div>
     <div class="quiz" id="quizBox"></div>
   </div>
 </section>
 
-<section id="fuentes" class="band">
+<section id="fuentes">
   <div class="wrap">
     <div class="sec-head"><div class="eyebrow">Fuentes</div><h2>Referencias confiables</h2></div>
     <ul class="srcs">
@@ -630,6 +756,7 @@ const IC={
  globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>',
  scale:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M5 21h14M5 7h14"/><path d="M5 7l-3 6a3 3 0 006 0zM19 7l-3 6a3 3 0 006 0z"/></svg>'
 };
+const ilia=[["Chile",71.4],["Brasil",68.4],["Uruguay",67.0],["Colombia",56.8],["Costa Rica",56.0],["Argentina",55.6],["Perú",52.7],["México",52.0],["Ecuador",51.8],["Rep. Dominicana",45.1],["Panamá",39.3],["El Salvador",37.9],["Trinidad y Tobago",35.5]];
 /* ---------- UNIDADES ---------- */
 const units=[
  {t:"I. Fundamentos éticos",w:"Semanas 1 a 4",d:"Qué es la IA generativa y con qué lentes éticas evaluarla.",c:["Diferencias entre IA, aprendizaje automático, modelos fundacionales y LLM","Capacidades, alucinaciones y límites","Enfoques deontológico, utilitarista, de la virtud y del cuidado","Principios: equidad, transparencia, explicabilidad, privacidad, supervisión humana"],e:"Mapa conceptual del ciclo de vida de la IA, deliberación ética de un caso y primer ensayo (semana 4).",r:["UNESCO 2021","OCDE 2024","Floridi 2023","Coeckelbergh 2020"]},
@@ -639,7 +766,7 @@ const units=[
 ];
 const ut=$("#unitTabs"),up=$("#unitPanel");
 function showUnit(i){[...ut.querySelectorAll(".step")].forEach((b,j)=>b.setAttribute("aria-selected",i===j));const u=units[i];
- up.innerHTML=`<div><div class="weeks">${u.w}</div><h3 style="font-size:1.4rem;margin-top:6px">${u.t}</h3><p class="lead" style="margin-top:8px">${u.d}</p><div class="deliv"><b>Entregables:</b> ${u.e}</div></div>
+ up.innerHTML=`<div><div class="weeks">${u.w}</div><h3 style="font-size:1.4rem;margin-top:6px">${u.t}</h3><p class="lead" style="margin-top:8px">${u.d}</p><div class="deliv"><b>Entregables:</b> ${u.e}</div><a class="go" href="${["#principios","#riesgo","#leyes","#oia"][i]}">Ir al capítulo →</a></div>
  <div><div class="eyebrow">Contenidos</div><ul>${u.c.map(x=>`<li>${x}</li>`).join("")}</ul><div class="eyebrow" style="margin-top:16px">Lecturas clave</div><div class="hero-meta" style="margin-top:8px">${u.r.map(x=>`<span class="chip">${x}</span>`).join("")}</div></div>`;}
 const UI=['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l9 17H3z"/><path d="M8.3 11h7.4M6.2 15h11.6"/></svg>',IC.shield,IC.net];
 units.forEach((u,i)=>{const b=el("button",{class:"step",role:"tab",type:"button"},`${UI[i]}<span>${i+1}. ${u.t.replace(/^[IV]+\. /,"")}</span><small>${u.w}</small>`);b.onclick=()=>showUnit(i);ut.append(b)});showUnit(0);
@@ -712,18 +839,6 @@ showUse(2);
 document.querySelectorAll(".pyr").forEach((a,i)=>a.addEventListener("click",()=>{const k=["ban","high","warn","ok"][i];showUse(uses.findIndex(u=>u.l===k))}));
 
 /* ---------- PERU TIMELINE ---------- */
-const peru=[
- ["Jul. 2011","Ley 29733 de Protección de Datos Personales","Base para todo uso de datos en IA. Su nuevo reglamento, DS 016-2024-JUS, rige desde fines de marzo de 2025 y crea el Oficial de Datos Personales."],
- ["Jul. 2023","Ley 31814","Promueve el uso de la IA para el desarrollo económico y social, con principios como la seguridad basada en riesgos, la ética y la privacidad. Designa a la SGTD de la PCM como autoridad (art. 4)."],
- ["9 set. 2025","DS 115-2025-PCM, reglamento de la Ley 31814","Distingue uso indebido (prohibido), riesgo alto y riesgo aceptable. Exige supervisión humana, registro de sistemas de riesgo alto y política institucional de IA en el Estado."],
- ["22 ene. 2026","Entra en vigor el reglamento","Rige a los 90 días hábiles de su publicación. La implementación en el Estado es gradual: 1 año para los tres poderes y organismos autónomos, 2 años para gobiernos regionales, EsSalud y universidades públicas, y 3 años para gobiernos locales."],
- ["Mar. 2026","Elecciones Generales y desinformación","El JNE publica la Guía contra la desinformación (con detección de deepfakes), incluye la IA en el Pacto Ético Electoral y reporta más de 700 alertas."],
- ["May. 2026","ENIA 2026-2030 (RM 152-2026-PCM)","Estrategia Nacional de IA para toda la administración pública, con cuatro ejes: talento, innovación, marco ético y regulatorio, y participación ciudadana. Encarga a la SGTD definir el perfil del Oficial de IA."],
- ["10 set. 2026","Vence el primer plazo sectorial","Primer año del reglamento para el uso de IA en salud, educación, justicia, seguridad, economía y finanzas."],
- ["21 oct. 2026","Directiva 002-2026-PCM/SGTD: Oficial de IA","Aprobada por la Resolución 004-2026-PCM/SGTD. Las entidades públicas deben designar un Oficial de Inteligencia Artificial con perfil, funciones y plazos definidos."],
- ["Nov. 2026","Debate público","Especialistas proponen un Consejo Nacional Científico y Ciudadano de IA. El Minsa avanza con un lineamiento de uso ético de IA en salud. SUNAT y el Poder Judicial (asistente Curia) ya usan IA con políticas propias."]
-];
-const pt=$("#peruTl");peru.forEach(e=>pt.append(el("div",{class:"ev"},`<div class="d">${e[0]}</div><div><h3>${e[1]}</h3><p>${e[2]}</p></div>`)));
 
 /* ---------- LATAM ---------- */
 const lat=[
@@ -736,10 +851,10 @@ const lat=[
  {c:"Uruguay",k:"pol",s:"Estrategia",t:"Estrategia Nacional de IA actualizada y tercer lugar en el ILIA 2026 (67,0 puntos). Ley de datos con nivel adecuado reconocido por la UE."},
  {c:"Argentina",k:"pol",s:"Lineamientos",t:"Recomendaciones para una IA fiable en el sector público y proyectos de ley en discusión. Caso de Salta (2018) es referencia de riesgo en programas sociales."}
 ];
-const lf=$("#latFilters"),lg=$("#latam");let lk="all";
+const lf=$("#latFilters"),lg=$("#latGrid");let lk="all";
 const latF=[["all","Todos"],["law","Ley vigente"],["bill","Proyecto de ley"],["pol","Política o estrategia"]];
 function drawLat(){[...lf.children].forEach((b,i)=>b.setAttribute("aria-selected",latF[i][0]===lk));lg.innerHTML="";
- lat.filter(x=>lk==="all"||x.k===lk).forEach(x=>lg.append(flipCard(`<header style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3 style="font-size:1.4rem">${x.c}</h3><span class="st st-${x.k}">${x.s}</span></header><p style="color:var(--muted)">¿Cómo regula la IA ${x.c}?</p>`,`<span class="bt">${x.c} · ${x.s}</span><p>${x.t}</p>`)));}
+ lat.filter(x=>lk==="all"||x.k===lk).forEach(x=>lg.append(flipCard(`<header style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3 style="font-size:1.4rem">${x.c}</h3><span class="st st-${x.k}">${x.s}</span></header>${(()=>{const v=(ilia.find(r=>r[0]===x.c)||[])[1];return v?`<div class="ckpi">${v.toFixed(1).replace(".",",")}<small>puntos ILIA 2026</small></div><div class="cbar"><i style="width:${v}%"></i></div>`:""})()}<p style="color:var(--muted)">¿Cómo regula la IA ${x.c}?</p>`,`<span class="bt">${x.c} · ${x.s}</span><p>${x.t}</p>`)));}
 latF.forEach(f=>{const b=el("button",{class:"tab",type:"button"},f[1]);b.onclick=()=>{lk=f[0];drawLat()};lf.append(b)});drawLat();
 
 /* ---------- CASOS ---------- */
@@ -819,13 +934,14 @@ const checks=[
 ];
 const cb=$("#checks");let saved={};try{saved=JSON.parse(localStorage.getItem("iar-checks")||"{}")}catch(e){}
 let idx=0;checks.forEach(g=>{cb.append(el("div",{class:"grp"},g[0]));g[1].forEach(t=>{const id="ck"+idx++;const l=el("label",{for:id},`<input type="checkbox" id="${id}"${saved[id]?" checked":""}><span>${t}</span>`);cb.append(l)})});
-const levels=[[0,"Inicial","La IA se usa sin reglas formales. El riesgo depende del criterio de cada persona.","Nombra un responsable y aprueba una política breve de uso de IA generativa."],
+const levels=[[0,"Inicial","La IA se usa sin reglas formales. El riesgo depende del criterio de cada persona.","Designa un Oficial de IA o responsable y aprueba una política breve de uso de IA generativa."],
  [30,"En desarrollo","Hay reglas básicas, pero falta visibilidad de qué sistemas existen y cuánto riesgo tienen.","Construye el inventario de sistemas y clasifícalos por riesgo según el reglamento de la Ley 31814."],
  [60,"Definido","La gobernanza existe y se aplica en los casos importantes.","Formaliza evaluaciones de impacto y un procedimiento de incidentes."],
  [85,"Gestionado","Gobernanza madura, comparable a un sistema ISO/IEC 42001.","Evalúa una auditoría externa o la certificación ISO/IEC 42001."]];
 function score(){const all=[...cb.querySelectorAll("input")];const n=all.filter(i=>i.checked).length;const p=Math.round(n/all.length*100);
  const s={};all.forEach(i=>{if(i.checked)s[i.id]=1});try{localStorage.setItem("iar-checks",JSON.stringify(s))}catch(e){}
- $("#pct").textContent=p+"%";$("#barFill").style.width=p+"%";const L=[...levels].reverse().find(l=>p>=l[0]);$("#lvlName").textContent=L[1];$("#lvlText").textContent=L[2];$("#nextStep").textContent=L[3];}
+ $("#pct").textContent=p+"%";
+ const dz=$("#dims");if(dz){let k=0;dz.innerHTML=checks.map(g=>{const ins=all.slice(k,k+g[1].length);k+=g[1].length;const q=Math.round(ins.filter(i=>i.checked).length/ins.length*100);return `<div class="dim"><span>${g[0]}</span><span class="tr"><i style="width:${q}%"></i></span><span class="v">${q}%</span></div>`}).join("")}$("#barFill").style.width=p+"%";const L=[...levels].reverse().find(l=>p>=l[0]);$("#lvlName").textContent=L[1];$("#lvlText").textContent=L[2];$("#nextStep").textContent=L[3];}
 cb.addEventListener("change",score);$("#resetChecks").onclick=()=>{cb.querySelectorAll("input").forEach(i=>i.checked=false);score()};score();
 
 /* ---------- QUIZ ---------- */
@@ -928,6 +1044,78 @@ dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
 
 const SEC={leyes:"doc",curso:"map",principios:"scale",dilema:"bulb",riesgo:"alert",peru:"map",latam:"globe",marcos:"net",casos:"case",noticias:"news",protocolo:"check",quiz:"quiz",fuentes:"doc"};
 for(const id in SEC){const h=document.querySelector(`#${id} .sec-head`);if(h)h.insertAdjacentHTML("afterbegin",`<div class="sec-ic">${IC[SEC[id]]}</div>`)}
+
+/* ---------- GRÁFICAS ---------- */
+const tip=el("div",{class:"tip",role:"tooltip"});document.body.append(tip);
+const showTip=(e,h)=>{tip.innerHTML=h;tip.style.opacity=1;const x=Math.min(e.clientX+14,innerWidth-270);tip.style.left=x+"px";tip.style.top=(e.clientY+14)+"px"};
+const hideTip=()=>tip.style.opacity=0;
+const bindTip=(node,h)=>{node.addEventListener("pointermove",e=>showTip(e,h));node.addEventListener("pointerleave",hideTip)};
+const onView=(node,fn)=>{const o=new IntersectionObserver(es=>{if(es[0].isIntersecting){fn();o.disconnect()}},{threshold:.2});o.observe(node)};
+/* ILIA */
+
+(()=>{const box=$("#ilia");ilia.forEach(([c,v],i)=>{const r=el("div",{class:"hb"+(c==="Perú"?" me":"")},`<span class="lab">${c}</span><span class="tr"><span class="bar" data-w="${v}"></span><span class="ref" style="left:60%"></span><span class="ref" style="left:35%"></span></span><span class="val">${v.toFixed(1).replace(".",",")}</span>`);
+ bindTip(r,`<b>${c}</b><br>${v.toFixed(1).replace(".",",")} puntos · puesto ${i+1}<br>${v>=60?"Pionero":"Adoptante"}`);box.append(r)});
+ box.insertAdjacentHTML("afterend",`<div class="hb-axis"><div></div><div class="ax"><span style="left:0">0</span><span style="left:35%">35</span><span style="left:60%">60 · pioneros</span><span style="left:100%">100</span></div><div></div></div>`);
+ onView(box,()=>box.querySelectorAll(".bar").forEach(b=>b.style.width=b.dataset.w+"%"));})();
+/* Avance regulatorio */
+const stages=["Estrategia","Proyecto de ley","Ley aprobada","Reglamento vigente"];
+const reg=[["Perú",4,"Ley 31814 (2023) y reglamento vigente desde ene. 2026"],["El Salvador",3,"Ley de Fomento de la IA y Tecnologías (2025)"],["Brasil",2.5,"PL 2338/2023 aprobado por el Senado; en la Cámara"],["Chile",2.5,"Proyecto aprobado por la Cámara; en el Senado"],["Colombia",2,"CONPES 4144 y proyectos de ley en trámite"],["México",2,"Iniciativas en el Congreso, sin ley general"],["Argentina",2,"Proyectos en discusión y lineamientos públicos"],["Uruguay",1,"Estrategia Nacional de IA actualizada"]];
+(()=>{const box=$("#regTrack");box.append(el("div",{class:"tk-head"},`<span></span><div class="tk-stages">${stages.map(x=>`<span>${x}</span>`).join("")}</div>`));
+ const pos=v=>12.5+(v-1)*25;
+ reg.forEach(([c,v,t])=>{const r=el("div",{class:"tk-row"+(c==="Perú"?" me":"")},`<span class="lab">${c}</span><div class="tk-line">${[1,2,3,4].map(k=>`<span class="tk-tick" style="left:${pos(k)}%"></span>`).join("")}<span class="tk-fill" data-w="${pos(v)-12.5}"></span><span class="tk-dot" data-l="${pos(v)}"></span></div>`);
+  bindTip(r,`<b>${c}</b><br>${t}`);box.append(r)});
+ onView(box,()=>{box.querySelectorAll(".tk-fill").forEach(f=>f.style.width=f.dataset.w+"%");box.querySelectorAll(".tk-dot").forEach(d=>d.style.left=d.dataset.l+"%")});})();
+/* Dos relojes */
+const TODAY=new Date(2026,10,24);
+const clk=[
+ [2023,"pe","5 jul. 2023","Ley 31814","Primera ley de IA del país",new Date(2023,6,5)],
+ [2024,"eu","1 ago. 2024","Entra en vigor el AI Act","Reglamento (UE) 2024/1689",new Date(2024,7,1)],
+ [2025,"eu","2 feb. 2025","Prohibiciones y alfabetización","Prácticas de riesgo inaceptable",new Date(2025,1,2)],
+ [2025,"eu","2 ago. 2025","Modelos de propósito general","Reglas para proveedores de GPAI",new Date(2025,7,2)],
+ [2025,"pe","9 set. 2025","Reglamento DS 115-2025-PCM","Uso indebido, riesgo alto y aceptable",new Date(2025,8,9)],
+ [2026,"pe","22 ene. 2026","Reglamento en vigor","90 días hábiles tras su publicación",new Date(2026,0,22)],
+ [2026,"pe","May. 2026","ENIA 2026-2030","Cuatro ejes, conduce la SGTD",new Date(2026,4,2)],
+ [2026,"eu","27 jul. 2026","Digital Omnibus","Posterga el alto riesgo",new Date(2026,6,27)],
+ [2026,"pe","10 set. 2026","Primer plazo sectorial","Salud, educación, justicia, finanzas",new Date(2026,8,10)],
+ [2026,"pe","21 oct. 2026","Oficial de IA","Directiva 002-2026-PCM/SGTD",new Date(2026,9,21)],
+ [2027,"pe","Set. 2027","Gobiernos regionales","También EsSalud y universidades",new Date(2027,8,10)],
+ [2027,"eu","2 dic. 2027","Alto riesgo autónomo","Nuevo plazo tras el Omnibus",new Date(2027,11,2)],
+ [2028,"eu","2 ago. 2028","Alto riesgo en productos","Dispositivos y máquinas",new Date(2028,7,2)],
+ [2028,"pe","Set. 2028","Gobiernos locales","Último plazo del Estado",new Date(2028,8,10)]];
+(()=>{const box=$("#clocks");box.innerHTML=`<div class="ck-h pe">Perú</div><div></div><div class="ck-h eu">Unión Europea</div>`;
+ let nowShown=false;
+ for(let y=2023;y<=2028;y++){
+  if(!nowShown&&y===2027){box.insertAdjacentHTML("beforeend",`<div class="ck-now">HOY · 24 NOV. 2026</div>`);nowShown=true}
+  const ev=(side)=>clk.filter(e=>e[0]===y&&e[1]===side).map(e=>`<div class="ck-ev${e[5]>TODAY?" fut":""}"><span class="dt">${e[2]}</span><b>${e[3]}</b><span>${e[4]}</span></div>`).join("");
+  box.insertAdjacentHTML("beforeend",`<div class="ck-col pe">${ev("pe")}</div><div class="ck-yr">${y}</div><div class="ck-col eu">${ev("eu")}</div>`)}})();
+/* Gantt */
+(()=>{const start=new Date(2025,8,10),end=new Date(2028,8,10),span=end-start,pct=d=>Math.max(0,Math.min(100,(d-start)/span*100));
+ const rows=[["Poder Ejecutivo, Legislativo y Judicial","1 año",new Date(2026,8,10)],["Organismos constitucionales autónomos","1 año",new Date(2026,8,10)],["IA en salud, educación, justicia, seguridad y finanzas","1 año",new Date(2026,8,10)],["Gobiernos regionales, EsSalud y universidades públicas","2 años",new Date(2027,8,10)],["Gobiernos locales","3 años",new Date(2028,8,10)]];
+ const box=$("#gantt");
+ rows.forEach(([n,t,d])=>{const done=d<=TODAY;const r=el("div",{class:"gt-row"},`<div class="lab">${n}<small>${t}${done?" · plazo vencido":""}</small></div><div class="gt-tr"><div class="gt-bar${done?" done":""}" data-w="${pct(d)}">${d.toLocaleDateString("es-PE",{month:"short",year:"numeric"})}</div></div>`);
+  bindTip(r,`<b>${n}</b><br>Plazo máximo: ${t}<br>Hasta ${d.toLocaleDateString("es-PE",{day:"numeric",month:"long",year:"numeric"})}`);box.append(r)});
+ const ticks=[[new Date(2025,8,10),"set. 2025"],[new Date(2026,8,10),"set. 2026"],[new Date(2027,8,10),"set. 2027"],[new Date(2028,8,10),"set. 2028"]];
+ box.insertAdjacentHTML("beforeend",`<div class="gt-axis"><div></div><div class="ax">${ticks.map(([d,l])=>`<span style="left:${pct(d)}%">${l}</span>`).join("")}</div></div>`);
+ const trs=box.querySelectorAll(".gt-tr");trs.forEach((t,i)=>{if(i===0)t.insertAdjacentHTML("beforeend",`<div class="gt-now" style="left:${pct(TODAY)}%"><span>hoy</span></div>`);else t.insertAdjacentHTML("beforeend",`<div class="gt-now" style="left:${pct(TODAY)}%"></div>`)});
+ onView(box,()=>box.querySelectorAll(".gt-bar").forEach(b=>b.style.width=b.dataset.w+"%"));})();
+/* Matriz de marcos */
+(()=>{const cols=["Obligatorio","Certificable","Enfoque de riesgo","Ámbito"];
+ const D=[["Recomendación UNESCO","2021",["no","no","part","193 Estados"],"Soft law: orienta políticas, no sanciona."],
+  ["Principios OCDE","2019, act. 2024",["no","no","part","Países adherentes, incluido Perú"],"Cinco principios de IA confiable."],
+  ["NIST AI RMF y AI 600-1","EE. UU., 2023-2024",["no","no","yes","Voluntario, uso global"],"Gobernar, mapear, medir y gestionar. Perfil de 12 riesgos de IA generativa."],
+  ["ISO/IEC 42001","2023",["no","yes","yes","Global"],"Sistema de gestión de IA auditable por terceros."],
+  ["EU AI Act","Reglamento (UE) 2024/1689",["yes","part","yes","Unión Europea"],"Multas de hasta 35 M€ o 7% de la facturación. Evaluación de conformidad para alto riesgo."],
+  ["Ley 31814 y DS 115-2025-PCM","Perú",["yes","no","yes","Perú"],"Uso indebido, riesgo alto y aceptable. Oficial de IA en el Estado."]];
+ const L={yes:"Sí",no:"No",part:"Parcial"};
+ const m=$("#matrix");m.innerHTML=`<div class="mx-c mx-h">Marco</div>${cols.map(c=>`<div class="mx-c mx-h">${c}</div>`).join("")}`;
+ D.forEach(([n,sub,v,note])=>{const row=el("div",{class:"mx-row"},`<div class="mx-c"><div><b>${n}</b><small>${sub}</small></div></div>${v.map((x,i)=>i<3?`<div class="mx-c"><span class="${x}" aria-hidden="true"></span>${L[x]}</div>`:`<div class="mx-c" style="color:var(--muted)">${x}</div>`).join("")}`);
+  m.append(row);[...row.children].forEach(c=>bindTip(c,`<b>${n}</b><br>${note}`))});
+ m.insertAdjacentHTML("afterend",`<div class="legend" style="padding:12px 14px"><span><i class="yes"></i>Sí</span><span><i class="part"></i>Parcial</span><span><i class="no"></i>No</span></div>`);})();
+/* Contadores de cifras */
+document.querySelectorAll(".cifra b[data-count]").forEach(b=>{const T=+b.dataset.count,dec=+(b.dataset.dec||0),pre=b.dataset.pre||"",suf=b.dataset.suf||"";
+ if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+ onView(b,()=>{const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)/1200),e=1-Math.pow(1-k,3);b.textContent=pre+(T*e).toFixed(dec).replace(".",",")+suf;if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)})});
+
 /* ---------- NAV ACTIVA ---------- */
 const links=[...document.querySelectorAll("#navlist a")];
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id))}}),{rootMargin:"-45% 0px -50% 0px"});
