@@ -113,9 +113,9 @@ button{font:inherit;cursor:pointer}
 .sub-step{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;font-size:1.05rem;margin:28px 0 12px}
 .sub-step span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#06231F;font-size:.85rem}
 .diag-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
-.diag-kpi div{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--glass),rgba(18,34,58,.55);display:grid;gap:4px}
-.diag-kpi b{font-family:var(--f-display);font-size:1.6rem;color:var(--accent);font-variant-numeric:tabular-nums}
-.diag-kpi span{font-size:.85rem;color:var(--muted)}
+.diag-kpi .dkx{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--glass),rgba(18,34,58,.55);display:grid;gap:4px}
+.diag-kpi .dkn{font-family:var(--f-display);font-size:1.6rem;color:var(--accent);font-variant-numeric:tabular-nums}
+.diag-kpi .dkl{font-size:.85rem;color:var(--muted)}
 .pe-hitos{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
 .lawlinks{display:flex;flex-wrap:wrap;gap:6px}
 
@@ -144,11 +144,48 @@ button{font:inherit;cursor:pointer}
 .step .art img.o3{filter:drop-shadow(0 0 24px rgba(79,156,255,.7)) drop-shadow(0 14px 18px rgba(0,0,0,.45))}
 .step .art img.o0,.step .art img.o2{filter:drop-shadow(0 0 16px rgba(200,220,255,.25)) drop-shadow(0 14px 18px rgba(0,0,0,.45))}
 .step:hover .art img{transform:translateY(-8px) rotate(-4deg) scale(1.06)}
+
+/* tarjetas que se voltean: botones del reverso y pasos */
+.flip .face.back .fxbtn{display:inline-block;margin-top:6px;background:var(--back-ink)!important;color:#fff!important;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:700;font-size:.85rem;text-decoration:none!important;cursor:pointer;width:fit-content}
+.flip .face.back .fxbtn:hover{filter:brightness(1.25)}
+.flip .face.back p{font-size:.9rem}
+.stepf{border-radius:12px;-webkit-box-reflect:below 6px linear-gradient(transparent 62%,rgba(255,255,255,.16))}
+.steps>.stepf:nth-child(3){transform:translateY(-40px)}
+.steps>.stepf:nth-child(4){transform:translateY(-80px)}
+.steps>.stepf:nth-child(5){transform:translateY(-120px)}
+.stepf .face{min-height:260px;padding:18px 16px 14px;border-radius:12px;justify-content:space-between;border:1px solid rgba(255,255,255,.22);box-shadow:0 20px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.25)}
+.stepf .face.front{background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.03) 55%,rgba(111,183,255,.06)),rgba(14,24,42,.55)}
+.stepf .art{width:100%;display:grid;place-items:center;padding-top:6px}
+.stepf .art img{width:150px;height:150px;object-fit:contain;transition:transform .5s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 14px 18px rgba(0,0,0,.45))}
+.stepf .art img.o1{filter:drop-shadow(0 0 22px rgba(255,180,90,.55)) drop-shadow(0 14px 18px rgba(0,0,0,.45))}
+.stepf .art img.o3{filter:drop-shadow(0 0 24px rgba(79,156,255,.7)) drop-shadow(0 14px 18px rgba(0,0,0,.45))}
+.stepf .lbl{font-size:.92rem;color:#E6EDF6;font-weight:500}
+.stepf small{font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+.stepf[data-sel] .face.front{border-color:#9FD0FF;box-shadow:0 24px 48px rgba(0,0,0,.4),0 0 34px rgba(111,183,255,.45),inset 0 1px 0 rgba(255,255,255,.35)}
+.stepf:hover .art img{transform:translateY(-8px) rotate(-4deg) scale(1.06)}
+.stepf .face.back{justify-content:flex-start;gap:6px}
+/* leyes */
+.lawf .face{min-height:250px}
+.lawf .ic{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;background:rgba(79,209,197,.1);border:1px solid rgba(79,209,197,.35);color:var(--accent)}
+.lawf .ic svg{width:28px;height:28px}
+.lawf .code{font-family:var(--f-mono);font-size:.74rem;color:#9DB6FF}
+.lawf .one{font-size:.92rem;color:var(--muted)}
+.lawf .kpi{font-family:var(--f-display);font-size:1.25rem;color:var(--accent)}
+.lawf .kpi small{display:block;font-family:var(--f-body);font-size:.78rem;color:var(--muted)}
+/* diagnóstico */
+.dk .face{min-height:130px}
+.dk .dkn{font-family:var(--f-display);font-size:1.7rem;color:var(--accent);font-variant-numeric:tabular-nums}
+.dk .dkl{font-size:.85rem;color:var(--muted)}
+@media (max-width:860px){
+ .stepf:nth-child(n){transform:none!important;-webkit-box-reflect:below 0 linear-gradient(transparent,transparent)}
+ .stepf .face{min-height:230px}
+ .stepf .art img{width:112px;height:112px}
+}
 @media (max-width:860px){.step .art img{width:112px;height:112px}}
 @media (max-width:860px){
  .steps{grid-template-columns:1fr 1fr!important;gap:14px!important;padding-block:20px 10px!important;align-items:stretch}
  .steps .curve{display:none}
- .step:nth-child(n){transform:none!important;-webkit-box-reflect:none;min-height:200px}
+ .step:nth-child(n){transform:none!important;-webkit-box-reflect:below 0 linear-gradient(transparent,transparent);min-height:200px}
  .step .art svg{width:88px!important;height:88px!important}
 }
 @media (max-width:860px){.diag-kpi{grid-template-columns:1fr 1fr}}
@@ -613,6 +650,17 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 }
 @media (max-width:520px){.grid3,.grid2{grid-template-columns:1fr} section{padding-block:52px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ajustes finales móvil: pasos en una columna, sin reflejo */
+@media (max-width:860px){
+ .steps>.stepf{-webkit-box-reflect:below 0 linear-gradient(transparent,transparent)!important;transform:none!important}
+ .stepf .face.back p{font-size:.88rem}
+}
+@media (max-width:600px){
+ .steps{grid-template-columns:1fr!important}
+ .stepf .face{min-height:0}
+ .stepf .art img{width:120px;height:120px}
+}
 </style>
 </head>
 <body>
@@ -761,12 +809,7 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
     </div>
     
     <div class="sub-step"><span>1</span>Diagnóstico del país</div>
-    <div class="diag-kpi">
-      <div><b>65.º de 70</b><span>Ranking Mundial Digital y de IA 2026 (IMD y Centrum PUCP)</span></div>
-      <div><b>56,3</b><span>puntos de 100; en la región solo supera a Venezuela</span></div>
-      <div><b>70.º</b><span>en talento: el último lugar del mundo</span></div>
-      <div><b>68.º</b><span>en adopción de IA en empresas</span></div>
-    </div>
+    <div class="diag-kpi" id="diagKpi"></div>
     <div class="chart-card">
       <div class="ch-head"><h3>Dónde el Perú es fuerte y dónde es débil en IA</h3><p class="note">Puesto entre 70 economías en subfactores del Ranking Mundial Digital y de IA 2026 (IMD y Centrum PUCP). Más a la izquierda es mejor.</p><div class="legend"><span><i style="background:var(--s1)"></i>Mitad superior</span><span><i style="background:#F38BA8"></i>Entre los 10 últimos</span><span><i style="background:var(--mute)"></i>Resto</span></div></div>
       <div class="dots" id="peDots"></div>
@@ -958,9 +1001,15 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 const $=s=>document.querySelector(s);
 const el=(t,a={},h="")=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);e.innerHTML=h;return e};
 
-const flipCard=(front,back,cls="")=>{const c=el("div",{class:"flip "+cls,role:"button",tabindex:"0","aria-pressed":"false"},`<div class="flip-in"><div class="face front">${front}<span class="hint">Toca para voltear</span></div><div class="face back">${back}<span class="hint">Volver</span></div></div>`);
- const t=()=>{c.classList.toggle("on");c.setAttribute("aria-pressed",c.classList.contains("on"))};
- c.addEventListener("click",e=>{if(e.target.closest("a"))return;t()});c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();t()}});return c};
+const HOVER=matchMedia("(hover:hover) and (pointer:fine)").matches;
+const flipCard=(front,back,cls="")=>{
+ const c=el("div",{class:"flip "+cls,role:"button",tabindex:"0","aria-pressed":"false"},`<div class="flip-in"><div class="face front">${front}<span class="hint">${HOVER?"Pasa el mouse o toca":"Toca para voltear"}</span></div><div class="face back">${back}<span class="hint">Volver</span></div></div>`);
+ let pin=false,hov=false;
+ const sync=()=>{const on=pin||hov;c.classList.toggle("on",on);c.setAttribute("aria-pressed",String(on))};
+ c.addEventListener("click",e=>{if(e.target.closest("a,button"))return;if(c.classList.contains("on")){pin=false;hov=false}else{pin=true}sync()});
+ c.addEventListener("keydown",e=>{if(e.target!==c)return;if(e.key==="Enter"||e.key===" "){e.preventDefault();pin=!pin;sync()}});
+ if(HOVER){c.addEventListener("mouseenter",()=>{hov=true;sync()});c.addEventListener("mouseleave",()=>{hov=false;pin=false;sync()})}
+ return c};
 const IC={
  net:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9z"/><path d="M12 2v18M4 6.5l16 9M20 6.5l-16 9"/><circle cx="12" cy="11" r="2"/></svg>',
  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
@@ -992,6 +1041,7 @@ const BIG={
  imd:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="32" r="22"/><path d="M10 32h44M32 10c7 6 10 14 10 22s-3 16-10 22c-7-6-10-14-10-22s3-16 10-22z"/><circle cx="46" cy="46" r="9" fill="rgba(243,139,168,.15)" stroke="#F38BA8"/><path d="M43 46h6" stroke="#F38BA8"/></svg>',
  jne:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="12" y="30" width="40" height="26" rx="3"/><path d="M24 30V12h16v18"/><path d="M28 20h8"/><path d="M32 4l10 18H22z" fill="rgba(243,139,168,.15)" stroke="#F38BA8"/><path d="M32 11v5M32 19v.5" stroke="#F38BA8"/></svg>'};
 
+const CE={"reg": "Un banco que usa IA para evaluar créditos debe poder mostrar cómo funciona el sistema y que una persona revisa los casos sensibles.", "ilia": "Un ministerio que quiere usar IA necesita primero datos ordenados y personal capacitado; sin eso, el proyecto no despega.", "imd": "Un hospital quiere un asistente de IA, pero faltan especialistas locales para construirlo y mantenerlo.", "emp": "Una tienda prueba un chatbot, pero no usa IA en inventarios ni en precios: eso todavía no es adopción real.", "jne": "Circula un video falso de un candidato; el JNE lo detecta y lo desmiente por sus canales oficiales."};
 const cifras=[
  {n:"22 ene. 2026",t:"Entra en vigor el Reglamento de la Ley 31814 de IA (DS 115-2025-PCM)",ic:"reg",h:"Desde ese día, la IA en el Perú tiene reglas obligatorias.",p:"Prohíbe los usos que dañan derechos, como la vigilancia masiva sin base legal, y exige control humano cuando la IA decide sobre crédito, empleo, salud o educación.",w:"Si tu organización usa IA para decidir sobre personas, ya debe cumplir.",u:"https://www.garrigues.com/es_ES/noticia/peru-aprueba-reglamento-ley-promueve-uso-inteligencia-artificial-favor-desarrollo-economico",f:"Garrigues"},
  {n:"52,7",c:52.7,d:1,t:"Puntos del Perú en el Índice Latinoamericano de IA (ILIA 2026) de CEPAL: puesto 7 de 20",ic:"ilia",h:"El Perú aprueba a medias en preparación para la IA.",p:"El índice mide talento, infraestructura, investigación y gobierno. El Perú está a casi 19 puntos de Chile (71,4) y avanzó solo 0,8 en un año.",w:"Sin talento ni datos, las leyes no bastan para competir.",u:"https://www.cepal.org/es/publicaciones/90413-indice-latinoamericano-inteligencia-artificial-ilia-2026",f:"CEPAL"},
@@ -1000,15 +1050,19 @@ const cifras=[
  {n:"+700",c:700,pre:"+",t:"Alertas de desinformación detectadas por el JNE en las Elecciones Generales 2026",ic:"jne",h:"La IA ya influye en cómo nos informamos para votar.",p:"El JNE rastreó más de 700 casos de contenido falso en redes, incluidos videos y audios manipulados con IA, y publicó una guía para detectar deepfakes.",w:"Verificar antes de compartir también es usar la IA con responsabilidad.",u:"https://andina.pe/agencia/noticia-elecciones-2026-jne-detecta-mas-700-alertas-desinformacion-1065586.aspx",f:"Andina"}];
 (()=>{const g=$("#cifrasGrid");cifras.forEach(x=>g.append(flipCard(
  `<span class="bigic">${BIG[x.ic]}</span><b class="cnum"${x.c?` data-count="${x.c}" data-dec="${x.d||0}" data-pre="${x.pre||""}" data-suf="${x.suf||""}"`:""}>${x.n}</b><span class="t">${x.t}</span>`,
- `<span class="bt">Qué significa</span><span class="big1">${x.h}</span><p>${x.p}</p><span class="why">${x.w}</span><a class="src" href="${x.u}" target="_blank" rel="noopener">Fuente: ${x.f}</a><a class="src" href="${({reg:"#leyes",ilia:"#latam",imd:"#peru",emp:"#peru",jne:"#noticias"})[x.ic]}">${({reg:"Ver la norma",ilia:"Ver la comparación regional",imd:"Ver el diagnóstico del Perú",emp:"Ver el diagnóstico del Perú",jne:"Ver lo último"})[x.ic]} →</a>`,"cifra-f")))})();
+ `<span class="bt">Qué significa</span><span class="big1">${x.h}</span><p>${x.p}</p><span class="bt">Ejemplo</span><p>${CE[x.ic]}</p><span class="why">${x.w}</span><a class="src" href="${x.u}" target="_blank" rel="noopener">Fuente: ${x.f}</a><a class="src" href="${({reg:"#leyes",ilia:"#latam",imd:"#peru",emp:"#peru",jne:"#noticias"})[x.ic]}">${({reg:"Ver la norma",ilia:"Ver la comparación regional",imd:"Ver el diagnóstico del Perú",emp:"Ver el diagnóstico del Perú",jne:"Ver lo último"})[x.ic]} →</a>`,"cifra-f")))})();
 
+/* ---------- DIAGNÓSTICO DEL PERÚ ---------- */
+(()=>{const box=$("#diagKpi");if(!box)return;const D=[["65.º de 70", "Ranking Mundial Digital y de IA 2026 (IMD y Centrum PUCP)", "Es el puesto del Perú entre 70 economías según su preparación digital y de IA.", "Es como sacar 56,3 sobre 100: aprueba, pero por debajo de Chile, Brasil, Argentina, Colombia y México."], ["56,3", "puntos de 100; en la región solo supera a Venezuela", "Es el puntaje total del Perú en el ranking, de 0 a 100.", "Chile, el mejor de la región, llega a 72,7; Venezuela, el último, a 39,1."], ["70.º", "en talento: el último lugar del mundo", "Mide si el país tiene personas con las habilidades para crear y usar IA.", "Un banco que quiere armar un equipo de IA no encuentra suficientes especialistas locales."], ["68.º", "en adopción de IA en empresas", "Mide cuántas empresas usan IA en su operación diaria, no solo en pruebas.", "Una tienda con un chatbot de prueba, pero sin IA en inventarios ni precios, cuenta como adopción baja."]];
+ D.forEach(d=>box.append(flipCard(`<b class="dkn">${d[0]}</b><span class="dkl">${d[1]}</span>`,`<span class="bt">Qué significa</span><p>${d[2]}</p><span class="bt">Ejemplo</span><p>${d[3]}</p>`,"dk")))})();
 /* ---------- ROLES DEL OIA ---------- */
 (()=>{const roles=[["Oficial de IA","Política, plan y cumplimiento de IA","Es el dueño de la IA en la entidad.","Aprueba la política de uso, dirige el plan de IA y vigila que cada sistema cumpla la norma."],
  ["Oficial de Datos Personales","Ley 29733 y DS 016-2024-JUS","Cuida los datos de las personas.","Verifica que la IA use datos con consentimiento, finalidad clara y seguridad."],
  ["Oficial de Seguridad y Confianza Digital","Ciberseguridad e incidentes","Protege a la IA de ataques y fallas.","Gestiona riesgos de ciberseguridad y responde cuando algo sale mal."],
  ["Comité de Gobierno y Transformación Digital","Aprueba y supervisa proyectos de IA","Decide qué proyectos de IA avanzan.","Lidera, evalúa y supervisa los sistemas de IA estratégicos de la entidad."],
  ["SGTD de la PCM","Autoridad nacional de IA","Pone las reglas para todo el Estado.","Dirige, evalúa y supervisa el uso de la IA en el país y da asistencia técnica."]];
- const box=$("#roles");if(!box)return;roles.forEach((r,i)=>box.append(flipCard(`<b>${r[0]}</b><span>${r[1]}</span>`,`<span class="bt">Qué hace</span><b>${r[2]}</b><p>${r[3]}</p>`,i===0?"role-core":"")))})();
+ const RE=["En un hospital regional, revisa que el sistema de triaje con IA tenga supervisión médica antes de usarse.", "Si un ministerio quiere entrenar un modelo con datos de ciudadanos, verifica el consentimiento y la finalidad.", "Si alguien engaña a un chatbot institucional para filtrar datos, activa la respuesta al incidente.", "Aprueba que una municipalidad pruebe un asistente virtual en su mesa de partes antes de ampliarlo.", "Orienta a un ministerio sobre cómo clasificar el riesgo de su sistema de IA."];
+ const box=$("#roles");if(!box)return;roles.forEach((r,i)=>box.append(flipCard(`<b>${r[0]}</b><span>${r[1]}</span>`,`<span class="bt">Qué significa</span><b>${r[2]}</b><p>${r[3]}</p><span class="bt">Ejemplo</span><p>${RE[i]}</p>`,i===0?"role-core":"")))})();
 /* ---------- UNIDADES ---------- */
 const units=[
  {t:"I. Fundamentos éticos",w:"Principios · Dilemas",d:"Qué es la IA generativa y con qué lentes éticas evaluarla.",c:["Diferencias entre IA, aprendizaje automático, modelos fundacionales y LLM","Capacidades, alucinaciones y límites","Enfoques deontológico, utilitarista, de la virtud y del cuidado","Principios: equidad, transparencia, explicabilidad, privacidad, supervisión humana"],e:"Distinguir qué es la IA generativa y razonar un dilema con distintas teorías éticas.",r:["UNESCO 2021","OCDE 2024","Floridi 2023","Coeckelbergh 2020"]},
@@ -1017,29 +1071,33 @@ const units=[
  {t:"IV. Gobernanza aplicada",w:"Casos · Protocolo · Quiz",d:"Llevar todo a un protocolo que funcione en la institución.",c:["Evaluación de impacto: partes interesadas, daños, probabilidad y severidad","Controles preventivos, detectivos y correctivos; riesgo residual","Usos permitidos, condicionados y prohibidos","Indicadores, auditoría, reclamos, incidentes y rendición de cuentas"],e:"Diseñar un protocolo de uso responsable y medir si funciona.",r:["NIST AI RMF Playbook","OCDE: catálogo de herramientas","ISO/IEC 42001"]}
 ];
 const ut=$("#unitTabs"),up=$("#unitPanel");
-function showUnit(i){[...ut.querySelectorAll(".step")].forEach((b,j)=>b.setAttribute("aria-selected",i===j));const u=units[i];
+function showUnit(i){[...ut.querySelectorAll(".stepf")].forEach((b,j)=>b.toggleAttribute("data-sel",i===j));const u=units[i];
  up.innerHTML=`<div><div class="weeks">${u.w}</div><h3 style="font-size:1.4rem;margin-top:6px">${u.t}</h3><p class="lead" style="margin-top:8px">${u.d}</p><div class="deliv"><b>Lo que podrás hacer:</b> ${u.e}</div><a class="go" href="${["#principios","#riesgo","#leyes","#casos"][i]}">Ir al paso →</a></div>
  <div><div class="eyebrow">Contenidos</div><ul>${u.c.map(x=>`<li>${x}</li>`).join("")}</ul><div class="eyebrow" style="margin-top:16px">Lecturas clave</div><div class="hero-meta" style="margin-top:8px">${u.r.map(x=>`<span class="chip">${x}</span>`).join("")}</div></div>`;}
 const UI=["brujula","piramide","escudo","icosaedro"].map((f,i)=>`<img src="img/${f}.png" alt="" width="640" height="640" loading="lazy" class="obj o${i}">`);
 const UL=["Valores y Ética","Gestión de Riesgos","Normatividad","Gobernanza"];
-units.forEach((u,i)=>{const b=el("button",{class:"step",role:"tab",type:"button","aria-label":`Paso ${i+1}: ${UL[i]}`},`<span class="art">${UI[i]}</span><span class="lbl">0${i+1} · ${UL[i]}</span><small>${u.w}</small>`);b.onclick=()=>showUnit(i);ut.append(b)});showUnit(0);
+const UC=[["Los principios que guían cómo usar la IA: equidad, transparencia, privacidad y supervisión humana.", "Un banco avisa al cliente que lo atiende una IA y le deja pedir hablar con una persona."], ["Clasificar cada uso de IA según el daño que puede causar y aplicar controles proporcionales.", "Un chatbot de consultas es de riesgo bajo; un sistema que aprueba créditos es de riesgo alto y exige supervisión humana."], ["Las leyes y estándares que dicen qué es obligatorio: Ley 31814 y su reglamento, el AI Act de la UE e ISO/IEC 42001.", "Una empresa que usa IA para decidir contrataciones debe registrar cómo funciona el sistema y revisar sus resultados con una persona."], ["Convertir las reglas en práctica: responsables, políticas, medición y mejora continua.", "Una entidad pública designa un Oficial de IA que aprueba la política de uso y revisa los incidentes."]];
+units.forEach((u,i)=>{
+ const c=flipCard(`<span class="art">${UI[i]}</span><span class="lbl">0${i+1} · ${UL[i]}</span><small>${u.w}</small>`,
+  `<span class="bt">Qué significa</span><p>${UC[i][0]}</p><span class="bt">Ejemplo</span><p>${UC[i][1]}</p><a class="fxbtn" href="${["#principios","#riesgo","#leyes","#casos"][i]}">Ir al paso →</a>`,"stepf");
+ c.setAttribute("aria-label",`Paso ${i+1}: ${UL[i]}`);c.addEventListener("click",()=>showUnit(i));ut.append(c)});showUnit(0);
 
 /* ---------- PRINCIPIOS ---------- */
 const prin=[
- ["Equidad","¿Probamos si el modelo trata distinto a mujeres, adultos mayores o personas de regiones?","Que el sistema no produzca resultados injustos o discriminatorios para ningún grupo de personas.","Medir tasas de error y de aprobación por grupo antes de lanzar, y repetir la medición cada trimestre.","UNESCO · OCDE"],
- ["Transparencia","¿El cliente sabe que habla con una IA?","Que las personas sepan cuándo interactúan con una IA o ven contenido generado por ella, y para qué se usa.","Aviso visible de IA en chatbots y etiqueta en imágenes, audios y videos sintéticos.","Ley 31814 · EU AI Act art. 50"],
- ["Explicabilidad","¿Podemos explicarle a alguien por qué le negamos un crédito?","Poder dar una razón comprensible de por qué el sistema llegó a una decisión concreta.","Documentar las variables que más pesan y entregar una explicación sencilla al afectado.","OCDE · NIST"],
- ["Privacidad","¿Qué datos personales entran al prompt y a dónde viajan?","Usar solo los datos personales necesarios, con consentimiento y protegidos durante todo el ciclo de vida.","Minimizar y anonimizar datos; no subir información de clientes a herramientas públicas sin contrato.","Ley 29733 · DS 016-2024-JUS"],
- ["Seguridad","¿Resistimos un ataque por inyección de prompt?","Que el sistema funcione de forma robusta y resista errores, fallas y ataques maliciosos.","Pruebas de red team, filtros de entrada y salida, y monitoreo de fugas de información.","NIST AI 600-1"],
- ["Supervisión humana","¿Quién puede revisar y revertir lo que decide el sistema?","Que una persona competente pueda vigilar, intervenir y anular las decisiones de la IA.","Nombrar un responsable con autoridad real en cada decisión de alto impacto.","DS 115-2025-PCM · EU AI Act art. 14"],
- ["Responsabilidad","Si el chatbot promete algo falso, ¿quién responde?","Que siempre haya una persona u organización identificable que rinda cuentas por la IA.","Asignar un dueño a cada sistema y registrar sus decisiones e incidentes.","Caso Air Canada 2024"],
- ["Inclusión","¿Funciona en quechua, para personas con discapacidad o con baja conectividad?","Que los beneficios de la IA lleguen a todos y no amplíen las brechas existentes.","Probar con usuarios diversos y mantener siempre un canal humano alternativo.","UNESCO · ENIA"],
- ["Sostenibilidad","¿Cuánta energía y agua consume nuestro uso de IA?","Que el uso de la IA considere su impacto ambiental y social a largo plazo.","Elegir el modelo más pequeño que resuelva la tarea y medir su huella.","UNESCO"]
+ ["Equidad","¿Probamos si el modelo trata distinto a mujeres, adultos mayores o personas de regiones?","Que el sistema no produzca resultados injustos o discriminatorios para ningún grupo de personas.","Medir tasas de error y de aprobación por grupo antes de lanzar, y repetir la medición cada trimestre.","UNESCO · OCDE","Un banco descubre que su modelo aprueba menos créditos a trabajadores informales y corrige los datos y las reglas."],
+ ["Transparencia","¿El cliente sabe que habla con una IA?","Que las personas sepan cuándo interactúan con una IA o ven contenido generado por ella, y para qué se usa.","Aviso visible de IA en chatbots y etiqueta en imágenes, audios y videos sintéticos.","Ley 31814 · EU AI Act art. 50","Un chatbot de una telecom empieza con «Soy un asistente de IA» y ofrece pasar con una persona."],
+ ["Explicabilidad","¿Podemos explicarle a alguien por qué le negamos un crédito?","Poder dar una razón comprensible de por qué el sistema llegó a una decisión concreta.","Documentar las variables que más pesan y entregar una explicación sencilla al afectado.","OCDE · NIST","Al rechazar un préstamo, el banco explica que pesaron el historial de pagos y los ingresos declarados."],
+ ["Privacidad","¿Qué datos personales entran al prompt y a dónde viajan?","Usar solo los datos personales necesarios, con consentimiento y protegidos durante todo el ciclo de vida.","Minimizar y anonimizar datos; no subir información de clientes a herramientas públicas sin contrato.","Ley 29733 · DS 016-2024-JUS","Un empleado no debe pegar la lista de clientes en un chatbot público: usa datos anonimizados o una herramienta con contrato."],
+ ["Seguridad","¿Resistimos un ataque por inyección de prompt?","Que el sistema funcione de forma robusta y resista errores, fallas y ataques maliciosos.","Pruebas de red team, filtros de entrada y salida, y monitoreo de fugas de información.","NIST AI 600-1","Antes de lanzar un asistente interno, el equipo intenta engañarlo con instrucciones maliciosas para ver si filtra datos."],
+ ["Supervisión humana","¿Quién puede revisar y revertir lo que decide el sistema?","Que una persona competente pueda vigilar, intervenir y anular las decisiones de la IA.","Nombrar un responsable con autoridad real en cada decisión de alto impacto.","DS 115-2025-PCM · EU AI Act art. 14","El sistema sugiere rechazar un subsidio y un funcionario revisa el caso antes de decidir."],
+ ["Responsabilidad","Si el chatbot promete algo falso, ¿quién responde?","Que siempre haya una persona u organización identificable que rinda cuentas por la IA.","Asignar un dueño a cada sistema y registrar sus decisiones e incidentes.","Caso Air Canada 2024","En 2024 Air Canada tuvo que cumplir el reembolso que su chatbot prometió por error."],
+ ["Inclusión","¿Funciona en quechua, para personas con discapacidad o con baja conectividad?","Que los beneficios de la IA lleguen a todos y no amplíen las brechas existentes.","Probar con usuarios diversos y mantener siempre un canal humano alternativo.","UNESCO · ENIA","Un servicio público ofrece el trámite en quechua y en ventanilla, además del chatbot."],
+ ["Sostenibilidad","¿Cuánta energía y agua consume nuestro uso de IA?","Que el uso de la IA considere su impacto ambiental y social a largo plazo.","Elegir el modelo más pequeño que resuelva la tarea y medir su huella.","UNESCO","Una empresa usa un modelo pequeño para clasificar correos en vez de uno enorme y gasta mucha menos energía."]
 ];
 const pg=$("#principles");
 const PI=[IC.scale,IC.eye,IC.bulb,IC.lock,IC.shield,IC.user,IC.hand,IC.people,IC.leaf];
 prin.forEach((p,k)=>pg.append(flipCard(`<div class="p-ic">${PI[k]}</div><span class="tag" style="font-family:var(--f-mono);font-size:.72rem;color:var(--accent)">${p[4]}</span><h3>${p[0]}</h3><p style="color:var(--muted)">${p[1]}</p>`,
- `<span class="bt">Qué significa</span><h3>${p[0]}</h3><p>${p[2]}</p><span class="bt">Cómo aplicarlo</span><p>${p[3]}</p>`)));
+ `<span class="bt">Qué significa</span><h3>${p[0]}</h3><p>${p[2]}</p><span class="bt">Ejemplo</span><p>${p[5]}</p>`)));
 
 /* ---------- DILEMAS ---------- */
 const dils=[
@@ -1109,8 +1167,9 @@ const lat=[
 ];
 const lf=$("#latFilters"),lg=$("#latGrid");let lk="all";
 const latF=[["all","Todos"],["law","Ley vigente"],["bill","Proyecto de ley"],["pol","Política o estrategia"]];
+const LEX={"Perú": "Un banco en Lima que usa IA para evaluar créditos debe cumplir hoy el reglamento: control humano y registros del sistema.", "El Salvador": "Una empresa tecnológica que invierte en IA en El Salvador encuentra una ley pensada para promover la innovación.", "Brasil": "Una empresa que ofrece IA en Brasil debe prepararse para clasificar sus sistemas por riesgo cuando se apruebe la ley.", "Chile": "Un banco chileno prepara controles de riesgo y protección de datos ante su proyecto de ley de IA y su nueva ley de datos.", "Colombia": "Una empresa en Colombia sigue la política CONPES 4144 y cumple la Ley 1581 de datos mientras llega una ley de IA.", "México": "Una empresa en México usa IA bajo las reglas de datos personales; todavía no existe una ley general de IA.", "Uruguay": "Una empresa que opera en Uruguay se apoya en su estrategia nacional y en una ley de datos reconocida por la UE.", "Argentina": "Un programa social que use IA debe cuidar el riesgo de estigmatizar, como mostró el caso de Salta en 2018."};
 function drawLat(){[...lf.children].forEach((b,i)=>b.setAttribute("aria-selected",latF[i][0]===lk));lg.innerHTML="";
- lat.filter(x=>lk==="all"||x.k===lk).forEach(x=>lg.append(flipCard(`<header style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3 style="font-size:1.4rem">${x.c}</h3><span class="st st-${x.k}">${x.s}</span></header>${(()=>{const v=(ilia.find(r=>r[0]===x.c)||[])[1];return v?`<div class="ckpi">${v.toFixed(1).replace(".",",")}<small>puntos ILIA 2026</small></div><div class="cbar"><i style="width:${v}%"></i></div>`:""})()}<p style="color:var(--muted)">¿Cómo regula la IA ${x.c}?</p>`,`<span class="bt">${x.c} · ${x.s}</span><p>${x.t}</p>`)));}
+ lat.filter(x=>lk==="all"||x.k===lk).forEach(x=>lg.append(flipCard(`<header style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3 style="font-size:1.4rem">${x.c}</h3><span class="st st-${x.k}">${x.s}</span></header>${(()=>{const v=(ilia.find(r=>r[0]===x.c)||[])[1];return v?`<div class="ckpi">${v.toFixed(1).replace(".",",")}<small>puntos ILIA 2026</small></div><div class="cbar"><i style="width:${v}%"></i></div>`:""})()}<p style="color:var(--muted)">¿Cómo regula la IA ${x.c}?</p>`,`<span class="bt">${x.c} · ${x.s}</span><p>${x.t}</p><span class="bt">Ejemplo</span><p>${LEX[x.c]||""}</p>`)));}
 latF.forEach(f=>{const b=el("button",{class:"tab",type:"button"},f[1]);b.onclick=()=>{lk=f[0];drawLat()};lf.append(b)});drawLat();
 
 /* ---------- CASOS ---------- */
@@ -1142,7 +1201,7 @@ function drawCases(){[...cf.children].forEach((b,i)=>b.setAttribute("aria-select
  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>',
  bank:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h4"/></svg>',
  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>'};
-const SI={"Banca":IC2.bank,"Telecom":IC2.signal,"Energía":IC2.bolt,"Servicios":IC2.chat,"RR. HH.":IC.people,"Sector público":IC2.gov,"Justicia":IC.scale};cg.append(flipCard(`<span class="bigic2">${SI[c.s]||IC.case}</span><div class="meta"><span class="sector">${c.s}</span><span class="level ${R[1]}">${R[0]}</span></div><h3>${c.t}</h3><p style="color:var(--muted)">¿Qué pasó y qué aprendimos?</p>`,`<span class="bt">Qué pasó</span><p>${c.p}</p><span class="bt">Lección de gobernanza</span><p>${c.l}</p><a class="src" href="${c.u}" target="_blank" rel="noopener">Fuente: ${c.f}</a>`))});}
+const SI={"Banca":IC2.bank,"Telecom":IC2.signal,"Energía":IC2.bolt,"Servicios":IC2.chat,"RR. HH.":IC.people,"Sector público":IC2.gov,"Justicia":IC.scale};cg.append(flipCard(`<span class="bigic2">${SI[c.s]||IC.case}</span><div class="meta"><span class="sector">${c.s}</span><span class="level ${R[1]}">${R[0]}</span></div><h3>${c.t}</h3><p style="color:var(--muted)">¿Qué pasó y qué aprendimos?</p>`,`<span class="bt">Ejemplo real</span><p>${c.p}</p><span class="bt">Lección de gobernanza</span><p>${c.l}</p><a class="src" href="${c.u}" target="_blank" rel="noopener">Fuente: ${c.f}</a>`))});}
 cSec.forEach(s=>{const b=el("button",{class:"tab",type:"button"},s);b.onclick=()=>{ck=s;drawCases()};cf.append(b)});drawCases();
 
 /* ---------- NOTICIAS ---------- */
@@ -1314,7 +1373,9 @@ const laws=[
   u:"https://www.iso.org/standard/42001"}
 ];
 const lg2=$("#laws"),dlg=$("#lawDlg");
-laws.forEach((L,i)=>{const b=el("button",{class:"law",type:"button"},`<div class="ic">${IC[L.i]}</div><div class="code">${L.c}</div><h3>${L.t}</h3><p class="one">${L.one}</p><div class="kpi">${L.k}<small>${L.ks}</small></div><span class="more">Ver ficha y texto oficial →</span>`);b.onclick=()=>openLaw(i);lg2.append(b)});
+laws.forEach((L,i)=>{const c=flipCard(`<div class="ic">${IC[L.i]}</div><div class="code">${L.c}</div><h3>${L.t}</h3><p class="one">${L.one}</p><div class="kpi">${L.k}<small>${L.ks}</small></div>`,
+ `<span class="bt">Qué significa</span><p><b>${L.fr}</b></p><span class="bt">Ejemplo</span><p>${L.ej}</p><button type="button" class="fxbtn" data-open="${i}">Ver ficha completa →</button>`,"lawf");
+ c.querySelector("[data-open]").addEventListener("click",e=>{e.stopPropagation();openLaw(i)});lg2.append(c)});
 function openLaw(i){const L=laws[i];
  dlg.innerHTML=`<div class="ld-head"><div class="law" style="padding:0;border:0;background:none"><div class="ic">${IC[L.i]}</div></div><div><div class="code" style="font-family:var(--f-mono);font-size:.78rem;color:var(--accent2)">${L.c}</div><h3 id="ldTitle" style="font-size:1.3rem">${L.t}</h3></div></div>
  <div class="ld-body"><div class="ld-frase">${L.fr}</div><div class="ld-data">${L.d.map(x=>`<div><b>${x[0]}</b><span>${x[1]}</span></div>`).join("")}</div>
@@ -1391,13 +1452,14 @@ const clk=[
   const ev=(side)=>clk.filter(e=>e[0]===y&&e[1]===side).map(e=>`<div class="ck-ev${e[5]>TODAY?" fut":""}" data-k="${clk.indexOf(e)}"><span class="dt">${e[2]}</span><b>${e[3]}</b><span>${e[4]}</span></div>`).join("");
   box.insertAdjacentHTML("beforeend",`<div class="ck-col pe">${ev("pe")}</div><div class="ck-yr">${y}</div><div class="ck-col eu">${ev("eu")}</div>`)}
  const XP={"Ley 31814": "El Perú fue de los primeros de la región en tener una ley de IA. Promueve su uso y fija principios, pero aún sin obligaciones detalladas.", "Entra en vigor el AI Act": "La primera ley integral de IA del mundo. Clasifica la IA por riesgo y aplica a quien ofrezca IA en Europa, aunque esté fuera.", "Prohibiciones y alfabetización": "Desde esta fecha están prohibidos en Europa usos como el puntaje social o la manipulación, y las empresas deben capacitar a quien usa IA.", "Modelos de propósito general": "Los creadores de modelos como los de chat deben documentar cómo los entrenan y respetar los derechos de autor.", "Reglamento DS 115-2025-PCM": "La ley peruana pasa de principios a reglas: qué está prohibido, qué es de riesgo alto y qué controles exige.", "Reglamento en vigor": "Desde aquí las reglas son exigibles en el Perú. Quien usa IA para decidir sobre personas debe tener control humano y registros.", "ENIA 2026-2030": "El Estado tiene hoja de ruta: formar talento, innovar, regular con ética y abrir la participación ciudadana.", "Digital Omnibus": "Europa da más tiempo a las empresas: las reglas de riesgo alto se postergan hasta fines de 2027 y 2028.", "Primer plazo sectorial": "Salud, educación, justicia, seguridad, economía y finanzas debían adecuar su uso de IA en el Estado. El plazo ya venció.", "Oficial de IA": "Cada entidad pública debe nombrar a una persona responsable de la IA. La gobernanza ya tiene nombre y apellido.", "Gobiernos regionales": "Gobiernos regionales, EsSalud y universidades públicas deben cumplir el reglamento hasta esta fecha.", "Alto riesgo autónomo": "Desde aquí en Europa la IA para crédito, empleo o educación deberá cumplir requisitos estrictos.", "Alto riesgo en productos": "La IA dentro de dispositivos médicos, máquinas o juguetes entra a las reglas de alto riesgo.", "Gobiernos locales": "Las municipalidades son las últimas en cumplir. Para entonces todo el Estado peruano deberá estar adecuado."};const card=box.closest(".chart-card");
+ const EX={"Ley 31814": "Una entidad que quiere usar IA debe hacerlo con ética, seguridad y respeto a los derechos, aunque la ley aún no detalle cada paso.", "Entra en vigor el AI Act": "Una empresa peruana que vende software con IA a clientes europeos empieza a revisar en qué nivel de riesgo cae.", "Prohibiciones y alfabetización": "Un sistema que puntúa socialmente a las personas queda prohibido y las empresas deben capacitar a quienes usan IA.", "Modelos de propósito general": "Quien ofrece un modelo de lenguaje debe documentar con qué datos lo entrenó y respetar los derechos de autor.", "Reglamento DS 115-2025-PCM": "Un banco que evalúa créditos con IA sabe ahora que está en riesgo alto y qué controles necesita.", "Reglamento en vigor": "Desde esa fecha, un banco o una entidad debe poder mostrar que una persona supervisa las decisiones de alto impacto.", "ENIA 2026-2030": "Un gobierno regional alinea su proyecto de IA con los ejes de talento, innovación, ética y participación.", "Digital Omnibus": "Una fintech con clientes en España gana hasta diciembre de 2027 para cumplir las reglas de alto riesgo.", "Primer plazo sectorial": "Un hospital público debe tener lista su política de uso de IA y la supervisión de sus sistemas.", "Oficial de IA": "Un ministerio nombra a la persona responsable de su política de IA y de su plan de acción.", "Gobiernos regionales": "Un gobierno regional adecua sus sistemas de IA y aprueba su política institucional.", "Alto riesgo autónomo": "Una empresa que usa IA para seleccionar personal en Europa debe documentar el sistema y mantener supervisión humana.", "Alto riesgo en productos": "Un fabricante de dispositivos médicos con IA debe cumplir las reglas de alto riesgo para vender en la UE.", "Gobiernos locales": "Una municipalidad que automatiza trámites con IA cumple el reglamento: es el último plazo del Estado."};
  box.querySelectorAll(".ck-ev").forEach(n=>{const e=clk[+n.dataset.k];const side=e[1];
   const front=`<span class="dt">${e[2]}</span><b>${e[3]}</b><span>${e[4]}</span>`;
-  const back=`<span class="bt">${e[5]>TODAY?"Lo que viene":"Qué significa"}</span><p>${XP[e[3]]}</p><span class="when">${e[5]>TODAY?"Todavía no llega: hay tiempo para prepararse.":"Ya ocurrió: es parte de las reglas vigentes."}</span>`;
+  const back=`<span class="bt">${e[5]>TODAY?"Lo que viene":"Qué significa"}</span><p>${XP[e[3]]}</p><span class="bt">Ejemplo</span><p>${EX[e[3]]}</p><span class="when">${e[5]>TODAY?"Todavía no llega: hay tiempo para prepararse.":"Ya ocurrió: es parte de las reglas vigentes."}</span>`;
   const f=flipCard(front,back,`ck-flip ${side}${e[5]>TODAY?" fut":""}`);n.replaceWith(f)});
  hint(card,"Toca un hito: se voltea y te explica de qué trata");
  /* hitos normativos del Perú en su propia sección */
- const ph=$("#peHitos");if(ph)[...clk].filter(e=>e[1]==="pe"&&e[5]<=TODAY).sort((a,b)=>a[5]-b[5]).forEach(e=>ph.append(flipCard(`<span class="dt">${e[2]}</span><b>${e[3]}</b><span>${e[4]}</span>`,`<span class="bt">Qué significa</span><p>${XP[e[3]]}</p>`,"ck-flip ckm pe")));
+ const ph=$("#peHitos");if(ph)[...clk].filter(e=>e[1]==="pe"&&e[5]<=TODAY).sort((a,b)=>a[5]-b[5]).forEach(e=>ph.append(flipCard(`<span class="dt">${e[2]}</span><b>${e[3]}</b><span>${e[4]}</span>`,`<span class="bt">Qué significa</span><p>${XP[e[3]]}</p><span class="bt">Ejemplo</span><p>${EX[e[3]]}</p>`,"ck-flip ckm pe")));
  /* versión de una columna para celular */
  const m=$("#clocksM");let last=0,now=false;
  [...clk].sort((a,b)=>a[5]-b[5]).forEach(e=>{
@@ -1405,7 +1467,7 @@ const clk=[
   if(e[0]!==last){m.insertAdjacentHTML("beforeend",`<div class="ckm-yr">${e[0]}</div>`);last=e[0]}
   const who=e[1]==="pe"?"Perú":"Unión Europea";
   const front=`<span class="who ${e[1]}">${who}</span><span class="dt">${e[2]}</span><b>${e[3]}</b><span>${e[4]}</span>`;
-  const back=`<span class="bt">${who} · ${e[5]>TODAY?"Lo que viene":"Qué significa"}</span><p>${XP[e[3]]}</p><span class="when">${e[5]>TODAY?"Todavía no llega: hay tiempo para prepararse.":"Ya ocurrió: es parte de las reglas vigentes."}</span>`;
+  const back=`<span class="bt">${who} · ${e[5]>TODAY?"Lo que viene":"Qué significa"}</span><p>${XP[e[3]]}</p><span class="bt">Ejemplo</span><p>${EX[e[3]]}</p><span class="when">${e[5]>TODAY?"Todavía no llega: hay tiempo para prepararse.":"Ya ocurrió: es parte de las reglas vigentes."}</span>`;
   m.append(flipCard(front,back,`ck-flip ckm ${e[1]}${e[5]>TODAY?" fut":""}`))});})();
 /* Gantt */
 (()=>{const start=new Date(2025,8,10),end=new Date(2028,8,10),span=end-start,pct=d=>Math.max(0,Math.min(100,(d-start)/span*100));
