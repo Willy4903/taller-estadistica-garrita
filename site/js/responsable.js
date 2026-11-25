@@ -106,7 +106,7 @@
           <p class="lead">No se trata de tener miedo, sino de combinar capacidad con responsabilidad. Seis principios y dos herramientas para decidir en segundos.</p></div>
         <div class="grid g3 princ">${E.principles.map((p) => `<article class="card pr"><span class="pr-n">${ico(p.icon)} ${p.n}</span><h3>${esc(p.t)}</h3><p>${esc(p.d)}</p><ul>${p.list.map((x) => `<li>${esc(x)}</li>`).join("")}</ul><p class="muted">${esc(p.how)}</p></article>`).join("")}</div>
         <div class="grid g2 tools">${traffic(E)}${checklist(E)}</div>
-        <div class="resp-links"><a class="btn ghost" href="responsable.html#casos" data-track="clic_casos">Casos reales, lecciones reales ${ico("arrow-right")}</a><a class="btn ghost" href="responsable.html#regulacion" data-track="clic_regulacion">IA, ética y regulación ${ico("arrow-right")}</a></div>`;
+        <div class="resp-links"><a class="btn" href="etica-ia/" data-track="clic_guia_ia_responsable">Guía interactiva: ética, leyes y gobernanza en el Perú y Latam ${ico("arrow-right")}</a><a class="btn ghost" href="responsable.html#casos" data-track="clic_casos">Casos reales, lecciones reales ${ico("arrow-right")}</a><a class="btn ghost" href="responsable.html#regulacion" data-track="clic_regulacion">IA, ética y regulación ${ico("arrow-right")}</a></div>`;
       bindTraffic(E); bindChecklist(E);
     }
     if (casesRoot && D.cases) cases(D.cases, casesRoot);

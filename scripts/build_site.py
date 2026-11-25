@@ -167,7 +167,7 @@ def build_about():
 
 def build_sitemap(urls):
     today = date.today().isoformat()
-    allu = ["", "modelos.html", "glosario.html", "responsable.html", "about.html"] + urls
+    allu = ["", "modelos.html", "glosario.html", "responsable.html", "about.html", "etica-ia/"] + urls
     items = "".join(f"<url><loc>{BASE}{u}</loc><lastmod>{today}</lastmod></url>" for u in allu)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}sitemap.xml\n")
