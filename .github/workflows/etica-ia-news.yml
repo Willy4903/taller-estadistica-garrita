@@ -46,8 +46,17 @@ jobs:
             echo "Sin cambios en las noticias."
           else
             git commit -m "IA Responsable: noticias automáticas $(TZ=America/Lima date '+%Y-%m-%d %H:%M')"
-            git pull --rebase origin main
-            git push origin main
+            for intento in 1 2 3; do
+              if git pull --rebase origin main; then
+                git push origin main && break
+              else
+                # Conflicto con otra actualización de noticias: se conserva la versión recién descargada.
+                git checkout --theirs -- site/etica-ia/data/news.json
+                git add site/etica-ia/data/news.json
+                GIT_EDITOR=true git rebase --continue && git push origin main && break
+              fi
+              sleep 5
+            done
           fi
       - name: Versionar archivos estáticos (evita caché del navegador)
         run: |

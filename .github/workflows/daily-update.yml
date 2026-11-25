@@ -141,6 +141,16 @@ jobs:
                 guardado=si
                 break
               fi
+              # Si el único conflicto son las noticias de IA Responsable (el flujo de noticias
+              # guardó una versión al mismo tiempo), se conserva la versión ya publicada en main.
+              if [ "$(git diff --name-only --diff-filter=U)" = "site/etica-ia/data/news.json" ]; then
+                git checkout --ours -- site/etica-ia/data/news.json
+                git add site/etica-ia/data/news.json
+                if GIT_EDITOR=true git rebase --continue && git push; then
+                  guardado=si
+                  break
+                fi
+              fi
               if [ -n "$(git ls-files -u)" ]; then
                 echo "Conflicto de Git: se detiene la publicación para conservar ambos cambios." >&2
                 exit 1
