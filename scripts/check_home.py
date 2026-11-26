@@ -141,7 +141,7 @@ def main():
 
 
     crons = re.findall(r'^\s*- cron:\s*["\']([^"\']+)["\']', workflow, re.M)
-    if crons != ["5 11 * * *", "5 15 * * *", "5 19 * * *", "5 23 * * *", "5 3 * * *"]:
+    if crons != ["17 11 * * *", "17 15 * * *", "17 19 * * *", "17 23 * * *", "17 3 * * *"]:
         raise AssertionError(f"Frecuencia incorrecta: {crons}")
     for command in ("scripts/update_data.py", "scripts/fetch_liga1.py", "scripts/build_site.py"):
         if command not in workflow:
