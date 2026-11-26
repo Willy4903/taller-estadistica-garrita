@@ -1,6 +1,6 @@
 {
- "updated": "2026-11-26T09:21:20.431764+00:00",
- "updated_lima": "26/11/2026 04:21",
+ "updated": "2026-11-26T12:15:21.890507+00:00",
+ "updated_lima": "26/11/2026 07:15",
  "schedule_lima": [
   "06:00",
   "12:00",
@@ -37,7 +37,7 @@
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20site%3Agestion.pe&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
    "ok": true,
-   "count": 16
+   "count": 13
   },
   {
    "id": "elcomercio",
@@ -57,7 +57,7 @@
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20site%3Aandina.pe&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
    "ok": true,
-   "count": 71
+   "count": 64
   },
   {
    "id": "elperuano",
@@ -67,7 +67,7 @@
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20site%3Aelperuano.pe&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
    "ok": true,
-   "count": 67
+   "count": 66
   },
   {
    "id": "gobpe",
@@ -77,7 +77,7 @@
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20site%3Agob.pe&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
    "ok": true,
-   "count": 63
+   "count": 62
   },
   {
    "id": "infobae",
@@ -87,7 +87,7 @@
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20Per%C3%BA%20site%3Ainfobae.com&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
    "ok": true,
-   "count": 28
+   "count": 32
   },
   {
    "id": "cepal",
@@ -97,7 +97,7 @@
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20site%3Acepal.org&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Latam",
    "ok": true,
-   "count": 54
+   "count": 85
   },
   {
    "id": "unesco",
@@ -107,7 +107,7 @@
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20%C3%A9tica%20site%3Aunesco.org&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Mundo",
    "ok": true,
-   "count": 45
+   "count": 78
   },
   {
    "id": "regulacion-pe",
@@ -117,10 +117,30 @@
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20Per%C3%BA%20%28ley%20OR%20reglamento%20OR%20regulaci%C3%B3n%20OR%20%22Ley%2031814%22%29&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
    "ok": true,
-   "count": 44
+   "count": 97
   }
  ],
  "items": [
+  {
+   "t": "CADE 2026: hoy se clausura el encuentro empresarial con foco en inversión e IA",
+   "u": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQc2FUNmN5Zmh5VzU0NWlYdE5MYnJzNk84eTlOQUd0S3pIeUhpN09PMGR0enB4bWtORzIzN0VTcWlkUmlMb283OFJyT2JaRU1GTjJOSzl3SkwyaHR6TldTeGdhQTNlSlBJRHVLYUJLaWg5ck85WTlyaC1YS2VoeVVnaWxNS2JGZTBuelZFYktPRkxkR1Fwd2NxeGNlcDMtZlM4VUhxNG9xZVV2U0paTTJoM25fei0?oc=5",
+   "d": "2026-11-26T11:18:00+00:00",
+   "f": "Agencia Andina",
+   "r": "Perú",
+   "s": "",
+   "src": "andina",
+   "c": "misc"
+  },
+  {
+   "t": "Nvidia frenó el envío de servidores con chips de IA a cuatro países del sudeste asiático",
+   "u": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQWW83OTV5TTMwak1CR19sLU8yMmlvZ1QxWlRuU2RCMFZoZ1U1RDRscmR3RlhlWjFBUzdWTlpneXZrODVRc2RUY3N0dVpIakVsZnNBSFZkZ2FxVGtmQnpUNnllUW0wajdLLTB3bnhwX01NYk1xZ1RaV1BNaGZYOG9JZ3dHN0lQQVVKMFBmM3o4TE11SjlYZVd1SHFlUlloLUZCN2VDM0RqWUd0bEl5ZWtmRFZ3NU03bTRGdHVtWDhlM0UzeW1kLUFDUVBB0gHkAUFVX3lxTFA1dmZmU0ZvZFV3MGhLTDBzUUNuRm9lREVfR2lXYnNrTHVoNFdJN2QxSDViekR2RlhBRnhwcVk4c29zWWwtQmIyb3JsOW9IY2lpeDcxaVJUV2RLRlNhcVFLWWpObVFIeHRtZkFUZmF0N2Vnbm9HN1RtNWttZXBNYWVhMEp2OXUyal9uT3B5S3VyamVGSHc5eTVRUHJNYzdkVnZuOEdCVDE0dm82bkxSZGVFWllXRGRvWm54UDlueUc0Y3ZPeTZCV0E5QlpMVE1FMlk5dVY5NXFhMU4xQndGUC1rZ1VkZw?oc=5",
+   "d": "2026-11-26T09:58:00+00:00",
+   "f": "Infobae",
+   "r": "Perú",
+   "s": "",
+   "src": "infobae",
+   "c": "misc"
+  },
   {
    "t": "Cobre se acerca a mercado bajista mientras venta tecnológica reaviva dudas sobre IA",
    "u": "https://gestion.pe/mundo/internacional/cobre-se-acerca-a-mercado-bajista-mientras-venta-tecnologica-reaviva-dudas-sobre-ia-noticia/",
@@ -292,6 +312,16 @@
    "c": "misc"
   },
   {
+   "t": "¿Está realmente preparada la legislación penal peruana para combatir la estafa mediante inteligencia artificial? Análisis de la Ley N.º 32314",
+   "u": "https://news.google.com/rss/articles/CBMi-wFBVV95cUxOeUx3bzFqZ2VIaWZMQWlRYUpyandQdWZ0LXVzNk9qLWY2MUplRzJwUlNoemhUc0ZmNHpqSHMxZVp4XzVrTHM3dl83S29IRlkyVE1URW1FTm5HcHZBZVR5TnZhMUJvUGhSOWFVMkVwUnB1b1QzbmhlXzBtZWswM00xZmFXQjdNQUFvUVZCMnhDenBWWmlrOXZyWHBIdEJBVzdaUE1KbTNmTDhTdU1LTW5GdGZLTXpHXzlhY2tKUDdlV0ppSHZ6dHFIZUNyZm9aZ28tNHdaYmNLaXNCc0pQLUE0ZWlwT0RLWU56RmpsYXk5Ui1Xcnp6bl9ubWVHSQ?oc=5",
+   "d": "2026-11-24T00:46:41+00:00",
+   "f": "Enfoque Derecho",
+   "r": "Perú",
+   "s": "",
+   "src": "regulacion-pe",
+   "c": "etica"
+  },
+  {
    "t": "Jefe de la ONU pide crear en el plazo de un año un mecanismo que limite los riesgos de la IA",
    "u": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxNaGhEejdENWlwTU1kQ2hUQWlLNUxVdV92S0pMeUhMRDhmOG9kZl9Jd19xcjNrSkhONHg0RVppbmt4dUpaZWFXTmpUSXNKY0FKdmJpeUUtNnRRcFRWTE1UN1dXU3BnOXRmZDZ0OEx3anlEbWJnT2dJVHRGdUYyekp3SDE1eDUtT1NyQTZpTWk1aDlHSUhMUDZRb2lJdTg3SnZIbW5PWkdFcWJzdzRFeVdJaF8yck4zTFRWMnFNWk9qSUJ0SnhaOXJZTDBxTjM4b0M0T2dSazlnYw?oc=5",
    "d": "2026-11-23T23:30:00+00:00",
@@ -432,14 +462,14 @@
    "c": "misc"
   },
   {
-   "t": "Anthropic sale a bolsa, ¿qué deben esperar los nuevos accionistas?",
-   "u": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNQW4xSThnYi1yaUFoV2locnVNZV93ai01TmZkZDJiTVp5Z3F5ZHhXb2gzOHRvNjVQdk40a21QYjJlTUdHc25GcEF0bjljcVpzRTQ1SmoxbzY0TUpBX0NjOFJQamhWMHp2MjV5N3pzSDZ0OWhEWEZmLUgyOFpXUnphdnZvRGlFY1RDUkc4S2NRWC11cE5VaGxoVXdrOUhtRnl4RmxPb1k2VQ?oc=5",
-   "d": "2026-11-19T18:03:00+00:00",
-   "f": "Gestión",
+   "t": "Trump rechaza una regulación globalista de la inteligencia artificial: “No permitiremos que eso suceda”",
+   "u": "https://news.google.com/rss/articles/CBMitwJBVV95cUxPd1RrZHRjQlVYejhQQmFhRTVWOXFDd194UnJVMGcyb3ZjM0xfYW9yOHphZHNnYVN2MDVwX1g5WElrX0RXUUlZcXRFYXQxaG40Wk9oaDdPVHFUclotbU91bl8wRGR4dFRtdUtiX0tnTV9pdDJWaVBZS0ZqT3NYdU9Takh5VUxnaXIwMTMxSWY4b2hORW9ORS1KMGZubXdmTzQ0R003SUl3VHpzckZrTHJkdVFsTTh1YWxpR3dNUGFZODV4eXVlRFo2VlNoNFFOYjh3aC1aYkxVM0Q2T1VSUVUycHBXSGxrTHJBZ29QUnB4TGhxQS1WTjRoT1JESXJfQm9YM09XM3Z5NEJZX3cxd2lNM2F4VEZreGxVb3VJQ001VnBya3ZuVlBmZC1ZblBWQXpWbHpYVHJOd9IBywJBVV95cUxQM0tPdnk3ZUZXR3lJVWZra0R5aGstV2lzVlpxZTVDOHZ6WVNWX1Y3VE1PQ2hCZDBEWmRWRktxU1BtQVo0Q2UtQ3VKVFNwOHF3ZThKRUgxSnJRWkpfVFZLRXJCNFI2OHptcVRLaWpOSGl3SnZiT1pMRUlmLWZIMUZsVGxZZDhQaDE3RzFuRU8zT3AzaDd4S3hUU0pXcmJzQTE3aTZHVlNIWDR2VTVyMUQyOW9TRTljN0Z3UHRQeTNaYjVNZ1plc1dlRm5rMDJ5d2JXOHBySl93SEpfRVZmdVJhVFlmVWpLWkl2Qkx4NjhjeU9QbFVFcHJUVjdJUjNpYUlPRWc5TUJ4eXE0NlZtNzdCUTluVFhKRW5CZ3NBUk9OME90SkQ1UzNiUk5wU3B4YzZSbHFmZmIwcUx2Q1hOM3ZZYWJxck95aHVNcVdZ?oc=5",
+   "d": "2026-11-19T16:45:06+00:00",
+   "f": "El Comercio Perú",
    "r": "Perú",
    "s": "",
-   "src": "gestion-gn",
-   "c": "misc"
+   "src": "regulacion-pe",
+   "c": "etica"
   },
   {
    "t": "OPI récord de Anthropic impacta en cobre y bitcoin: “Tema de la IA sigue más vivo que nunca”",
@@ -462,6 +492,16 @@
    "c": "misc"
   },
   {
+   "t": "AI Readiness: el acceso a los datos estadísticos en la era de la inteligencia artificial",
+   "u": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQTDhFc2RoZkNVdmhtWjNTMGZZV0pzVlQzTm9NallQT0o3V3B0NkVSQmdKY3hxYjlGUV9kZFplSERKb3hMcVc1ZldhOU5MR1cxY1Z0WkJiWW9GX3AzVEgzdFI0LWQwdERYNXhiWUVhR0ZFOFkxREN2NHNJWkV5ZjRrcUM3WXRwRmJuRm5yMmRhdk9LdHZVTmRYX05leVM3WGY1VEU2TjJYUjZuTVRqR3oxbXZLRlprYnFjQ1E?oc=5",
+   "d": "2026-11-19T14:52:43+00:00",
+   "f": "Comisión Económica para América Latina y el Caribe",
+   "r": "Latam",
+   "s": "",
+   "src": "cepal",
+   "c": "misc"
+  },
+  {
    "t": "Poder Judicial capacita a periodistas para informar con rigor sobre procesos penales en era de la IA",
    "u": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxOaFN1RmNjX0V4ZVZ2RW9HMXp5X0gzbzhwWFlBMFdtbE5yX3M5ai1rVWJUeE5pcUlPdTlUb3l6T2k0X2dHZ1Q5dHJKVmtqaFJZQ2Q0S2dyLTFGT1dQTWFXTmN5MFptT3hoakNRYklDZ0FncFRiWjd2UmZ2MEI0U2ZzWHAyaW5MeDRUSmI4Q2NLZWg2UTlXVGphNnp5NkpHRElraVdoRjF0Zmh0bXJpbzVkWEN3MjFac1RCQUZ0OHJ0SEZCaEk1RGRaX1pEc3FfUEdJMVI5elpHOEpTMERQOHB5a0NkN1NmQQ?oc=5",
    "d": "2026-11-19T14:42:18+00:00",
@@ -480,16 +520,6 @@
    "s": "",
    "src": "regulacion-pe",
    "c": "etica"
-  },
-  {
-   "t": "Cifras récord: Anthropic supera a SpaceX en debut bursátil pese a dudas sobre la IA",
-   "u": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPV0ZkTmhYM2xFWkZJTVkzMkIxQjdUc1oxZjlVNEp2SlNOTzd2U2NKbUVMelc3eXlsRXRoaVdnNjBlclVFT2lGU2Z4cS1ZcThTWU9zWmVJM0NEa0IwNW5SUWRqWEhBc2I5VlBLWEV0Q2REWFA1a2R5UzRBZG5ncHZ4encwejZlR0w5c21xdTlTdjQ0V2d1cW96elp1NHVUZVB2ME5NaTlnV1EtWEptSHI3TUQ1bldybkZwSjFrZg?oc=5",
-   "d": "2026-11-19T11:07:56+00:00",
-   "f": "Gestión",
-   "r": "Perú",
-   "s": "",
-   "src": "gestion-gn",
-   "c": "misc"
   },
   {
    "t": "Catálogo de Aplicaciones con Inteligencia Artificial en el Estado Peruano",
@@ -519,6 +549,16 @@
    "r": "Perú",
    "s": "",
    "src": "gobpe",
+   "c": "misc"
+  },
+  {
+   "t": "Nuevas cámaras con IA llegan al mercado peruano",
+   "u": "https://news.google.com/rss/articles/CBMi_AFBVV95cUxQd0VtREdUaTlYSzRmTFdjTG9aVlFtdG05aVp6TEJJTjVxdXpBRFI2Y2VLUTg5YjdHQnM5Q2ZJS0hIaTFESFVvRXpYQjNzaTF5bzNlR0sxb19WZGZYTG55TENtRjRrZ3ZyMGRMQ2ZTa0ZCM3FRSjhCWkl6NVp2T29id0xrRkZ3WHRpNElVaExhdWxYVkFVZDh3OHdoY25vVXV3TzBkSkZaZV9SSkFqUTdaTkplY3MxbllyRXN2OVZPbGxvdHZqQVVRVmJlLU5yYTlnZ1Y4aWpNNnB1UlpBVXpucHN4VW0tZHRvU0Nfb3JyWGpPTWhQMm5TS2FJYnE?oc=5",
+   "d": "2026-11-18T16:59:59+00:00",
+   "f": "La República",
+   "r": "Perú",
+   "s": "",
+   "src": "regulacion-pe",
    "c": "misc"
   },
   {
@@ -592,16 +632,6 @@
    "c": "etica"
   },
   {
-   "t": "Periodistas de Chepén son capacitados en el uso de la Inteligencia Artificial en el Periodismo Digital",
-   "u": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxNSk1XdXc1N3pEcnIyenhRRnFfRkxhR3J6ZkJMbkctMFRLNTFmdWdfTDAtY1F1WEUzSkFtZ2hpTEY4ZGdFdG0xTktsV0N3QWExN2NGelpNbWFNckR6cDkxWUtxUUNPRmNXZUFGZFR1Um0yVERiRjdYNUcyUFRBWS05NTU4QVhQRjJMMXprRWUwZkUyZW9ZVFdlVFkzRFpQTThoQ0R5blZ1b29Rc3JjUDdabkFjZ0hzVmNqSWo5RHJlbjRULUxNUUxUeDFiZk8xUWM3X3BrTTJGM2tsVmlJTmdpU2FRVE02d094bmFmSEM3dTVaZ0E?oc=5",
-   "d": "2026-11-13T08:00:00+00:00",
-   "f": "Plataforma del Estado Peruano",
-   "r": "Perú",
-   "s": "",
-   "src": "gobpe",
-   "c": "misc"
-  },
-  {
    "t": "El mensaje jurídico del papa León XIV: inteligencia artificial, derechos y garantías para las personas",
    "u": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxNWUlPbGhjamJhZmJjMk5XYjZlUkNrSmhFanZyWXlUQU5oQXJNTGpjeDZGX05oNTVQXzJPdXM3VlREOWVHWlhseEdIT0FReW1ZOFJRYUIzanh2UkJoa0xPbk8yOGdDNEpUWHpqSnVoU2Ywb0JBYmNWTmVxNTA2alB4WTNzV25wWUplNDJaMEU1cmwzenpkcVpYYkVzQUNwTzlXR3ljZ09UWVlDcXRZb3dkc2RFS3JuWXNSdmh0U1ZQZkwxVzlhdFJfdjZzZGtRRV9CaVE?oc=5",
    "d": "2026-11-12T08:00:00+00:00",
@@ -609,6 +639,26 @@
    "r": "Perú",
    "s": "",
    "src": "elperuano",
+   "c": "etica"
+  },
+  {
+   "t": "¿Debe el árbitro revelar que usó inteligencia artificial? Lecciones del caso Quebec para la Ley de Arbitraje peruana",
+   "u": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxPMWo1d0k2dzJYcGdxbTM2NElWZ2tTQ0o3SVpLd0JhMGFrajdkMXpySFo0Uy1COG9XaTViWXczcHFsNjMzWXVGSkUwRnBNNm1LX0xXYnBTeUc2RXZ0elZTSUl2TTUtckE4N1pYZy1CTEpldFNwaEo5eWF4WGJwUXMtc0RrQ0czQ0tnV0RwWmRDM2VJT0pQbEdzR1h6WlpycFVMTjk2bl9ZeXJOTmdLZFdQdUN1b1RxRmRHUHhJOWtTNnBVN2ZtcTRFV1dtc0U2ak9EcXc?oc=5",
+   "d": "2026-11-12T08:00:00+00:00",
+   "f": "LP | Pasión por el Derecho",
+   "r": "Perú",
+   "s": "",
+   "src": "regulacion-pe",
+   "c": "etica"
+  },
+  {
+   "t": "Perú destaca a nivel mundial por legislación sobre IA responsable",
+   "u": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQcE10dUZVNUMtVnRiLWgyNWp6MTQzZmR2V3VkZzE1UWtyM1NBeDBRcFo0R0xKTllvU1QzUGRnV2ttZDN3VkpJMDVMZm9DS0dkV2EzTW9ZRVZybTZrdS1FTE8zQlg0N29GYkFrVWl3TDN3NlpmYlY2aVlnUXJmbUZyb0UtTHRULXNTNjZPTEZORnBldjI2NERVMWdDclQ2dmEzVWV0T1JQRTg3Ykd0UVE?oc=5",
+   "d": "2026-11-11T16:30:42+00:00",
+   "f": "tvperu.gob.pe",
+   "r": "Perú",
+   "s": "",
+   "src": "regulacion-pe",
    "c": "etica"
   },
   {
@@ -669,6 +719,26 @@
    "r": "Perú",
    "s": "",
    "src": "gobpe",
+   "c": "misc"
+  },
+  {
+   "t": "IA en la industria alimentaria: desafíos para 2030",
+   "u": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxOcE9rU2hKOW42eW4yUzFqODVoVndwRG4zTHBtZ3Rja1V4NUZ2WS1hRHNNYUR3V3ozY2cwS0xsdUoyOHRoQmV3SUZ6UERkaWRHYkt1ajF0SnhBQVg3bGtiTXFtcmpsV0V2WWZHUnZiT2RDeHg0aEhENi1keUJIcVV0eVZnU0VDTkcya0lMVGNKU0RRZ1p1RTJkN2tzalBwd2luaExhWHcwVXUzOEdJZ2dLcmw3NTRTMzF5OGFIa0YyZHhENWtxdkVFbk1Iak9JQzZTd0Rz?oc=5",
+   "d": "2026-11-10T08:00:00+00:00",
+   "f": "La República",
+   "r": "Perú",
+   "s": "",
+   "src": "regulacion-pe",
+   "c": "misc"
+  },
+  {
+   "t": "El uso de IA generativa y el desarrollo de capacidades avanzan a ritmos distintos",
+   "u": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNYWEzVXlMS1ROSEJmUEE5dF9lQThtZ01FbzlWbUREdlg0TklUMU43Z1hzUzlsNHFBX1ZVUERNcTFrdmhNRnZ2bEo2M1VydE5TY2EwXzM1NEVjcVBqQjRoWlBVakU2MTlvUV9rQ1BjT0NmckNTRjRoTVRKZkItSUZvODBQM3NSUGlyeXFFVmpIZzVuemt6TGstczYtMjRaMVM4ZUlKTlhfZ3M4cXJLRWdzWjh5M2wzZER3NnhDTWlid3JnUXVsVGdGVWc3My04UQ?oc=5",
+   "d": "2026-11-10T06:25:00+00:00",
+   "f": "Observatorio de Desarrollo Digital",
+   "r": "Latam",
+   "s": "",
+   "src": "cepal",
    "c": "misc"
   },
   {
