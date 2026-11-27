@@ -1,6 +1,6 @@
 {
- "updated": "2026-11-27T12:29:31.059198+00:00",
- "updated_lima": "27/11/2026 07:29",
+ "updated": "2026-11-27T19:51:52.559405+00:00",
+ "updated_lima": "27/11/2026 14:51",
  "schedule_lima": [
   "06:00",
   "12:00",
@@ -17,7 +17,7 @@
    "feed": "https://gestion.pe/arc/outboundfeeds/rss/?outputType=xml",
    "region": "Perú",
    "ok": true,
-   "count": 7
+   "count": 3
   },
   {
    "id": "gestion-tec",
@@ -36,8 +36,9 @@
    "site": "https://gestion.pe",
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20site%3Agestion.pe&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
-   "ok": true,
-   "count": 13
+   "ok": false,
+   "count": 0,
+   "error": "HTTPError: HTTP Error 503: Service Unavailable"
   },
   {
    "id": "elcomercio",
@@ -56,8 +57,9 @@
    "site": "https://andina.pe",
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20site%3Aandina.pe&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
-   "ok": true,
-   "count": 60
+   "ok": false,
+   "count": 0,
+   "error": "HTTPError: HTTP Error 503: Service Unavailable"
   },
   {
    "id": "elperuano",
@@ -66,8 +68,9 @@
    "site": "https://elperuano.pe",
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20site%3Aelperuano.pe&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
-   "ok": true,
-   "count": 75
+   "ok": false,
+   "count": 0,
+   "error": "HTTPError: HTTP Error 503: Service Unavailable"
   },
   {
    "id": "gobpe",
@@ -76,8 +79,9 @@
    "site": "https://www.gob.pe",
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20site%3Agob.pe&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
-   "ok": true,
-   "count": 62
+   "ok": false,
+   "count": 0,
+   "error": "HTTPError: HTTP Error 503: Service Unavailable"
   },
   {
    "id": "infobae",
@@ -86,8 +90,9 @@
    "site": "https://www.infobae.com/peru/",
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20Per%C3%BA%20site%3Ainfobae.com&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
-   "ok": true,
-   "count": 60
+   "ok": false,
+   "count": 0,
+   "error": "HTTPError: HTTP Error 503: Service Unavailable"
   },
   {
    "id": "cepal",
@@ -96,8 +101,9 @@
    "site": "https://www.cepal.org",
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20site%3Acepal.org&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Latam",
-   "ok": true,
-   "count": 89
+   "ok": false,
+   "count": 0,
+   "error": "HTTPError: HTTP Error 503: Service Unavailable"
   },
   {
    "id": "unesco",
@@ -106,8 +112,9 @@
    "site": "https://www.unesco.org",
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20%C3%A9tica%20site%3Aunesco.org&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Mundo",
-   "ok": true,
-   "count": 47
+   "ok": false,
+   "count": 0,
+   "error": "HTTPError: HTTP Error 503: Service Unavailable"
   },
   {
    "id": "regulacion-pe",
@@ -116,11 +123,32 @@
    "site": "https://news.google.com",
    "feed": "https://news.google.com/rss/search?q=%22inteligencia%20artificial%22%20Per%C3%BA%20%28ley%20OR%20reglamento%20OR%20regulaci%C3%B3n%20OR%20%22Ley%2031814%22%29&hl=es-419&gl=PE&ceid=PE:es-419",
    "region": "Perú",
-   "ok": true,
-   "count": 97
+   "ok": false,
+   "count": 0,
+   "error": "HTTPError: HTTP Error 503: Service Unavailable"
   }
  ],
  "items": [
+  {
+   "t": "Amazon: ¿trabajadores junior perderán su puesto por la IA?",
+   "u": "https://gestion.pe/tu-dinero/amazon-trabajadores-junior-perderan-su-puesto-por-la-ia-noticia/",
+   "d": "2026-11-27T18:32:53+00:00",
+   "f": "Gestión",
+   "r": "Perú",
+   "s": "Uno de los principales temores ante el avance de la Inteligencia Artificial (IA) es que reemplace ciertos puestos de trabajo, y un grupo que se siente especialmente vulnerable son los jóvenes.",
+   "src": "gestion",
+   "c": "etica"
+  },
+  {
+   "t": "Las ‘tiendas falsas’ en Black Friday ponen en jaque las ventas por Internet y la reputación de las marcas",
+   "u": "https://elcomercio.pe/tecnologia/ciberseguridad/las-tiendas-falsas-en-black-friday-ponen-en-jaque-las-ventas-por-internet-y-la-reputacion-de-las-marcas-inteligencia-artificial-fraude-estafa-noticia/",
+   "d": "2026-11-27T14:55:30+00:00",
+   "f": "El Comercio",
+   "r": "Perú",
+   "s": "Señala especialista que los algoritmos de inteligencia artificial “permiten a los ciberdelincuentes suplantar webs y marcas con relativa facilidad”. No solo perjudica al cliente. Firmas pueden perder actividad comercial",
+   "src": "elcomercio",
+   "c": "misc"
+  },
   {
    "t": "SAP recortará miles de empleos para transformar su negocio en era de IA",
    "u": "https://news.google.com/rss/articles/CBMizwFBVV95cUxORGVad1VzQTlhRUpwS0N4QlNLTWlNaGFqQ1p2UXNhdmVNRmV4aHpBYkdoRzFUcmZNRlI3aHl5Q2VnWDVHTC14SXpUYm90S1FJQmwxZ3BhNWFNUXpzOHlvWXAyb1VxbXVGbjNtbE5YNkxBUF9BX2RxNnBqOFd5OFFVelVYbGpSUUo3dDVzYS0xWDRrbWdxYmRJRFp6V2FSTk45dUJxOVlnRnFMQXhSSTE0WDlRSU9qd1NpZ2VxMzE4XzhGSkZ3d0pfTmZfMTRDNk0?oc=5",
@@ -129,6 +157,16 @@
    "r": "Perú",
    "s": "",
    "src": "gestion-gn",
+   "c": "etica"
+  },
+  {
+   "t": "SAP planea recortar miles de empleos para transformar su negocio en era de IA",
+   "u": "https://gestion.pe/mundo/internacional/sap-prepara-recorte-de-al-menos-10000-empleos-para-transformar-su-negocio-en-era-de-ia-noticia/",
+   "d": "2026-11-27T10:40:52+00:00",
+   "f": "Gestión",
+   "r": "Perú",
+   "s": "SAP SE prepara un plan para eliminar al menos 10,000 puestos de trabajo con el objetivo de transformar su negocio de software para la era de la inteligencia artificial, según fuentes familiarizadas con el asunto.",
+   "src": "gestion",
    "c": "etica"
   },
   {
@@ -182,16 +220,6 @@
    "c": "misc"
   },
   {
-   "t": "Antes de comprar en Black Friday o Cyber Monday: así puedes usar ChatGPT para comparar precios reales",
-   "u": "https://gestion.pe/mix/respuestas/antes-de-comprar-en-black-friday-o-cyber-monday-asi-puedes-usar-chatgpt-para-comparar-precios-reales-nnda-nnrt-noticia/",
-   "d": "2026-11-26T21:44:13+00:00",
-   "f": "Gestión",
-   "r": "Perú",
-   "s": "Descubre cómo utilizar ChatGPT durante el Black Friday y el Cyber Monday para comparar precios, encontrar cupones, revisar descuentos y evitar falsas ofertas en tus compras.",
-   "src": "gestion",
-   "c": "misc"
-  },
-  {
    "t": "Personal del CENEPRED fortalece sus conocimientos en ciberseguridad e IA mediante el programa SDIA 2026 impulsado por el MINDEF",
    "u": "https://news.google.com/rss/articles/CBMikgJBVV95cUxONzhaM2J2RDdtZWpJQVVuRENURGNWRzFwbkQ1R1JxbFBfT0djZHFCaUMwTFJQbTlmM29MOEJpLUFDcWVXUGN5N3JiUVp0WG9DdGJTLTJzWEpxQlNXU1Fia2t2dEVOYWgzeGsyaEFDVGp4MXpJekFMMXdPLVFrLTMyS2Z3RFJXVFQ5ZHdkQkZVNk42QVNEbHFmUUJJRlpFMVg4ZFM4N0NRb3hFa2VvSVpIMlgwR016RWNIVzNQYVhLNjRVV3ZRX0pXOUkxb2NCaVJZY0VIYUtJLW1RRjcyTHRORmd6Z2htRlVlam1Oc2hrRHc0UmJ3RXVoM3JFdWg5bm5SZjdVT184cmlNVEdRR1ZDNWpB?oc=5",
    "d": "2026-11-26T20:54:01+00:00",
@@ -210,16 +238,6 @@
    "s": "",
    "src": "infobae",
    "c": "misc"
-  },
-  {
-   "t": "Hochul firmó una ley que frenará la fabricación y venta de juguetes con IA en Nueva York por 5 años: ¿desde cuándo y qué productos estarán prohibidos?",
-   "u": "https://gestion.pe/mix/usa/kathy-hochul-firmo-una-ley-que-frenara-la-fabricacion-y-venta-de-juguetes-con-inteligencia-artificial-en-nueva-york-por-5-anos-desde-cuando-y-que-productos-estaran-prohibidos-ny-estados-unidos-nnda-nnlt-noticia/",
-   "d": "2026-11-26T18:38:06+00:00",
-   "f": "Gestión",
-   "r": "Perú",
-   "s": "Nueva York pone límites a los juguetes con chatbots de IA. Conoce qué contempla la ley de Hochul y qué deben revisar las familias al elegir regalos.",
-   "src": "gestion",
-   "c": "etica"
   },
   {
    "t": "Educación inclusiva: cómo la inteligencia artificial y la tecnología ayudan a transformar las aulas",
@@ -242,33 +260,13 @@
    "c": "etica"
   },
   {
-   "t": "Amazon: ¿trabajadores junior perderán su puesto por la IA?",
-   "u": "https://gestion.pe/tu-dinero/amazon-trabajadores-junior-perderan-su-puesto-por-la-ia-noticia/",
-   "d": "2026-11-26T17:21:20+00:00",
-   "f": "Gestión",
-   "r": "Perú",
-   "s": "Uno de los principales temores ante el avance de la Inteligencia Artificial (IA) es que reemplace ciertos puestos de trabajo, y un grupo que se siente especialmente vulnerable son los jóvenes.",
-   "src": "gestion",
-   "c": "etica"
-  },
-  {
-   "t": "CADE 2026: líderes de PathPilot y McKinsey ponen el foco en el valor empresarial de la IA",
-   "u": "https://gestion.pe/economia/empresas/cade-2026-lideres-de-pathpilot-y-mckinsey-ponen-el-foco-en-el-valor-empresarial-de-la-ia-noticia/",
-   "d": "2026-11-26T16:41:28+00:00",
-   "f": "Gestión",
-   "r": "Perú",
-   "s": "En CADE 2026, líderes de PathPilot y McKinsey analizaron los retos de la inteligencia artificial en las empresas y cómo generar valor con su implementación.",
-   "src": "gestion",
-   "c": "misc"
-  },
-  {
    "t": "EE.UU. autoriza a SpaceX a lanzar un millón de satélites y crear centros de datos espaciales",
    "u": "https://gestion.pe/tecnologia/eeuu-autoriza-a-spacex-a-lanzar-un-millon-de-satelites-y-crear-centros-de-datos-espaciales-noticia/",
    "d": "2026-11-26T15:38:15+00:00",
    "f": "Gestión",
    "r": "Perú",
    "s": "La Comisión Federal de Comunicaciones de Estados Unidos (FCC, por su sigla en inglés) autorizó este miércoles a la empresa aeroespacial y de inteligencia artificial SpaceX a colocar en órbita un millón de satélites para crear centros de datos espaciales.",
-   "src": "gestion",
+   "src": "gestion-tec",
    "c": "misc"
   },
   {
@@ -350,16 +348,6 @@
    "s": "",
    "src": "elperuano",
    "c": "misc"
-  },
-  {
-   "t": "Ciberseguridad: ¿es seguro subir tu pasaporte o documento de identidad a Internet?",
-   "u": "https://elcomercio.pe/tecnologia/ciberseguridad/ciberseguridad-es-seguro-subir-tu-pasaporte-o-documento-de-identidad-a-internet-dni-reniec-redes-sociales-noticia/",
-   "d": "2026-11-25T18:30:21+00:00",
-   "f": "El Comercio",
-   "r": "Perú",
-   "s": "Hoy en día, frente a la filtración y exposición de datos personales, compartir información puede resultar peligroso. Delincuentes se suelen interesar por los datos biométricos, como los escaneos faciales",
-   "src": "elcomercio",
-   "c": "etica"
   },
   {
    "t": "Spotify quitó a Livi, la voz del DJ con IA, y usuarios de habla hispana se quejaron del cambio",
