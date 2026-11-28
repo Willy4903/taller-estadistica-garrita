@@ -834,7 +834,7 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
       <div class="oia-grid">
         <div class="ld-box"><div class="eyebrow">Qué hace</div><ul class="oia-ul"><li>Formula la política institucional de uso de IA.</li><li>Dirige el Plan de Acción de IA de la entidad.</li><li>Supervisa que los sistemas cumplan la normativa.</li><li>Integra el Comité de Gobierno y Transformación Digital.</li></ul></div>
         <div class="ld-box"><div class="eyebrow">Quién debe designarlo</div><ul class="oia-ul"><li>Ministerios y sus adscritas, Poder Judicial, Congreso y organismos autónomos.</li><li>Universidades públicas e IPRESS públicas II-2 o superior.</li><li>Gobiernos regionales y municipalidades tipo A y C.</li><li>Empresas públicas regionales y locales.</li></ul></div>
-        <div class="ld-box"><div class="eyebrow">Plazos</div><ul class="oia-ul"><li>Designación en 6 a 12 meses según el tipo de entidad.</li><li>El perfil profesional es exigible a los 12 meses de vigencia de la directiva.</li><li>Lo designa la máxima autoridad administrativa.</li></ul></div>
+        <div class="ld-box"><div class="eyebrow">Plazos</div><ul class="oia-ul"><li>Designación en 6 a 12 meses según el tipo de entidad.</li><li>Perfil mínimo: grado de bachiller y al menos 40 horas de especialización en IA, exigible a los 12 meses de vigencia de la directiva.</li><li>Lo designa la máxima autoridad administrativa.</li></ul></div>
       </div>
       <div class="eyebrow" style="margin-top:22px">Con quién trabaja</div>
       <div class="roles" id="roles"></div>
@@ -994,7 +994,7 @@ button.chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 
 </section>
 
 <footer>
-  <div class="wrap">Guía informativa sobre ética, normatividad y gobernanza de la IA generativa en el Perú y América Latina. No constituye asesoría legal. Datos revisados al 24 de noviembre de 2026.</div>
+  <div class="wrap">Guía informativa sobre ética, normatividad y gobernanza de la IA generativa en el Perú y América Latina. No constituye asesoría legal. Contenido revisado el 28 de noviembre de 2026; las noticias de "Lo último" se actualizan solas.</div>
 </footer>
 
 <script>
@@ -1429,7 +1429,8 @@ const reg=[["Perú",4,"Ley 31814 (2023) y reglamento vigente desde ene. 2026"],[
  hint(box.closest(".chart-card"));
  onView(box,()=>{box.querySelectorAll(".tk-fill").forEach(f=>f.style.width=f.dataset.w+"%");box.querySelectorAll(".tk-dot").forEach(d=>d.style.left=d.dataset.l+"%")});})();
 /* Dos relojes */
-const TODAY=new Date(2026,10,24);
+const TODAY=new Date();TODAY.setHours(0,0,0,0);
+const HOYL=TODAY.toLocaleDateString("es-PE",{day:"numeric",month:"short",year:"numeric"}).replace(/\./g,"").toUpperCase();
 const clk=[
  [2023,"pe","5 jul. 2023","Ley 31814","Primera ley de IA del país",new Date(2023,6,5)],
  [2024,"eu","1 ago. 2024","Entra en vigor el AI Act","Reglamento (UE) 2024/1689",new Date(2024,7,1)],
@@ -1446,9 +1447,9 @@ const clk=[
  [2028,"eu","2 ago. 2028","Alto riesgo en productos","Dispositivos y máquinas",new Date(2028,7,2)],
  [2028,"pe","Set. 2028","Gobiernos locales","Último plazo del Estado",new Date(2028,8,10)]];
 (()=>{const box=$("#clocks");box.innerHTML=`<div class="ck-h pe">Perú</div><div></div><div class="ck-h eu">Unión Europea</div>`;
- let nowShown=false;
+ let nowShown=false;const fy=(clk.filter(e=>e[5]>TODAY).map(e=>e[0]).sort()[0])||9999;
  for(let y=2023;y<=2028;y++){
-  if(!nowShown&&y===2027){box.insertAdjacentHTML("beforeend",`<div class="ck-now">HOY · 24 NOV. 2026</div>`);nowShown=true}
+  if(!nowShown&&y===fy){box.insertAdjacentHTML("beforeend",`<div class="ck-now">HOY · ${HOYL}</div>`);nowShown=true}
   const ev=(side)=>clk.filter(e=>e[0]===y&&e[1]===side).map(e=>`<div class="ck-ev${e[5]>TODAY?" fut":""}" data-k="${clk.indexOf(e)}"><span class="dt">${e[2]}</span><b>${e[3]}</b><span>${e[4]}</span></div>`).join("");
   box.insertAdjacentHTML("beforeend",`<div class="ck-col pe">${ev("pe")}</div><div class="ck-yr">${y}</div><div class="ck-col eu">${ev("eu")}</div>`)}
  const XP={"Ley 31814": "El Perú fue de los primeros de la región en tener una ley de IA. Promueve su uso y fija principios, pero aún sin obligaciones detalladas.", "Entra en vigor el AI Act": "La primera ley integral de IA del mundo. Clasifica la IA por riesgo y aplica a quien ofrezca IA en Europa, aunque esté fuera.", "Prohibiciones y alfabetización": "Desde esta fecha están prohibidos en Europa usos como el puntaje social o la manipulación, y las empresas deben capacitar a quien usa IA.", "Modelos de propósito general": "Los creadores de modelos como los de chat deben documentar cómo los entrenan y respetar los derechos de autor.", "Reglamento DS 115-2025-PCM": "La ley peruana pasa de principios a reglas: qué está prohibido, qué es de riesgo alto y qué controles exige.", "Reglamento en vigor": "Desde aquí las reglas son exigibles en el Perú. Quien usa IA para decidir sobre personas debe tener control humano y registros.", "ENIA 2026-2030": "El Estado tiene hoja de ruta: formar talento, innovar, regular con ética y abrir la participación ciudadana.", "Digital Omnibus": "Europa da más tiempo a las empresas: las reglas de riesgo alto se postergan hasta fines de 2027 y 2028.", "Primer plazo sectorial": "Salud, educación, justicia, seguridad, economía y finanzas debían adecuar su uso de IA en el Estado. El plazo ya venció.", "Oficial de IA": "Cada entidad pública debe nombrar a una persona responsable de la IA. La gobernanza ya tiene nombre y apellido.", "Gobiernos regionales": "Gobiernos regionales, EsSalud y universidades públicas deben cumplir el reglamento hasta esta fecha.", "Alto riesgo autónomo": "Desde aquí en Europa la IA para crédito, empleo o educación deberá cumplir requisitos estrictos.", "Alto riesgo en productos": "La IA dentro de dispositivos médicos, máquinas o juguetes entra a las reglas de alto riesgo.", "Gobiernos locales": "Las municipalidades son las últimas en cumplir. Para entonces todo el Estado peruano deberá estar adecuado."};const card=box.closest(".chart-card");
@@ -1463,7 +1464,7 @@ const clk=[
  /* versión de una columna para celular */
  const m=$("#clocksM");let last=0,now=false;
  [...clk].sort((a,b)=>a[5]-b[5]).forEach(e=>{
-  if(!now&&e[5]>TODAY){m.insertAdjacentHTML("beforeend",`<div class="ck-now">HOY · 24 NOV. 2026</div>`);now=true}
+  if(!now&&e[5]>TODAY){m.insertAdjacentHTML("beforeend",`<div class="ck-now">HOY · ${HOYL}</div>`);now=true}
   if(e[0]!==last){m.insertAdjacentHTML("beforeend",`<div class="ckm-yr">${e[0]}</div>`);last=e[0]}
   const who=e[1]==="pe"?"Perú":"Unión Europea";
   const front=`<span class="who ${e[1]}">${who}</span><span class="dt">${e[2]}</span><b>${e[3]}</b><span>${e[4]}</span>`;
